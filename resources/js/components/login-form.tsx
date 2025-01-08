@@ -1,4 +1,3 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import ApplicationLogoBox from '@/Components/ApplicationLogoBox';
 import InputError from '@/Components/InputError';
 import { Button } from '@/components/ui/button';

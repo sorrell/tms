@@ -1,7 +1,6 @@
 import { LoginForm } from '@/components/login-form';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { Head } from '@inertiajs/react';
 
 export default function Login({
     status,
@@ -28,13 +27,13 @@ export default function Login({
         <GuestLayout>
             <Head title="Log in" />
 
+            <LoginForm />
+
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mb-4 w-full text-center text-sm font-medium text-green-600">
                     {status}
                 </div>
             )}
-
-            <LoginForm />
         </GuestLayout>
     );
 }
