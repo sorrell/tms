@@ -1,31 +1,43 @@
-import { GalleryVerticalEnd } from 'lucide-react';
-
+import ApplicationLogo from '@/Components/ApplicationLogo';
+import ApplicationLogoBox from '@/Components/ApplicationLogoBox';
+import InputError from '@/Components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { PageProps } from '@/types';
-import { usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
+import { FormEventHandler } from 'react';
 
 export function LoginForm({
     className,
     ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
-
     const { app } = usePage<PageProps>().props;
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        email: '',
+        password: '',
+    });
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        post(route('login'), {
+            onFinish: () => reset('password'),
+        });
+    };
 
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
-            <form>
+            <form onSubmit={submit}>
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-col items-center gap-2">
                         <a
                             href="#"
                             className="flex flex-col items-center gap-2 font-medium"
                         >
-                            <div className="flex h-8 w-8 items-center justify-center rounded-md">
-                                <GalleryVerticalEnd className="size-6" />
-                            </div>
+                            <ApplicationLogoBox />
                             <span className="sr-only">{app.name}</span>
                         </a>
                         <h1 className="text-xl font-bold">
@@ -50,6 +62,15 @@ export function LoginForm({
                                 placeholder="m@example.com"
                                 required
                                 className="bg-white"
+                                value={data.email}
+                                onChange={(e) =>
+                                    setData('email', e.target.value)
+                                }
+                                tabIndex={1}
+                            />
+                            <InputError
+                                message={errors.email}
+                                className="mt-2"
                             />
                         </div>
                         <div className="grid gap-2">
@@ -67,9 +88,23 @@ export function LoginForm({
                                 type="password"
                                 required
                                 className="bg-white"
+                                value={data.password}
+                                onChange={(e) =>
+                                    setData('password', e.target.value)
+                                }
+                                tabIndex={2}
+                            />
+                            <InputError
+                                message={errors.password}
+                                className="mt-2"
                             />
                         </div>
-                        <Button type="submit" className="w-full">
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={processing}
+                            tabIndex={3}
+                        >
                             Login
                         </Button>
                     </div>
