@@ -4,6 +4,6 @@ spec:
     - name: web
       git:
         branch: main
-        repo: https://github.com/loadpartner/tms.git
+        repo_clone_url: https://github.com/loadpartner/tms.git
       run_command: ./setup.sh
       environment_slug: php
