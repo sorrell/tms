@@ -40,7 +40,7 @@ export default function Register() {
                             <span className="sr-only">{app.name}</span>
                         </a>
                         <h1 className="text-xl font-bold">
-                            Sign-up for {app.name}
+                            Sign up for {app.name}
                         </h1>
                         <div className="text-center text-sm">
                             Already have an account?{' '}
