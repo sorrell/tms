@@ -1,0 +1,9 @@
+spec:
+  name: laravel-app
+  services:
+    - name: web
+      github:
+        branch: main
+        repo_clone_url: loadpartner/tms
+      run_command: ./setup.sh
+      environment_slug: php
