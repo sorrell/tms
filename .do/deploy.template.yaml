@@ -18,4 +18,3 @@ spec:
         php artisan key:generate
         npm run dev
         heroku-php-apache2 public/
-      environment_slug: php
