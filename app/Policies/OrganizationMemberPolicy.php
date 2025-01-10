@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Organization;
+use App\Models\OrganizationMember;
+use App\Models\User;
+
+class OrganizationMemberPolicy
+{
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user, Organization $organization): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, OrganizationMember $organizationMember): bool
+    {
+        return $organizationMember->organization->users->contains($user);
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user, Organization $organization): bool
+    {
+        return $organization->owner_id === $user->id;
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, OrganizationMember $organizationMember): bool
+    {
+        return $organizationMember->organization->owner_id === $user->id;
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, OrganizationMember $organizationMember): bool
+    {
+        return $organizationMember->organization->owner_id === $user->id
+            && $organizationMember->user_id !== $organizationMember->organization->owner_id;
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, OrganizationMember $organizationMember): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, OrganizationMember $organizationMember): bool
+    {
+        return false;
+    }
+}
