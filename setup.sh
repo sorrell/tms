@@ -11,6 +11,8 @@ cp .env.example .env
 
 sail up -d
 
+touch database/database.sqlite
+
 sail artisan migrate
 
 sail npm install

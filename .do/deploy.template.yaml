@@ -8,5 +8,12 @@ spec:
       envs:
       - key: APP_KEY
         value: "base64:UdAH2B63rlotjrkSSsj3Hppy4gbfr+OeHvtSdF9r9q8="
-      run_command: heroku-php-apache2 public/
+      run_command: |
+        cp .env.example .env 
+        touch database/database.sqlite
+        php artisan migrate --seed
+        npm install
+        php artisan key:generate
+        npm run dev
+        heroku-php-apache2 public/
       environment_slug: php
