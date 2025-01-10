@@ -6,6 +6,15 @@ spec:
         branch: do-deploy-button
         repo_clone_url: https://github.com/loadpartner/tms.git
       dockerfile_path: .do/sail84/Dockerfile
+      run_command: start-container
+      http_port: 80
+      health_check:
+        http_path: /
+        initial_delay_seconds: 30
+        period_seconds: 10
+        timeout_seconds: 5
+        success_threshold: 1
+        failure_threshold: 3
       envs:
       - key: APP_KEY
         value: "base64:UdAH2B63rlotjrkSSsj3Hppy4gbfr+OeHvtSdF9r9q8="
