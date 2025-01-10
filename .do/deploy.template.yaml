@@ -1,5 +1,5 @@
 spec:
-  name: laravel-app
+  name: loadpartner-tms
   services:
     - name: web
       git:
@@ -10,6 +10,7 @@ spec:
         value: "base64:UdAH2B63rlotjrkSSsj3Hppy4gbfr+OeHvtSdF9r9q8="
       run_command: |
         cp .env.example .env 
+        composer install
         touch database/database.sqlite
         php artisan migrate --seed
         npm install
