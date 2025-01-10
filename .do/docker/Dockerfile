@@ -58,6 +58,7 @@ RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 COPY ${DOCKERFILE_PATH}/start-container /usr/local/bin/start-container
 COPY ${DOCKERFILE_PATH}/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ${DOCKERFILE_PATH}/php.ini /etc/php/8.4/fpm/conf.d/99-sail.ini
+COPY ${DOCKERFILE_PATH}/php-fpm.conf /etc/php/8.4/fpm/pool.d/www.conf
 RUN chmod +x /usr/local/bin/start-container
 
 RUN cp .env.example .env \
