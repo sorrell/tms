@@ -3,7 +3,7 @@ spec:
   services:
       name: web
       git:
-        branch: main
+        branch: do-deploy-button
         repo_clone_url: https://github.com/loadpartner/tms.git
       envs:
       - key: APP_KEY
