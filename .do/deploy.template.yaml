@@ -1,9 +1,12 @@
 spec:
   name: laravel-app
   services:
-    - name: web
+      name: web
       git:
         branch: main
         repo_clone_url: https://github.com/loadpartner/tms.git
-      run_command: ./setup.sh
+      envs:
+      - key: APP_KEY
+        value: "base64:UdAH2B63rlotjrkSSsj3Hppy4gbfr+OeHvtSdF9r9q8="
+      run_command: heroku-php-apache2 public/
       environment_slug: php
