@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestampsTz();
         });
 
-        Schema::create('organization_members', function (Blueprint $table) {
+        Schema::create('organization_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained();
             $table->foreignId('user_id')->constrained();
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->dropForeign(['current_organization_id']);
             $table->dropColumn('current_organization_id');
         });
-        Schema::dropIfExists('organization_members');
+        Schema::dropIfExists('organization_users');
         Schema::dropIfExists('organizations');
     }
 };

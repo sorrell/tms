@@ -49,8 +49,8 @@ class User extends Authenticatable
 
     public function organizations()
     {
-        return $this->belongsToMany(Organization::class)
-            ->using(OrganizationMember::class)
+        return $this->belongsToMany(Organization::class, 'organization_users')
+            ->using(OrganizationUser::class)
             ->withTimestamps();
     }
 }

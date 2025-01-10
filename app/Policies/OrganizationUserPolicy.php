@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\Organization;
-use App\Models\OrganizationMember;
+use App\Models\OrganizationUser;
 use App\Models\User;
 
-class OrganizationMemberPolicy
+class OrganizationUserPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,9 +19,9 @@ class OrganizationMemberPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, OrganizationMember $organizationMember): bool
+    public function view(User $user, OrganizationUser $organizationUser): bool
     {
-        return $organizationMember->organization->users->contains($user);
+        return $organizationUser->organization->users->contains($user);
     }
 
     /**
@@ -35,24 +35,24 @@ class OrganizationMemberPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, OrganizationMember $organizationMember): bool
+    public function update(User $user, OrganizationUser $organizationUser): bool
     {
-        return $organizationMember->organization->owner_id === $user->id;
+        return $organizationUser->organization->owner_id === $user->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, OrganizationMember $organizationMember): bool
+    public function delete(User $user, OrganizationUser $organizationUser): bool
     {
-        return $organizationMember->organization->owner_id === $user->id
-            && $organizationMember->user_id !== $organizationMember->organization->owner_id;
+        return $organizationUser->organization->owner_id === $user->id
+            && $organizationUser->user_id !== $organizationUser->organization->owner_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, OrganizationMember $organizationMember): bool
+    public function restore(User $user, OrganizationUser $organizationUser): bool
     {
         return false;
     }
@@ -60,7 +60,7 @@ class OrganizationMemberPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, OrganizationMember $organizationMember): bool
+    public function forceDelete(User $user, OrganizationUser $organizationUser): bool
     {
         return false;
     }

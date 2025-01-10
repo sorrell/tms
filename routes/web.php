@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\OrganizationMemberController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;

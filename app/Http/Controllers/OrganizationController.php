@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organization;
+use App\Models\OrganizationUser;
 use Inertia\Inertia;
 
 class OrganizationController extends Controller
@@ -35,7 +36,14 @@ class OrganizationController extends Controller
             'owner_id' => $request->user()->id,
         ]);
 
-        auth()->user()->update([
+        $user = auth()->user();
+
+        $orgMembership = OrganizationUser::create([
+            'organization_id' => $org->id,
+            'user_id' => $user->id,
+        ]);
+
+        $user->update([
             'current_organization_id' => $org->id,
         ]);
 
