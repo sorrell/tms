@@ -1,4 +1,4 @@
-import { LoginForm } from '@/Components/login-form';
+import { LoginForm } from '@/Components/LoginForm';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head } from '@inertiajs/react';
 
