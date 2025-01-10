@@ -5,12 +5,4 @@ spec:
       git:
         branch: do-deploy-button
         repo_clone_url: https://github.com/loadpartner/tms.git
-      run_command: |
-        cp .env.example .env
-        composer install
-        php artisan key:generate
-        php artisan migrate
-        npm install
-        npm run build
-        heroku-php-apache2 public/
-      environment_slug: php
+      dockerfile_path: .do/docker/Dockerfile
