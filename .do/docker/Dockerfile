@@ -61,6 +61,9 @@ COPY ${DOCKERFILE_PATH}/php.ini /etc/php/8.4/fpm/conf.d/99-sail.ini
 COPY ${DOCKERFILE_PATH}/php-fpm.conf /etc/php/8.4/fpm/pool.d/www.conf
 RUN chmod +x /usr/local/bin/start-container
 
+# chown all files to www-data
+RUN chown -R www-data:www-data /var/www/html
+
 RUN cp .env.example .env \
     && composer install \
     && touch database/database.sqlite \
@@ -69,6 +72,6 @@ RUN cp .env.example .env \
     && php artisan key:generate \
     && npm run build 
 
-EXPOSE 80/tcp
+EXPOSE 8080/tcp
 
 ENTRYPOINT ["start-container"]
