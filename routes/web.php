@@ -32,8 +32,6 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('organizations.members', OrganizationMemberController::class);
-
 });
 
 require __DIR__.'/auth.php';
