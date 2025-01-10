@@ -1,9 +1,9 @@
 spec:
   name: laravel-app
   services:
-      name: web
+    - name: web
       git:
-        branch: do-deploy-button
+        branch: main
         repo_clone_url: https://github.com/loadpartner/tms.git
       envs:
       - key: APP_KEY
