@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 
 LABEL maintainer="Taylor Otwell"
 
-ARG WWWGROUP
+ARG WWWGROUP=1000
 ARG NODE_VERSION=22
 ARG MYSQL_CLIENT="mysql-client"
 ARG POSTGRES_VERSION=17
@@ -67,13 +67,14 @@ COPY ${DO_DIR}/start-container /usr/local/bin/start-container
 COPY ${DO_DIR}/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ${DO_DIR}/php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
+COPY . .
 RUN cp .env.example .env \
     && composer install \
     && touch database/database.sqlite \
     && php artisan migrate --seed \
     && npm install \
     && php artisan key:generate \
-    && npm run dev
+    && npm run build
 
 EXPOSE 80/tcp
 
