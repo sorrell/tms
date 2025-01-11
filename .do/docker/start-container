@@ -19,4 +19,7 @@ if [ ! -z "$WWWUSER" ]; then
     usermod -u $WWWUSER www-data
 fi
 
+echo "APP_URL=${APP_URL}" >> /var/www/html/.env
+echo "ASSET_URL=${APP_URL}" >> /var/www/html/.env
+
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
