@@ -36,6 +36,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'app' => [
                 'name' => config('app.name'),
+            ],
+            'permissions' => [
+                'canEditOrganization' => fn () => $request->user()?->can('update', $request->user()?->currentOrganization),
             ]
         ];
     }

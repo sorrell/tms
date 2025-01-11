@@ -3,6 +3,7 @@ export interface User {
     name: string;
     email: string;
     email_verified_at?: string;
+    current_organization_id: number;
 }
 
 export type PageProps<
@@ -13,5 +14,8 @@ export type PageProps<
     };
     app: {
         name: string;
+    };
+    permissions: {
+        [key: string]: boolean;
     };
 };
