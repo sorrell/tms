@@ -46,7 +46,10 @@ export function NavUser({
                                     alt={user.name}
                                 />
                                 <AvatarFallback className="rounded-lg">
-                                    CN
+                                    {user.name
+                                        .split(' ')
+                                        .map((n) => n[0].toUpperCase())
+                                        .join('')}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
