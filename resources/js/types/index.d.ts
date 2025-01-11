@@ -14,4 +14,7 @@ export type PageProps<
     app: {
         name: string;
     };
+    permissions: {
+        [key: string]: boolean;
+    };
 };

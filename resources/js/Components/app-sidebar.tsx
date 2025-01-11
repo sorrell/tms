@@ -1,4 +1,4 @@
-import { Dot, GalleryVerticalEnd, Home } from 'lucide-react';
+import { Building, Dot, GalleryVerticalEnd, Home } from 'lucide-react';
 import * as React from 'react';
 
 import { NavUser } from '@/Components/nav-user';
@@ -27,6 +27,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const user = usePage().props.auth.user;
+    const permissions = usePage().props.permissions;
 
     const userData = {
         name: user.name,
@@ -49,6 +50,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         </a>
                     </SidebarMenuButton>
                 </SidebarGroup>
+                {permissions.canEditOrganization && (
+                    <SidebarGroup>
+                        <SidebarMenuButton asChild>
+                            <a href="#">
+                                <Building />
+                                <span>Organization</span>
+                                {/* {route().current('dashboard') && <Dot />} */}
+                            </a>
+                        </SidebarMenuButton>
+                    </SidebarGroup>
+                )}
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={userData} />

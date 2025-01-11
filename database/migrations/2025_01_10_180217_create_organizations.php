@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('owner_id')->constrained('users');
+            $table->foreignId('owner_id')->constrained('users');
             $table->timestampsTz();
         });
 

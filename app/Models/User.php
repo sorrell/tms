@@ -47,6 +47,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function currentOrganization()
+    {
+        return $this->belongsTo(Organization::class, 'current_organization_id');
+    }
+
     public function organizations()
     {
         return $this->belongsToMany(Organization::class, 'organization_users')
