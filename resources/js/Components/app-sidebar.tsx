@@ -53,10 +53,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {permissions.canEditOrganization && (
                     <SidebarGroup>
                         <SidebarMenuButton asChild>
-                            <a href="#">
+                            <a
+                                href={route('organizations.show', [
+                                    user.current_organization_id,
+                                ])}
+                            >
                                 <Building />
                                 <span>Organization</span>
-                                {/* {route().current('dashboard') && <Dot />} */}
+                                {route().current('organizations.show', [
+                                    user.current_organization_id,
+                                ]) && <Dot />}
                             </a>
                         </SidebarMenuButton>
                     </SidebarGroup>
