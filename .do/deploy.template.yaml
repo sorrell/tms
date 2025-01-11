@@ -6,4 +6,8 @@ spec:
         branch: do-deploy-button
         repo_clone_url: https://github.com/loadpartner/tms.git
       dockerfile_path: .do/docker/Dockerfile
+      envs:
+      - key: APP_URL
+        scope: RUN_TIME
+        value: ${APP_URL}
 
