@@ -7,9 +7,9 @@ spec:
         repo_clone_url: https://github.com/loadpartner/tms.git
       dockerfile_path: .do/docker/Dockerfile
       envs:
-      - name: APP_URL
+      - key: APP_URL
         scope: RUN_TIME
         value: ${APP_URL}
-      - name: ASSET_URL
+      - key: ASSET_URL
         scope: RUN_TIME
         value: ${APP_URL}
