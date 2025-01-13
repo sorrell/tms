@@ -37,6 +37,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     ]);
 
     Route::post('organizations/{organization}/invites/{invite:code}/resend', [OrganizationInviteController::class, 'resend'])->name('organizations.invites.resend');
+    Route::post('organizations/{organization}/invites/{invite:code}/accept', [OrganizationInviteController::class, 'accept'])->name('organizations.invites.accept');
 
 });
 

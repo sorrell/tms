@@ -8,8 +8,10 @@ use App\Http\Requests\UpdateOrganizationInviteRequest;
 use App\Mail\Organizations\UserInvite;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationInvite;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class OrganizationInviteController extends Controller
 {
@@ -34,6 +36,7 @@ class OrganizationInviteController extends Controller
      */
     public function store(StoreOrganizationInviteRequest $request, Organization $organization)
     {
+        Gate::authorize('create', [OrganizationInvite::class, $organization]);
         try {
             $newInvite = SendInvite::run($request->email, $organization);
 
@@ -51,7 +54,12 @@ class OrganizationInviteController extends Controller
      */
     public function show(Organization $organization, OrganizationInvite $invite)
     {
-        // TODO - accept invite page
+        Gate::authorize('view', $invite);
+
+        return Inertia::render('Organization/InviteAccept', [
+            'organization' => $organization,
+            'invite' => $invite,
+        ]);
     }
 
     /**
@@ -75,6 +83,8 @@ class OrganizationInviteController extends Controller
      */
     public function destroy(Organization $organization, OrganizationInvite $invite)
     {
+        Gate::authorize('delete', $invite);
+
         $invite->delete();
 
         return redirect()->route('organizations.show', $organization)
@@ -89,8 +99,22 @@ class OrganizationInviteController extends Controller
     /**
      * Accept the organization invite and add current user to the org
      */
-    public function accept(OrganizationInvite $invite)
+    public function accept(Organization $organization, OrganizationInvite $invite)
     {
-        // TODO - accept invite
+
+        Gate::authorize('view', $invite);
+
+        $invite->update([
+            'accepted_by_id' => auth()->id(),
+            'accepted_at' => now(),
+        ]);
+
+        $user = auth()->user();
+        $user->organizations()->attach($organization->id);
+        $user->current_organization_id = $organization->id;
+        $user->save();
+
+        return redirect()->route('dashboard', $organization)
+            ->with('success', 'You have joined ' . $organization->name);
     }
 }
