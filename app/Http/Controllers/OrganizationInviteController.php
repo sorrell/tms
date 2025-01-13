@@ -42,7 +42,7 @@ class OrganizationInviteController extends Controller
 
             return redirect()->route('organizations.show', $organization)
                 ->with('success', 'Invite sent to ' . $newInvite->email);
-        } catch (\Exception $e) {
+        } catch (\Symfony\Component\HttpFoundation\Exception\BadRequestException $e) {
             throw ValidationException::withMessages([
                 'email' => $e->getMessage(),
             ]);
@@ -59,6 +59,7 @@ class OrganizationInviteController extends Controller
         return Inertia::render('Organization/InviteAccept', [
             'organization' => $organization,
             'invite' => $invite,
+            'showCreateOption' => auth()->user()->organizations()->count() < 1,
         ]);
     }
 

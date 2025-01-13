@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('organizations', OrganizationController::class);
+
+    Route::post('organizations/{organization}/invites/{invite:code}/accept', [OrganizationInviteController::class, 'accept'])->name('organizations.invites.accept');
+    Route::resource('organizations.invites', OrganizationInviteController::class)->scoped([
+        'invite' => 'code',
+    ])->only(['show']);
 });
 
 
@@ -33,13 +38,12 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::resource('organizations.invites', OrganizationInviteController::class)->scoped([
         'invite' => 'code',
-    ]);
+    ])->except(['show']);
 
     Route::delete('organizations/{organization}/users/{user}', [OrganizationController::class, 'removeUser'])->name('organizations.users.destroy');
     Route::post('organizations/{organization}/users/{user}/transfer', [OrganizationController::class, 'transferOwnership'])->name('organizations.users.transfer');
 
     Route::post('organizations/{organization}/invites/{invite:code}/resend', [OrganizationInviteController::class, 'resend'])->name('organizations.invites.resend');
-    Route::post('organizations/{organization}/invites/{invite:code}/accept', [OrganizationInviteController::class, 'accept'])->name('organizations.invites.accept');
 });
 
 require __DIR__ . '/auth.php';

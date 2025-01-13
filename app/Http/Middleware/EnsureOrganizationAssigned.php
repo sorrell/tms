@@ -22,10 +22,19 @@ class EnsureOrganizationAssigned
             if ($firstOrg) {
                 $request->user()->update(['current_organization_id' => $firstOrg->id]);
             } else {
-                // If no they don't have an org, make them create one
-                return redirect()->route('organizations.create');
+                // if they don't have an org, check for any pending invites
+                $invite = $request->user()->organizationInvites()->first();
+                if ($invite) {
+                    return redirect()->route('organizations.invites.show',
+                        [
+                            'organization' => $invite->organization_id,
+                            'invite' => $invite->code
+                        ]
+                    );
+                } else {
+                    return redirect()->route('organizations.create');
+                }
             }
-
         }
         return $next($request);
     }
