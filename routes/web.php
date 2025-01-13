@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,10 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('dashboard', function() {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::resource('organizations.invites', OrganizationInviteController::class)->scoped([
+        'invite' => 'code',
+    ]);
 
 });
 

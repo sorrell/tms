@@ -1,32 +1,19 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Organization } from '@/types/organization';
 import { Head } from '@inertiajs/react';
+import InvitesTable from './Partials/InvitesTable';
+import UsersTable from './Partials/UsersTable';
 
-export default function Show({ organization }) {
+export default function Show({ organization }: { organization: Organization }) {
     return (
         <AuthenticatedLayout>
             <Head title="Organization" />
 
             <h1>Organization {organization.name}</h1>
 
-            <div>
-                <h2>Members</h2>
+            <UsersTable users={organization.users} />
 
-                <ul>
-                    {organization.users.map((user) => (
-                        <li
-                            key={user.id}
-                            style={
-                                user.id === organization.owner_id
-                                    ? { fontWeight: 'bold', color: 'red' }
-                                    : {}
-                            }
-                        >
-                            {user.name}{' '}
-                            {user.id === organization.owner_id && '(Owner)'}
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <InvitesTable invites={[]} />
         </AuthenticatedLayout>
     );
 }
