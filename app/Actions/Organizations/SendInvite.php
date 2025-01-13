@@ -18,7 +18,7 @@ class SendInvite
         $code = strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXY23456789'), 0, 6));
 
         $maxTries = 5;
-        while(OrganizationInvite::where('code', $code)->open()->exists() && $maxTries > 0) {
+        while(OrganizationInvite::where('code', $code)->exists() && $maxTries > 0) {
             $code = strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXY23456789'), 0, 6));
             $maxTries--;
         }
@@ -29,7 +29,7 @@ class SendInvite
 
         $email = strtolower($email);
 
-        if(OrganizationInvite::where('email', $email)->open()->exists()) {
+        if(OrganizationInvite::where('email', $email)->exists()) {
             throw new \Symfony\Component\HttpFoundation\Exception\BadRequestException('An open invite already exists for this email address.');
         }
 

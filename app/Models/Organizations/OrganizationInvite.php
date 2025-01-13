@@ -25,9 +25,13 @@ class OrganizationInvite extends Model
         'expire_at' => 'datetime',
     ];
 
-    public function scopeOpen($query)
+    protected static function boot()
     {
-        return $query->whereNull('accepted_at')->where('expire_at', '>', now());
+        parent::boot();
+
+        static::addGlobalScope('open', function ($query) {
+            $query->whereNull('accepted_at')->where('expire_at', '>', now());
+        });
     }
 
     public function inviteUrl()
