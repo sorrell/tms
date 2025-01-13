@@ -23,12 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('organizations', OrganizationController::class);
-
 });
 
 
-Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function() {
-    Route::get('dashboard', function() {
+Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function () {
+    Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
@@ -36,9 +35,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
         'invite' => 'code',
     ]);
 
+    Route::delete('organizations/{organization}/users/{user}', [OrganizationController::class, 'removeUser'])->name('organizations.users.destroy');
+    Route::post('organizations/{organization}/users/{user}/transfer', [OrganizationController::class, 'transferOwnership'])->name('organizations.users.transfer');
+
     Route::post('organizations/{organization}/invites/{invite:code}/resend', [OrganizationInviteController::class, 'resend'])->name('organizations.invites.resend');
     Route::post('organizations/{organization}/invites/{invite:code}/accept', [OrganizationInviteController::class, 'accept'])->name('organizations.invites.accept');
-
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

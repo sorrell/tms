@@ -4,6 +4,7 @@ export interface Organization {
     id: number;
     name: string;
     users: User[];
+    owner_id: number;
 }
 
 export interface OrganizationInvite {

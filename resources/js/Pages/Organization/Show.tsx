@@ -17,7 +17,7 @@ export default function Show({
 
             <h1>Organization {organization.name}</h1>
 
-            <UsersTable users={organization.users} />
+            <UsersTable users={organization.users} organization={organization} />
 
             <InvitesTable invites={invites} />
         </AuthenticatedLayout>
