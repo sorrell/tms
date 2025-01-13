@@ -15,11 +15,22 @@ export default function Show({
         <AuthenticatedLayout>
             <Head title="Organization" />
 
-            <h1>Organization {organization.name}</h1>
+            <h1 className="mx-4 mb-4 text-2xl">
+                Organization {organization.name}
+            </h1>
 
-            <UsersTable users={organization.users} organization={organization} />
+            <div className="mx-4 mb-4">
+                <h1 className="mb-4 text-xl">Users</h1>
+                <UsersTable
+                    users={organization.users}
+                    organization={organization}
+                />
+            </div>
 
-            <InvitesTable invites={invites} />
+            <div className="mx-4 mb-4">
+                <h1 className="mb-4 text-xl">Pending Invites</h1>
+                <InvitesTable invites={invites} />
+            </div>
         </AuthenticatedLayout>
     );
 }

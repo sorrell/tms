@@ -19,6 +19,7 @@ import { toast } from '@/hooks/use-toast';
 import { User } from '@/types';
 import { Organization } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
+import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import { Crown, MoreHorizontal } from 'lucide-react';
 
 export default function UsersTable({
@@ -95,6 +96,8 @@ export default function UsersTable({
                                     >
                                         Remove User
                                     </DropdownMenuItem>
+                                    <DropdownMenuLabel></DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
                                     <DropdownMenuItem
                                         disabled={
                                             user.id === organization.owner_id
