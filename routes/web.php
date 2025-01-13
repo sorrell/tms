@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -23,14 +24,26 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('organizations', OrganizationController::class);
 
+    Route::post('organizations/{organization}/invites/{invite:code}/accept', [OrganizationInviteController::class, 'accept'])->name('organizations.invites.accept');
+    Route::resource('organizations.invites', OrganizationInviteController::class)->scoped([
+        'invite' => 'code',
+    ])->only(['show']);
 });
 
 
-Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function() {
-    Route::get('dashboard', function() {
+Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function () {
+    Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::resource('organizations.invites', OrganizationInviteController::class)->scoped([
+        'invite' => 'code',
+    ])->except(['show']);
+
+    Route::delete('organizations/{organization}/users/{user}', [OrganizationController::class, 'removeUser'])->name('organizations.users.destroy');
+    Route::post('organizations/{organization}/users/{user}/transfer', [OrganizationController::class, 'transferOwnership'])->name('organizations.users.transfer');
+
+    Route::post('organizations/{organization}/invites/{invite:code}/resend', [OrganizationInviteController::class, 'resend'])->name('organizations.invites.resend');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

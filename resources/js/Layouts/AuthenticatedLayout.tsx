@@ -4,6 +4,7 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from '@/Components/ui/sidebar';
+import { Toaster } from '@/Components/ui/toaster';
 import { PropsWithChildren } from 'react';
 
 export default function Authenticated({ children }: PropsWithChildren) {
@@ -36,6 +37,7 @@ export default function Authenticated({ children }: PropsWithChildren) {
                     </div>
                 </header>
                 <main>{children}</main>
+                <Toaster />
             </SidebarInset>
         </SidebarProvider>
     );

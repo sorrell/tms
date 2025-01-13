@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Organizations;
 
-use App\Models\Organization;
-use App\Models\OrganizationUser;
+use App\Models\Organizations\Organization;
+use App\Models\Organizations\OrganizationUser;
 use App\Models\User;
 
 class OrganizationUserPolicy
