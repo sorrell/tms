@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
-use App\Models\Organization;
-use App\Models\OrganizationUser;
+use App\Models\Organizations\Organization;
+use App\Models\Organizations\OrganizationUser;
 use Inertia\Inertia;
 
 class OrganizationController extends Controller

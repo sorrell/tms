@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Organizations;
 
-use App\Models\Organization;
-use App\Models\OrganizationInvite;
+use App\Models\Organizations\Organization;
+use App\Models\Organizations\OrganizationInvite;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 

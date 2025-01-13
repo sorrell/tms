@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Organizations;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 

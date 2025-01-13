@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Organization;
+use App\Models\Organizations\Organization;
 
 function current_organization_id() : int
 {

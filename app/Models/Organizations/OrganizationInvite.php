@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Organizations;
 
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;

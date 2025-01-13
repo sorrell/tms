@@ -7,7 +7,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/Components/ui/dialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
@@ -21,11 +20,16 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import { useToast } from '@/hooks/use-toast';
 import { useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 export default function InvitesTable({ invites }: { invites: any[] }) {
     const organizationId = usePage().props.auth.user.current_organization_id;
+
+    const { toast } = useToast();
+
+    const [open, setOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
@@ -38,6 +42,19 @@ export default function InvitesTable({ invites }: { invites: any[] }) {
             route('organizations.invites.store', {
                 organization: organizationId,
             }),
+            {
+                onFinish: () => reset('email'),
+                onSuccess: () => {
+                    setOpen(false);
+                    toast({
+                        title: 'Invite sent to ' + data.email,
+                        description: 'Expires in 7 days.',
+                    });
+                },
+                onError: () => {
+                    //setError('email', 'Invalid email address.');
+                },
+            },
         );
     };
 
@@ -68,8 +85,10 @@ export default function InvitesTable({ invites }: { invites: any[] }) {
             <TableFooter>
                 <TableRow>
                     <TableCell colSpan={4} className="text-right">
-                        <Dialog>
-                            <DialogTrigger>New Invite</DialogTrigger>
+                        <Button onClick={() => setOpen(true)}>
+                            New Invite
+                        </Button>
+                        <Dialog open={open} onOpenChange={setOpen}>
                             <DialogContent>
                                 <form onSubmit={submit}>
                                     <DialogHeader>
@@ -78,25 +97,27 @@ export default function InvitesTable({ invites }: { invites: any[] }) {
                                             organization
                                         </DialogTitle>
                                         <DialogDescription>
-                                            <Label htmlFor="invite-email">
-                                                Email
-                                            </Label>
-                                            <Input
-                                                id="invite-email"
-                                                type="email"
-                                                value={data.email}
-                                                placeholder="m@example.com"
-                                                required
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'email',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            />
-                                            <InputError
-                                                message={errors.email}
-                                            />
+                                            <div className="my-4">
+                                                <Label htmlFor="invite-email">
+                                                    Email
+                                                </Label>
+                                                <Input
+                                                    id="invite-email"
+                                                    type="email"
+                                                    value={data.email}
+                                                    placeholder="m@example.com"
+                                                    required
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            'email',
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                />
+                                                <InputError
+                                                    message={errors.email}
+                                                />
+                                            </div>
                                         </DialogDescription>
                                     </DialogHeader>
                                     <DialogFooter>

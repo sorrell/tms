@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Organizations\SendInvite;
 use App\Http\Requests\StoreOrganizationInviteRequest;
 use App\Http\Requests\UpdateOrganizationInviteRequest;
-use App\Models\Organization;
-use App\Models\OrganizationInvite;
+use App\Models\Organizations\Organization;
+use App\Models\Organizations\OrganizationInvite;
+use Illuminate\Validation\ValidationException;
 
 class OrganizationInviteController extends Controller
 {
@@ -30,10 +32,16 @@ class OrganizationInviteController extends Controller
      */
     public function store(StoreOrganizationInviteRequest $request, Organization $organization)
     {
-        $invite = OrganizationInvite::create([
-            'email' => $request->email,
-            'organization_id' => $organization->id
-        ]);
+        try {
+            $newInvite = SendInvite::run($request->email, $organization);
+
+            return redirect()->route('organizations.show', $organization)
+                ->with('success', 'Invite sent to ' . $newInvite->email);
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'email' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
