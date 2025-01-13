@@ -2,8 +2,10 @@
 
 namespace App\Actions\Organizations;
 
+use App\Mail\Organizations\UserInvite;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationInvite;
+use Illuminate\Support\Facades\Mail;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class SendInvite
@@ -38,9 +40,7 @@ class SendInvite
             'code' => $code,
         ]);
 
-
-        // TODO - send the invite email
-
+        Mail::to($email)->send(new UserInvite($invite));
 
         return $invite;
     }

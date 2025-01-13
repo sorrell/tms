@@ -13,7 +13,7 @@ class OrganizationInvite extends Model
 
     protected $fillable = [
         'organization_id',
-        'used_by_id',
+        'accepted_by_id',
         'email',
         'accepted_at',
         'expire_at',
@@ -28,6 +28,11 @@ class OrganizationInvite extends Model
     public function scopeOpen($query)
     {
         return $query->whereNull('accepted_at')->where('expire_at', '>', now());
+    }
+
+    public function inviteUrl()
+    {
+        return route('organizations.invites.show', [$this->organization, $this]);
     }
 
 

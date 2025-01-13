@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('code');
             $table->timestampTz('accepted_at')->nullable();
             $table->timestampTz('expire_at');
-            $table->foreignId('used_by_id')->nullable()->constrained('users');
+            $table->foreignId('accepted_by_id')->nullable()->constrained('users');
             $table->softDeletesTz();
 
             $table->unique(['code']);

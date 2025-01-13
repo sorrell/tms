@@ -1,10 +1,16 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Organization } from '@/types/organization';
+import { Organization, OrganizationInvite } from '@/types/organization';
 import { Head } from '@inertiajs/react';
 import InvitesTable from './Partials/InvitesTable';
 import UsersTable from './Partials/UsersTable';
 
-export default function Show({ organization }: { organization: Organization }) {
+export default function Show({
+    organization,
+    invites,
+}: {
+    organization: Organization;
+    invites: OrganizationInvite[];
+}) {
     return (
         <AuthenticatedLayout>
             <Head title="Organization" />
@@ -13,7 +19,7 @@ export default function Show({ organization }: { organization: Organization }) {
 
             <UsersTable users={organization.users} />
 
-            <InvitesTable invites={[]} />
+            <InvitesTable invites={invites} />
         </AuthenticatedLayout>
     );
 }

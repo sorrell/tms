@@ -8,6 +8,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/Components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import {
@@ -21,17 +28,31 @@ import {
     TableRow,
 } from '@/Components/ui/table';
 import { useToast } from '@/hooks/use-toast';
+import { OrganizationInvite } from '@/types/organization';
 import { useForm, usePage } from '@inertiajs/react';
+import { MoreHorizontal } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 
-export default function InvitesTable({ invites }: { invites: any[] }) {
+export default function InvitesTable({
+    invites,
+}: {
+    invites: OrganizationInvite[];
+}) {
     const organizationId = usePage().props.auth.user.current_organization_id;
 
     const { toast } = useToast();
 
     const [open, setOpen] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        reset,
+        delete: destroy,
+    } = useForm({
         email: '',
     });
 
@@ -73,11 +94,80 @@ export default function InvitesTable({ invites }: { invites: any[] }) {
                 {invites.map((invite) => (
                     <TableRow key={invite.id}>
                         <TableCell>{invite.email}</TableCell>
-                        <TableCell>{invite.created_at}</TableCell>
-                        <TableCell>{invite.expires_at}</TableCell>
+                        <TableCell>
+                            {new Date(invite.created_at).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                            {new Date(invite.expire_at).toLocaleString()}
+                        </TableCell>
                         <TableCell className="text-right">
-                            <button>Resend</button>
-                            <button>Cancel</button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className="h-8 w-8 p-0"
+                                    >
+                                        <span className="sr-only">
+                                            Open menu
+                                        </span>
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>
+                                        Actions
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            post(
+                                                route(
+                                                    'organizations.invites.resend',
+                                                    {
+                                                        organization:
+                                                            invite.organization_id,
+                                                        invite: invite.code,
+                                                    },
+                                                ),
+                                                {
+                                                    onSuccess: () => {
+                                                        toast({
+                                                            description:
+                                                                'Invite resent to ' +
+                                                                invite.email,
+                                                        });
+                                                    },
+                                                },
+                                            )
+                                        }
+                                    >
+                                        Resend
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            destroy(
+                                                route(
+                                                    'organizations.invites.destroy',
+                                                    {
+                                                        organization:
+                                                            invite.organization_id,
+                                                        invite: invite.code,
+                                                    },
+                                                ),
+                                                {
+                                                    onSuccess: () => {
+                                                        toast({
+                                                            description:
+                                                                'Invite canceled',
+                                                        });
+                                                    },
+                                                },
+                                            )
+                                        }
+                                    >
+                                        Cancel
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </TableCell>
                     </TableRow>
                 ))}

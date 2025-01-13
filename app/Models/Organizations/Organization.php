@@ -27,4 +27,9 @@ class Organization extends Model
             ->using(OrganizationUser::class)
             ->withTimestamps();
     }
+
+    public function invites()
+    {
+        return $this->hasMany(OrganizationInvite::class);
+    }
 }

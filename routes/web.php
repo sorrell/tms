@@ -36,6 +36,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
         'invite' => 'code',
     ]);
 
+    Route::post('organizations/{organization}/invites/{invite:code}/resend', [OrganizationInviteController::class, 'resend'])->name('organizations.invites.resend');
+
 });
 
 require __DIR__.'/auth.php';

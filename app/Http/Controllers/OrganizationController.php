@@ -57,6 +57,7 @@ class OrganizationController extends Controller
     {
         return Inertia::render('Organization/Show', [
             'organization' => $organization->load('owner', 'users'),
+            'invites' => $organization->invites,
         ]);
     }
 
