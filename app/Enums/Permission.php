@@ -6,7 +6,7 @@ enum Permission: string
 {
     // case NAMEINAPP = 'name-in-database';
     case ORGANIZATION_MANAGE_USERS = 'organization-manage-users';
-    case ORGANIZATION_ADMIN = 'organization-edit';
+    case ORGANIZATION_ADMIN = 'organization-admin';
 
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly

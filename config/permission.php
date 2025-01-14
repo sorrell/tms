@@ -1,7 +1,7 @@
 <?php
 
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Models\Permissions\Permission;
+use App\Models\Permissions\Role;
 
 return [
 

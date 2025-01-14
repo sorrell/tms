@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,22 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::post('organizations/{organization}/users/{user}/transfer', [OrganizationController::class, 'transferOwnership'])->name('organizations.users.transfer');
 
     Route::post('organizations/{organization}/invites/{invite:code}/resend', [OrganizationInviteController::class, 'resend'])->name('organizations.invites.resend');
+
+
+    Route::prefix('organizations/{organization}/permissions')->group(function () {
+        Route::post('assign-role-permission', [PermissionController::class, 'assignRolePermission'])->name('organizations.permissions.assign-role-permission');
+        Route::post('remove-role-permission', [PermissionController::class, 'removeRolePermission'])->name('organizations.permissions.remove-role-permission');
+
+        Route::post('assign-user-permission', [PermissionController::class, 'assignUserPermission'])->name('organizations.permissions.assign-user-permission');
+        Route::post('remove-user-permission', [PermissionController::class, 'removeUserPermission'])->name('organizations.permissions.remove-user-permission');
+
+        Route::post('assign-user-role', [PermissionController::class, 'assignUserRole'])->name('organizations.permissions.assign-user-role');
+        Route::post('remove-user-role', [PermissionController::class, 'removeUserRole'])->name('organizations.permissions.remove-user-role');
+
+        Route::post('role', [PermissionController::class, 'storeRole'])->name('organizations.permissions.store-role');
+        Route::delete('role/{role}', [PermissionController::class, 'destroyRole'])->name('organizations.permissions.destroy-role');
+        Route::patch('role/{role}', [PermissionController::class, 'updateRole'])->name('organizations.permissions.update-role');
+    });
 });
 
 require __DIR__ . '/auth.php';
