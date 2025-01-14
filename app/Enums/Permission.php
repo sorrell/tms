@@ -6,13 +6,15 @@ enum Permission: string
 {
     // case NAMEINAPP = 'name-in-database';
     case ORGANIZATION_MANAGE_USERS = 'organization-manage-users';
-    case ORGANIZATION_MANAGE_PERMISSIONS = 'organization-manage-permissions';
+    case ORGANIZATION_ADMIN = 'organization-edit';
 
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
     public function label(): string
     {
         return match ($this) {
+            self::ORGANIZATION_MANAGE_USERS => 'Manage Organization Users & Permissions',
+            self::ORGANIZATION_ADMIN => 'View & Edit Organization Details',
             default => 'Label Unknown',
         };
     }

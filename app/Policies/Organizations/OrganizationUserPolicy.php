@@ -2,6 +2,7 @@
 
 namespace App\Policies\Organizations;
 
+use App\Enums\Permission;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationUser;
 use App\Models\User;
@@ -29,7 +30,7 @@ class OrganizationUserPolicy
      */
     public function create(User $user, Organization $organization): bool
     {
-        return $organization->owner_id === $user->id;
+        return $organization->owner_id === $user->id || $user->can(Permission::ORGANIZATION_MANAGE_USERS);
     }
 
     /**
@@ -37,7 +38,7 @@ class OrganizationUserPolicy
      */
     public function update(User $user, OrganizationUser $organizationUser): bool
     {
-        return $organizationUser->organization->owner_id === $user->id;
+        return $organizationUser->organization->owner_id === $user->id || $user->can(Permission::ORGANIZATION_MANAGE_USERS);
     }
 
     /**
@@ -45,8 +46,10 @@ class OrganizationUserPolicy
      */
     public function delete(User $user, OrganizationUser $organizationUser): bool
     {
-        return $organizationUser->organization->owner_id === $user->id
-            && $organizationUser->user_id !== $organizationUser->organization->owner_id;
+        if ($organizationUser->user_id === $organizationUser->organization->owner_id) {
+            return false;
+        }
+        return $organizationUser->organization->owner_id === $user->id || $user->can(Permission::ORGANIZATION_MANAGE_USERS);
     }
 
     /**

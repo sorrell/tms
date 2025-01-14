@@ -2,6 +2,7 @@
 
 namespace App\Policies\Organizations;
 
+use App\Enums\Permission;
 use App\Models\Organizations\Organization;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -21,7 +22,7 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization): bool
     {
-        return $user->id === $organization->owner_id;
+        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_ADMIN);
     }
 
     /**
@@ -37,7 +38,7 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization): bool
     {
-        return $user->id === $organization->owner_id;
+        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_ADMIN);
     }
 
     /**
@@ -45,7 +46,7 @@ class OrganizationPolicy
      */
     public function delete(User $user, Organization $organization): bool
     {
-        return $user->id === $organization->owner_id;
+        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_ADMIN);
     }
 
     /**
