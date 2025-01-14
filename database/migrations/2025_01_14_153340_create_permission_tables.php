@@ -118,29 +118,6 @@ return new class extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
-
-
-        // CUSTOM - Adding organization_id to the related tables
-        // this is not part of the default package and is instead part of our TMS implementation
-        // to handle multi-tenancy.
-        // This will let us use teams in the future in addition if we want to :)
-        // Permissions is the only table that we dont need organization_id on
-        // since it is global
-        Schema::table($tableNames['roles'], function (Blueprint $table) {
-            $table->foreignId('organization_id')->constrained();
-        });
-
-        Schema::table($tableNames['model_has_roles'], function (Blueprint $table) {
-            $table->foreignId('organization_id')->constrained();
-        });
-
-        Schema::table($tableNames['model_has_permissions'], function (Blueprint $table) {
-            $table->foreignId('organization_id')->constrained();
-        });
-
-        Schema::table($tableNames['role_has_permissions'], function (Blueprint $table) {
-            $table->foreignId('organization_id')->constrained();
-        });
     }
 
     /**

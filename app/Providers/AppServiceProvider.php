@@ -23,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::prefetch(concurrency: 3);
 
+        if(!empty(auth()->user())){
+            // session value set on login
+            setPermissionsTeamId(current_organization_id());
+        }
+
         Gate::guessPolicyNamesUsing(function (string $modelClass) {
             return str_replace('Models', 'Policies', $modelClass) . 'Policy';
         });
