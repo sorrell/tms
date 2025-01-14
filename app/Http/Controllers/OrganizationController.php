@@ -6,6 +6,7 @@ use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationUser;
+use App\Models\Permissions\Permission;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -60,6 +61,8 @@ class OrganizationController extends Controller
         return Inertia::render('Organization/Show', [
             'organization' => $organization->load('owner', 'users'),
             'invites' => $organization->invites,
+            'roles' => $organization->roles->load('permissions', 'users'),
+            'permissions' => Permission::all(),
         ]);
     }
 

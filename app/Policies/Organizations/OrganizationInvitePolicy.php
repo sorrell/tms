@@ -2,6 +2,7 @@
 
 namespace App\Policies\Organizations;
 
+use App\Enums\Permission;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationInvite;
 use App\Models\User;
@@ -30,7 +31,7 @@ class OrganizationInvitePolicy
      */
     public function create(User $user, Organization $organization): bool
     {
-        return $organization->owner_id === $user->id;
+        return $organization->owner_id === $user->id || $user->can(Permission::ORGANIZATION_MANAGE_USERS);
     }
 
     /**
@@ -38,7 +39,9 @@ class OrganizationInvitePolicy
      */
     public function update(User $user, OrganizationInvite $organizationInvite): bool
     {
-        return strtolower($user->email) === strtolower($organizationInvite->email) || $organizationInvite->organization->owner_id === $user->id;
+        return strtolower($user->email) === strtolower($organizationInvite->email)
+            || $organizationInvite->organization->owner_id === $user->id
+            || $user->can(Permission::ORGANIZATION_MANAGE_USERS);;
     }
 
     /**
@@ -46,7 +49,7 @@ class OrganizationInvitePolicy
      */
     public function delete(User $user, OrganizationInvite $organizationInvite): bool
     {
-        return $organizationInvite->organization->owner_id === $user->id;
+        return $organizationInvite->organization->owner_id === $user->id || $user->can(Permission::ORGANIZATION_MANAGE_USERS);
     }
 
     /**

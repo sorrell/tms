@@ -5,6 +5,7 @@ namespace App\Models\Organizations;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Organization extends Model
 {
@@ -31,5 +32,12 @@ class Organization extends Model
     public function invites()
     {
         return $this->hasMany(OrganizationInvite::class);
+    }
+
+    public function roles() : HasMany
+    {
+        return $this->hasMany(
+                config('permission.models.role')
+        );
     }
 }

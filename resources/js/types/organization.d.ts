@@ -18,3 +18,19 @@ export interface OrganizationInvite {
     accepted_by_id: number;
     code: string;
 }
+
+export interface Role {
+    id: number;
+    name: string;
+    organization_id: number;
+    permissions: Permission[];
+    users: User[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Permission {
+    id: number;
+    name: string;
+    label: string;
+}
