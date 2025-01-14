@@ -48,18 +48,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
 
     Route::prefix('organizations/{organization}/permissions')->group(function () {
-        Route::post('assign-role-permission', [PermissionController::class, 'assignRolePermission'])->name('organizations.permissions.assign-role-permission');
-        Route::post('remove-role-permission', [PermissionController::class, 'removeRolePermission'])->name('organizations.permissions.remove-role-permission');
-
-        Route::post('assign-user-permission', [PermissionController::class, 'assignUserPermission'])->name('organizations.permissions.assign-user-permission');
-        Route::post('remove-user-permission', [PermissionController::class, 'removeUserPermission'])->name('organizations.permissions.remove-user-permission');
-
-        Route::post('assign-user-role', [PermissionController::class, 'assignUserRole'])->name('organizations.permissions.assign-user-role');
-        Route::post('remove-user-role', [PermissionController::class, 'removeUserRole'])->name('organizations.permissions.remove-user-role');
-
-        Route::post('role', [PermissionController::class, 'storeRole'])->name('organizations.permissions.store-role');
-        Route::delete('role/{role}', [PermissionController::class, 'destroyRole'])->name('organizations.permissions.destroy-role');
-        Route::patch('role/{role}', [PermissionController::class, 'updateRole'])->name('organizations.permissions.update-role');
+        Route::post('role', [PermissionController::class, 'storeRole'])->name('organizations.permissions.role.store');
+        Route::delete('role/{role}', [PermissionController::class, 'destroyRole'])->name('organizations.permissions.role.destroy');
+        Route::patch('role/{role}', [PermissionController::class, 'updateRole'])->name('organizations.permissions.role.update');
     });
 });
 

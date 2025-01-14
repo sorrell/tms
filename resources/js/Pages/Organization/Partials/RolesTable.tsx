@@ -25,13 +25,14 @@ import InputError from '@/Components/InputError';
 import {
     Dialog,
     DialogContent,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/Components/ui/dialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { useEffect, useState } from 'react';
+import { toast, useToast } from '@/hooks/use-toast';
+import { FormEventHandler, useEffect, useState } from 'react';
 
 export default function RolesTable({
     roles,
@@ -120,7 +121,7 @@ export default function RolesTable({
                                             onClick={() => {
                                                 destroy(
                                                     route(
-                                                        'organizations.permissions.destroy-role',
+                                                        'organizations.permissions.role.destroy',
                                                         {
                                                             organization:
                                                                 organization.id,
@@ -171,7 +172,7 @@ function RoleForm({
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     permissions: Permission[];
 }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, patch, processing, errors, reset } = useForm({
         name: role?.name || '',
         permissions: role?.permissions.map((permission) => permission.id) || [],
         users: role?.users.map((user) => user.id) || [],
@@ -188,17 +189,55 @@ function RoleForm({
         })(setData);
     }, [role]);
 
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        if (role) {
+            patch(
+                route('organizations.permissions.role.update', {
+                    organization: organization.id,
+                    role: role.id,
+                }),
+                {
+                    onSuccess: () => {
+                        reset();
+                        setOpen(false);
+                        toast({
+                            description: 'Role updated!',
+                        });
+                    },
+                },
+            );
+        } else {
+            post(
+                route('organizations.permissions.role.store', {
+                    organization: organization.id,
+                }),
+                {
+                    onSuccess: () => {
+                        reset();
+                        setOpen(false);
+                        toast({
+                            description: 'Role created!',
+                        });
+                    },
+                },
+            );
+        }
+    };
+
     return (
-        <form>
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent>
+                <form onSubmit={submit}>
                     <DialogHeader>
-                        <DialogTitle>
+                        <DialogTitle className="mb-4">
                             {role ? 'Edit' : 'Create'} Role
                         </DialogTitle>
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
+                                <InputError message={errors.name} />
                                 <Input
                                     id="name"
                                     type="text"
@@ -217,6 +256,7 @@ function RoleForm({
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="permissions">Permissions</Label>
+                                <InputError message={errors.permissions} />
                                 <div className="grid gap-2">
                                     {permissions.map((permission) => (
                                         <div
@@ -259,6 +299,7 @@ function RoleForm({
 
                             <div className="grid gap-2">
                                 <Label htmlFor="users">Users</Label>
+                                <InputError message={errors.users} />
                                 <div className="grid gap-2">
                                     {organization.users
                                         .sort((a, b) =>
@@ -281,8 +322,8 @@ function RoleForm({
                                                 className="flex space-x-2"
                                             >
                                                 <Checkbox
-                                                    name={`permissions[${user.id}]`}
-                                                    id={`permissions[${user.id}]`}
+                                                    name={`users[${user.id}]`}
+                                                    id={`users[${user.id}]`}
                                                     checked={data?.users?.includes(
                                                         user.id,
                                                     )}
@@ -315,8 +356,13 @@ function RoleForm({
                             </div>
                         </div>
                     </DialogHeader>
-                </DialogContent>
-            </Dialog>
-        </form>
+                    <DialogFooter>
+                        <Button type="submit" disabled={processing}>
+                            {role ? 'Update' : 'Create'}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     );
 }
