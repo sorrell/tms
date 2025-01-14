@@ -1,6 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Organization, OrganizationInvite, Role } from '@/types/organization';
+import {
+    Organization,
+    OrganizationInvite,
+    Permission,
+    Role,
+} from '@/types/organization';
 import { Head } from '@inertiajs/react';
 import InvitesTable from './Partials/InvitesTable';
 import RolesTable from './Partials/RolesTable';
@@ -10,10 +15,12 @@ export default function Show({
     organization,
     invites,
     roles,
+    permissions,
 }: {
     organization: Organization;
     invites: OrganizationInvite[];
     roles: Role[];
+    permissions: Permission[];
 }) {
     return (
         <AuthenticatedLayout>
@@ -43,7 +50,11 @@ export default function Show({
                 </TabsContent>
                 <TabsContent value="roles">
                     <div className="mx-4 mb-4">
-                        <RolesTable roles={roles} organization={organization} />
+                        <RolesTable
+                            roles={roles}
+                            organization={organization}
+                            permissions={permissions}
+                        />
                     </div>
                 </TabsContent>
             </Tabs>
