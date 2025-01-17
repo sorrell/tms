@@ -46,6 +46,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::post('organizations/{organization}/invites/{invite:code}/resend', [OrganizationInviteController::class, 'resend'])->name('organizations.invites.resend');
 
+    Route::post('organizations/{organization}/switch', [OrganizationController::class, 'switchOrganization'])->name('organizations.switch');
+
 
     Route::prefix('organizations/{organization}/permissions')->group(function () {
         Route::post('role', [PermissionController::class, 'storeRole'])->name('organizations.permissions.role.store');

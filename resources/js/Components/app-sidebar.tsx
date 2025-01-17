@@ -14,20 +14,22 @@ import {
 } from '@/Components/ui/sidebar';
 import { usePage } from '@inertiajs/react';
 
-// This is sample data.
-const data = {
-    teams: [
-        {
-            name: 'Default Team',
-            logo: GalleryVerticalEnd,
-            plan: 'Org name',
-        },
-    ],
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const user = usePage().props.auth.user;
     const permissions = usePage().props.auth.permissions;
+
+    // Placeholder for future "user teams"
+    const data = {
+        teams: [
+            {
+                name: 'Default Team',
+                logo: GalleryVerticalEnd,
+                plan: user.organizations.find(
+                    (org) => org.id === user.current_organization_id,
+                )?.name,
+            },
+        ],
+    };
 
     const userData = {
         name: user.name,

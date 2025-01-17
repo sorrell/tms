@@ -58,8 +58,8 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
-
         Gate::authorize('view', $organization);
+
         return Inertia::render('Organization/Show', [
             'organization' => $organization->load('owner', 'users'),
             'invites' => $organization->invites,
@@ -133,5 +133,15 @@ class OrganizationController extends Controller
 
         return redirect()->route('organizations.show', $organization)
             ->with('success', 'Ownership transferred');
+    }
+
+    public function switchOrganization(Organization $organization)
+    {
+        $user = auth()->user();
+        $user->update([
+            'current_organization_id' => $organization->id,
+        ]);
+
+        return redirect()->back();
     }
 }

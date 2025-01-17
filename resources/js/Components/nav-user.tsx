@@ -1,6 +1,6 @@
 'use client';
 
-import { BadgeCheck, ChevronsUpDown, LogOut } from 'lucide-react';
+import { BadgeCheck, Building, ChevronRight, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import {
@@ -18,7 +18,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/Components/ui/sidebar';
-import { router } from '@inertiajs/react';
+import { Organization } from '@/types/organization';
+import { router, usePage } from '@inertiajs/react';
 
 export function NavUser({
     user,
@@ -30,6 +31,21 @@ export function NavUser({
     };
 }) {
     const { isMobile } = useSidebar();
+
+    const pageUser = usePage().props.auth.user;
+    const userOrganizations = pageUser.organizations;
+    const currentOrgId = pageUser.current_organization_id;
+
+    function setActiveOrganization(organization: Organization) {
+        router.post(route('organizations.switch', organization.id), undefined, {
+            replace: true,
+            preserveState: false,
+            preserveScroll: false,
+            onSuccess: () => {
+                window.location.reload();
+            },
+        });
+    }
 
     return (
         <SidebarMenu>
@@ -60,7 +76,7 @@ export function NavUser({
                                     {user.email}
                                 </span>
                             </div>
-                            <ChevronsUpDown className="ml-auto size-4" />
+                            <ChevronRight className="ml-auto size-4" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -92,6 +108,44 @@ export function NavUser({
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="flex w-full items-center gap-2 outline-none">
+                                            <Building className="size-4" />
+                                            Organizations
+                                            <ChevronRight className="ml-auto size-4 text-muted-foreground" />
+                                        </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                        align="start"
+                                        side={isMobile ? 'bottom' : 'right'}
+                                        sideOffset={4}
+                                    >
+                                        <DropdownMenuLabel className="text-xs text-muted-foreground">
+                                            Organizations
+                                        </DropdownMenuLabel>
+                                        {userOrganizations.map((org) => (
+                                            <DropdownMenuItem
+                                                key={org.name}
+                                                onClick={() =>
+                                                    setActiveOrganization(org)
+                                                }
+                                                className="gap-2 p-2"
+                                                disabled={
+                                                    org.id === currentOrgId
+                                                }
+                                            >
+                                                {org.name}
+                                                {org.id === currentOrgId && (
+                                                    <BadgeCheck className="ml-auto h-4 w-4 text-primary" />
+                                                )}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                                 onSelect={() => {
                                     router.visit(route('profile.edit'));
