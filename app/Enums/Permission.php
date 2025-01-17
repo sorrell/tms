@@ -8,7 +8,7 @@ enum Permission: string
 {
     // case NAMEINAPP = 'name-in-database';
     case ORGANIZATION_MANAGE_USERS = 'organization-manage-users';
-    case ORGANIZATION_ADMIN = 'organization-admin';
+    case ORGANIZATION_MANAGER = 'organization-manager';
 
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
@@ -16,7 +16,7 @@ enum Permission: string
     {
         return match ($this) {
             self::ORGANIZATION_MANAGE_USERS => 'Manage Organization Users & Permissions',
-            self::ORGANIZATION_ADMIN => 'View & Edit Organization Details',
+            self::ORGANIZATION_MANAGER => 'View & Edit Organization Details',
             default => 'Label Unknown',
         };
     }
@@ -40,7 +40,7 @@ enum Permission: string
 
         $permissions = [];
         foreach (static::cases() as $permission) {
-            $permissions[$permission->value] = $user->can($permission) ? 'true' : 'false';
+            $permissions[$permission->name] = $user->can($permission) ? 'true' : 'false';
         }
         return $permissions;
     }

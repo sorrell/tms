@@ -16,7 +16,7 @@ class PermissionController extends Controller
 
     public function updateRole(UpdateRoleRequest $request, Organization $organization, Role $role)
     {
-        Gate::authorize(Permission::ORGANIZATION_ADMIN);
+        Gate::authorize(Permission::ORGANIZATION_MANAGER);
 
         if ($organization->id !== current_organization_id()) {
             return redirect()->back()->with('error', 'You are not authorized to create a role for this organization');
@@ -42,7 +42,7 @@ class PermissionController extends Controller
 
     public function storeRole(StoreRoleRequest $request, Organization $organization)
     {
-        Gate::authorize(Permission::ORGANIZATION_ADMIN);
+        Gate::authorize(Permission::ORGANIZATION_MANAGER);
 
         if ($organization->id !== current_organization_id()) {
             return redirect()->back()->with('error', 'You are not authorized to create a role for this organization');
@@ -65,7 +65,7 @@ class PermissionController extends Controller
 
     public function destroyRole(Organization $organization, Role $role)
     {
-        Gate::authorize(Permission::ORGANIZATION_ADMIN);
+        Gate::authorize(Permission::ORGANIZATION_MANAGER);
 
         $role->delete();
 
