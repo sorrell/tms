@@ -22,7 +22,7 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization): bool
     {
-        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_ADMIN);
+        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_MANAGER);
     }
 
     /**
@@ -38,7 +38,7 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization): bool
     {
-        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_ADMIN);
+        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_MANAGER);
     }
 
     /**
@@ -46,7 +46,7 @@ class OrganizationPolicy
      */
     public function delete(User $user, Organization $organization): bool
     {
-        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_ADMIN);
+        return $user->id === $organization->owner_id || $user->can(Permission::ORGANIZATION_MANAGER);
     }
 
     /**

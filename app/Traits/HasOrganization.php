@@ -3,9 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Organizations\Organization;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
-#[ScopedBy(\App\Models\Scopes\OrganizationScope::class)]
 trait HasOrganization
 {
     public static function bootHasOrganization()
@@ -17,6 +15,8 @@ trait HasOrganization
         static::updating(function ($model) {
             $model->organization_id = $model->organization_id ?? current_organization_id();
         });
+
+        static::addGlobalScope(new \App\Models\Scopes\OrganizationScope);
     }
 
     public function organization()
