@@ -18,6 +18,10 @@ class PermissionController extends Controller
     {
         Gate::authorize(Permission::ORGANIZATION_ADMIN);
 
+        if ($organization->id !== current_organization_id()) {
+            return redirect()->back()->with('error', 'You are not authorized to create a role for this organization');
+        }
+
         $role->syncPermissions($request->permissions);
 
         // Handle users by removing anyone not in the new list
@@ -39,6 +43,10 @@ class PermissionController extends Controller
     public function storeRole(StoreRoleRequest $request, Organization $organization)
     {
         Gate::authorize(Permission::ORGANIZATION_ADMIN);
+
+        if ($organization->id !== current_organization_id()) {
+            return redirect()->back()->with('error', 'You are not authorized to create a role for this organization');
+        }
 
         $role = Role::create([
             'name' => request('name'),

@@ -13,6 +13,6 @@ class OrganizationScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $builder->where('organization_id', current_organization_id());
+        $builder->where($model->getTable() . '.organization_id', current_organization_id());
     }
 }

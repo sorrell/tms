@@ -32,8 +32,12 @@ enum Permission: string
         return true;
     }
 
-    public static function getPermissionsForUser(User $user): array
+    public static function getPermissionsForUser(?User $user): array
     {
+        if (!$user) {
+            return [];
+        }
+
         $permissions = [];
         foreach (static::cases() as $permission) {
             $permissions[$permission->value] = $user->can($permission) ? 'true' : 'false';

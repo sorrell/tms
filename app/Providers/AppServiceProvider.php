@@ -31,6 +31,13 @@ class AppServiceProvider extends ServiceProvider
             return str_replace('Models', 'Policies', $modelClass) . 'Policy';
         });
 
+        Gate::before(function ($user, $ability) {
+            if (current_organization()?->owner_id === $user->id) {
+                return true;
+            }
+            return null;    // check if user has permission via normal flow
+        });
+
         /** @var Kernel $kernel */
         $kernel = app()->make(Kernel::class);
     }
