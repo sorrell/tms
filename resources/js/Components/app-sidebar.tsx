@@ -50,7 +50,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         </a>
                     </SidebarMenuButton>
                 </SidebarGroup>
-                {permissions.ORGANIZATION_MANAGER && (
+                {(permissions.ORGANIZATION_MANAGER ||
+                    permissions.ORGANIZATION_MANAGE_USERS) && (
                     <SidebarGroup>
                         <SidebarMenuButton asChild>
                             <a

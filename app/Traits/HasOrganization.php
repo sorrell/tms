@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Organizations\Organization;
+use Illuminate\Database\Eloquent\Builder;
 
 trait HasOrganization
 {
@@ -17,6 +18,11 @@ trait HasOrganization
         });
 
         static::addGlobalScope(new \App\Models\Scopes\OrganizationScope);
+    }
+
+    public static function allOrganizations() : Builder
+    {
+        return static::withoutGlobalScope(\App\Models\Scopes\OrganizationScope::class);
     }
 
     public function organization()

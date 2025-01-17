@@ -52,13 +52,15 @@ class OrganizationInviteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Organization $organization, OrganizationInvite $invite)
+    public function show(Organization $organization, string $invite)
     {
-        Gate::authorize('view', $invite);
+        $orgInvite = OrganizationInvite::allOrganizations()->where('code', $invite)->firstOrFail();
+
+        Gate::authorize('view', $orgInvite);
 
         return Inertia::render('Organization/InviteAccept', [
             'organization' => $organization,
-            'invite' => $invite,
+            'invite' => $orgInvite,
             'showCreateOption' => auth()->user()->organizations()->count() < 1,
         ]);
     }
@@ -100,12 +102,13 @@ class OrganizationInviteController extends Controller
     /**
      * Accept the organization invite and add current user to the org
      */
-    public function accept(Organization $organization, OrganizationInvite $invite)
+    public function accept(Organization $organization, string $invite)
     {
+        $orgInvite = OrganizationInvite::allOrganizations()->where('code', $invite)->firstOrFail();
 
-        Gate::authorize('view', $invite);
+        Gate::authorize('view', $orgInvite);
 
-        $invite->update([
+        $orgInvite->update([
             'accepted_by_id' => auth()->id(),
             'accepted_at' => now(),
         ]);
