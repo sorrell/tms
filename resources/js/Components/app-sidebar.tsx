@@ -51,10 +51,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             {route().current('dashboard') && <Dot />}
                         </a>
                     </SidebarMenuButton>
-                </SidebarGroup>
-                {(permissions.ORGANIZATION_MANAGER ||
-                    permissions.ORGANIZATION_MANAGE_USERS) && (
-                    <SidebarGroup>
+                    {(permissions.ORGANIZATION_MANAGER ||
+                        permissions.ORGANIZATION_MANAGE_USERS) && (
                         <SidebarMenuButton asChild>
                             <a
                                 href={route('organizations.show', [
@@ -68,8 +66,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 ]) && <Dot />}
                             </a>
                         </SidebarMenuButton>
-                    </SidebarGroup>
-                )}
+                    )}
+                </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={userData} />
