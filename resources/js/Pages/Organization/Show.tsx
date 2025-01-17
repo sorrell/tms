@@ -6,7 +6,7 @@ import {
     Permission,
     Role,
 } from '@/types/organization';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import InvitesTable from './Partials/InvitesTable';
 import RolesTable from './Partials/RolesTable';
 import UsersTable from './Partials/UsersTable';
@@ -22,6 +22,12 @@ export default function Show({
     roles: Role[];
     permissions: Permission[];
 }) {
+    const userPermissions = usePage().props.auth.permissions;
+
+    const canManageOrganization = userPermissions.ORGANIZATION_MANAGER;
+
+    console.log(usePage().props.auth.permissions);
+
     return (
         <AuthenticatedLayout>
             <Head title="Organization" />
@@ -33,7 +39,12 @@ export default function Show({
             <Tabs defaultValue="users">
                 <TabsList className="mx-auto grid w-full max-w-[500px] grid-cols-2">
                     <TabsTrigger value="users">Users</TabsTrigger>
-                    <TabsTrigger value="roles">Roles</TabsTrigger>
+                    <TabsTrigger
+                        value="roles"
+                        disabled={!canManageOrganization}
+                    >
+                        Roles
+                    </TabsTrigger>
                 </TabsList>
                 <TabsContent value="users">
                     <div className="mx-4 mb-4">
@@ -48,15 +59,17 @@ export default function Show({
                         <InvitesTable invites={invites} />
                     </div>
                 </TabsContent>
-                <TabsContent value="roles">
-                    <div className="mx-4 mb-4">
-                        <RolesTable
-                            roles={roles}
-                            organization={organization}
-                            permissions={permissions}
-                        />
-                    </div>
-                </TabsContent>
+                {canManageOrganization && (
+                    <TabsContent value="roles">
+                        <div className="mx-4 mb-4">
+                            <RolesTable
+                                roles={roles}
+                                organization={organization}
+                                permissions={permissions}
+                            />
+                        </div>
+                    </TabsContent>
+                )}
             </Tabs>
         </AuthenticatedLayout>
     );

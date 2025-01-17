@@ -58,6 +58,8 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
+
+        Gate::authorize('view', $organization);
         return Inertia::render('Organization/Show', [
             'organization' => $organization->load('owner', 'users'),
             'invites' => $organization->invites,

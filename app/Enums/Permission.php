@@ -40,7 +40,7 @@ enum Permission: string
 
         $permissions = [];
         foreach (static::cases() as $permission) {
-            $permissions[$permission->name] = $user->can($permission) ? 'true' : 'false';
+            $permissions[$permission->name] = $user->can($permission) ? true : false;
         }
         return $permissions;
     }
