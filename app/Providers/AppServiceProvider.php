@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Middleware\TeamPermissionIdAssignment;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Gate;
@@ -16,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->beforeResolving(\Spatie\Permission\PermissionRegistrar::class, function () {
+            $this->app->singleton(\Spatie\Permission\PermissionRegistrar::class, PermissionRegistrar::class);
+        });
     }
 
     /**
@@ -32,10 +33,5 @@ class AppServiceProvider extends ServiceProvider
 
         /** @var Kernel $kernel */
         $kernel = app()->make(Kernel::class);
-
-        $kernel->addToMiddlewarePriorityBefore(
-            SubstituteBindings::class,
-            TeamPermissionIdAssignment::class,
-        );
     }
 }
