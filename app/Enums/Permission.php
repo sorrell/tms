@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace App\Enums;
 
+use App\Models\User;
+
 enum Permission: string
 {
     // case NAMEINAPP = 'name-in-database';
@@ -28,5 +30,14 @@ enum Permission: string
         }
 
         return true;
+    }
+
+    public static function getPermissionsForUser(User $user): array
+    {
+        $permissions = [];
+        foreach (static::cases() as $permission) {
+            $permissions[$permission->value] = $user->can($permission) ? 'true' : 'false';
+        }
+        return $permissions;
     }
 }
