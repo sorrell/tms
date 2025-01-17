@@ -27,7 +27,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const user = usePage().props.auth.user;
-    const permissions = usePage().props.permissions;
+    const permissions = usePage().props.auth.permissions;
 
     const userData = {
         name: user.name,
@@ -50,7 +50,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         </a>
                     </SidebarMenuButton>
                 </SidebarGroup>
-                {permissions.canEditOrganization && (
+                {permissions['organization-admin'] && (
                     <SidebarGroup>
                         <SidebarMenuButton asChild>
                             <a

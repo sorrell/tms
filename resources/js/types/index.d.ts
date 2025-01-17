@@ -11,11 +11,11 @@ export type PageProps<
 > = T & {
     auth: {
         user: User;
+        permissions: {
+            [key: string]: boolean;
+        };
     };
     app: {
         name: string;
-    };
-    permissions: {
-        [key: string]: boolean;
     };
 };

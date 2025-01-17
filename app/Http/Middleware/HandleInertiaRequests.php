@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Permission;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -33,13 +34,11 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'permissions' => Permission::getPermissionsForUser($request->user()),
             ],
             'app' => [
                 'name' => config('app.name'),
             ],
-            'permissions' => [
-                'canEditOrganization' => fn () => $request->user()?->can('update', $request->user()?->currentOrganization),
-            ]
         ];
     }
 }
