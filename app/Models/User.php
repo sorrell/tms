@@ -52,6 +52,28 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function (User $user) {
+            if ($user->isDirty('current_organization_id')) {
+                $isMember = $user->organizations()
+                    ->where('organizations.id', $user->current_organization_id)
+                    ->exists();
+
+                if (!$isMember) {
+                    throw new \Illuminate\Auth\Access\AuthorizationException(
+                        'You can only set your current organization to one you are a member of.'
+                    );
+                }
+            }
+        });
+    }
+
     public function currentOrganization()
     {
         return $this->belongsTo(Organization::class, 'current_organization_id');

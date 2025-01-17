@@ -26,8 +26,6 @@ export default function Show({
 
     const canManageOrganization = userPermissions.ORGANIZATION_MANAGER;
 
-    console.log(usePage().props.auth.permissions);
-
     return (
         <AuthenticatedLayout>
             <Head title="Organization" />
