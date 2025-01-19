@@ -4,6 +4,7 @@ namespace App\Models\Organizations;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class OrganizationUser extends Pivot
@@ -19,12 +20,18 @@ class OrganizationUser extends Pivot
         'user_id',
     ];
 
-    public function organization()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Organization, $this>
+     */
+    public function organization() : BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id');
     }
 
-    public function user()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     */
+    public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

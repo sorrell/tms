@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Organizations\Organization;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait HasOrganization
 {
@@ -25,7 +26,10 @@ trait HasOrganization
         return static::withoutGlobalScope(\App\Models\Scopes\OrganizationScope::class);
     }
 
-    public function organization()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Organization, $this>
+     */
+    public function organization() : BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id');
     }

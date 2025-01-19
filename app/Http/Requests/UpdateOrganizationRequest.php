@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Organizations\Organization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,7 @@ class UpdateOrganizationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->organization());
+        return $this->user()->can('update', Organization::find($this->route('organization')));
     }
 
     /**

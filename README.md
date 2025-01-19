@@ -51,3 +51,8 @@ sail artisan key:generate
 ``` bash
 sail npm run dev
 ```
+
+#### Running PHPStan
+``` bash
+sail php ./vendor/bin/phpstan analyse
+```
