@@ -8,6 +8,8 @@ use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationInvite;
 use App\Models\Organizations\OrganizationUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -79,15 +81,21 @@ class User extends Authenticatable
         return $this->belongsTo(Organization::class, 'current_organization_id');
     }
 
-    public function organizations()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Organization, $this>
+     */
+    public function organizations() : BelongsToMany
     {
         return $this->belongsToMany(Organization::class, 'organization_users')
             ->using(OrganizationUser::class)
             ->withTimestamps();
     }
 
-    public function organizationInvites()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<OrganizationInvite, $this>
+     */
+    public function organizationInvites() : HasMany
     {
-        return OrganizationInvite::where('email', strtolower($this->email));
+        return $this->hasMany(OrganizationInvite::class, 'email', 'email');
     }
 }

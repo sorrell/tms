@@ -17,7 +17,6 @@ enum Permission: string
         return match ($this) {
             self::ORGANIZATION_MANAGE_USERS => 'Manage Organization Users & Permissions',
             self::ORGANIZATION_MANAGER => 'View & Edit Organization Details',
-            default => 'Label Unknown',
         };
     }
 
