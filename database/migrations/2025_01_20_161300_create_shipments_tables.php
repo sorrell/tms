@@ -68,6 +68,7 @@ return new class extends Migration
             $table->foreignId('organization_id')->constrained('organizations');
             $table->foreignId('shipment_id')->constrained('shipments');
             $table->foreignId('facility_id')->constrained('facilities');
+            $table->string('stop_type');
             $table->timestampsTz();
         });
 

@@ -13,5 +13,11 @@ class CreateShipment
     public function handle(): Shipment
     {
         throw new NotImplementedException();
+
+        // shipper ids
+        // carrier id
+        // stops -> facility id, stop type, appointment object
+
+
     }
 }
