@@ -21,8 +21,11 @@ class CarrierFactory extends Factory
      */
     public function definition(): array
     {
+        $suffixes = ['Trucking', 'Transport', 'Carriers', 'Logistics', 'Freight'];
+        $prefixes = ['Interstate', 'Regional', 'Express', 'American', 'National', 'Pacific', 'Elite'];
+        
         return [
-            'name' => fake()->company(),
+            'name' => fake()->randomElement($prefixes) . ' ' . fake()->company() . ' ' . fake()->randomElement($suffixes),
         ];
     }
 }

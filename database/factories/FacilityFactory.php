@@ -21,8 +21,11 @@ class FacilityFactory extends Factory
      */
     public function definition(): array
     {
+        $types = ['Distribution Center', 'Warehouse', 'Freight Terminal', 'Logistics Hub', 'Cross-dock Facility', 'Storage Facility'];
+        $locations = ['North', 'South', 'East', 'West', 'Central', 'Regional', 'Metro'];
+        
         return [
-            'name' => fake()->company(),
+            'name' => fake()->randomElement($locations) . ' ' . fake()->randomElement($types) . ' #' . fake()->numberBetween(1, 99),
             'location_id' => Location::factory(),
         ];
     }

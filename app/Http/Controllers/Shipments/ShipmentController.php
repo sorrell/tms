@@ -6,6 +6,9 @@ use App\Http\Requests\Shipments\StoreShipmentRequest;
 use App\Http\Requests\Shipments\UpdateShipmentRequest;
 use App\Models\Shipments\Shipment;
 use App\Http\Controllers\Controller;
+use App\Models\Carrier;
+use App\Models\Facility;
+use App\Models\Shipper;
 use Inertia\Inertia;
 
 class ShipmentController extends Controller
@@ -23,7 +26,11 @@ class ShipmentController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Shipments/Create');
+        return Inertia::render('Shipments/Create', [
+            'facilities' => Facility::all(),
+            'shippers' => Shipper::all(),
+            'carriers' => Carrier::all(),
+        ]);
     }
 
     /**

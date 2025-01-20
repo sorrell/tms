@@ -21,8 +21,13 @@ class ShipperFactory extends Factory
      */
     public function definition(): array
     {
+        $suffixes = ['Manufacturing', 'Industries', 'Products', 'Supply Co.', 'Production'];
+        $prefixes = ['Global', 'United', 'Premier', 'Advanced', 'Industrial', 'Standard', 'Quality'];
+        
         return [
-            'name' => fake()->company(),
+            'name' => fake()->randomElement($prefixes) . ' ' . 
+                     fake()->company() . ' ' . 
+                     fake()->randomElement($suffixes),
         ];
     }
 }
