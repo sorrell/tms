@@ -77,8 +77,8 @@ return new class extends Migration
             $table->foreignId('organization_id')->constrained('organizations');
             $table->foreignId('shipment_stop_id')->constrained('shipment_stops');
             $table->dateTimeTz('appointment_datetime');
-            $table->dateTimeTz('appointment_end_datetime');
-            $table->string('appointment_type');
+            $table->dateTimeTz('appointment_end_datetime')->nullable();
+            $table->string('appointment_type')->nullable();
             $table->softDeletesTz();
             $table->timestampsTz();
         });

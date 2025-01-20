@@ -9,6 +9,8 @@ class ShipmentShipper extends Pivot
 {
     use HasOrganization;
 
+    protected $table = 'shipment_shippers';
+
     protected $fillable = [
         'organization_id',
         'shipment_id',

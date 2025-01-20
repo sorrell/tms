@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shipments;
 
+use App\Actions\Shipments\CreateShipment;
 use App\Http\Requests\Shipments\StoreShipmentRequest;
 use App\Http\Requests\Shipments\UpdateShipmentRequest;
 use App\Models\Shipments\Shipment;
@@ -18,7 +19,9 @@ class ShipmentController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Shipments/Index');  
+        return Inertia::render('Shipments/Index', [
+            'shipments' => Shipment::all(),
+        ]);  
     }
 
     /**
@@ -38,8 +41,17 @@ class ShipmentController extends Controller
      */
     public function store(StoreShipmentRequest $request)
     {
-        logger()->info($request->all());
-        // CreateShipment::run(...);
+
+        // TODO - hack until multi support is added
+        $shipperIds = [$request->shipper_ids];
+
+        $shipment = CreateShipment::run(
+            shipperIds: $shipperIds,
+            carrierId: $request->carrier_id,
+            stops: $request->stops,
+        );
+
+        return redirect()->route('shipments.show', $shipment);
     }
 
     /**
@@ -47,7 +59,9 @@ class ShipmentController extends Controller
      */
     public function show(Shipment $shipment)
     {
-        //
+        return Inertia::render('Shipments/Show', [
+            'shipment' => $shipment,
+        ]);
     }
 
     /**

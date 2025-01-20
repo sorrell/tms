@@ -29,7 +29,7 @@ class DemoEnvironmentSetup extends Command
      */
     public function handle()
     {
-        $organizationId = $this->argument('organization_id');
+        $organizationId = intval($this->argument('organization_id'));
 
         run_with_organization($organizationId, function () {
             Facility::factory(10)->create();
