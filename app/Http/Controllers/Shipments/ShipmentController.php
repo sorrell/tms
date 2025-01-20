@@ -6,6 +6,7 @@ use App\Http\Requests\Shipments\StoreShipmentRequest;
 use App\Http\Requests\Shipments\UpdateShipmentRequest;
 use App\Models\Shipments\Shipment;
 use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 
 class ShipmentController extends Controller
 {
@@ -14,7 +15,7 @@ class ShipmentController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Shipments/Index');  
     }
 
     /**
