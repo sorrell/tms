@@ -1,3 +1,4 @@
+import InputError from '@/Components/InputError';
 import { Button } from '@/Components/ui/button';
 import {
     Form,
@@ -19,7 +20,7 @@ import {
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Head } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
@@ -34,29 +35,39 @@ export default function Index({
     shippers: Shipper[];
     carriers: Carrier[];
 }) {
+
+    const { errors } = usePage().props;
+
     const formSchema = z.object({
-        shipper_ids: z.array(z.number()).min(1),
-        carrier_id: z.number().min(1),
-        stops: z.array(
-            z.object({
-                facility_id: z.string(),
-                stop_type: z.enum(['pickup', 'delivery']),
-                appointment: z.object({
-                    datetime: z.string().datetime(),
+        shipper_ids: z.string(), //z.array(z.number()).min(1),
+        carrier_id: z.string(),
+        stops: z
+            .array(
+                z.object({
+                    facility_id: z.string(),
+                    stop_type: z.enum(['pickup', 'delivery']),
+                    appointment: z.object({
+                        datetime: z.string(),
+                    }),
                 }),
-            }),
-        ),
+            )
+            .min(2),
     });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            shipper_ids: [],
+            shipper_ids: shippers[0].id, //[],
             carrier_id: carriers[0].id,
             stops: [
                 {
                     stop_type: 'pickup',
-                    facility_id: '0',
+                    facility_id: facilities[0]?.id.toString(),
+                    appointment: { datetime: '' },
+                },
+                {
+                    stop_type: 'delivery',
+                    facility_id: facilities[1]?.id.toString(),
                     appointment: { datetime: '' },
                 },
             ],
@@ -65,9 +76,8 @@ export default function Index({
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values);
+
+        router.post(route('shipments.store'), values);
     }
 
     return (
@@ -142,7 +152,9 @@ export default function Index({
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage>
+                                            {errors[`stops.${index}.stop_type`]}
+                                        </FormMessage>
                                     </FormItem>
                                 )}
                             />
@@ -176,7 +188,9 @@ export default function Index({
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage>
+                                            {errors[`stops.${index}.facility_id`]}
+                                        </FormMessage>
                                     </FormItem>
                                 )}
                             />
@@ -193,7 +207,9 @@ export default function Index({
                                             />
                                         </FormControl>
                                         <FormDescription></FormDescription>
-                                        <FormMessage />
+                                        <FormMessage>
+                                            {errors[`stops.${index}.appointment.datetime`]}
+                                        </FormMessage>
                                     </FormItem>
                                 )}
                             />
@@ -226,7 +242,9 @@ export default function Index({
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage>
+                                    {errors.shipper_ids}
+                                </FormMessage>
                             </FormItem>
                         )}
                     />
@@ -256,7 +274,9 @@ export default function Index({
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage>
+                                    {errors.carrier_id}
+                                </FormMessage>
                             </FormItem>
                         )}
                     />

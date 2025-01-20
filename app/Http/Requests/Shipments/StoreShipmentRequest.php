@@ -11,7 +11,7 @@ class StoreShipmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,16 @@ class StoreShipmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // 'shipper_ids' => ['required', 'array'],
+            // 'shipper_ids.*' => ['required', 'exists:shippers,id'],
+            
+            'shipper_ids' => ['required', 'exists:shippers,id'],
+
+            'carrier_id' => ['required', 'exists:carriers,id'],
+            'stops' => ['required', 'array'],
+            'stops.*.stop_type' => ['required', 'in:pickup,delivery'],
+            'stops.*.facility_id' => ['required', 'exists:facilities,id'],
+            'stops.*.appointment.datetime' => ['required', 'date'],
         ];
     }
 }

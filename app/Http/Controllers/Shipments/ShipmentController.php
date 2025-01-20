@@ -38,6 +38,7 @@ class ShipmentController extends Controller
      */
     public function store(StoreShipmentRequest $request)
     {
+        logger()->info($request->all());
         // CreateShipment::run(...);
     }
 
