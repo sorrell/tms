@@ -23,7 +23,7 @@ class ShipmentController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Shipments/Create');
     }
 
     /**
@@ -31,7 +31,7 @@ class ShipmentController extends Controller
      */
     public function store(StoreShipmentRequest $request)
     {
-        //
+        // CreateShipment::run(...);
     }
 
     /**
