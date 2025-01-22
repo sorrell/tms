@@ -21,9 +21,21 @@ import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { CommandLoading } from 'cmdk';
 
-export function MultiSelectSearch() {
+export function MultiSelectSearch({
+    searchRoute,
+    onValueChange,
+    defaultSelectedItems = [],
+    allowMultiple = true,
+}: {
+    searchRoute: string;
+    onValueChange: (value: any) => void;
+    defaultSelectedItems: any[];
+    allowMultiple: boolean;
+}) {
+
     const [open, setOpen] = React.useState(false);
-    const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
+    const [selectedItems, setSelectedItems] =
+        React.useState<any[]>(defaultSelectedItems);
     const [search, setSearch] = React.useState('');
     const [dataOptions, setDataOptions] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(false);
@@ -32,7 +44,7 @@ export function MultiSelectSearch() {
     const searchData = (searchInput: string) => {
         setLoading(true);
         axios
-            .get(route('facilities.search'), {
+            .get(searchRoute, {
                 params: {
                     query: searchInput,
                 },
@@ -119,7 +131,7 @@ export function MultiSelectSearch() {
             <PopoverContent className="p-0">
                 <Command shouldFilter={false}>
                     <CommandInput
-                        placeholder="Search..."
+                        placeholder={`Search ...`}
                         className="h-9"
                         value={search}
                         onInput={(e) => {
@@ -129,7 +141,7 @@ export function MultiSelectSearch() {
                     <CommandList>
                         {loading && (
                             <CommandLoading>
-                                <div className="flex items-center justify-center h-full p-4">
+                                <div className="flex h-full items-center justify-center p-4">
                                     <Loader2 className="animate-spin" />
                                     <span>Fetching results...</span>
                                 </div>
@@ -142,28 +154,41 @@ export function MultiSelectSearch() {
                                     key={option.value}
                                     value={option.value}
                                     onSelect={(currentValue) => {
-                                        if (
-                                            selectedItems
-                                                .map((v) => v.value)
-                                                .includes(currentValue)
-                                        ) {
-                                            setSelectedItems(
-                                                selectedItems.filter(
-                                                    (v) =>
-                                                        v.value !==
-                                                        currentValue,
-                                                ),
-                                            );
+                                        let newSelected = [];
+
+                                        if (allowMultiple) {
+                                            if (
+                                                selectedItems
+                                                    .map((v) => v.value)
+                                                    .includes(currentValue)
+                                            ) {
+                                                newSelected =
+                                                    selectedItems.filter(
+                                                        (v) =>
+                                                            v.value !==
+                                                            currentValue,
+                                                    );
+                                            } else {
+                                                newSelected = [
+                                                    ...selectedItems,
+                                                    getAllOptions().find(
+                                                        (f) =>
+                                                            f.value ===
+                                                            currentValue,
+                                                    ),
+                                                ];
+                                            }
                                         } else {
-                                            setSelectedItems([
-                                                ...selectedItems,
-                                                getAllOptions().find(
-                                                    (f) =>
-                                                        f.value ===
-                                                        currentValue,
-                                                ),
-                                            ]);
+                                            newSelected = [option];
                                         }
+
+                                        // But save the whole selected for this component to reference
+                                        setSelectedItems(newSelected);
+
+                                        // Just the ids for the on value change for parent users
+                                        onValueChange(
+                                            newSelected.map((v) => v.value),
+                                        );
                                     }}
                                 >
                                     {option.label}
