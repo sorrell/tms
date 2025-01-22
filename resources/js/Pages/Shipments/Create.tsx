@@ -10,6 +10,7 @@ import {
     FormMessage,
 } from '@/Components/ui/form';
 import { Input } from '@/Components/ui/input';
+import { MultiSelectSearch } from '@/Components/ui/multiselect-search';
 import {
     Select,
     SelectContent,
@@ -21,6 +22,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
@@ -80,10 +82,22 @@ export default function Index({
         router.post(route('shipments.store'), values);
     }
 
+    // function testSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    //     axios.get(route('facilities.search'), {
+    //         params: {
+    //             query: e.target.value,
+    //         },
+    //     }).then((response) => {
+    //         console.log(response.data);
+    //     });
+    // }
+
     return (
         <AuthenticatedLayout>
             <Head title="Create Shipment" />
 
+            <MultiSelectSearch />
+            {/* <input type="text" name='test-search' onChange={testSearch} /> */}
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\PermissionController;
@@ -55,6 +56,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
         Route::delete('role/{role}', [PermissionController::class, 'destroyRole'])->name('organizations.permissions.role.destroy');
         Route::patch('role/{role}', [PermissionController::class, 'updateRole'])->name('organizations.permissions.role.update');
     });
+
+    Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
+    Route::resource('facilities', FacilityController::class);    
 
     Route::resource('shipments', ShipmentController::class);
 });
