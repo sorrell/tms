@@ -1,4 +1,3 @@
-import InputError from '@/Components/InputError';
 import { Button } from '@/Components/ui/button';
 import {
     Form,
@@ -22,8 +21,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
-import { Value } from '@radix-ui/react-select';
-import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
@@ -38,7 +35,6 @@ export default function Index({
     shippers: Shipper[];
     carriers: Carrier[];
 }) {
-
     const { errors } = usePage().props;
 
     const formSchema = z.object({
@@ -79,7 +75,6 @@ export default function Index({
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-
         router.post(route('shipments.store'), values);
     }
 
@@ -97,18 +92,6 @@ export default function Index({
         <AuthenticatedLayout>
             <Head title="Create Shipment" />
 
-            <MultiSelectSearch
-                searchRoute={route('facilities.search')}
-                onValueChange={console.log}
-                allowMultiple={true}
-                defaultSelectedItems={[
-                    {
-                        "value": "14",
-                        "label": "South Warehouse #96"
-                    }
-                ]}
-            />
-            
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
@@ -190,31 +173,21 @@ export default function Index({
                                     <FormItem>
                                         <FormLabel>Facility</FormLabel>
                                         <FormControl>
-                                            <Select
+                                            <MultiSelectSearch
+                                                searchRoute={route(
+                                                    'facilities.search',
+                                                )}
+                                                allowMultiple={false}
                                                 onValueChange={field.onChange}
-                                                defaultValue={field.value.toString()}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a stop type" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {facilities.map(
-                                                        (facility) => (
-                                                            <SelectItem
-                                                                key={
-                                                                    facility.id
-                                                                }
-                                                                value={facility.id.toString()}
-                                                            >
-                                                                {facility.name}
-                                                            </SelectItem>
-                                                        ),
-                                                    )}
-                                                </SelectContent>
-                                            </Select>
+                                                //defaultValue={field.value.toString()}
+                                            />
                                         </FormControl>
                                         <FormMessage>
-                                            {errors[`stops.${index}.facility_id`]}
+                                            {
+                                                errors[
+                                                    `stops.${index}.facility_id`
+                                                ]
+                                            }
                                         </FormMessage>
                                     </FormItem>
                                 )}
@@ -233,7 +206,11 @@ export default function Index({
                                         </FormControl>
                                         <FormDescription></FormDescription>
                                         <FormMessage>
-                                            {errors[`stops.${index}.appointment.datetime`]}
+                                            {
+                                                errors[
+                                                    `stops.${index}.appointment.datetime`
+                                                ]
+                                            }
                                         </FormMessage>
                                     </FormItem>
                                 )}
@@ -267,9 +244,7 @@ export default function Index({
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
-                                <FormMessage>
-                                    {errors.shipper_ids}
-                                </FormMessage>
+                                <FormMessage>{errors.shipper_ids}</FormMessage>
                             </FormItem>
                         )}
                     />
@@ -299,9 +274,7 @@ export default function Index({
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
-                                <FormMessage>
-                                    {errors.carrier_id}
-                                </FormMessage>
+                                <FormMessage>{errors.carrier_id}</FormMessage>
                             </FormItem>
                         )}
                     />
