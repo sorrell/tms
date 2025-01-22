@@ -81,17 +81,6 @@ export function MultiSelectSearch({
             .filter((o) => !selectedItems.find((s) => s.value === o.value))
             .concat(selectedItems)
             .sort((a, b) => {
-                // Sorting by selected items first then alphabetic second
-                const aSelected = selectedItems.find(
-                    (s) => s.value === a.value,
-                );
-                const bSelected = selectedItems.find(
-                    (s) => s.value === b.value,
-                );
-
-                if (aSelected && !bSelected) return -1;
-                if (!aSelected && bSelected) return 1;
-
                 return a.label.localeCompare(b.label);
             });
     };
@@ -187,7 +176,9 @@ export function MultiSelectSearch({
 
                                         // Just the ids for the on value change for parent users
                                         onValueChange(
-                                            newSelected.map((v) => v.value),
+                                            allowMultiple
+                                                ? newSelected.map((v) => v.value)
+                                                : newSelected[0].value,
                                         );
                                     }}
                                 >

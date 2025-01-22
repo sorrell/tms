@@ -10,7 +10,7 @@ import {
     FormMessage,
 } from '@/Components/ui/form';
 import { Input } from '@/Components/ui/input';
-import { MultiSelectSearch } from '@/Components/ui/multiselect-search';
+import { MultiSelectSearch } from '@/Components/ui/multi-select-search';
 import {
     Select,
     SelectContent,
@@ -22,6 +22,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
+import { Value } from '@radix-ui/react-select';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -96,8 +97,18 @@ export default function Index({
         <AuthenticatedLayout>
             <Head title="Create Shipment" />
 
-            <MultiSelectSearch />
-            {/* <input type="text" name='test-search' onChange={testSearch} /> */}
+            <MultiSelectSearch
+                searchRoute={route('facilities.search')}
+                onValueChange={console.log}
+                allowMultiple={true}
+                defaultSelectedItems={[
+                    {
+                        "value": "14",
+                        "label": "South Warehouse #96"
+                    }
+                ]}
+            />
+            
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
