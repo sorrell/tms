@@ -179,7 +179,6 @@ export default function Index({
                                                 )}
                                                 allowMultiple={false}
                                                 onValueChange={field.onChange}
-                                                //defaultValue={field.value.toString()}
                                             />
                                         </FormControl>
                                         <FormMessage>
@@ -281,6 +280,12 @@ export default function Index({
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>
+            <div className="flex flex-col p-8">
+                <MultiSelectSearch
+                    searchRoute={route('facilities.search')}
+                    allowMultiple={false}
+                />
+            </div>
         </AuthenticatedLayout>
     );
 }

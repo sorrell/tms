@@ -28,9 +28,9 @@ export function MultiSelectSearch({
     allowMultiple = true,
 }: {
     searchRoute: string;
-    onValueChange: (value: any) => void;
-    defaultSelectedItems: any[];
-    allowMultiple: boolean;
+    onValueChange?: (value: any) => void;
+    defaultSelectedItems?: any[];
+    allowMultiple?: boolean;
 }) {
 
     const [open, setOpen] = React.useState(false);
