@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\CarrierController;
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Shipments\ShipmentController;
+use App\Http\Controllers\ShipperController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -54,6 +58,17 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
         Route::delete('role/{role}', [PermissionController::class, 'destroyRole'])->name('organizations.permissions.role.destroy');
         Route::patch('role/{role}', [PermissionController::class, 'updateRole'])->name('organizations.permissions.role.update');
     });
+
+    Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
+    Route::resource('facilities', FacilityController::class);
+
+    Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
+    Route::resource('carriers', CarrierController::class);
+
+    Route::get('shippers/search', [ShipperController::class, 'search'])->name('shippers.search');
+    Route::resource('shippers', ShipperController::class);
+
+    Route::resource('shipments', ShipmentController::class);
 });
 
 require __DIR__ . '/auth.php';
