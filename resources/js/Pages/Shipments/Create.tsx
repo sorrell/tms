@@ -9,7 +9,7 @@ import {
     FormMessage,
 } from '@/Components/ui/form';
 import { Input } from '@/Components/ui/input';
-import { MultiSelectSearch } from '@/Components/ui/multi-select-search';
+import { ResourceSearchSelect } from '@/Components/ui/resource-search-select';
 import {
     Select,
     SelectContent,
@@ -173,7 +173,7 @@ export default function Index({
                                     <FormItem>
                                         <FormLabel>Facility</FormLabel>
                                         <FormControl>
-                                            <MultiSelectSearch
+                                            <ResourceSearchSelect
                                                 searchRoute={route(
                                                     'facilities.search',
                                                 )}
@@ -224,7 +224,7 @@ export default function Index({
                             <FormItem>
                                 <FormLabel>Shipper</FormLabel>
                                 <FormControl>
-                                    <MultiSelectSearch
+                                    <ResourceSearchSelect
                                         searchRoute={route('shippers.search')}
                                         onValueChange={field.onChange}
                                         allowMultiple={true}
@@ -241,7 +241,7 @@ export default function Index({
                             <FormItem>
                                 <FormLabel>Carrier</FormLabel>
                                 <FormControl>
-                                    <MultiSelectSearch
+                                    <ResourceSearchSelect
                                         searchRoute={route('carriers.search')}
                                         onValueChange={field.onChange}
                                         allowMultiple={false}

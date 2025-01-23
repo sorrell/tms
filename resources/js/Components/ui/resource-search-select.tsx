@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { CommandLoading } from 'cmdk';
 
-export function MultiSelectSearch({
+export function ResourceSearchSelect({
     searchRoute,
     onValueChange,
     defaultSelectedItems = [],
