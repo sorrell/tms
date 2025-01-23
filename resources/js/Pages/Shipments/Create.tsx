@@ -46,7 +46,11 @@ export default function Index({
                     facility_id: z.string(),
                     stop_type: z.enum(['pickup', 'delivery']),
                     appointment: z.object({
-                        datetime: z.string(),
+                        datetime: z.string().refine((val) => {
+                            // Accept any valid date string that can be parsed
+                            const date = new Date(val);
+                            return !isNaN(date.getTime());
+                        }, 'Please enter a valid date and time'),
                     }),
                 }),
             )
@@ -56,8 +60,6 @@ export default function Index({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            shipper_ids: [],
-            carrier_id: carriers[0].id,
             stops: [
                 {
                     stop_type: 'pickup',
@@ -94,7 +96,10 @@ export default function Index({
 
             <Form {...form}>
                 <form
-                    onSubmit={form.handleSubmit(onSubmit)}
+                    onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                        console.log(errors);
+                        console.log(form.getValues());
+                    })}
                     className="mx-auto max-w-screen-md space-y-8 px-8"
                 >
                     <div>
