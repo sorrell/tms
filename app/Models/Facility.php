@@ -6,10 +6,11 @@ use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Scout\Searchable;
 
 class Facility extends Model
 {
-    use HasFactory, HasOrganization;
+    use HasFactory, HasOrganization, Searchable;
 
     protected $fillable = [
         'organization_id',

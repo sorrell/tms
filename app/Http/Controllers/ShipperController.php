@@ -2,27 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchBoxRequest;
+use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Requests\StoreShipperRequest;
 use App\Http\Requests\UpdateShipperRequest;
 use App\Models\Shipper;
 
-class ShipperController extends Controller
+class ShipperController extends ResourceSearchController
 {
-
-    public function search(SearchBoxRequest $request)
-    {
-        if (!$request->input('query')) {
-            return response()->json(Shipper::limit(10)->get());
-        }
-
-        $results = Shipper::where('name', 'like', '%' . $request->input('query') . '%')
-            ->limit(10)
-            ->get();
-
-        return response()->json($results);
-    }
-
+    protected $model = Shipper::class;
     /**
      * Display a listing of the resource.
      */

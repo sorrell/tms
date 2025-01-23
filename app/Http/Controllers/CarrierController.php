@@ -2,22 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchBoxRequest;
+use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Requests\StoreCarrierRequest;
 use App\Http\Requests\UpdateCarrierRequest;
 use App\Models\Carrier;
 
-class CarrierController extends Controller
+class CarrierController extends ResourceSearchController
 {
-
-    public function search(SearchBoxRequest $request)
-    {
-        $results = Carrier::where('name', 'like', '%' . $request->input('query') . '%')
-            ->limit(10)
-            ->get();
-
-        return response()->json($results);
-    }
+    protected $model = Carrier::class;
 
     /**
      * Display a listing of the resource.

@@ -2,35 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchBoxRequest;
+use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Requests\StoreFacilityRequest;
 use App\Http\Requests\UpdateFacilityRequest;
 use App\Models\Facility;
 use App\Models\Location;
 use Illuminate\Http\Request;
-class FacilityController extends Controller
+class FacilityController extends ResourceSearchController
 {
-
-    public function search(SearchBoxRequest $request)
-    {
-        if (!$request->input('query')) {
-            return response()->json(Facility::with('location')->limit(10)->get());
-        }
-
-        $facilities = Facility::with('location');
-
-        $facilities->orWhere('name', 'like', '%' . $request->input('query') . '%');
-        $facilities->orWhereRelation('location', 'name', 'like', '%' . $request->input('query') . '%');
-        $facilities->orWhereRelation('location', 'address_line_1', 'like', '%' . $request->input('query') . '%');
-        $facilities->orWhereRelation('location', 'address_line_2', 'like', '%' . $request->input('query') . '%');
-        $facilities->orWhereRelation('location', 'address_city', 'like', '%' . $request->input('query') . '%');
-        $facilities->orWhereRelation('location', 'address_state', 'like', '%' . $request->input('query') . '%');
-        $facilities->orWhereRelation('location', 'address_zipcode', 'like', '%' . $request->input('query') . '%');
-
-        $facilities = $facilities->get();
-
-        return response()->json($facilities);
-    }
+    protected $model = Facility::class;
 
     /**
      * Display a listing of the resource.

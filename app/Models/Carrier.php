@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Carrier extends Model
 {
-    use HasFactory, HasOrganization;
+    use HasFactory, HasOrganization, Searchable;
 
     protected $fillable = [
         'organization_id',
