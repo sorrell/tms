@@ -26,11 +26,13 @@ export function ResourceSearchSelect({
     onValueChange,
     defaultSelectedItems = [],
     allowMultiple = true,
+    autoLoadOptions = true,
 }: {
     searchRoute: string;
     onValueChange?: (value: any) => void;
     defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
+    autoLoadOptions?: boolean;
 }) {
     const [open, setOpen] = React.useState(false);
     const [selectedItems, setSelectedItems] = React.useState<any[]>(
@@ -42,6 +44,12 @@ export function ResourceSearchSelect({
     const [dataOptions, setDataOptions] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
+
+    React.useEffect(() => {
+        if (autoLoadOptions) {
+            searchData('');
+        }
+    }, []);
 
     const searchData = (searchInput: string) => {
         setLoading(true);
