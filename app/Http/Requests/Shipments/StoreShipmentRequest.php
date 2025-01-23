@@ -22,10 +22,8 @@ class StoreShipmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'shipper_ids' => ['required', 'array'],
-            // 'shipper_ids.*' => ['required', 'exists:shippers,id'],
-            
-            'shipper_ids' => ['required', 'exists:shippers,id'],
+            'shipper_ids' => ['required', 'array'],
+            'shipper_ids.*' => ['required', 'exists:shippers,id'],
 
             'carrier_id' => ['required', 'exists:carriers,id'],
             'stops' => ['required', 'array'],

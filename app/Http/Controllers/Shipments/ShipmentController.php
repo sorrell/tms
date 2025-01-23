@@ -41,12 +41,8 @@ class ShipmentController extends Controller
      */
     public function store(StoreShipmentRequest $request)
     {
-
-        // TODO - hack until multi support is added
-        $shipperIds = [$request->shipper_ids];
-
         $shipment = CreateShipment::run(
-            shipperIds: $shipperIds,
+            shipperIds: $request->shipper_ids,
             carrierId: $request->carrier_id,
             stops: $request->stops,
         );

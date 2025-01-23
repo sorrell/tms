@@ -29,13 +29,15 @@ export function MultiSelectSearch({
 }: {
     searchRoute: string;
     onValueChange?: (value: any) => void;
-    defaultSelectedItems?: any[];
+    defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
 }) {
-
     const [open, setOpen] = React.useState(false);
-    const [selectedItems, setSelectedItems] =
-        React.useState<any[]>(defaultSelectedItems);
+    const [selectedItems, setSelectedItems] = React.useState<any[]>(
+        Array.isArray(defaultSelectedItems)
+            ? defaultSelectedItems
+            : [defaultSelectedItems],
+    );
     const [search, setSearch] = React.useState('');
     const [dataOptions, setDataOptions] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(false);
@@ -58,7 +60,8 @@ export function MultiSelectSearch({
                 setDataOptions(options);
                 setLoading(false);
             })
-            .catch(() => {
+            .catch((error) => {
+                console.error('Error fetching data', error);
                 setLoading(false);
             });
     };
@@ -177,7 +180,9 @@ export function MultiSelectSearch({
                                         // Just the ids for the on value change for parent users
                                         onValueChange(
                                             allowMultiple
-                                                ? newSelected.map((v) => v.value)
+                                                ? newSelected.map(
+                                                      (v) => v.value,
+                                                  )
                                                 : newSelected[0].value,
                                         );
                                     }}

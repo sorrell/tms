@@ -16,7 +16,9 @@ class ShipperController extends Controller
             return response()->json(Shipper::limit(10)->get());
         }
 
-        $results = Shipper::where('name', 'like', '%' . $request->input('query') . '%');
+        $results = Shipper::where('name', 'like', '%' . $request->input('query') . '%')
+            ->limit(10)
+            ->get();
 
         return response()->json($results);
     }

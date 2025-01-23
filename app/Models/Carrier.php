@@ -14,4 +14,13 @@ class Carrier extends Model
         'organization_id',
         'name',
     ];
+
+    protected $appends = [ 'selectable_label' ];
+
+    public function getSelectableLabelAttribute() : string
+    {
+        return sprintf("%s", $this->name);
+    }
+
+
 }

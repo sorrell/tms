@@ -38,7 +38,7 @@ export default function Index({
     const { errors } = usePage().props;
 
     const formSchema = z.object({
-        shipper_ids: z.string(), //z.array(z.number()).min(1),
+        shipper_ids: z.array(z.string()),
         carrier_id: z.string(),
         stops: z
             .array(
@@ -56,7 +56,7 @@ export default function Index({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            shipper_ids: shippers[0].id, //[],
+            shipper_ids: [],
             carrier_id: carriers[0].id,
             stops: [
                 {
@@ -224,24 +224,11 @@ export default function Index({
                             <FormItem>
                                 <FormLabel>Shipper</FormLabel>
                                 <FormControl>
-                                    <Select
+                                    <MultiSelectSearch
+                                        searchRoute={route('shippers.search')}
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value.toString()}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select shippers" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {shippers.map((shipper) => (
-                                                <SelectItem
-                                                    key={shipper.id}
-                                                    value={shipper.id.toString()}
-                                                >
-                                                    {shipper.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                        allowMultiple={true}
+                                    />
                                 </FormControl>
                                 <FormMessage>{errors.shipper_ids}</FormMessage>
                             </FormItem>
@@ -254,24 +241,11 @@ export default function Index({
                             <FormItem>
                                 <FormLabel>Carrier</FormLabel>
                                 <FormControl>
-                                    <Select
+                                    <MultiSelectSearch
+                                        searchRoute={route('carriers.search')}
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value.toString()}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a carrier" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {carriers.map((carrier) => (
-                                                <SelectItem
-                                                    key={carrier.id}
-                                                    value={carrier.id.toString()}
-                                                >
-                                                    {carrier.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                        allowMultiple={false}
+                                    />
                                 </FormControl>
                                 <FormMessage>{errors.carrier_id}</FormMessage>
                             </FormItem>
@@ -280,12 +254,6 @@ export default function Index({
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>
-            <div className="flex flex-col p-8">
-                <MultiSelectSearch
-                    searchRoute={route('facilities.search')}
-                    allowMultiple={false}
-                />
-            </div>
         </AuthenticatedLayout>
     );
 }

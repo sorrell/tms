@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
@@ -59,7 +60,10 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     });
 
     Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
-    Route::resource('facilities', FacilityController::class);    
+    Route::resource('facilities', FacilityController::class);
+
+    Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
+    Route::resource('carriers', CarrierController::class);
 
     Route::get('shippers/search', [ShipperController::class, 'search'])->name('shippers.search');
     Route::resource('shippers', ShipperController::class);
