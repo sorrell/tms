@@ -178,7 +178,7 @@ export function ResourceSearchSelect({
                                         setSelectedItems(newSelected);
 
                                         // Just the ids for the on value change for parent users
-                                        onValueChange(
+                                        onValueChange?.(
                                             allowMultiple
                                                 ? newSelected.map(
                                                       (v) => v.value,
