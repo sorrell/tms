@@ -6,6 +6,7 @@ use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Shipments\ShipmentController;
+use App\Http\Controllers\ShipperController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -59,6 +60,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
     Route::resource('facilities', FacilityController::class);    
+
+    Route::get('shippers/search', [ShipperController::class, 'search'])->name('shippers.search');
+    Route::resource('shippers', ShipperController::class);
 
     Route::resource('shipments', ShipmentController::class);
 });

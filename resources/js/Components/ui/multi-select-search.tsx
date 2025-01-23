@@ -52,7 +52,7 @@ export function MultiSelectSearch({
             .then((response) => {
                 let options = response.data.map((item: any) => ({
                     value: item.id.toString(),
-                    label: item.name,
+                    label: item.selectable_label ?? item.name,
                 }));
                 setSearch(searchInput);
                 setDataOptions(options);

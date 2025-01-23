@@ -17,6 +17,13 @@ class Facility extends Model
         'name',
     ];
 
+    protected $appends = [ 'selectable_label' ];
+
+    public function getSelectableLabelAttribute() : string
+    {
+        return sprintf("%s - %s, %s, %s", $this->name, $this->location->name, $this->location->address_city, $this->location->address_state);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Location, $this>
      */

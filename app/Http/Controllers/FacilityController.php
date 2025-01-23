@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchBoxRequest;
 use App\Http\Requests\StoreFacilityRequest;
 use App\Http\Requests\UpdateFacilityRequest;
 use App\Models\Facility;
@@ -10,12 +11,8 @@ use Illuminate\Http\Request;
 class FacilityController extends Controller
 {
 
-    public function search(Request $request)
+    public function search(SearchBoxRequest $request)
     {
-        $request->validate([
-            'query' => 'nullable|string',
-        ]);
-
         if (!$request->input('query')) {
             return response()->json(Facility::with('location')->limit(10)->get());
         }
