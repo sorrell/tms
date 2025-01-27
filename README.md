@@ -1,10 +1,16 @@
 # LoadPartner TMS
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/loadpartner/tms/tree/main)
 
-Open source and extensible freight brokerage TMS
+Open source and extensible freight brokerage TMS (tms.loadpartner.io)
 
+#### 🌐 [tms.loadpartner.io](https://tms.loadpartner.io)
 
-### Development
+## Get involved
+🗨️ [Chat with the team on Discord](https://tms.loadpartner.io/links/discord) 
+
+📰 [Subscribe to the newsletter](https://tms.loadpartner.io/links/newsletter)
+
+## Development
 Standing up the development environment after cloning the repository should follow these steps:
 
 #### Setup [Laravel Sail](https://laravel.com/docs/11.x/sail)
