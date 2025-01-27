@@ -7,13 +7,26 @@ use App\Http\Requests\Shipments\StoreShipmentRequest;
 use App\Http\Requests\Shipments\UpdateShipmentRequest;
 use App\Models\Shipments\Shipment;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ResourceSearchController;
+use App\Http\Requests\ResourceSearchRequest;
 use App\Models\Carrier;
 use App\Models\Facility;
 use App\Models\Shipper;
 use Inertia\Inertia;
 
-class ShipmentController extends Controller
+class ShipmentController extends ResourceSearchController
 {
+    protected $model = Shipment::class;
+
+    public function search(ResourceSearchRequest $request)
+    {
+        $results = $this->model::search($request->input('query'))->get()->take(10)
+            ->load('carrier')
+            ->load('shippers')
+            ->load('stops');
+        return response()->json($results);
+    }
+
     /**
      * Display a listing of the resource.
      */

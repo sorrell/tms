@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ResourceSearchRequest;
 
-abstract class ResourceSearchController
+abstract class ResourceSearchController extends Controller
 {
     protected $model;
 

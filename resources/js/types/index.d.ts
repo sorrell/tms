@@ -35,3 +35,17 @@ export interface Shipper {
     id: number;
     name: string;
 }
+
+export interface ShipmentStop {
+    id: number;
+    shipment_id: number;
+    facility: Facility;
+    stop_type: string;
+}
+
+export interface Shipment {
+    id: number;
+    shippers: Shipper[];
+    carrier: Carrier;
+    stops: ShipmentStop[];
+}

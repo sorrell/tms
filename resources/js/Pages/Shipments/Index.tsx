@@ -1,3 +1,4 @@
+import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
@@ -14,8 +15,8 @@ export default function Index({ shipments }: { shipments: any }) {
                     Create Shipment
                 </Link>
             </div>
-            <div className="flex flex-col gap-4 max-w-sm mx-auto">
-                {shipments.map((shipment: any) => (
+            <div className="mx-auto flex flex-col gap-4">
+                {/* {shipments.map((shipment: any) => (
                     <Link
                         href={route('shipments.show', shipment.id)}
                         key={shipment.id}
@@ -23,7 +24,8 @@ export default function Index({ shipments }: { shipments: any }) {
                     >
                         View Shipment {shipment.id}
                     </Link>
-                ))}
+                ))} */}
+                <ShipmentList />
             </div>
         </AuthenticatedLayout>
     );
