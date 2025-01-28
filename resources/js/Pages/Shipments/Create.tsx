@@ -1,5 +1,6 @@
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Checkbox } from '@/Components/ui/checkbox';
 import {
     Form,
     FormControl,
@@ -46,9 +47,9 @@ export default function Create({
         trip_distance: z.number().nullable(),
 
         // trailer_type_id: z.string().nullable(),
-        // trailer_temperature_range: z.boolean().nullable(),
-        // trailer_temperature_minimum: z.number().nullable(),
-        // trailer_temperature_maximum: z.number().nullable(),
+        trailer_temperature_range: z.boolean().nullable(),
+        trailer_temperature_minimum: z.number().nullable(),
+        trailer_temperature_maximum: z.number().nullable(),
 
         stops: z
             .array(
@@ -113,49 +114,136 @@ export default function Create({
                         <CardHeader>
                             <CardTitle>General</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <FormField
-                                control={form.control}
-                                name={`weight`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Weight</FormLabel>
-                                        <FormControl>
-                                            <div className="flex items-center gap-2">
-                                                <Input
-                                                    className="w-fit"
-                                                    {...field}
-                                                />
-                                                <span>lbs</span>
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage>
-                                            {errors[`weight`]}
-                                        </FormMessage>
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name={`trip_distance`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Trip Distance</FormLabel>
-                                        <FormControl>
-                                            <div className="flex items-center gap-2">
-                                                <Input
-                                                    className="w-fit"
-                                                    {...field}
-                                                />
-                                                <span>miles</span>
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage>
-                                            {errors[`trip_distance`]}
-                                        </FormMessage>
-                                    </FormItem>
-                                )}
-                            />
+                        <CardContent className="flex gap-4 justify-evenly">
+                            <div className="flex flex-col gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name={`weight`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Weight</FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        className="w-fit"
+                                                        {...field}
+                                                    />
+                                                    <span>lbs</span>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage>
+                                                {errors[`weight`]}
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name={`trip_distance`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Trip Distance</FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        className="w-fit"
+                                                        {...field}
+                                                    />
+                                                    <span>miles</span>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage>
+                                                {errors[`trip_distance`]}
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-4">
+                                <div>Temperature</div>
+                                <FormField
+                                    control={form.control}
+                                    name={`trailer_temperature_range`}
+                                    render={({ field }) => (
+                                        <FormItem className="gap-2">
+                                            <FormControl>
+                                                <Checkbox {...field} />
+                                            </FormControl>
+                                            <FormLabel className="ml-2">
+                                                Range
+                                            </FormLabel>
+                                            <FormMessage>
+                                                {
+                                                    errors[
+                                                        `trailer_temperature_range`
+                                                    ]
+                                                }
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="flex gap-2">
+                                    {form.watch(
+                                        'trailer_temperature_range',
+                                    ) && (
+                                        <>
+                                            <FormField
+                                                control={form.control}
+                                                name={`trailer_temperature_minimum`}
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Min
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input
+                                                                className="w-fit"
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage>
+                                                            {
+                                                                errors[
+                                                                    `trailer_temperature_minimum`
+                                                                ]
+                                                            }
+                                                        </FormMessage>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </>
+                                    )}
+                                    <FormField
+                                        control={form.control}
+                                        name={`trailer_temperature_maximum`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    {form.watch(
+                                                        'trailer_temperature_range',
+                                                    )
+                                                        ? 'Max'
+                                                        : 'Target'}
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        className="w-fit"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage>
+                                                    {
+                                                        errors[
+                                                            `trailer_temperature_maximum`
+                                                        ]
+                                                    }
+                                                </FormMessage>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
                     <Card>
