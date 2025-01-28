@@ -20,7 +20,6 @@ import {
 import { Textarea } from '@/Components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
-import { TemperatureUnit } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
@@ -43,13 +42,13 @@ export default function Create({
         shipper_ids: z.array(z.string()),
         carrier_id: z.string(),
 
-        // weight: z.number().nullable(),
-        // trip_miles: z.number().nullable(),
+        weight: z.number().nullable(),
+        trip_distance: z.number().nullable(),
+
         // trailer_type_id: z.string().nullable(),
         // trailer_temperature_range: z.boolean().nullable(),
         // trailer_temperature_minimum: z.number().nullable(),
         // trailer_temperature_maximum: z.number().nullable(),
-        // trailer_temperature_unit: z.nativeEnum(TemperatureUnit),
 
         stops: z
             .array(
@@ -114,7 +113,50 @@ export default function Create({
                         <CardHeader>
                             <CardTitle>General</CardTitle>
                         </CardHeader>
-                        <CardContent></CardContent>
+                        <CardContent>
+                            <FormField
+                                control={form.control}
+                                name={`weight`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Weight</FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center gap-2">
+                                                <Input
+                                                    className="w-fit"
+                                                    {...field}
+                                                />
+                                                <span>lbs</span>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage>
+                                            {errors[`weight`]}
+                                        </FormMessage>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`trip_distance`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Trip Distance</FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center gap-2">
+                                                <Input
+                                                    className="w-fit"
+                                                    {...field}
+                                                />
+                                                <span>miles</span>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage>
+                                            {errors[`trip_distance`]}
+                                        </FormMessage>
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
                     </Card>
                     <Card>
                         <CardHeader>
@@ -332,14 +374,25 @@ export default function Create({
                                                         </FormControl>
                                                         <FormLabel className="">
                                                             <Button
-                                                                disabled={form.getValues('stops').length <= 2}
+                                                                disabled={
+                                                                    form.getValues(
+                                                                        'stops',
+                                                                    ).length <=
+                                                                    2
+                                                                }
                                                                 type="button"
                                                                 variant="ghost"
                                                                 onClick={() => {
-                                                                    let stops = [
-                                                                        ...form.getValues('stops'),
-                                                                    ];
-                                                                    stops.splice(index, 1);
+                                                                    let stops =
+                                                                        [
+                                                                            ...form.getValues(
+                                                                                'stops',
+                                                                            ),
+                                                                        ];
+                                                                    stops.splice(
+                                                                        index,
+                                                                        1,
+                                                                    );
 
                                                                     stops.forEach(
                                                                         (
@@ -347,7 +400,8 @@ export default function Create({
                                                                             i,
                                                                         ) => {
                                                                             stop.stop_number =
-                                                                                i + 1;
+                                                                                i +
+                                                                                1;
                                                                         },
                                                                     );
 

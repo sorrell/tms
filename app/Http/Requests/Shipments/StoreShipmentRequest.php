@@ -28,7 +28,7 @@ class StoreShipmentRequest extends FormRequest
             'shipper_ids.*' => ['required', 'exists:shippers,id'],
 
             'weight' => ['nullable', 'numeric'],
-            'trip_miles' => ['nullable', 'numeric'],
+            'trip_distance' => ['nullable', 'numeric'],
             'trailer_type_id' => ['nullable', 'exists:trailer_types,id'],
             'trailer_temperature_range' => ['nullable', 'boolean'],
             'trailer_temperature_minimum' => ['nullable', 'numeric'],

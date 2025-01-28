@@ -18,7 +18,7 @@ class CreateShipment
         int $carrierId,
         array $stops,
         ?float $weight = null,
-        ?float $tripMiles = null,
+        ?float $tripDistance = null,
         ?int $trailerTypeId = null,
         ?bool $trailerTemperatureRange = null,
         ?float $trailerTemperatureMinimum = null,
@@ -31,7 +31,7 @@ class CreateShipment
         $shipment = Shipment::create([
             'carrier_id' => $carrierId,
             'weight' => $weight,
-            'trip_miles' => $tripMiles,
+            'trip_distance' => $tripDistance,
             'trailer_type_id' => $trailerTypeId,
             'trailer_temperature_range' => $trailerTemperatureRange,
             'trailer_temperature_minimum' => $trailerTemperatureMinimum,

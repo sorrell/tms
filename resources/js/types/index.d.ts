@@ -52,7 +52,7 @@ export interface Shipment {
     carrier: Carrier;
     stops: ShipmentStop[];
     weight: number;
-    trip_miles: number;
+    trip_distance: number;
     trailer_type_id: number;
     trailer_temperature_range: boolean;
     trailer_temperature_minimum: number;

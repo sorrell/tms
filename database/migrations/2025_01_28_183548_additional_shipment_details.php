@@ -37,7 +37,7 @@ return new class extends Migration
 
         Schema::table('shipments', function (Blueprint $table) {
             $table->float('weight')->nullable();
-            $table->float('trip_miles')->nullable();
+            $table->float('trip_distance')->nullable();
 
             // This weirdness is required for sqlite migrations to properly allow nullable foreign keys
             $table->unsignedBigInteger('trailer_type_id')->nullable();
@@ -46,7 +46,6 @@ return new class extends Migration
             $table->boolean('trailer_temperature_range')->default(false);
             $table->float('trailer_temperature_minimum')->nullable();
             $table->float('trailer_temperature_maximum')->nullable();
-            $table->string('trailer_temperature_unit');
         });
 
         Schema::table('shipment_stops', function (Blueprint $table) {
@@ -65,11 +64,10 @@ return new class extends Migration
             $table->dropForeign(['trailer_type_id']);
             $table->dropColumn('trailer_type_id');
             $table->dropColumn('weight');
-            $table->dropColumn('trip_miles');
+            $table->dropColumn('trip_distance');
             $table->dropColumn('trailer_temperature_range');
             $table->dropColumn('trailer_temperature_minimum');
             $table->dropColumn('trailer_temperature_maximum');
-            $table->dropColumn('trailer_temperature_unit');
         });
 
         Schema::dropIfExists('trailer_types');

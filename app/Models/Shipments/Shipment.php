@@ -19,7 +19,7 @@ class Shipment extends Model
         'organization_id',
         'carrier_id',
         'weight',
-        'trip_miles',
+        'trip_distance',
         'trailer_type_id',
         'trailer_temperature_range',
         'trailer_temperature_minimum',
