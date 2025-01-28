@@ -7,10 +7,18 @@ use App\Http\Requests\ResourceSearchRequest;
 abstract class ResourceSearchController extends Controller
 {
     protected $model;
+    protected $resource;
 
     public function search(ResourceSearchRequest $request)
     {
-        $results = $this->model::search($request->input('query'))->get()->take(10);
-        return response()->json($results);
+        $query = $this->model::search($request->input('query'));
+        $results = $query->get()->take(10);
+
+        // If relationships are requested to be loaded
+        if ($request->has('with') && is_array($request->input('with'))) {
+            $results->load($request->input('with'));
+        }
+        
+        return response()->json($this->resource::collection($results));
     }
 }

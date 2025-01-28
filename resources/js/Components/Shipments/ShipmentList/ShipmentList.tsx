@@ -9,6 +9,7 @@ function getData(): Promise<Shipment[]> {
     return axios.get(route('shipments.search'), {
         params: {
             query: '',
+            with: ['carrier', 'shippers', 'stops'],
         },
     }).then(response => response.data);
 }
