@@ -312,7 +312,7 @@ export default function Create({
                                                                     onValueChange={
                                                                         field.onChange
                                                                     }
-                                                                    defaultValue={
+                                                                    value={
                                                                         field.value
                                                                     }
                                                                 >
