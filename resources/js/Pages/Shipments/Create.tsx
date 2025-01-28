@@ -1,5 +1,12 @@
 import { Button } from '@/Components/ui/button';
 import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/Components/ui/card';
+import {
     Form,
     FormControl,
     FormDescription,
@@ -17,6 +24,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
+import { Skeleton } from '@/Components/ui/skeleton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -80,16 +88,6 @@ export default function Index({
         router.post(route('shipments.store'), values);
     }
 
-    // function testSearch(e: React.ChangeEvent<HTMLInputElement>) {
-    //     axios.get(route('facilities.search'), {
-    //         params: {
-    //             query: e.target.value,
-    //         },
-    //     }).then((response) => {
-    //         console.log(response.data);
-    //     });
-    // }
-
     return (
         <AuthenticatedLayout>
             <Head title="Create Shipment" />
@@ -100,162 +98,229 @@ export default function Index({
                         console.log(errors);
                         console.log(form.getValues());
                     })}
-                    className="mx-auto max-w-screen-md space-y-8 px-8"
+                    className="mx-auto max-w-screen-2xl space-y-8 px-8"
                 >
-                    <div>
-                        <Button
-                            type="button"
-                            onClick={() =>
-                                form.setValue('stops', [
-                                    ...form.getValues('stops'),
-                                    {
-                                        stop_type: 'pickup',
-                                        appointment: { datetime: '' },
-                                        facility_id: '0',
-                                    },
-                                ])
-                            }
-                        >
-                            Add Stop
-                        </Button>
-                    </div>
-                    {form.watch('stops').map((stop: any, index: number) => (
-                        <div key={'stop' + index}>
-                            <FormField
-                                key={index}
-                                control={form.control}
-                                name={`stops.${index}.stop_type`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="flex items-center justify-between">
-                                            Stop {index + 1} Type
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                onClick={() =>
-                                                    form.setValue(
-                                                        'stops',
-                                                        form
-                                                            .getValues('stops')
-                                                            .filter(
-                                                                (_, i) =>
-                                                                    i !== index,
-                                                            ),
-                                                    )
-                                                }
-                                            >
-                                                <Trash className="h-4 w-4" />
-                                            </Button>
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a stop type" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="pickup">
-                                                        Pickup
-                                                    </SelectItem>
-                                                    <SelectItem value="delivery">
-                                                        Delivery
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </FormControl>
-                                        <FormMessage>
-                                            {errors[`stops.${index}.stop_type`]}
-                                        </FormMessage>
-                                    </FormItem>
-                                )}
-                            />
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>General</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Skeleton className="h-[200px] w-full" />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Shippers</CardTitle>
+                        </CardHeader>
+                        <CardContent>
                             <FormField
                                 control={form.control}
-                                name={`stops.${index}.facility_id`}
+                                name={`shipper_ids`}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Facility</FormLabel>
+                                        {/* <FormLabel>Shipper</FormLabel> */}
                                         <FormControl>
                                             <ResourceSearchSelect
+                                                className="w-full"
                                                 searchRoute={route(
-                                                    'facilities.search',
+                                                    'shippers.search',
                                                 )}
-                                                allowMultiple={false}
                                                 onValueChange={field.onChange}
+                                                allowMultiple={true}
                                             />
                                         </FormControl>
                                         <FormMessage>
-                                            {
-                                                errors[
-                                                    `stops.${index}.facility_id`
-                                                ]
-                                            }
+                                            {errors.shipper_ids}
                                         </FormMessage>
                                     </FormItem>
                                 )}
                             />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Carrier</CardTitle>
+                        </CardHeader>
+                        <CardContent>
                             <FormField
                                 control={form.control}
-                                name={`stops.${index}.appointment.datetime`}
+                                name={`carrier_id`}
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel>Appointment Date</FormLabel>
+                                    <FormItem>
+                                        {/* <FormLabel>Carrier</FormLabel> */}
                                         <FormControl>
-                                            <Input
-                                                type="datetime-local"
-                                                {...field}
+                                            <ResourceSearchSelect
+                                                className="w-full"
+                                                searchRoute={route(
+                                                    'carriers.search',
+                                                )}
+                                                onValueChange={field.onChange}
+                                                allowMultiple={false}
                                             />
                                         </FormControl>
-                                        <FormDescription></FormDescription>
                                         <FormMessage>
-                                            {
-                                                errors[
-                                                    `stops.${index}.appointment.datetime`
-                                                ]
-                                            }
+                                            {errors.carrier_id}
                                         </FormMessage>
                                     </FormItem>
                                 )}
                             />
-                        </div>
-                    ))}
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                <div className="flex items-center justify-between">
+                                    <span>Stops</span>
+                                    <Button
+                                        type="button"
+                                        onClick={() =>
+                                            form.setValue('stops', [
+                                                ...form.getValues('stops'),
+                                                {
+                                                    stop_type: 'pickup',
+                                                    appointment: {
+                                                        datetime: '',
+                                                    },
+                                                    facility_id: '0',
+                                                },
+                                            ])
+                                        }
+                                    >
+                                        Add Stop
+                                    </Button>
+                                </div>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {form
+                                .watch('stops')
+                                .map((stop: any, index: number) => (
+                                    <div key={'stop' + index} className='border-l-4 border-primary pl-4'>
+                                        <FormField
+                                            key={index}
+                                            control={form.control}
+                                            name={`stops.${index}.stop_type`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel className="flex items-center justify-between">
+                                                        Stop {index + 1} Type
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            onClick={() =>
+                                                                form.setValue(
+                                                                    'stops',
+                                                                    form
+                                                                        .getValues(
+                                                                            'stops',
+                                                                        )
+                                                                        .filter(
+                                                                            (
+                                                                                _,
+                                                                                i,
+                                                                            ) =>
+                                                                                i !==
+                                                                                index,
+                                                                        ),
+                                                                )
+                                                            }
+                                                        >
+                                                            <Trash className="h-4 w-4" />
+                                                        </Button>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Select
+                                                            onValueChange={
+                                                                field.onChange
+                                                            }
+                                                            defaultValue={
+                                                                field.value
+                                                            }
+                                                        >
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select a stop type" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                <SelectItem value="pickup">
+                                                                    Pickup
+                                                                </SelectItem>
+                                                                <SelectItem value="delivery">
+                                                                    Delivery
+                                                                </SelectItem>
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormControl>
+                                                    <FormMessage>
+                                                        {
+                                                            errors[
+                                                                `stops.${index}.stop_type`
+                                                            ]
+                                                        }
+                                                    </FormMessage>
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`stops.${index}.facility_id`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Facility
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <ResourceSearchSelect
+                                                            searchRoute={route(
+                                                                'facilities.search',
+                                                            )}
+                                                            allowMultiple={
+                                                                false
+                                                            }
+                                                            onValueChange={
+                                                                field.onChange
+                                                            }
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage>
+                                                        {
+                                                            errors[
+                                                                `stops.${index}.facility_id`
+                                                            ]
+                                                        }
+                                                    </FormMessage>
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`stops.${index}.appointment.datetime`}
+                                            render={({ field }) => (
+                                                <FormItem className="flex flex-col">
+                                                    <FormLabel>
+                                                        Appointment Date
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="datetime-local"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormDescription></FormDescription>
+                                                    <FormMessage>
+                                                        {
+                                                            errors[
+                                                                `stops.${index}.appointment.datetime`
+                                                            ]
+                                                        }
+                                                    </FormMessage>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                ))}
+                        </CardContent>
+                    </Card>
 
-                    <FormField
-                        control={form.control}
-                        name={`shipper_ids`}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Shipper</FormLabel>
-                                <FormControl>
-                                    <ResourceSearchSelect
-                                        searchRoute={route('shippers.search')}
-                                        onValueChange={field.onChange}
-                                        allowMultiple={true}
-                                    />
-                                </FormControl>
-                                <FormMessage>{errors.shipper_ids}</FormMessage>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name={`carrier_id`}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Carrier</FormLabel>
-                                <FormControl>
-                                    <ResourceSearchSelect
-                                        searchRoute={route('carriers.search')}
-                                        onValueChange={field.onChange}
-                                        allowMultiple={false}
-                                    />
-                                </FormControl>
-                                <FormMessage>{errors.carrier_id}</FormMessage>
-                            </FormItem>
-                        )}
-                    />
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>

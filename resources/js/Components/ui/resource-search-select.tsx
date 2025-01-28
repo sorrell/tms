@@ -20,6 +20,7 @@ import {
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { CommandLoading } from 'cmdk';
+import { Badge } from './badge';
 
 export function ResourceSearchSelect({
     searchRoute,
@@ -27,12 +28,14 @@ export function ResourceSearchSelect({
     defaultSelectedItems = [],
     allowMultiple = true,
     autoLoadOptions = true,
+    className,
 }: {
     searchRoute: string;
     onValueChange?: (value: any) => void;
     defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
     autoLoadOptions?: boolean;
+    className?: string;
 }) {
     const [open, setOpen] = React.useState(false);
     const [selectedItems, setSelectedItems] = React.useState<any[]>(
@@ -111,18 +114,19 @@ export function ResourceSearchSelect({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] justify-between"
+                    className={cn('w-[200px] justify-between', className)}
                 >
-                    <div className="overflow-hidden">
+                    <div className="flex gap-1 flex-wrap">
                         {selectedItems.length > 0
-                            ? selectedItems
-                                  .map(
-                                      (v) =>
+                            ? selectedItems.map((v) => (
+                                  <Badge variant="secondary">
+                                      {
                                           getAllOptions().find(
                                               (f) => f.value === v.value,
-                                          )?.label,
-                                  )
-                                  .join(', ')
+                                          )?.label
+                                      }
+                                  </Badge>
+                              ))
                             : 'Select ...'}
                     </div>
                     <ChevronsUpDown className="opacity-50" />
@@ -157,6 +161,7 @@ export function ResourceSearchSelect({
                                         let newSelected = [];
 
                                         if (allowMultiple) {
+                                            // If selected item is already selected, remove it
                                             if (
                                                 selectedItems
                                                     .map((v) => v.value)
@@ -169,6 +174,7 @@ export function ResourceSearchSelect({
                                                             currentValue,
                                                     );
                                             } else {
+                                                // If selected item is not already selected, add it to the full list
                                                 newSelected = [
                                                     ...selectedItems,
                                                     getAllOptions().find(
@@ -179,7 +185,16 @@ export function ResourceSearchSelect({
                                                 ];
                                             }
                                         } else {
-                                            newSelected = [option];
+                                            // If selected item is already selected, remove it
+                                            if (
+                                                selectedItems
+                                                    .map((v) => v.value)
+                                                    .includes(option.value)
+                                            ) {
+                                                newSelected = [];
+                                            } else {
+                                                newSelected = [option];
+                                            }
                                         }
 
                                         // But save the whole selected for this component to reference
