@@ -3,6 +3,7 @@ import { columns } from './Columns';
 import { DataTable } from './DataTable';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Skeleton } from '@/Components/ui/skeleton';
 
 function getData(): Promise<Shipment[]> {
     return axios.get(route('shipments.search'), {
@@ -27,9 +28,10 @@ export default function ShipmentList() {
                 setIsLoading(false);
             });
     }, []);
+    
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Skeleton className="w-1/2 mx-auto h-[200px] rounded-md" />;
     }
 
     return (
