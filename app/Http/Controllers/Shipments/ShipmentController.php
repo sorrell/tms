@@ -10,8 +10,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResourceSearchController;
 use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Resources\ShipmentResource;
+use App\Http\Resources\TrailerTypeResource;
 use App\Models\Carrier;
 use App\Models\Facility;
+use App\Models\Shipments\TrailerType;
 use App\Models\Shipper;
 use Inertia\Inertia;
 
@@ -36,9 +38,7 @@ class ShipmentController extends ResourceSearchController
     public function create()
     {
         return Inertia::render('Shipments/Create', [
-            'facilities' => Facility::all(),
-            'shippers' => Shipper::all(),
-            'carriers' => Carrier::all(),
+            'trailerTypes' => TrailerTypeResource::collection(TrailerType::all()),
         ]);
     }
 

@@ -136,7 +136,7 @@ export function ResourceSearchSelect({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className={cn('w-[200px] justify-between', className)}
+                    className={cn('w-[200px] justify-between h-fit', className)}
                 >
                     <div className="flex flex-wrap gap-1">
                         {selectedItems.length > 0

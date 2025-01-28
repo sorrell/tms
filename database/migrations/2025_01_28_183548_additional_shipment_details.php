@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Shipments\TrailerType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -20,20 +21,18 @@ return new class extends Migration
             $table->softDeletesTz();
         });
 
-        DB::table('trailer_types')->insert(
-            [
-                'name' => '53\' Dry Van'
-            ],
-            [
-                'name' => '53\' Reefer'
-            ],
-            [
-                'name' => '53\' Flatbed'
-            ],
-            [
-                'name' => '53\' Stepdeck'
-            ]
-        );
+        TrailerType::create([
+            'name' => '53\' Dry Van'
+        ]);
+        TrailerType::create([
+            'name' => '53\' Reefer'
+        ]);
+        TrailerType::create([
+            'name' => '53\' Flatbed'
+        ]);
+        TrailerType::create([
+            'name' => '53\' Stepdeck'
+        ]);
 
         Schema::table('shipments', function (Blueprint $table) {
             $table->float('weight')->nullable();

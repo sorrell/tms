@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@/Components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { cn } from '@/lib/utils';
-import { Carrier, Facility, Shipper } from '@/types';
+import { TrailerType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
@@ -30,13 +30,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Create({
-    facilities,
-    shippers,
-    carriers,
+    trailerTypes,
 }: {
-    facilities: Facility[];
-    shippers: Shipper[];
-    carriers: Carrier[];
+    trailerTypes: TrailerType[];
 }) {
     const { errors } = usePage().props;
 
@@ -47,10 +43,10 @@ export default function Create({
         weight: z.string().nullable(),
         trip_distance: z.string().nullable(),
 
-        // trailer_type_id: z.string().nullable(),
+        trailer_type_id: z.string().nullable(),
         trailer_temperature_range: z.boolean().nullable(),
-        trailer_temperature: z.string().nullable(),
-        trailer_temperature_maximum: z.string().nullable(),
+        trailer_temperature: z.string().optional(),
+        trailer_temperature_maximum: z.string().nullable().optional(),
 
         stops: z
             .array(
@@ -75,6 +71,7 @@ export default function Create({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            trailer_type_id: undefined,
             trailer_temperature_range: false,
             trailer_temperature: undefined,
             trailer_temperature_maximum: undefined,
@@ -89,6 +86,7 @@ export default function Create({
                     special_instructions: '',
                     reference_numbers: '',
                     stop_number: 1,
+                    facility_id: undefined,
                 },
                 {
                     stop_type: 'delivery',
@@ -96,6 +94,7 @@ export default function Create({
                     special_instructions: '',
                     reference_numbers: '',
                     stop_number: 2,
+                    facility_id: undefined,
                 },
             ],
         },
@@ -116,14 +115,14 @@ export default function Create({
                         console.log(errors);
                         console.log(form.getValues());
                     })}
-                    className="mx-auto max-w-screen-2xl space-y-2 px-2 pb-8 md:space-y-8 md:px-8"
+                    className="mx-auto max-w-screen-2xl space-y-2 pb-8 md:space-y-8 md:px-8"
                 >
                     <Card>
                         <CardHeader>
                             <CardTitle>General</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex justify-evenly gap-4">
-                            <div className="flex flex-col gap-4">
+                        <CardContent className="flex flex-wrap justify-evenly gap-4">
+                            <div className="flex flex-col flex-wrap gap-4">
                                 <FormField
                                     control={form.control}
                                     name={`weight`}
@@ -285,7 +284,6 @@ export default function Create({
                                 name={`shipper_ids`}
                                 render={({ field }) => (
                                     <FormItem>
-                                        {/* <FormLabel>Shipper</FormLabel> */}
                                         <FormControl>
                                             <ResourceSearchSelect
                                                 className="w-full"
@@ -311,13 +309,13 @@ export default function Create({
                         <CardHeader>
                             <CardTitle>Carrier</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="flex flex-wrap flex-col gap-4">
                             <FormField
                                 control={form.control}
                                 name={`carrier_id`}
                                 render={({ field }) => (
-                                    <FormItem>
-                                        {/* <FormLabel>Carrier</FormLabel> */}
+                                    <FormItem className="flex flex-col flex-grow">
+                                        <FormLabel>Carrier</FormLabel>
                                         <FormControl>
                                             <ResourceSearchSelect
                                                 className="w-full"
@@ -333,6 +331,51 @@ export default function Create({
                                         </FormControl>
                                         <FormMessage>
                                             {errors.carrier_id}
+                                        </FormMessage>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name={`trailer_type_id`}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Trailer Type</FormLabel>
+                                        <FormControl>
+                                            <div className="flex flex-grow">
+                                                <Select
+                                                    onValueChange={
+                                                        field.onChange
+                                                    }
+                                                    value={
+                                                        field.value ?? undefined
+                                                    }
+                                                >
+                                                    <SelectTrigger className="w-fit min-w-[100px]">
+                                                        <SelectValue placeholder="Select ..." />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {trailerTypes.map(
+                                                            (trailerType) => (
+                                                                <SelectItem
+                                                                    key={
+                                                                        trailerType.id
+                                                                    }
+                                                                    value={trailerType.id.toString()}
+                                                                >
+                                                                    {
+                                                                        trailerType.name
+                                                                    }
+                                                                </SelectItem>
+                                                            ),
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage>
+                                            {errors.trailer_type_id}
                                         </FormMessage>
                                     </FormItem>
                                 )}
@@ -654,7 +697,11 @@ export default function Create({
                         </CardContent>
                     </Card>
 
-                    <Button type="submit">Create Shipment</Button>
+                    <div className="flex justify-center md:justify-start">
+                        <Button type="submit">
+                            Create Shipment
+                        </Button>
+                    </div>
                 </form>
             </Form>
         </AuthenticatedLayout>

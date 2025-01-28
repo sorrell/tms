@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Shipments;
 
-use App\Enums\TemperatureUnit;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreShipmentRequest extends FormRequest
 {
