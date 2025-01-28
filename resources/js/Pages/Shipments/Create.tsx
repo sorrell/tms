@@ -203,7 +203,7 @@ export default function Create({
                                         </FormItem>
                                     )}
                                 />
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2">
                                     <FormField
                                         control={form.control}
                                         name={`trailer_temperature`}
