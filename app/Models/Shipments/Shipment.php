@@ -18,6 +18,13 @@ class Shipment extends Model
     protected $fillable = [
         'organization_id',
         'carrier_id',
+        'weight',
+        'trip_miles',
+        'trailer_type_id',
+        'trailer_temperature_range',
+        'trailer_temperature_minimum',
+        'trailer_temperature_maximum',
+        'trailer_temperature_unit',
     ];  
 
     protected $appends = [ 'selectable_label' ];
@@ -25,6 +32,14 @@ class Shipment extends Model
     public function getSelectableLabelAttribute() : string
     {
         return sprintf("Shipment %s", $this->id);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrailerType, $this>
+     */
+    public function trailer_type(): BelongsTo
+    {
+        return $this->belongsTo(TrailerType::class);
     }
 
     /**

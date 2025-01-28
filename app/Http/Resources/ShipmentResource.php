@@ -16,6 +16,13 @@ class ShipmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'weight' => $this->weight,
+            'trip_miles' => $this->trip_miles,
+            'trailer_type' => new TrailerTypeResource($this->whenLoaded('trailer_type')),
+            'trailer_temperature_range' => $this->trailer_temperature_range,
+            'trailer_temperature_minimum' => $this->trailer_temperature_minimum,
+            'trailer_temperature_maximum' => $this->trailer_temperature_maximum,
+            'trailer_temperature_unit' => $this->trailer_temperature_unit,
             'shippers' => ShipperResource::collection($this->whenLoaded('shippers')),
             'carrier' => new CarrierResource($this->whenLoaded('carrier')),
             'stops' => ShipmentStopResource::collection($this->whenLoaded('stops')),

@@ -17,9 +17,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
-import { Skeleton } from '@/Components/ui/skeleton';
+import { Textarea } from '@/Components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
+import { TemperatureUnit } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
@@ -27,7 +28,7 @@ import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
 
-export default function Index({
+export default function Create({
     facilities,
     shippers,
     carriers,
@@ -41,6 +42,15 @@ export default function Index({
     const formSchema = z.object({
         shipper_ids: z.array(z.string()),
         carrier_id: z.string(),
+
+        // weight: z.number().nullable(),
+        // trip_miles: z.number().nullable(),
+        // trailer_type_id: z.string().nullable(),
+        // trailer_temperature_range: z.boolean().nullable(),
+        // trailer_temperature_minimum: z.number().nullable(),
+        // trailer_temperature_maximum: z.number().nullable(),
+        // trailer_temperature_unit: z.nativeEnum(TemperatureUnit),
+
         stops: z
             .array(
                 z.object({
@@ -53,6 +63,9 @@ export default function Index({
                             return !isNaN(date.getTime());
                         }, 'Please enter a valid date and time'),
                     }),
+                    special_instructions: z.string().nullable(),
+                    reference_numbers: z.string().nullable(),
+                    stop_number: z.number().int(),
                 }),
             )
             .min(2),
@@ -65,10 +78,16 @@ export default function Index({
                 {
                     stop_type: 'pickup',
                     appointment: { datetime: '' },
+                    special_instructions: '',
+                    reference_numbers: '',
+                    stop_number: 1,
                 },
                 {
                     stop_type: 'delivery',
                     appointment: { datetime: '' },
+                    special_instructions: '',
+                    reference_numbers: '',
+                    stop_number: 2,
                 },
             ],
         },
@@ -95,9 +114,7 @@ export default function Index({
                         <CardHeader>
                             <CardTitle>General</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <Skeleton className="w-sm h-[200px] md:w-full" />
-                        </CardContent>
+                        <CardContent></CardContent>
                     </Card>
                     <Card>
                         <CardHeader>
@@ -179,6 +196,11 @@ export default function Index({
                                                     appointment: {
                                                         datetime: '',
                                                     },
+                                                    special_instructions: '',
+                                                    reference_numbers: '',
+                                                    stop_number:
+                                                        form.getValues('stops')
+                                                            .length + 1,
                                                     facility_id: '0',
                                                 },
                                             ])
@@ -212,14 +234,18 @@ export default function Index({
                                                     stops[index] =
                                                         stops[index - 1];
                                                     stops[index - 1] = temp;
+
+                                                    stops.forEach((stop, i) => {
+                                                        stop.stop_number =
+                                                            i + 1;
+                                                    });
                                                     form.setValue(
                                                         'stops',
                                                         stops,
                                                         {
                                                             shouldValidate:
                                                                 false,
-                                                            shouldTouch:
-                                                                false,
+                                                            shouldTouch: false,
                                                         },
                                                     );
                                                 }}
@@ -227,6 +253,9 @@ export default function Index({
                                             >
                                                 <ArrowUp className="h-4 w-4" />
                                             </Button>
+                                            <span className="text-center text-sm font-bold">
+                                                {stop.stop_number}
+                                            </span>
                                             <Button
                                                 variant="secondary"
                                                 size="icon"
@@ -241,14 +270,19 @@ export default function Index({
                                                     stops[index] =
                                                         stops[index + 1];
                                                     stops[index + 1] = temp;
+
+                                                    stops.forEach((stop, i) => {
+                                                        stop.stop_number =
+                                                            i + 1;
+                                                    });
+
                                                     form.setValue(
                                                         'stops',
                                                         stops,
                                                         {
                                                             shouldValidate:
                                                                 false,
-                                                            shouldTouch:
-                                                                false,
+                                                            shouldTouch: false,
                                                         },
                                                     );
                                                 }}
@@ -298,25 +332,30 @@ export default function Index({
                                                         </FormControl>
                                                         <FormLabel className="">
                                                             <Button
+                                                                disabled={form.getValues('stops').length <= 2}
                                                                 type="button"
                                                                 variant="ghost"
-                                                                onClick={() =>
+                                                                onClick={() => {
+                                                                    let stops = [
+                                                                        ...form.getValues('stops'),
+                                                                    ];
+                                                                    stops.splice(index, 1);
+
+                                                                    stops.forEach(
+                                                                        (
+                                                                            stop,
+                                                                            i,
+                                                                        ) => {
+                                                                            stop.stop_number =
+                                                                                i + 1;
+                                                                        },
+                                                                    );
+
                                                                     form.setValue(
                                                                         'stops',
-                                                                        form
-                                                                            .getValues(
-                                                                                'stops',
-                                                                            )
-                                                                            .filter(
-                                                                                (
-                                                                                    _,
-                                                                                    i,
-                                                                                ) =>
-                                                                                    i !==
-                                                                                    index,
-                                                                            ),
-                                                                    )
-                                                                }
+                                                                        stops,
+                                                                    );
+                                                                }}
                                                             >
                                                                 Remove
                                                                 <Trash className="h-4 w-4" />
@@ -385,6 +424,53 @@ export default function Index({
                                                             {
                                                                 errors[
                                                                     `stops.${index}.appointment.datetime`
+                                                                ]
+                                                            }
+                                                        </FormMessage>
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            <FormField
+                                                control={form.control}
+                                                name={`stops.${index}.special_instructions`}
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Special Instructions
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Textarea
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage>
+                                                            {
+                                                                errors[
+                                                                    `stops.${index}.special_instructions`
+                                                                ]
+                                                            }
+                                                        </FormMessage>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name={`stops.${index}.reference_numbers`}
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Reference Numbers
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Textarea
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage>
+                                                            {
+                                                                errors[
+                                                                    `stops.${index}.reference_numbers`
                                                                 ]
                                                             }
                                                         </FormMessage>

@@ -41,6 +41,9 @@ export interface ShipmentStop {
     shipment_id: number;
     facility: Facility;
     stop_type: string;
+    stop_number: number;
+    special_instructions: string;
+    reference_numbers: string;
 }
 
 export interface Shipment {
@@ -48,4 +51,11 @@ export interface Shipment {
     shippers: Shipper[];
     carrier: Carrier;
     stops: ShipmentStop[];
+    weight: number;
+    trip_miles: number;
+    trailer_type_id: number;
+    trailer_temperature_range: boolean;
+    trailer_temperature_minimum: number;
+    trailer_temperature_maximum: number;
+    trailer_temperature_unit: string;
 }

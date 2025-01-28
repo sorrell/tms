@@ -18,6 +18,9 @@ class ShipmentStop extends Model
         'shipment_id',
         'facility_id',
         'stop_type',
+        'special_instructions',
+        'reference_numbers',
+        'stop_number',
     ];
 
     /**
