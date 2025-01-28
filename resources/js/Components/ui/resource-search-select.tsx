@@ -25,7 +25,7 @@ import { Badge } from './badge';
 export function ResourceSearchSelect({
     searchRoute,
     onValueChange,
-    defaultSelectedItems = [],
+    defaultSelectedItems = null,
     allowMultiple = true,
     autoLoadOptions = true,
     className,
@@ -38,28 +38,47 @@ export function ResourceSearchSelect({
     className?: string;
 }) {
     const [open, setOpen] = React.useState(false);
-    const [selectedItems, setSelectedItems] = React.useState<any[]>(
-        Array.isArray(defaultSelectedItems)
-            ? defaultSelectedItems
-            : [defaultSelectedItems],
-    );
+    const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
     const [search, setSearch] = React.useState('');
     const [dataOptions, setDataOptions] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
 
     React.useEffect(() => {
-        if (autoLoadOptions) {
-            searchData('');
+        if (autoLoadOptions || defaultSelectedItems) {
+            let items = Array.isArray(defaultSelectedItems)
+                ? defaultSelectedItems
+                : [defaultSelectedItems];
+            searchData('', items);
         }
     }, []);
 
-    const searchData = (searchInput: string) => {
+    React.useEffect(() => {
+        if (defaultSelectedItems) {
+            let items = Array.isArray(defaultSelectedItems)
+                ? defaultSelectedItems
+                : [defaultSelectedItems];
+
+            // Check if the current selection is different from the defaultSelectedItems
+            const currentSelectedIds = selectedItems.map((item) => item.value);
+            const hasChanges =
+                items.some(
+                    (id) => !currentSelectedIds.includes(id.toString()),
+                ) || currentSelectedIds.some((id) => !items.includes(id));
+
+            if (hasChanges) {
+                searchData('', items);
+            }
+        }
+    }, [defaultSelectedItems]);
+
+    const searchData = (searchInput: string, searchIds?: string[]) => {
         setLoading(true);
         axios
             .get(searchRoute, {
                 params: {
                     query: searchInput,
+                    ids: searchIds ?? null,
                 },
             })
             .then((response) => {
@@ -69,6 +88,11 @@ export function ResourceSearchSelect({
                 }));
                 setSearch(searchInput);
                 setDataOptions(options);
+                if (searchIds) {
+                    setSelectedItems(
+                        options.filter((o: any) => searchIds.includes(o.value)),
+                    );
+                }
                 setLoading(false);
             })
             .catch((error) => {
@@ -116,17 +140,27 @@ export function ResourceSearchSelect({
                     aria-expanded={open}
                     className={cn('w-[200px] justify-between', className)}
                 >
-                    <div className="flex gap-1 flex-wrap">
+                    <div className="flex flex-wrap gap-1">
                         {selectedItems.length > 0
-                            ? selectedItems.map((v) => (
-                                  <Badge variant="secondary">
-                                      {
-                                          getAllOptions().find(
-                                              (f) => f.value === v.value,
-                                          )?.label
-                                      }
-                                  </Badge>
-                              ))
+                            ? selectedItems.map((v) =>
+                                  allowMultiple ? (
+                                      <Badge variant="secondary" key={v.value}>
+                                          {
+                                              getAllOptions().find(
+                                                  (f) => f.value === v.value,
+                                              )?.label
+                                          }
+                                      </Badge>
+                                  ) : (
+                                      <span key={v.value}>
+                                          {
+                                              getAllOptions().find(
+                                                  (f) => f.value === v.value,
+                                              )?.label
+                                          }
+                                      </span>
+                                  ),
+                              )
                             : 'Select ...'}
                     </div>
                     <ChevronsUpDown className="opacity-50" />

@@ -11,8 +11,13 @@ abstract class ResourceSearchController extends Controller
 
     public function search(ResourceSearchRequest $request)
     {
-        $query = $this->model::search($request->input('query'));
-        $results = $query->get()->take(10);
+        if ($request->has('ids')) {
+            $query = $this->model::whereIn('id', $request->input('ids'))->limit(10);
+            $results = $query->get();
+        } else {
+            $query = $this->model::search($request->input('query'));
+            $results = $query->get()->take(10);
+        }
 
         // If relationships are requested to be loaded
         if ($request->has('with') && is_array($request->input('with'))) {

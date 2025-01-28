@@ -1,15 +1,8 @@
 import { Button } from '@/Components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/Components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -29,7 +22,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier, Facility, Shipper } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
-import { Trash } from 'lucide-react';
+import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
@@ -71,12 +64,10 @@ export default function Index({
             stops: [
                 {
                     stop_type: 'pickup',
-                    facility_id: facilities[0]?.id.toString(),
                     appointment: { datetime: '' },
                 },
                 {
                     stop_type: 'delivery',
-                    facility_id: facilities[1]?.id.toString(),
                     appointment: { datetime: '' },
                 },
             ],
@@ -98,14 +89,14 @@ export default function Index({
                         console.log(errors);
                         console.log(form.getValues());
                     })}
-                    className="mx-auto max-w-screen-2xl space-y-8 px-8"
+                    className="mx-auto max-w-screen-2xl space-y-2 px-2 pb-8 md:space-y-8 md:px-8"
                 >
                     <Card>
                         <CardHeader>
                             <CardTitle>General</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <Skeleton className="h-[200px] w-full" />
+                            <Skeleton className="w-sm h-[200px] md:w-full" />
                         </CardContent>
                     </Card>
                     <Card>
@@ -127,6 +118,9 @@ export default function Index({
                                                 )}
                                                 onValueChange={field.onChange}
                                                 allowMultiple={true}
+                                                defaultSelectedItems={
+                                                    field.value
+                                                }
                                             />
                                         </FormControl>
                                         <FormMessage>
@@ -156,6 +150,9 @@ export default function Index({
                                                 )}
                                                 onValueChange={field.onChange}
                                                 allowMultiple={false}
+                                                defaultSelectedItems={
+                                                    field.value
+                                                }
                                             />
                                         </FormControl>
                                         <FormMessage>
@@ -173,6 +170,7 @@ export default function Index({
                                     <span>Stops</span>
                                     <Button
                                         type="button"
+                                        variant="default"
                                         onClick={() =>
                                             form.setValue('stops', [
                                                 ...form.getValues('stops'),
@@ -191,137 +189,215 @@ export default function Index({
                                 </div>
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-6">
+                        <CardContent className="space-y-8">
                             {form
                                 .watch('stops')
                                 .map((stop: any, index: number) => (
-                                    <div key={'stop' + index} className='border-l-4 border-primary pl-4'>
-                                        <FormField
-                                            key={index}
-                                            control={form.control}
-                                            name={`stops.${index}.stop_type`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="flex items-center justify-between">
-                                                        Stop {index + 1} Type
-                                                        <Button
-                                                            type="button"
-                                                            variant="ghost"
-                                                            onClick={() =>
-                                                                form.setValue(
-                                                                    'stops',
-                                                                    form
-                                                                        .getValues(
-                                                                            'stops',
-                                                                        )
-                                                                        .filter(
-                                                                            (
-                                                                                _,
-                                                                                i,
-                                                                            ) =>
-                                                                                i !==
-                                                                                index,
-                                                                        ),
-                                                                )
-                                                            }
-                                                        >
-                                                            <Trash className="h-4 w-4" />
-                                                        </Button>
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Select
-                                                            onValueChange={
-                                                                field.onChange
-                                                            }
-                                                            defaultValue={
-                                                                field.value
-                                                            }
-                                                        >
-                                                            <SelectTrigger>
-                                                                <SelectValue placeholder="Select a stop type" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                <SelectItem value="pickup">
-                                                                    Pickup
-                                                                </SelectItem>
-                                                                <SelectItem value="delivery">
-                                                                    Delivery
-                                                                </SelectItem>
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </FormControl>
-                                                    <FormMessage>
+                                    <div
+                                        className="flex items-center justify-between space-x-2"
+                                        key={'stops-div-' + index}
+                                    >
+                                        <div className="flex h-full flex-shrink-0 flex-col justify-between gap-2">
+                                            <Button
+                                                variant="secondary"
+                                                size="icon"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    const stops = [
+                                                        ...form.getValues(
+                                                            'stops',
+                                                        ),
+                                                    ];
+                                                    const temp = stops[index];
+                                                    stops[index] =
+                                                        stops[index - 1];
+                                                    stops[index - 1] = temp;
+                                                    form.setValue(
+                                                        'stops',
+                                                        stops,
                                                         {
-                                                            errors[
-                                                                `stops.${index}.stop_type`
-                                                            ]
-                                                        }
-                                                    </FormMessage>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`stops.${index}.facility_id`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>
-                                                        Facility
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <ResourceSearchSelect
-                                                            searchRoute={route(
-                                                                'facilities.search',
-                                                            )}
-                                                            allowMultiple={
-                                                                false
-                                                            }
-                                                            onValueChange={
-                                                                field.onChange
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage>
+                                                            shouldValidate:
+                                                                false,
+                                                            shouldTouch:
+                                                                false,
+                                                        },
+                                                    );
+                                                }}
+                                                disabled={index === 0}
+                                            >
+                                                <ArrowUp className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="secondary"
+                                                size="icon"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    const stops = [
+                                                        ...form.getValues(
+                                                            'stops',
+                                                        ),
+                                                    ];
+                                                    const temp = stops[index];
+                                                    stops[index] =
+                                                        stops[index + 1];
+                                                    stops[index + 1] = temp;
+                                                    form.setValue(
+                                                        'stops',
+                                                        stops,
                                                         {
-                                                            errors[
-                                                                `stops.${index}.facility_id`
-                                                            ]
-                                                        }
-                                                    </FormMessage>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`stops.${index}.appointment.datetime`}
-                                            render={({ field }) => (
-                                                <FormItem className="flex flex-col">
-                                                    <FormLabel>
-                                                        Appointment Date
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="datetime-local"
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormDescription></FormDescription>
-                                                    <FormMessage>
-                                                        {
-                                                            errors[
-                                                                `stops.${index}.appointment.datetime`
-                                                            ]
-                                                        }
-                                                    </FormMessage>
-                                                </FormItem>
-                                            )}
-                                        />
+                                                            shouldValidate:
+                                                                false,
+                                                            shouldTouch:
+                                                                false,
+                                                        },
+                                                    );
+                                                }}
+                                                disabled={
+                                                    index ===
+                                                    form.getValues('stops')
+                                                        .length -
+                                                        1
+                                                }
+                                            >
+                                                <ArrowDown className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                        <div
+                                            key={'stop' + index}
+                                            className="flex flex-grow flex-col space-y-4 border-l-2 border-primary py-2 pl-2 md:border-l-4 md:pl-4"
+                                        >
+                                            <FormField
+                                                key={index}
+                                                control={form.control}
+                                                name={`stops.${index}.stop_type`}
+                                                render={({ field }) => (
+                                                    <FormItem className="flex flex-row">
+                                                        <FormControl>
+                                                            <div className="flex flex-grow">
+                                                                <Select
+                                                                    onValueChange={
+                                                                        field.onChange
+                                                                    }
+                                                                    defaultValue={
+                                                                        field.value
+                                                                    }
+                                                                >
+                                                                    <SelectTrigger className="w-fit min-w-[100px]">
+                                                                        <SelectValue placeholder="Select a stop type" />
+                                                                    </SelectTrigger>
+                                                                    <SelectContent>
+                                                                        <SelectItem value="pickup">
+                                                                            Pickup
+                                                                        </SelectItem>
+                                                                        <SelectItem value="delivery">
+                                                                            Delivery
+                                                                        </SelectItem>
+                                                                    </SelectContent>
+                                                                </Select>
+                                                            </div>
+                                                        </FormControl>
+                                                        <FormLabel className="">
+                                                            <Button
+                                                                type="button"
+                                                                variant="ghost"
+                                                                onClick={() =>
+                                                                    form.setValue(
+                                                                        'stops',
+                                                                        form
+                                                                            .getValues(
+                                                                                'stops',
+                                                                            )
+                                                                            .filter(
+                                                                                (
+                                                                                    _,
+                                                                                    i,
+                                                                                ) =>
+                                                                                    i !==
+                                                                                    index,
+                                                                            ),
+                                                                    )
+                                                                }
+                                                            >
+                                                                Remove
+                                                                <Trash className="h-4 w-4" />
+                                                            </Button>
+                                                        </FormLabel>
+                                                        <FormMessage>
+                                                            {
+                                                                errors[
+                                                                    `stops.${index}.stop_type`
+                                                                ]
+                                                            }
+                                                        </FormMessage>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name={`stops.${index}.facility_id`}
+                                                render={({ field }) => (
+                                                    <FormItem className="flex flex-col">
+                                                        <FormLabel>
+                                                            Facility
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <ResourceSearchSelect
+                                                                searchRoute={route(
+                                                                    'facilities.search',
+                                                                )}
+                                                                allowMultiple={
+                                                                    false
+                                                                }
+                                                                onValueChange={
+                                                                    field.onChange
+                                                                }
+                                                                defaultSelectedItems={
+                                                                    field.value
+                                                                }
+                                                                className="w-full"
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage>
+                                                            {
+                                                                errors[
+                                                                    `stops.${index}.facility_id`
+                                                                ]
+                                                            }
+                                                        </FormMessage>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name={`stops.${index}.appointment.datetime`}
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Appointment Date
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input
+                                                                type="datetime-local"
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage>
+                                                            {
+                                                                errors[
+                                                                    `stops.${index}.appointment.datetime`
+                                                                ]
+                                                            }
+                                                        </FormMessage>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </div>
                                     </div>
                                 ))}
                         </CardContent>
                     </Card>
 
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Create Shipment</Button>
                 </form>
             </Form>
         </AuthenticatedLayout>
