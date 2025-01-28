@@ -54,21 +54,19 @@ export function ResourceSearchSelect({
     }, []);
 
     React.useEffect(() => {
-        if (defaultSelectedItems) {
-            let items = Array.isArray(defaultSelectedItems)
-                ? defaultSelectedItems
-                : [defaultSelectedItems];
+        let items = Array.isArray(defaultSelectedItems)
+            ? defaultSelectedItems
+            : [defaultSelectedItems];
 
-            // Check if the current selection is different from the defaultSelectedItems
-            const currentSelectedIds = selectedItems.map((item) => item.value);
-            const hasChanges =
-                items.some(
-                    (id) => !currentSelectedIds.includes(id.toString()),
-                ) || currentSelectedIds.some((id) => !items.includes(id));
+        // Check if the current selection is different from the defaultSelectedItems
+        const currentSelectedIds = selectedItems.map((item) => item.value);
+        const hasChanges =
+            items.some(
+                (id) => !currentSelectedIds.includes(id?.toString()),
+            ) || currentSelectedIds.some((id) => !items.includes(id));
 
-            if (hasChanges) {
-                searchData('', items);
-            }
+        if (hasChanges) {
+            searchData('', items);
         }
     }, [defaultSelectedItems]);
 
