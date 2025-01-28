@@ -22,9 +22,8 @@ class Shipment extends Model
         'trip_distance',
         'trailer_type_id',
         'trailer_temperature_range',
-        'trailer_temperature_minimum',
+        'trailer_temperature',
         'trailer_temperature_maximum',
-        'trailer_temperature_unit',
     ];  
 
     protected $appends = [ 'selectable_label' ];

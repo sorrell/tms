@@ -20,6 +20,7 @@ import {
 } from '@/Components/ui/select';
 import { Textarea } from '@/Components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { cn } from '@/lib/utils';
 import { Carrier, Facility, Shipper } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
@@ -43,13 +44,13 @@ export default function Create({
         shipper_ids: z.array(z.string()),
         carrier_id: z.string(),
 
-        weight: z.number().nullable(),
-        trip_distance: z.number().nullable(),
+        weight: z.string().nullable(),
+        trip_distance: z.string().nullable(),
 
         // trailer_type_id: z.string().nullable(),
         trailer_temperature_range: z.boolean().nullable(),
-        trailer_temperature_minimum: z.number().nullable(),
-        trailer_temperature_maximum: z.number().nullable(),
+        trailer_temperature: z.string().nullable(),
+        trailer_temperature_maximum: z.string().nullable(),
 
         stops: z
             .array(
@@ -74,6 +75,13 @@ export default function Create({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            trailer_temperature_range: false,
+            trailer_temperature: undefined,
+            trailer_temperature_maximum: undefined,
+
+            weight: undefined,
+            trip_distance: undefined,
+
             stops: [
                 {
                     stop_type: 'pickup',
@@ -114,7 +122,7 @@ export default function Create({
                         <CardHeader>
                             <CardTitle>General</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex gap-4 justify-evenly">
+                        <CardContent className="flex justify-evenly gap-4">
                             <div className="flex flex-col gap-4">
                                 <FormField
                                     control={form.control}
@@ -127,6 +135,10 @@ export default function Create({
                                                     <Input
                                                         className="w-fit"
                                                         {...field}
+                                                        type="number"
+                                                        value={
+                                                            field.value ?? ''
+                                                        }
                                                     />
                                                     <span>lbs</span>
                                                 </div>
@@ -148,6 +160,10 @@ export default function Create({
                                                     <Input
                                                         className="w-fit"
                                                         {...field}
+                                                        type="number"
+                                                        value={
+                                                            field.value ?? ''
+                                                        }
                                                     />
                                                     <span>miles</span>
                                                 </div>
@@ -161,14 +177,19 @@ export default function Create({
                             </div>
 
                             <div className="flex flex-col gap-4">
-                                <div>Temperature</div>
+                                <div>Temperature (F)</div>
                                 <FormField
                                     control={form.control}
                                     name={`trailer_temperature_range`}
                                     render={({ field }) => (
                                         <FormItem className="gap-2">
                                             <FormControl>
-                                                <Checkbox {...field} />
+                                                <Checkbox
+                                                    {...field}
+                                                    onCheckedChange={
+                                                        field.onChange
+                                                    }
+                                                />
                                             </FormControl>
                                             <FormLabel className="ml-2">
                                                 Range
@@ -184,52 +205,60 @@ export default function Create({
                                     )}
                                 />
                                 <div className="flex gap-2">
-                                    {form.watch(
-                                        'trailer_temperature_range',
-                                    ) && (
-                                        <>
-                                            <FormField
-                                                control={form.control}
-                                                name={`trailer_temperature_minimum`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>
-                                                            Min
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Input
-                                                                className="w-fit"
-                                                                {...field}
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage>
-                                                            {
-                                                                errors[
-                                                                    `trailer_temperature_minimum`
-                                                                ]
-                                                            }
-                                                        </FormMessage>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </>
-                                    )}
                                     <FormField
                                         control={form.control}
-                                        name={`trailer_temperature_maximum`}
+                                        name={`trailer_temperature`}
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
                                                     {form.watch(
                                                         'trailer_temperature_range',
                                                     )
-                                                        ? 'Max'
+                                                        ? 'Min'
                                                         : 'Target'}
                                                 </FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         className="w-fit"
                                                         {...field}
+                                                        type="number"
+                                                        value={
+                                                            field.value ?? ''
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage>
+                                                    {
+                                                        errors[
+                                                            `trailer_temperature`
+                                                        ]
+                                                    }
+                                                </FormMessage>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name={`trailer_temperature_maximum`}
+                                        render={({ field }) => (
+                                            <FormItem
+                                                className={cn(
+                                                    form.watch(
+                                                        'trailer_temperature_range',
+                                                    )
+                                                        ? ''
+                                                        : 'invisible',
+                                                )}
+                                            >
+                                                <FormLabel>Max</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        className="w-fit"
+                                                        {...field}
+                                                        type="number"
+                                                        value={
+                                                            field.value ?? ''
+                                                        }
                                                     />
                                                 </FormControl>
                                                 <FormMessage>

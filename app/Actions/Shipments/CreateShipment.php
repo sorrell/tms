@@ -20,10 +20,9 @@ class CreateShipment
         ?float $weight = null,
         ?float $tripDistance = null,
         ?int $trailerTypeId = null,
-        ?bool $trailerTemperatureRange = null,
-        ?float $trailerTemperatureMinimum = null,
+        ?bool $trailerTemperatureRange = false,
+        ?float $trailerTemperature = null,
         ?float $trailerTemperatureMaximum = null,
-        ?string $trailerTemperatureUnit = TemperatureUnit::Fahrenheit->value
         ): Shipment
     {
         DB::beginTransaction();
@@ -34,9 +33,8 @@ class CreateShipment
             'trip_distance' => $tripDistance,
             'trailer_type_id' => $trailerTypeId,
             'trailer_temperature_range' => $trailerTemperatureRange,
-            'trailer_temperature_minimum' => $trailerTemperatureMinimum,
+            'trailer_temperature' => $trailerTemperature,
             'trailer_temperature_maximum' => $trailerTemperatureMaximum,
-            'trailer_temperature_unit' => $trailerTemperatureUnit,
         ]);
 
         $shipment->shippers()->attach($shipperIds);

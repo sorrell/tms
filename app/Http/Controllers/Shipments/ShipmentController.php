@@ -51,6 +51,12 @@ class ShipmentController extends ResourceSearchController
             shipperIds: $request->shipper_ids,
             carrierId: $request->carrier_id,
             stops: $request->stops,
+            weight: $request->weight,
+            tripDistance: $request->trip_distance,
+            trailerTypeId: $request->trailer_type_id,
+            trailerTemperatureRange: $request->trailer_temperature_range,
+            trailerTemperature: $request->trailer_temperature,
+            trailerTemperatureMaximum: $request->trailer_temperature_maximum,
         );
 
         return redirect()->route('shipments.show', $shipment);

@@ -44,7 +44,7 @@ return new class extends Migration
             $table->foreign('trailer_type_id')->references('id')->on('trailer_types');
 
             $table->boolean('trailer_temperature_range')->default(false);
-            $table->float('trailer_temperature_minimum')->nullable();
+            $table->float('trailer_temperature')->nullable();
             $table->float('trailer_temperature_maximum')->nullable();
         });
 
@@ -66,7 +66,7 @@ return new class extends Migration
             $table->dropColumn('weight');
             $table->dropColumn('trip_distance');
             $table->dropColumn('trailer_temperature_range');
-            $table->dropColumn('trailer_temperature_minimum');
+            $table->dropColumn('trailer_temperature');
             $table->dropColumn('trailer_temperature_maximum');
         });
 

@@ -31,9 +31,8 @@ class StoreShipmentRequest extends FormRequest
             'trip_distance' => ['nullable', 'numeric'],
             'trailer_type_id' => ['nullable', 'exists:trailer_types,id'],
             'trailer_temperature_range' => ['nullable', 'boolean'],
-            'trailer_temperature_minimum' => ['nullable', 'numeric'],
+            'trailer_temperature' => ['nullable', 'numeric'],
             'trailer_temperature_maximum' => ['nullable', 'numeric'],
-            'trailer_temperature_unit' => ['nullable', Rule::enum(TemperatureUnit::class)],
 
             'carrier_id' => ['required', 'exists:carriers,id'],
             'stops' => ['required', 'array'],

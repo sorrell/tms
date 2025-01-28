@@ -55,7 +55,6 @@ export interface Shipment {
     trip_distance: number;
     trailer_type_id: number;
     trailer_temperature_range: boolean;
-    trailer_temperature_minimum: number;
+    trailer_temperature: number;
     trailer_temperature_maximum: number;
-    trailer_temperature_unit: string;
 }
