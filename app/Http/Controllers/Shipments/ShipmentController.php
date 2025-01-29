@@ -7,13 +7,21 @@ use App\Http\Requests\Shipments\StoreShipmentRequest;
 use App\Http\Requests\Shipments\UpdateShipmentRequest;
 use App\Models\Shipments\Shipment;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ResourceSearchController;
+use App\Http\Requests\ResourceSearchRequest;
+use App\Http\Resources\ShipmentResource;
+use App\Http\Resources\TrailerTypeResource;
 use App\Models\Carrier;
 use App\Models\Facility;
+use App\Models\Shipments\TrailerType;
 use App\Models\Shipper;
 use Inertia\Inertia;
 
-class ShipmentController extends Controller
+class ShipmentController extends ResourceSearchController
 {
+    protected $model = Shipment::class;
+    protected $resource = ShipmentResource::class;
+
     /**
      * Display a listing of the resource.
      */
@@ -30,9 +38,7 @@ class ShipmentController extends Controller
     public function create()
     {
         return Inertia::render('Shipments/Create', [
-            'facilities' => Facility::all(),
-            'shippers' => Shipper::all(),
-            'carriers' => Carrier::all(),
+            'trailerTypes' => TrailerTypeResource::collection(TrailerType::all()),
         ]);
     }
 
@@ -45,6 +51,12 @@ class ShipmentController extends Controller
             shipperIds: $request->shipper_ids,
             carrierId: $request->carrier_id,
             stops: $request->stops,
+            weight: $request->weight,
+            tripDistance: $request->trip_distance,
+            trailerTypeId: $request->trailer_type_id,
+            trailerTemperatureRange: $request->trailer_temperature_range,
+            trailerTemperature: $request->trailer_temperature,
+            trailerTemperatureMaximum: $request->trailer_temperature_maximum,
         );
 
         return redirect()->route('shipments.show', $shipment);

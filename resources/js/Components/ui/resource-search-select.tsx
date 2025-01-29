@@ -20,43 +20,63 @@ import {
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { CommandLoading } from 'cmdk';
+import { Badge } from './badge';
 
 export function ResourceSearchSelect({
     searchRoute,
     onValueChange,
-    defaultSelectedItems = [],
+    defaultSelectedItems = null,
     allowMultiple = true,
     autoLoadOptions = true,
+    className,
 }: {
     searchRoute: string;
     onValueChange?: (value: any) => void;
     defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
     autoLoadOptions?: boolean;
+    className?: string;
 }) {
     const [open, setOpen] = React.useState(false);
-    const [selectedItems, setSelectedItems] = React.useState<any[]>(
-        Array.isArray(defaultSelectedItems)
-            ? defaultSelectedItems
-            : [defaultSelectedItems],
-    );
+    const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
     const [search, setSearch] = React.useState('');
     const [dataOptions, setDataOptions] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
 
     React.useEffect(() => {
-        if (autoLoadOptions) {
-            searchData('');
+        if (autoLoadOptions || defaultSelectedItems) {
+            let items = Array.isArray(defaultSelectedItems)
+                ? defaultSelectedItems
+                : [defaultSelectedItems];
+            searchData('', items);
         }
     }, []);
 
-    const searchData = (searchInput: string) => {
+    React.useEffect(() => {
+        let items = Array.isArray(defaultSelectedItems)
+            ? defaultSelectedItems
+            : [defaultSelectedItems];
+
+        // Check if the current selection is different from the defaultSelectedItems
+        const currentSelectedIds = selectedItems.map((item) => item.value);
+        const hasChanges =
+            items.some(
+                (id) => !currentSelectedIds.includes(id?.toString()),
+            ) || currentSelectedIds.some((id) => !items.includes(id));
+
+        if (hasChanges) {
+            searchData('', items);
+        }
+    }, [defaultSelectedItems]);
+
+    const searchData = (searchInput: string, searchIds?: string[]) => {
         setLoading(true);
         axios
             .get(searchRoute, {
                 params: {
                     query: searchInput,
+                    ids: searchIds ?? null,
                 },
             })
             .then((response) => {
@@ -66,6 +86,11 @@ export function ResourceSearchSelect({
                 }));
                 setSearch(searchInput);
                 setDataOptions(options);
+                if (searchIds) {
+                    setSelectedItems(
+                        options.filter((o: any) => searchIds.includes(o.value)),
+                    );
+                }
                 setLoading(false);
             })
             .catch((error) => {
@@ -111,18 +136,29 @@ export function ResourceSearchSelect({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] justify-between"
+                    className={cn('w-[200px] justify-between h-fit', className)}
                 >
-                    <div className="overflow-hidden">
+                    <div className="flex flex-wrap gap-1">
                         {selectedItems.length > 0
-                            ? selectedItems
-                                  .map(
-                                      (v) =>
-                                          getAllOptions().find(
-                                              (f) => f.value === v.value,
-                                          )?.label,
-                                  )
-                                  .join(', ')
+                            ? selectedItems.map((v) =>
+                                  allowMultiple ? (
+                                      <Badge variant="secondary" key={v.value}>
+                                          {
+                                              getAllOptions().find(
+                                                  (f) => f.value === v.value,
+                                              )?.label
+                                          }
+                                      </Badge>
+                                  ) : (
+                                      <span key={v.value}>
+                                          {
+                                              getAllOptions().find(
+                                                  (f) => f.value === v.value,
+                                              )?.label
+                                          }
+                                      </span>
+                                  ),
+                              )
                             : 'Select ...'}
                     </div>
                     <ChevronsUpDown className="opacity-50" />
@@ -157,6 +193,7 @@ export function ResourceSearchSelect({
                                         let newSelected = [];
 
                                         if (allowMultiple) {
+                                            // If selected item is already selected, remove it
                                             if (
                                                 selectedItems
                                                     .map((v) => v.value)
@@ -169,6 +206,7 @@ export function ResourceSearchSelect({
                                                             currentValue,
                                                     );
                                             } else {
+                                                // If selected item is not already selected, add it to the full list
                                                 newSelected = [
                                                     ...selectedItems,
                                                     getAllOptions().find(
@@ -179,7 +217,16 @@ export function ResourceSearchSelect({
                                                 ];
                                             }
                                         } else {
-                                            newSelected = [option];
+                                            // If selected item is already selected, remove it
+                                            if (
+                                                selectedItems
+                                                    .map((v) => v.value)
+                                                    .includes(option.value)
+                                            ) {
+                                                newSelected = [];
+                                            } else {
+                                                newSelected = [option];
+                                            }
                                         }
 
                                         // But save the whole selected for this component to reference

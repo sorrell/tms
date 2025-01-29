@@ -35,3 +35,32 @@ export interface Shipper {
     id: number;
     name: string;
 }
+
+export interface ShipmentStop {
+    id: number;
+    shipment_id: number;
+    facility: Facility;
+    stop_type: string;
+    stop_number: number;
+    special_instructions: string;
+    reference_numbers: string;
+}
+
+export interface Shipment {
+    id: number;
+    shippers: Shipper[];
+    carrier: Carrier;
+    stops: ShipmentStop[];
+    weight: number;
+    trip_distance: number;
+    trailer_type_id: number;
+    trailer_temperature_range: boolean;
+    trailer_temperature: number;
+    trailer_temperature_maximum: number;
+}
+
+
+export interface TrailerType {
+    id: number;
+    name: string;
+}

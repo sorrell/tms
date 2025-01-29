@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Http\Kernel;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
@@ -40,5 +41,7 @@ class AppServiceProvider extends ServiceProvider
 
         /** @var Kernel $kernel */
         $kernel = app()->make(Kernel::class);
+
+        JsonResource::withoutWrapping();
     }
 }

@@ -68,6 +68,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('shippers/search', [ShipperController::class, 'search'])->name('shippers.search');
     Route::resource('shippers', ShipperController::class);
 
+    Route::get('shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
     Route::resource('shipments', ShipmentController::class);
 });
 

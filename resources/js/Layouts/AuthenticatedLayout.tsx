@@ -36,7 +36,7 @@ export default function Authenticated({ children }: PropsWithChildren) {
                         </Breadcrumb> */}
                     </div>
                 </header>
-                <main>{children}</main>
+                <main className="pb-2">{children}</main>
                 <Toaster />
             </SidebarInset>
         </SidebarProvider>

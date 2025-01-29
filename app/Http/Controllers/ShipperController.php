@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Requests\StoreShipperRequest;
 use App\Http\Requests\UpdateShipperRequest;
+use App\Http\Resources\ShipperResource;
 use App\Models\Shipper;
 
 class ShipperController extends ResourceSearchController
 {
     protected $model = Shipper::class;
+    protected $resource = ShipperResource::class;
     /**
      * Display a listing of the resource.
      */
