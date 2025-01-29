@@ -6,6 +6,7 @@ use App\Models\Carrier;
 use App\Models\Shipper;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +14,7 @@ use Laravel\Scout\Searchable;
 
 class Shipment extends Model
 {
-    use HasOrganization, Searchable;
+    use HasOrganization, Searchable, HasFactory;
 
     protected $fillable = [
         'organization_id',
