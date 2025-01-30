@@ -26,7 +26,6 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
             }),
             {
                 onSuccess: (e) => {
-                    console.log(e);
                     setEditMode(false);
                     toast({
                         description: (
