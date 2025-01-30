@@ -25,6 +25,7 @@ class Shipment extends Model
         'trailer_temperature_range',
         'trailer_temperature',
         'trailer_temperature_maximum',
+        'shipment_number',
     ];  
 
     protected $appends = [ 'selectable_label' ];

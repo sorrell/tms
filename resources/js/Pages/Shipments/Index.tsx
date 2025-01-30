@@ -5,7 +5,13 @@ import { Head, Link } from '@inertiajs/react';
 
 export default function Index({ shipments }: { shipments: any }) {
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout
+            breadcrumbs={[
+                {
+                    title: 'Shipments',
+                },
+            ]}
+        >
             <Head title="Shipments" />
             <div className="flex justify-end px-8">
                 <Link

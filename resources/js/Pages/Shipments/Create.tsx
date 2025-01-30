@@ -37,6 +37,7 @@ export default function Create({
     const { errors } = usePage().props;
 
     const formSchema = z.object({
+        shipment_number: z.string().optional(),
         shipper_ids: z.array(z.string()),
         carrier_id: z.string(),
 
@@ -106,7 +107,17 @@ export default function Create({
     }
 
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout
+            breadcrumbs={[
+                {
+                    title: 'Shipments',
+                    url: route('shipments.index'),
+                },
+                {
+                    title: 'Create',
+                },
+            ]}
+        >
             <Head title="Create Shipment" />
 
             <Form {...form}>
@@ -122,6 +133,34 @@ export default function Create({
                             <CardTitle>General</CardTitle>
                         </CardHeader>
                         <CardContent className="flex flex-wrap justify-evenly gap-4">
+                            <div>
+                                <FormField
+                                    control={form.control}
+                                    name={`shipment_number`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Shipment Number
+                                            </FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        className="w-fit"
+                                                        {...field}
+                                                        type="text"
+                                                        value={
+                                                            field.value ?? ''
+                                                        }
+                                                    />
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage>
+                                                {errors[`shipment_number`]}
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                             <div className="flex flex-col flex-wrap gap-4">
                                 <FormField
                                     control={form.control}
@@ -309,12 +348,12 @@ export default function Create({
                         <CardHeader>
                             <CardTitle>Carrier</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex flex-wrap flex-col gap-4">
+                        <CardContent className="flex flex-col flex-wrap gap-4">
                             <FormField
                                 control={form.control}
                                 name={`carrier_id`}
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-col flex-grow">
+                                    <FormItem className="flex flex-grow flex-col">
                                         <FormLabel>Carrier</FormLabel>
                                         <FormControl>
                                             <ResourceSearchSelect
@@ -698,9 +737,7 @@ export default function Create({
                     </Card>
 
                     <div className="flex justify-center md:justify-start">
-                        <Button type="submit">
-                            Create Shipment
-                        </Button>
+                        <Button type="submit">Create Shipment</Button>
                     </div>
                 </form>
             </Form>

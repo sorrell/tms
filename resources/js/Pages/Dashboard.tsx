@@ -17,7 +17,13 @@ export default function Dashboard() {
     };
 
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout
+            breadcrumbs={[
+                {
+                    title: 'Dashboard',
+                },
+            ]}
+        >
             <Head title="Dashboard" />
 
             <div className="py-12">

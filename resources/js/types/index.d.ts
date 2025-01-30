@@ -48,6 +48,7 @@ export interface ShipmentStop {
 
 export interface Shipment {
     id: number;
+    shipment_number: string;
     shippers: Shipper[];
     carrier: Carrier;
     stops: ShipmentStop[];

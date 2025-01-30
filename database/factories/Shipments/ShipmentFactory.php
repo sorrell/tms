@@ -34,6 +34,7 @@ class ShipmentFactory extends Factory
             'trailer_temperature_range' => fake()->randomElement(['frozen', 'refrigerated', 'ambient']),
             'trailer_temperature' => fake()->randomFloat(1, -10, 70), // temperature in fahrenheit
             'trailer_temperature_maximum' => fake()->randomFloat(1, -10, 70),
+            'shipment_number' => fake()->unique()->numerify('######'),
         ];
     }
 
