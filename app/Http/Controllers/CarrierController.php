@@ -11,7 +11,7 @@ use App\Models\Carrier;
 class CarrierController extends ResourceSearchController
 {
     protected $model = Carrier::class;
-    protected $resource = CarrierResource::class;
+    protected $modelResource = CarrierResource::class;
     /**
      * Display a listing of the resource.
      */

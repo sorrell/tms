@@ -7,7 +7,7 @@ use App\Http\Requests\ResourceSearchRequest;
 abstract class ResourceSearchController extends Controller
 {
     protected $model;
-    protected $resource;
+    protected $modelResource;
 
     public function search(ResourceSearchRequest $request)
     {
@@ -24,6 +24,6 @@ abstract class ResourceSearchController extends Controller
             $results->load($request->input('with'));
         }
         
-        return response()->json($this->resource::collection($results));
+        return response()->json($this->modelResource::collection($results));
     }
 }

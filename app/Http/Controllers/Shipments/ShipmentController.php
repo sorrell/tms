@@ -20,7 +20,7 @@ use Inertia\Inertia;
 class ShipmentController extends ResourceSearchController
 {
     protected $model = Shipment::class;
-    protected $resource = ShipmentResource::class;
+    protected $modelResource = ShipmentResource::class;
 
     /**
      * Display a listing of the resource.

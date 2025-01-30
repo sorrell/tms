@@ -11,7 +11,7 @@ use App\Models\Shipper;
 class ShipperController extends ResourceSearchController
 {
     protected $model = Shipper::class;
-    protected $resource = ShipperResource::class;
+    protected $modelResource = ShipperResource::class;
     /**
      * Display a listing of the resource.
      */
