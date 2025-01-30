@@ -27,6 +27,7 @@ export function ResourceSearchSelect({
     onValueChange,
     defaultSelectedItems = null,
     allowMultiple = true,
+    allowUnselect = true,
     autoLoadOptions = true,
     className,
 }: {
@@ -34,6 +35,7 @@ export function ResourceSearchSelect({
     onValueChange?: (value: any) => void;
     defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
+    allowUnselect?: boolean;
     autoLoadOptions?: boolean;
     className?: string;
 }) {
@@ -229,6 +231,10 @@ export function ResourceSearchSelect({
                                             } else {
                                                 newSelected = [option];
                                             }
+                                        }
+
+                                        if (!allowUnselect && newSelected.length === 0) {
+                                            return;
                                         }
 
                                         // But save the whole selected for this component to reference
