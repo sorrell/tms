@@ -14,7 +14,7 @@ import {
     SidebarTrigger,
 } from '@/Components/ui/sidebar';
 import { Toaster } from '@/Components/ui/toaster';
-import { PropsWithChildren } from 'react';
+import { Fragment, PropsWithChildren } from 'react';
 
 interface BreadcrumbItem {
     title: string;
@@ -39,9 +39,8 @@ export default function Authenticated({
                         <Breadcrumb>
                             <BreadcrumbList>
                                 {breadcrumbs.map((item, index) => (
-                                    <>
+                                    <Fragment key={index}>
                                         <BreadcrumbItem
-                                            key={index}
                                             className="hidden md:block"
                                         >
                                             {item.url ? (
@@ -57,7 +56,7 @@ export default function Authenticated({
                                         {index < breadcrumbs.length - 1 && (
                                             <BreadcrumbSeparator className="hidden md:block" />
                                         )}
-                                    </>
+                                    </Fragment>
                                 ))}
                             </BreadcrumbList>
                         </Breadcrumb>
