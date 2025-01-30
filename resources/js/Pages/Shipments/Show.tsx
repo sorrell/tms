@@ -6,6 +6,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { FileText, MapPin, MessageSquare, Truck } from 'lucide-react';
 import ShipmentHeader from './Partials/ShipmentHeader';
+import ShipmentGeneral from './Partials/ShipmentGeneral';
 
 export default function Show({ shipment }: { shipment: any }) {
     return (
@@ -181,6 +182,9 @@ export default function Show({ shipment }: { shipment: any }) {
 
                     {/* Sidebar - 1 column */}
                     <div className="space-y-4">
+                        {/* General */}
+                        <ShipmentGeneral shipment={shipment} />
+
                         {/* Carrier Details */}
                         <Card>
                             <CardHeader>

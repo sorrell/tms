@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\FacilityController;
@@ -72,6 +73,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
     Route::resource('shipments', ShipmentController::class);
     Route::patch('shipments/{shipment}/shipment-number', UpdateShipmentNumber::class)->name('shipments.updateShipmentNumber');
+    Route::patch('shipments/{shipment}/general', UpdateShipmentGeneral::class)->name('shipments.updateGeneral');
 });
 
 require __DIR__ . '/auth.php';
