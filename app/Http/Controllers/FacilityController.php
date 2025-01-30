@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class FacilityController extends ResourceSearchController
 {
     protected $model = Facility::class;
-    protected $resource = FacilityResource::class;
+    protected $modelResource = FacilityResource::class;
     /**
      * Display a listing of the resource.
      */
