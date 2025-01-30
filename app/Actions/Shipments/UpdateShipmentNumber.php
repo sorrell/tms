@@ -15,8 +15,8 @@ class UpdateShipmentNumber
     use AsAction;
 
     public function handle(
-        string $shipmentNumber = null,
-        Shipment $shipment
+        Shipment $shipment,
+        ?string $shipmentNumber = null,
     ): Shipment
     {
         $shipment->update([
@@ -28,7 +28,7 @@ class UpdateShipmentNumber
 
     public function asController(UpdateShipmentNumberRequest $request, Shipment $shipment)
     {
-        $shipment = $this->handle($request->shipment_number, $shipment);
+        $shipment = $this->handle($shipment, $request->shipment_number);
 
         return redirect()->back()->with('success', 'Shipment number updated successfully');
     }

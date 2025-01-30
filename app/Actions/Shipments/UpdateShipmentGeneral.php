@@ -17,12 +17,12 @@ class UpdateShipmentGeneral
 
     public function handle(
         Shipment $shipment,
-        float $weight = null,
-        float $tripDistance = null,
-        int $trailerTypeId = null,
-        float $trailerTemperature = null,
-        float $trailerTemperatureMaximum = null,
-        bool $trailerTemperatureRange = null,
+        ?float $weight = null,
+        ?float $tripDistance = null,
+        ?int $trailerTypeId = null,
+        ?float $trailerTemperature = null,
+        ?float $trailerTemperatureMaximum = null,
+        ?bool $trailerTemperatureRange = null,
     ): Shipment {
         $shipment->update([
             'weight' => $weight,

@@ -7,6 +7,7 @@ import { Head } from '@inertiajs/react';
 import { FileText, MapPin, MessageSquare, Truck } from 'lucide-react';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
+import CarrierDetails from './Partials/CarrierDetails';
 
 export default function Show({ shipment }: { shipment: any }) {
     return (
@@ -186,22 +187,7 @@ export default function Show({ shipment }: { shipment: any }) {
                         <ShipmentGeneral shipment={shipment} />
 
                         {/* Carrier Details */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Truck className="h-5 w-5" />
-                                    Carrier Details
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <Skeleton className="h-20 w-full" />
-                                <div className="flex flex-col gap-2">
-                                    <Skeleton className="h-4 w-3/4" />
-                                    <Skeleton className="h-4 w-1/2" />
-                                    <Skeleton className="h-4 w-2/3" />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <CarrierDetails shipment={shipment} />
 
                         {/* Quick Actions */}
                         <Card>

@@ -44,19 +44,21 @@ export function ResourceSearchSelect({
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
 
-    React.useEffect(() => {
-        if (autoLoadOptions || defaultSelectedItems) {
-            let items = Array.isArray(defaultSelectedItems)
-                ? defaultSelectedItems
-                : [defaultSelectedItems];
-            searchData('', items);
-        }
-    }, []);
+    // React.useEffect(() => {
+    //     if (autoLoadOptions || defaultSelectedItems) {
+    //         let items = Array.isArray(defaultSelectedItems)
+    //             ? defaultSelectedItems
+    //             : [defaultSelectedItems];
+    //         searchData('', items);
+    //     }
+    // }, []);
 
     React.useEffect(() => {
         let items = Array.isArray(defaultSelectedItems)
             ? defaultSelectedItems
             : [defaultSelectedItems];
+
+        items = items.map((item) => item?.toString());
 
         // Check if the current selection is different from the defaultSelectedItems
         const currentSelectedIds = selectedItems.map((item) => item.value);
@@ -68,7 +70,7 @@ export function ResourceSearchSelect({
         if (hasChanges) {
             searchData('', items);
         }
-    }, [defaultSelectedItems]);
+    }, [defaultSelectedItems, autoLoadOptions]);
 
     const searchData = (searchInput: string, searchIds?: string[]) => {
         setLoading(true);
