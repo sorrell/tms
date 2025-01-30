@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shipments;
 
 use App\Actions\Shipments\CreateShipment;
+use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Http\Requests\Shipments\StoreShipmentRequest;
 use App\Http\Requests\Shipments\UpdateShipmentRequest;
 use App\Models\Shipments\Shipment;
@@ -85,7 +86,7 @@ class ShipmentController extends ResourceSearchController
      */
     public function update(UpdateShipmentRequest $request, Shipment $shipment)
     {
-        //
+        
     }
 
     /**

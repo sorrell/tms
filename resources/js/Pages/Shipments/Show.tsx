@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { FileText, MapPin, MessageSquare, Truck } from 'lucide-react';
+import ShipmentHeader from './Partials/ShipmentHeader';
 
 export default function Show({ shipment }: { shipment: any }) {
     return (
@@ -23,22 +24,7 @@ export default function Show({ shipment }: { shipment: any }) {
 
             <div className="mx-auto max-w-screen-2xl space-y-4 p-4 md:p-8">
                 {/* Header with key load info */}
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold">
-                            Shipment{' '}
-                            {shipment.shipment_number ?? `id:${shipment.id}`}
-                        </h1>
-                        <p className="text-muted-foreground">Status: Active</p>
-                    </div>
-                    <div className="flex gap-2">
-                        <Button>
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate Ratecon
-                        </Button>
-                        <Button variant="outline">Edit Load</Button>
-                    </div>
-                </div>
+                <ShipmentHeader shipment={shipment} />
 
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     {/* Main Content Area - 2 columns */}
