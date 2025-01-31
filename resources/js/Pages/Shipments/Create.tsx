@@ -55,13 +55,11 @@ export default function Create({
                 z.object({
                     facility_id: z.string(),
                     stop_type: z.enum(['pickup', 'delivery']),
-                    appointment: z.object({
-                        datetime: z.string().refine((val) => {
-                            // Accept any valid date string that can be parsed
-                            const date = new Date(val);
-                            return !isNaN(date.getTime());
-                        }, 'Please enter a valid date and time'),
-                    }),
+                    appointment_at: z.string().refine((val) => {
+                        // Accept any valid date string that can be parsed
+                        const date = new Date(val);
+                        return !isNaN(date.getTime());
+                    }, 'Please enter a valid date and time'),
                     special_instructions: z.string().nullable(),
                     reference_numbers: z.string().nullable(),
                     stop_number: z.number().int(),
@@ -662,7 +660,7 @@ export default function Create({
                                             />
                                             <FormField
                                                 control={form.control}
-                                                name={`stops.${index}.appointment.datetime`}
+                                                name={`stops.${index}.appointment_at`}
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormLabel>
@@ -677,7 +675,7 @@ export default function Create({
                                                         <FormMessage>
                                                             {
                                                                 errors[
-                                                                    `stops.${index}.appointment.datetime`
+                                                                    `stops.${index}.appointment_at`
                                                                 ]
                                                             }
                                                         </FormMessage>

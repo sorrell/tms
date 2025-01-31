@@ -28,7 +28,11 @@ class ShipmentStopResource extends JsonResource
             'arrived_at' => $this->arrived_at,
             'loaded_unloaded_at' => $this->loaded_unloaded_at,
             'left_at' => $this->left_at,
-            'appointment' => new ShipmentStopAppointmentResource($this->whenLoaded('appointment')),
+
+            'appointment_at' => $this->appointment_at,
+            'appointment_end_at' => $this->appointment_end_at,
+            'appointment_type' => $this->appointment_type,
         ];
     }
 }
+

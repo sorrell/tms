@@ -48,10 +48,7 @@ class CreateShipment
                 'stop_number' => $stopData['stop_number'],
                 'special_instructions' => $stopData['special_instructions'],
                 'reference_numbers' => $stopData['reference_numbers'],
-            ]);
-
-            $stop->appointment()->create([
-                'appointment_at' => Carbon::parse($stopData['appointment']['datetime']),
+                'appointment_at' => Carbon::parse($stopData['appointment_at']),
             ]);
         }
 

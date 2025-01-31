@@ -48,15 +48,9 @@ export interface ShipmentStop {
     arrived_at: string;
     loaded_unloaded_at: string;
     left_at: string;
-    appointment: ShipmentStopAppointment;
-}
-
-export interface ShipmentStopAppointment {
-    id: number;
-    shipment_stop_id: number;
     appointment_at: string;
-    appointment_type: string;
     appointment_end_at: string;
+    appointment_type: string;
 }
 
 export interface Shipment {

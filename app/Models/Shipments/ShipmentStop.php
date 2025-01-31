@@ -26,6 +26,9 @@ class ShipmentStop extends Model
         'arrived_at',
         'loaded_unloaded_at',
         'left_at',
+        'appointment_at',
+        'appointment_end_at',
+        'appointment_type',
     ];
 
     protected $casts = [
@@ -48,11 +51,4 @@ class ShipmentStop extends Model
         return $this->belongsTo(Facility::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<ShipmentStopAppointment, $this>
-     */
-    public function appointment(): HasOne
-    {
-        return $this->hasOne(ShipmentStopAppointment::class);
-    }
 }

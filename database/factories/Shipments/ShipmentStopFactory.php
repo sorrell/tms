@@ -27,20 +27,7 @@ class ShipmentStopFactory extends Factory
             'stop_number' => fake()->numberBetween(1, 5),
             'special_instructions' => fake()->optional()->sentence(),
             'reference_numbers' => fake()->optional()->words(3, true),
+            'appointment_at' => Carbon::now()->addDays(fake()->numberBetween(1, 14)),
         ];
-    }
-
-    /**
-     * Configure the model factory to create an appointment.
-     *
-     * @return $this
-     */
-    public function withAppointment(): static
-    {
-        return $this->afterCreating(function (ShipmentStop $stop) {
-            $stop->appointment()->create([
-                'appointment_at' => Carbon::now()->addDays(fake()->numberBetween(1, 14)),
-            ]);
-        });
     }
 }

@@ -59,6 +59,7 @@ class ShipmentController extends ResourceSearchController
             trailerTemperatureRange: $request->trailer_temperature_range,
             trailerTemperature: $request->trailer_temperature,
             trailerTemperatureMaximum: $request->trailer_temperature_maximum,
+            shipmentNumber: $request->shipment_number,
         );
 
         return redirect()->route('shipments.show', $shipment);
@@ -71,7 +72,7 @@ class ShipmentController extends ResourceSearchController
     {
         return Inertia::render('Shipments/Show', [
             'shipment' => $shipment->load('carrier', 'shippers'),
-            'stops' => ShipmentStopResource::collection($shipment->stops->load('appointment', 'facility')),
+            'stops' => ShipmentStopResource::collection($shipment->stops->load('facility')),
         ]);
     }
 
