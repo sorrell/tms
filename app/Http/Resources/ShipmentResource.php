@@ -20,6 +20,7 @@ class ShipmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'shipment_number' => $this->shipment_number,
             'weight' => $this->weight,
             'trip_distance' => $this->trip_distance,
             'trailer_type' => new TrailerTypeResource($this->whenLoaded('trailer_type')),

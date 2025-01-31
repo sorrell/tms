@@ -23,7 +23,8 @@ class CreateShipment
         ?bool $trailerTemperatureRange = false,
         ?float $trailerTemperature = null,
         ?float $trailerTemperatureMaximum = null,
-        ): Shipment
+        ?string $shipmentNumber = null,
+    ): Shipment
     {
         DB::beginTransaction();
 
@@ -35,6 +36,7 @@ class CreateShipment
             'trailer_temperature_range' => $trailerTemperatureRange,
             'trailer_temperature' => $trailerTemperature,
             'trailer_temperature_maximum' => $trailerTemperatureMaximum,
+            'shipment_number' => $shipmentNumber,
         ]);
 
         $shipment->shippers()->attach($shipperIds);
@@ -46,10 +48,7 @@ class CreateShipment
                 'stop_number' => $stopData['stop_number'],
                 'special_instructions' => $stopData['special_instructions'],
                 'reference_numbers' => $stopData['reference_numbers'],
-            ]);
-
-            $stop->appointment()->create([
-                'appointment_datetime' => Carbon::parse($stopData['appointment']['datetime']),
+                'appointment_at' => Carbon::parse($stopData['appointment_at']),
             ]);
         }
 

@@ -20,7 +20,6 @@ export const columns: ColumnDef<Shipment>[] = [
         accessorKey: 'carrier',
         header: 'Carrier',
         cell: ({ row }) => {
-            console.log(row);
             const carrier = row.original.carrier;
             return carrier ? carrier.name : 'N/A';
         },

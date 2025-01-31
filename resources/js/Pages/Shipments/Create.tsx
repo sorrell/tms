@@ -22,6 +22,7 @@ import { Textarea } from '@/Components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { cn } from '@/lib/utils';
 import { TrailerType } from '@/types';
+import { StopType } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
@@ -37,6 +38,7 @@ export default function Create({
     const { errors } = usePage().props;
 
     const formSchema = z.object({
+        shipment_number: z.string().optional(),
         shipper_ids: z.array(z.string()),
         carrier_id: z.string(),
 
@@ -53,13 +55,11 @@ export default function Create({
                 z.object({
                     facility_id: z.string(),
                     stop_type: z.enum(['pickup', 'delivery']),
-                    appointment: z.object({
-                        datetime: z.string().refine((val) => {
-                            // Accept any valid date string that can be parsed
-                            const date = new Date(val);
-                            return !isNaN(date.getTime());
-                        }, 'Please enter a valid date and time'),
-                    }),
+                    appointment_at: z.string().refine((val) => {
+                        // Accept any valid date string that can be parsed
+                        const date = new Date(val);
+                        return !isNaN(date.getTime());
+                    }, 'Please enter a valid date and time'),
                     special_instructions: z.string().nullable(),
                     reference_numbers: z.string().nullable(),
                     stop_number: z.number().int(),
@@ -81,16 +81,16 @@ export default function Create({
 
             stops: [
                 {
-                    stop_type: 'pickup',
-                    appointment: { datetime: '' },
+                    stop_type: StopType.Pickup,
+                    appointment_at: '',
                     special_instructions: '',
                     reference_numbers: '',
                     stop_number: 1,
                     facility_id: undefined,
                 },
                 {
-                    stop_type: 'delivery',
-                    appointment: { datetime: '' },
+                    stop_type: StopType.Delivery,
+                    appointment_at: '',
                     special_instructions: '',
                     reference_numbers: '',
                     stop_number: 2,
@@ -106,7 +106,17 @@ export default function Create({
     }
 
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout
+            breadcrumbs={[
+                {
+                    title: 'Shipments',
+                    url: route('shipments.index'),
+                },
+                {
+                    title: 'Create',
+                },
+            ]}
+        >
             <Head title="Create Shipment" />
 
             <Form {...form}>
@@ -122,6 +132,34 @@ export default function Create({
                             <CardTitle>General</CardTitle>
                         </CardHeader>
                         <CardContent className="flex flex-wrap justify-evenly gap-4">
+                            <div>
+                                <FormField
+                                    control={form.control}
+                                    name={`shipment_number`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Shipment Number
+                                            </FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        className="w-fit"
+                                                        {...field}
+                                                        type="text"
+                                                        value={
+                                                            field.value ?? ''
+                                                        }
+                                                    />
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage>
+                                                {errors[`shipment_number`]}
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                             <div className="flex flex-col flex-wrap gap-4">
                                 <FormField
                                     control={form.control}
@@ -309,12 +347,12 @@ export default function Create({
                         <CardHeader>
                             <CardTitle>Carrier</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex flex-wrap flex-col gap-4">
+                        <CardContent className="flex flex-col flex-wrap gap-4">
                             <FormField
                                 control={form.control}
                                 name={`carrier_id`}
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-col flex-grow">
+                                    <FormItem className="flex flex-grow flex-col">
                                         <FormLabel>Carrier</FormLabel>
                                         <FormControl>
                                             <ResourceSearchSelect
@@ -394,10 +432,8 @@ export default function Create({
                                             form.setValue('stops', [
                                                 ...form.getValues('stops'),
                                                 {
-                                                    stop_type: 'pickup',
-                                                    appointment: {
-                                                        datetime: '',
-                                                    },
+                                                    stop_type: StopType.Pickup,
+                                                    appointment_at: '',
                                                     special_instructions: '',
                                                     reference_numbers: '',
                                                     stop_number:
@@ -522,10 +558,10 @@ export default function Create({
                                                                         <SelectValue placeholder="Select a stop type" />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
-                                                                        <SelectItem value="pickup">
+                                                                        <SelectItem value={StopType.Pickup}>
                                                                             Pickup
                                                                         </SelectItem>
-                                                                        <SelectItem value="delivery">
+                                                                        <SelectItem value={StopType.Delivery}>
                                                                             Delivery
                                                                         </SelectItem>
                                                                     </SelectContent>
@@ -622,7 +658,7 @@ export default function Create({
                                             />
                                             <FormField
                                                 control={form.control}
-                                                name={`stops.${index}.appointment.datetime`}
+                                                name={`stops.${index}.appointment_at`}
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormLabel>
@@ -637,7 +673,7 @@ export default function Create({
                                                         <FormMessage>
                                                             {
                                                                 errors[
-                                                                    `stops.${index}.appointment.datetime`
+                                                                    `stops.${index}.appointment_at`
                                                                 ]
                                                             }
                                                         </FormMessage>
@@ -698,9 +734,7 @@ export default function Create({
                     </Card>
 
                     <div className="flex justify-center md:justify-start">
-                        <Button type="submit">
-                            Create Shipment
-                        </Button>
+                        <Button type="submit">Create Shipment</Button>
                     </div>
                 </form>
             </Form>

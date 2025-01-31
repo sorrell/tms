@@ -1,5 +1,10 @@
 <?php
 
+use App\Actions\Shipments\UpdateShipmentCarrierDetails;
+use App\Actions\Shipments\UpdateShipmentGeneral;
+use App\Actions\Shipments\UpdateShipmentNumber;
+use App\Actions\Shipments\UpdateShipmentShippers;
+use App\Actions\Shipments\UpdateShipmentStops;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\OrganizationController;
@@ -70,6 +75,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
     Route::resource('shipments', ShipmentController::class);
+    Route::patch('shipments/{shipment}/shipment-number', UpdateShipmentNumber::class)->name('shipments.updateShipmentNumber');
+    Route::patch('shipments/{shipment}/general', UpdateShipmentGeneral::class)->name('shipments.updateGeneral');
+    Route::patch('shipments/{shipment}/carrier-details', UpdateShipmentCarrierDetails::class)->name('shipments.updateCarrierDetails');
+    Route::patch('shipments/{shipment}/shippers', UpdateShipmentShippers::class)->name('shipments.updateShippers');
+    Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
 });
 
 require __DIR__ . '/auth.php';

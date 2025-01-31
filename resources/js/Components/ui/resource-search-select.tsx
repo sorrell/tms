@@ -25,15 +25,19 @@ import { Badge } from './badge';
 export function ResourceSearchSelect({
     searchRoute,
     onValueChange,
+    onValueObjectChange,
     defaultSelectedItems = null,
     allowMultiple = true,
+    allowUnselect = true,
     autoLoadOptions = true,
     className,
 }: {
     searchRoute: string;
     onValueChange?: (value: any) => void;
+    onValueObjectChange?: (selected: any) => void;
     defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
+    allowUnselect?: boolean;
     autoLoadOptions?: boolean;
     className?: string;
 }) {
@@ -44,19 +48,13 @@ export function ResourceSearchSelect({
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
 
-    React.useEffect(() => {
-        if (autoLoadOptions || defaultSelectedItems) {
-            let items = Array.isArray(defaultSelectedItems)
-                ? defaultSelectedItems
-                : [defaultSelectedItems];
-            searchData('', items);
-        }
-    }, []);
 
     React.useEffect(() => {
         let items = Array.isArray(defaultSelectedItems)
             ? defaultSelectedItems
             : [defaultSelectedItems];
+
+        items = items.map((item) => item?.toString());
 
         // Check if the current selection is different from the defaultSelectedItems
         const currentSelectedIds = selectedItems.map((item) => item.value);
@@ -68,7 +66,7 @@ export function ResourceSearchSelect({
         if (hasChanges) {
             searchData('', items);
         }
-    }, [defaultSelectedItems]);
+    }, [defaultSelectedItems, autoLoadOptions]);
 
     const searchData = (searchInput: string, searchIds?: string[]) => {
         setLoading(true);
@@ -229,6 +227,10 @@ export function ResourceSearchSelect({
                                             }
                                         }
 
+                                        if (!allowUnselect && newSelected.length === 0) {
+                                            return;
+                                        }
+
                                         // But save the whole selected for this component to reference
                                         setSelectedItems(newSelected);
 
@@ -239,6 +241,12 @@ export function ResourceSearchSelect({
                                                       (v) => v.value,
                                                   )
                                                 : newSelected[0].value,
+                                        );
+
+                                        onValueObjectChange?.(
+                                            allowMultiple
+                                                ? newSelected
+                                                : newSelected[0],
                                         );
                                     }}
                                 >
