@@ -82,7 +82,7 @@ export default function Create({
             stops: [
                 {
                     stop_type: StopType.Pickup,
-                    appointment: { datetime: '' },
+                    appointment_at: '',
                     special_instructions: '',
                     reference_numbers: '',
                     stop_number: 1,
@@ -90,7 +90,7 @@ export default function Create({
                 },
                 {
                     stop_type: StopType.Delivery,
-                    appointment: { datetime: '' },
+                    appointment_at: '',
                     special_instructions: '',
                     reference_numbers: '',
                     stop_number: 2,
@@ -433,9 +433,7 @@ export default function Create({
                                                 ...form.getValues('stops'),
                                                 {
                                                     stop_type: StopType.Pickup,
-                                                    appointment: {
-                                                        datetime: '',
-                                                    },
+                                                    appointment_at: '',
                                                     special_instructions: '',
                                                     reference_numbers: '',
                                                     stop_number:

@@ -3,16 +3,11 @@
 namespace App\Actions\Shipments;
 
 use App\Enums\StopType;
-use App\Enums\TemperatureUnit;
-use App\Http\Requests\Shipments\UpdateShipmentGeneralRequest;
-use App\Http\Requests\Shipments\UpdateShipmentNumberRequest;
 use App\Models\Shipments\Shipment;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use App\Models\Shipments\ShipmentStop;
 use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Nette\NotImplementedException;
 
 class UpdateShipmentStops
 {
@@ -22,6 +17,10 @@ class UpdateShipmentStops
         Shipment $shipment,
         array $stops,
     ): Shipment {
+
+        ShipmentStop::where('shipment_id', $shipment->id)
+            ->whereNotIn('id', array_column($stops, 'id'))
+            ->delete();
 
         foreach ($stops as $stop) {
             $shipment->stops()->updateOrCreate(['id' => $stop['id']], $stop);

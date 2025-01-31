@@ -16,7 +16,16 @@ import { useToast } from '@/hooks/use-toast';
 import { ShipmentStop } from '@/types';
 import { StopType } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
-import { ArrowDown, ArrowUp, Check, CheckCircle2, MapPin, Pencil, X } from 'lucide-react';
+import {
+    ArrowDown,
+    ArrowUp,
+    Check,
+    CheckCircle2,
+    MapPin,
+    Pencil,
+    Trash,
+    X,
+} from 'lucide-react';
 import { useState } from 'react';
 
 export default function ShipmentStopsList({
@@ -60,14 +69,10 @@ export default function ShipmentStopsList({
             facility_id: stop.facility?.id,
             appointment_type: stop.appointment_type,
             appointment_at: stop.appointment_at
-                ? new Date(stop.appointment_at)
-                      .toISOString()
-                      .slice(0, 16)
+                ? new Date(stop.appointment_at).toISOString().slice(0, 16)
                 : '',
             appointment_end_at: stop.appointment_end_at
-                ? new Date(stop.appointment_end_at)
-                      .toISOString()
-                      .slice(0, 16)
+                ? new Date(stop.appointment_end_at).toISOString().slice(0, 16)
                 : '',
             arrived_at: stop.arrived_at
                 ? new Date(stop.arrived_at).toISOString().slice(0, 16)
@@ -92,26 +97,32 @@ export default function ShipmentStopsList({
                     <div className="flex items-center gap-2">
                         <MapPin className="h-5 w-5" />
                         Stops
-                        {editMode && <Button onClick={() => {
-                            const updatedStops = [...data.stops];
-                            updatedStops.push({
-                                id: null,
-                                shipment_id: shipmentId,
-                                stop_type: StopType.Delivery,
-                                stop_number: data.stops.length + 1,
-                                facility_id: null,
-                                eta: '',
-                                appointment_type: '',
-                                appointment_at: '',
-                                appointment_end_at: '',
-                                arrived_at: '',
-                                loaded_unloaded_at: '',
-                                left_at: '',
-                                special_instructions: '',
-                                reference_numbers: '',
-                            });
-                            setData('stops', updatedStops);
-                        }}>Add Stop</Button>}
+                        {editMode && (
+                            <Button
+                                onClick={() => {
+                                    const updatedStops = [...data.stops];
+                                    updatedStops.push({
+                                        id: null,
+                                        shipment_id: shipmentId,
+                                        stop_type: StopType.Delivery,
+                                        stop_number: data.stops.length + 1,
+                                        facility_id: null,
+                                        eta: '',
+                                        appointment_type: '',
+                                        appointment_at: '',
+                                        appointment_end_at: '',
+                                        arrived_at: '',
+                                        loaded_unloaded_at: '',
+                                        left_at: '',
+                                        special_instructions: '',
+                                        reference_numbers: '',
+                                    });
+                                    setData('stops', updatedStops);
+                                }}
+                            >
+                                Add Stop
+                            </Button>
+                        )}
                     </div>
                     {editMode ? (
                         <div className="flex gap-2">
@@ -122,10 +133,7 @@ export default function ShipmentStopsList({
                                 variant="ghost"
                                 onClick={() => {
                                     setEditMode(false);
-                                    setData(
-                                        'stops',
-                                        getSavedStops()
-                                    );
+                                    setData('stops', getSavedStops());
                                 }}
                             >
                                 <X />
@@ -143,8 +151,10 @@ export default function ShipmentStopsList({
             </CardHeader>
             <CardContent className="space-y-8">
                 {data.stops.map((stop, index) => {
-                    const previousStop = index > 0 ? data.stops[index - 1] : null;
-                    const shouldHideFields = previousStop && !previousStop.left_at;
+                    const previousStop =
+                        index > 0 ? data.stops[index - 1] : null;
+                    const shouldHideFields =
+                        previousStop && !previousStop.left_at;
 
                     return (
                         <div
@@ -152,7 +162,7 @@ export default function ShipmentStopsList({
                             className="flex flex-col gap-4 border-l-2 border-primary pl-4"
                         >
                             <div className="grid gap-4 md:grid-cols-2">
-                            <div>
+                                <div>
                                     {editMode ? (
                                         <>
                                             <label className="text-sm font-medium">
@@ -168,7 +178,10 @@ export default function ShipmentStopsList({
                                                         ...updatedStops[index],
                                                         stop_type: value,
                                                     };
-                                                    setData('stops', updatedStops);
+                                                    setData(
+                                                        'stops',
+                                                        updatedStops,
+                                                    );
                                                 }}
                                             >
                                                 <SelectTrigger>
@@ -181,12 +194,14 @@ export default function ShipmentStopsList({
                                                         Pickup
                                                     </SelectItem>
                                                     <SelectItem
-                                                        value={StopType.Delivery}
+                                                        value={
+                                                            StopType.Delivery
+                                                        }
                                                     >
                                                         Delivery
                                                     </SelectItem>
                                                 </SelectContent>
-                                            </Select>   
+                                            </Select>
                                             {errors[`stops.${index}.type`] && (
                                                 <InputError
                                                     message={
@@ -200,10 +215,17 @@ export default function ShipmentStopsList({
                                         </>
                                     ) : (
                                         <Avatar>
-                                            <AvatarFallback className='bg-primary text-white p-1'>
-                                                {stop.stop_type === StopType.Delivery ? <ArrowDown className="h-4 w-4 inline" /> : <ArrowUp className="h-4 w-4 inline" />}
+                                            <AvatarFallback className="bg-primary p-1 text-white">
+                                                {stop.stop_type ===
+                                                StopType.Delivery ? (
+                                                    <ArrowDown className="inline h-4 w-4" />
+                                                ) : (
+                                                    <ArrowUp className="inline h-4 w-4" />
+                                                )}
                                                 <p className="font-semibold">
-                                                    {stop.stop_type.charAt(0).toUpperCase()}
+                                                    {stop.stop_type
+                                                        .charAt(0)
+                                                        .toUpperCase()}
                                                     {stop.stop_number}
                                                 </p>
                                             </AvatarFallback>
@@ -211,9 +233,34 @@ export default function ShipmentStopsList({
                                     )}
                                 </div>
                                 <div>
-                                    <label className="text-sm font-medium">
-                                        Facility
-                                    </label>
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-sm font-medium">
+                                            Facility
+                                        </label>
+                                        {editMode && (
+                                            <Button
+                                                disabled={data.stops.length <= 2}
+                                                variant="destructive"
+                                                className="m-1"
+                                                onClick={() => {
+                                                    const updatedStops = [
+                                                        ...data.stops,
+                                                    ];
+                                                    updatedStops.splice(
+                                                        index,
+                                                        1,
+                                                    );
+                                                    setData(
+                                                        'stops',
+                                                        updatedStops,
+                                                    );
+                                                }}
+                                            >
+                                                <Trash className="h-4 w-4" />
+                                            </Button>
+                                        )}
+                                    </div>
+
                                     {editMode ? (
                                         <>
                                             <ResourceSearchSelect
@@ -221,20 +268,28 @@ export default function ShipmentStopsList({
                                                     'facilities.search',
                                                 )}
                                                 allowMultiple={false}
-                                                onValueObjectChange={(selected) => {
+                                                onValueObjectChange={(
+                                                    selected,
+                                                ) => {
                                                     const updatedStops = [
                                                         ...data.stops,
                                                     ];
                                                     updatedStops[index] = {
                                                         ...updatedStops[index],
-                                                        facility_id: selected?.value,
+                                                        facility_id:
+                                                            selected?.value,
                                                         facility: {
-                                                            ...updatedStops[index].facility,
+                                                            ...updatedStops[
+                                                                index
+                                                            ].facility,
                                                             id: selected?.value,
                                                             name: selected?.label,
                                                         },
                                                     };
-                                                    setData('stops', updatedStops);
+                                                    setData(
+                                                        'stops',
+                                                        updatedStops,
+                                                    );
                                                 }}
                                                 defaultSelectedItems={
                                                     stop.facility?.id
@@ -267,14 +322,21 @@ export default function ShipmentStopsList({
                                         <>
                                             <Select
                                                 disabled={true}
-                                                value={stop.appointment_type || ''}
+                                                value={
+                                                    stop.appointment_type || ''
+                                                }
                                                 onValueChange={(value) => {
-                                                    const updatedStops = [...data.stops];
+                                                    const updatedStops = [
+                                                        ...data.stops,
+                                                    ];
                                                     updatedStops[index] = {
                                                         ...updatedStops[index],
                                                         appointment_type: value,
                                                     };
-                                                    setData('stops', updatedStops);
+                                                    setData(
+                                                        'stops',
+                                                        updatedStops,
+                                                    );
                                                 }}
                                             >
                                                 <SelectTrigger>
@@ -322,19 +384,33 @@ export default function ShipmentStopsList({
                                         <>
                                             <Input
                                                 type="datetime-local"
-                                                value={stop.appointment_at || ''}
+                                                value={
+                                                    stop.appointment_at || ''
+                                                }
                                                 onChange={(e) => {
-                                                    const updatedStops = [...data.stops];
+                                                    const updatedStops = [
+                                                        ...data.stops,
+                                                    ];
                                                     updatedStops[index] = {
                                                         ...updatedStops[index],
-                                                        appointment_at: e.target.value,
+                                                        appointment_at:
+                                                            e.target.value,
                                                     };
-                                                    setData('stops', updatedStops);
+                                                    setData(
+                                                        'stops',
+                                                        updatedStops,
+                                                    );
                                                 }}
                                             />
-                                            {errors[`stops.${index}.appointment_at`] && (
+                                            {errors[
+                                                `stops.${index}.appointment_at`
+                                            ] && (
                                                 <InputError
-                                                    message={errors[`stops.${index}.appointment_at`]}
+                                                    message={
+                                                        errors[
+                                                            `stops.${index}.appointment_at`
+                                                        ]
+                                                    }
                                                     className="mt-2"
                                                 />
                                             )}
@@ -342,7 +418,9 @@ export default function ShipmentStopsList({
                                     ) : (
                                         <p>
                                             {stop.appointment_at
-                                                ? new Date(stop.appointment_at).toLocaleString()
+                                                ? new Date(
+                                                      stop.appointment_at,
+                                                  ).toLocaleString()
                                                 : 'Not set'}
                                         </p>
                                     )}
@@ -359,20 +437,31 @@ export default function ShipmentStopsList({
                                                         type="datetime-local"
                                                         value={stop.eta}
                                                         onChange={(e) => {
-                                                            const updatedStops = [
-                                                                ...data.stops,
-                                                            ];
-                                                            updatedStops[index] = {
-                                                                ...updatedStops[index],
-                                                                eta: e.target.value,
+                                                            const updatedStops =
+                                                                [...data.stops];
+                                                            updatedStops[
+                                                                index
+                                                            ] = {
+                                                                ...updatedStops[
+                                                                    index
+                                                                ],
+                                                                eta: e.target
+                                                                    .value,
                                                             };
-                                                            setData('stops', updatedStops);
+                                                            setData(
+                                                                'stops',
+                                                                updatedStops,
+                                                            );
                                                         }}
                                                     />
-                                                    {errors[`stops.${index}.eta`] && (
+                                                    {errors[
+                                                        `stops.${index}.eta`
+                                                    ] && (
                                                         <InputError
                                                             message={
-                                                                errors[`stops.${index}.eta`]
+                                                                errors[
+                                                                    `stops.${index}.eta`
+                                                                ]
                                                             }
                                                             className="mt-2"
                                                         />
@@ -381,7 +470,9 @@ export default function ShipmentStopsList({
                                             ) : (
                                                 <p>
                                                     {stop.eta
-                                                        ? new Date(stop.eta).toLocaleString()
+                                                        ? new Date(
+                                                              stop.eta,
+                                                          ).toLocaleString()
                                                         : 'Not set'}
                                                 </p>
                                             )}
@@ -396,17 +487,33 @@ export default function ShipmentStopsList({
                                                         type="datetime-local"
                                                         value={stop.arrived_at}
                                                         onChange={(e) => {
-                                                            const updatedStops = [...data.stops];
-                                                            updatedStops[index] = {
-                                                                ...updatedStops[index],
-                                                                arrived_at: e.target.value,
+                                                            const updatedStops =
+                                                                [...data.stops];
+                                                            updatedStops[
+                                                                index
+                                                            ] = {
+                                                                ...updatedStops[
+                                                                    index
+                                                                ],
+                                                                arrived_at:
+                                                                    e.target
+                                                                        .value,
                                                             };
-                                                            setData('stops', updatedStops);
+                                                            setData(
+                                                                'stops',
+                                                                updatedStops,
+                                                            );
                                                         }}
                                                     />
-                                                    {errors[`stops.${index}.arrived_at`] && (
+                                                    {errors[
+                                                        `stops.${index}.arrived_at`
+                                                    ] && (
                                                         <InputError
-                                                            message={errors[`stops.${index}.arrived_at`]}
+                                                            message={
+                                                                errors[
+                                                                    `stops.${index}.arrived_at`
+                                                                ]
+                                                            }
                                                             className="mt-2"
                                                         />
                                                     )}
@@ -414,32 +521,54 @@ export default function ShipmentStopsList({
                                             ) : (
                                                 <p>
                                                     {stop.arrived_at
-                                                        ? new Date(stop.arrived_at).toLocaleString()
+                                                        ? new Date(
+                                                              stop.arrived_at,
+                                                          ).toLocaleString()
                                                         : 'Not set'}
                                                 </p>
                                             )}
                                         </div>
                                         <div>
                                             <label className="text-sm font-medium">
-                                                {stop.stop_type === 'pickup' ? 'Loaded At' : 'Unloaded At'}
+                                                {stop.stop_type === 'pickup'
+                                                    ? 'Loaded At'
+                                                    : 'Unloaded At'}
                                             </label>
                                             {editMode ? (
                                                 <>
                                                     <Input
                                                         type="datetime-local"
-                                                        value={stop.loaded_unloaded_at}
+                                                        value={
+                                                            stop.loaded_unloaded_at
+                                                        }
                                                         onChange={(e) => {
-                                                            const updatedStops = [...data.stops];
-                                                            updatedStops[index] = {
-                                                                ...updatedStops[index],
-                                                                loaded_unloaded_at: e.target.value,
+                                                            const updatedStops =
+                                                                [...data.stops];
+                                                            updatedStops[
+                                                                index
+                                                            ] = {
+                                                                ...updatedStops[
+                                                                    index
+                                                                ],
+                                                                loaded_unloaded_at:
+                                                                    e.target
+                                                                        .value,
                                                             };
-                                                            setData('stops', updatedStops);
+                                                            setData(
+                                                                'stops',
+                                                                updatedStops,
+                                                            );
                                                         }}
                                                     />
-                                                    {errors[`stops.${index}.loaded_unloaded_at`] && (
+                                                    {errors[
+                                                        `stops.${index}.loaded_unloaded_at`
+                                                    ] && (
                                                         <InputError
-                                                            message={errors[`stops.${index}.loaded_unloaded_at`]}
+                                                            message={
+                                                                errors[
+                                                                    `stops.${index}.loaded_unloaded_at`
+                                                                ]
+                                                            }
                                                             className="mt-2"
                                                         />
                                                     )}
@@ -447,7 +576,9 @@ export default function ShipmentStopsList({
                                             ) : (
                                                 <p>
                                                     {stop.loaded_unloaded_at
-                                                        ? new Date(stop.loaded_unloaded_at).toLocaleString()
+                                                        ? new Date(
+                                                              stop.loaded_unloaded_at,
+                                                          ).toLocaleString()
                                                         : 'Not set'}
                                                 </p>
                                             )}
@@ -462,17 +593,33 @@ export default function ShipmentStopsList({
                                                         type="datetime-local"
                                                         value={stop.left_at}
                                                         onChange={(e) => {
-                                                            const updatedStops = [...data.stops];
-                                                            updatedStops[index] = {
-                                                                ...updatedStops[index],
-                                                                left_at: e.target.value,
+                                                            const updatedStops =
+                                                                [...data.stops];
+                                                            updatedStops[
+                                                                index
+                                                            ] = {
+                                                                ...updatedStops[
+                                                                    index
+                                                                ],
+                                                                left_at:
+                                                                    e.target
+                                                                        .value,
                                                             };
-                                                            setData('stops', updatedStops);
+                                                            setData(
+                                                                'stops',
+                                                                updatedStops,
+                                                            );
                                                         }}
                                                     />
-                                                    {errors[`stops.${index}.left_at`] && (
+                                                    {errors[
+                                                        `stops.${index}.left_at`
+                                                    ] && (
                                                         <InputError
-                                                            message={errors[`stops.${index}.left_at`]}
+                                                            message={
+                                                                errors[
+                                                                    `stops.${index}.left_at`
+                                                                ]
+                                                            }
                                                             className="mt-2"
                                                         />
                                                     )}
@@ -480,15 +627,16 @@ export default function ShipmentStopsList({
                                             ) : (
                                                 <p>
                                                     {stop.left_at
-                                                        ? new Date(stop.left_at).toLocaleString()
+                                                        ? new Date(
+                                                              stop.left_at,
+                                                          ).toLocaleString()
                                                         : 'Not set'}
                                                 </p>
                                             )}
                                         </div>
                                     </>
                                 )}
-                                
-                                
+
                                 <div className="col-span-2">
                                     <label className="text-sm font-medium">
                                         Special Instructions
@@ -497,7 +645,8 @@ export default function ShipmentStopsList({
                                         <>
                                             <Textarea
                                                 value={
-                                                    stop.special_instructions || ''
+                                                    stop.special_instructions ||
+                                                    ''
                                                 }
                                                 onChange={(e) => {
                                                     const updatedStops = [
@@ -508,7 +657,10 @@ export default function ShipmentStopsList({
                                                         special_instructions:
                                                             e.target.value,
                                                     };
-                                                    setData('stops', updatedStops);
+                                                    setData(
+                                                        'stops',
+                                                        updatedStops,
+                                                    );
                                                 }}
                                             />
                                             {errors[
@@ -525,7 +677,10 @@ export default function ShipmentStopsList({
                                             )}
                                         </>
                                     ) : (
-                                        <p>{stop.special_instructions || 'None'}</p>
+                                        <p>
+                                            {stop.special_instructions ||
+                                                'None'}
+                                        </p>
                                     )}
                                 </div>
                             </div>
