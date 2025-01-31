@@ -44,7 +44,7 @@ class UpdateShipmentStops
     {
         return [
             'stops' => ['required', 'array'],
-            'stops.*.id' => ['integer'],
+            'stops.*.id' => ['integer', 'nullable'],
             'stops.*.stop_number' => ['required', 'integer'],
             'stops.*.stop_type' => ['required', Rule::enum(StopType::class)],
             'stops.*.facility_id' => ['required', 'integer', 'exists:facilities,id'],

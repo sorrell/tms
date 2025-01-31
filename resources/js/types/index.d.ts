@@ -37,9 +37,10 @@ export interface Shipper {
 }
 
 export interface ShipmentStop {
-    id: number;
+    id: number | null;
     shipment_id: number;
-    facility: Facility;
+    facility: Facility | null;
+    facility_id: number | null;
     stop_type: StopType;
     stop_number: number;
     special_instructions: string;

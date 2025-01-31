@@ -25,6 +25,7 @@ import { Badge } from './badge';
 export function ResourceSearchSelect({
     searchRoute,
     onValueChange,
+    onValueObjectChange,
     defaultSelectedItems = null,
     allowMultiple = true,
     allowUnselect = true,
@@ -33,6 +34,7 @@ export function ResourceSearchSelect({
 }: {
     searchRoute: string;
     onValueChange?: (value: any) => void;
+    onValueObjectChange?: (selected: any) => void;
     defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
     allowUnselect?: boolean;
@@ -46,14 +48,6 @@ export function ResourceSearchSelect({
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
 
-    // React.useEffect(() => {
-    //     if (autoLoadOptions || defaultSelectedItems) {
-    //         let items = Array.isArray(defaultSelectedItems)
-    //             ? defaultSelectedItems
-    //             : [defaultSelectedItems];
-    //         searchData('', items);
-    //     }
-    // }, []);
 
     React.useEffect(() => {
         let items = Array.isArray(defaultSelectedItems)
@@ -247,6 +241,12 @@ export function ResourceSearchSelect({
                                                       (v) => v.value,
                                                   )
                                                 : newSelected[0].value,
+                                        );
+
+                                        onValueObjectChange?.(
+                                            allowMultiple
+                                                ? newSelected
+                                                : newSelected[0],
                                         );
                                     }}
                                 >

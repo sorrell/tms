@@ -92,6 +92,27 @@ export default function ShipmentStopsList({
                     <div className="flex items-center gap-2">
                         <MapPin className="h-5 w-5" />
                         Stops
+                        {editMode && <Button onClick={() => {
+                            const lastStop = data.stops[data.stops.length - 1];
+                            const updatedStops = [...data.stops];
+                            updatedStops.push({
+                                id: null,
+                                shipment_id: shipmentId,
+                                stop_type: StopType.Delivery,
+                                stop_number: lastStop.stop_number + 1,
+                                facility_id: null,
+                                eta: '',
+                                appointment_type: '',
+                                appointment_at: '',
+                                appointment_end_at: '',
+                                arrived_at: '',
+                                loaded_unloaded_at: '',
+                                left_at: '',
+                                special_instructions: '',
+                                reference_numbers: '',
+                            });
+                            setData('stops', updatedStops);
+                        }}>Add Stop</Button>}
                     </div>
                     {editMode ? (
                         <div className="flex gap-2">
@@ -128,7 +149,7 @@ export default function ShipmentStopsList({
 
                     return (
                         <div
-                            key={stop.id}
+                            key={stop.stop_number}
                             className="flex flex-col gap-4 border-l-2 border-primary pl-4"
                         >
                             <div className="grid gap-4 md:grid-cols-2">
@@ -201,16 +222,17 @@ export default function ShipmentStopsList({
                                                     'facilities.search',
                                                 )}
                                                 allowMultiple={false}
-                                                onValueChange={(value) => {
+                                                onValueObjectChange={(selected) => {
                                                     const updatedStops = [
                                                         ...data.stops,
                                                     ];
                                                     updatedStops[index] = {
                                                         ...updatedStops[index],
+                                                        facility_id: selected?.value,
                                                         facility: {
-                                                            ...updatedStops[index]
-                                                                .facility,
-                                                            name: e.target.value,
+                                                            ...updatedStops[index].facility,
+                                                            id: selected?.value,
+                                                            name: selected?.label,
                                                         },
                                                     };
                                                     setData('stops', updatedStops);
