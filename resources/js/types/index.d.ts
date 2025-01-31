@@ -40,10 +40,23 @@ export interface ShipmentStop {
     id: number;
     shipment_id: number;
     facility: Facility;
-    stop_type: string;
+    stop_type: StopType;
     stop_number: number;
     special_instructions: string;
     reference_numbers: string;
+    eta: string;
+    arrived_at: string;
+    loaded_unloaded_at: string;
+    left_at: string;
+    appointment: ShipmentStopAppointment;
+}
+
+export interface ShipmentStopAppointment {
+    id: number;
+    shipment_stop_id: number;
+    appointment_at: string;
+    appointment_type: string;
+    appointment_end_at: string;
 }
 
 export interface Shipment {

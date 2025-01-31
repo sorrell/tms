@@ -9,8 +9,10 @@ import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import CarrierDetails from './Partials/CarrierDetails';
 import ShipperDetails from './Partials/ShipperDetails';
+import { ShipmentStop } from '@/types';
+import ShipmentStopsList from './Partials/ShipmentStopsList';
 
-export default function Show({ shipment }: { shipment: any }) {
+export default function Show({ shipment, stops }: { shipment: any, stops: ShipmentStop[] }) {
     return (
         <AuthenticatedLayout
             breadcrumbs={[
@@ -46,36 +48,7 @@ export default function Show({ shipment }: { shipment: any }) {
                         </Card>
 
                         {/* Stops Timeline */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Stops</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                {[1, 2, 3].map((stop) => (
-                                    <div
-                                        key={stop}
-                                        className="flex gap-4 border-l-2 border-primary pl-4"
-                                    >
-                                        <div className="flex-grow space-y-2">
-                                            <Skeleton className="h-6 w-1/3" />
-                                            <Skeleton className="h-4 w-1/4" />
-                                            <div className="flex gap-2">
-                                                <Button size="sm">
-                                                    Update ETA
-                                                </Button>
-                                                <Button size="sm">
-                                                    Mark Arrived
-                                                </Button>
-                                                <Button size="sm">
-                                                    Mark Completed
-                                                </Button>
-                                            </div>
-                                        </div>
-                                        <Skeleton className="h-20 w-32" />
-                                    </div>
-                                ))}
-                            </CardContent>
-                        </Card>
+                        <ShipmentStopsList stops={stops} />
 
                         {/* Tabbed Content */}
                         <Tabs defaultValue="financials">

@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Shipments;
 
+use App\Enums\StopType;
 use App\Models\Location;
 use App\Models\Organizations\Organization;
 use App\Models\Carrier;
@@ -22,7 +23,7 @@ class ShipmentStopFactory extends Factory
         return [
             'shipment_id' => Shipment::factory(),
             'facility_id' => Facility::factory(),
-            'stop_type' => fake()->randomElement(['pickup', 'delivery']),
+            'stop_type' => fake()->randomElement(StopType::cases()),
             'stop_number' => fake()->numberBetween(1, 5),
             'special_instructions' => fake()->optional()->sentence(),
             'reference_numbers' => fake()->optional()->words(3, true),
@@ -38,7 +39,7 @@ class ShipmentStopFactory extends Factory
     {
         return $this->afterCreating(function (ShipmentStop $stop) {
             $stop->appointment()->create([
-                'appointment_datetime' => Carbon::now()->addDays(fake()->numberBetween(1, 14)),
+                'appointment_at' => Carbon::now()->addDays(fake()->numberBetween(1, 14)),
             ]);
         });
     }

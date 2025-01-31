@@ -22,6 +22,7 @@ import { Textarea } from '@/Components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { cn } from '@/lib/utils';
 import { TrailerType } from '@/types';
+import { StopType } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
@@ -82,7 +83,7 @@ export default function Create({
 
             stops: [
                 {
-                    stop_type: 'pickup',
+                    stop_type: StopType.Pickup,
                     appointment: { datetime: '' },
                     special_instructions: '',
                     reference_numbers: '',
@@ -90,7 +91,7 @@ export default function Create({
                     facility_id: undefined,
                 },
                 {
-                    stop_type: 'delivery',
+                    stop_type: StopType.Delivery,
                     appointment: { datetime: '' },
                     special_instructions: '',
                     reference_numbers: '',
@@ -433,7 +434,7 @@ export default function Create({
                                             form.setValue('stops', [
                                                 ...form.getValues('stops'),
                                                 {
-                                                    stop_type: 'pickup',
+                                                    stop_type: StopType.Pickup,
                                                     appointment: {
                                                         datetime: '',
                                                     },
@@ -561,10 +562,10 @@ export default function Create({
                                                                         <SelectValue placeholder="Select a stop type" />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
-                                                                        <SelectItem value="pickup">
+                                                                        <SelectItem value={StopType.Pickup}>
                                                                             Pickup
                                                                         </SelectItem>
-                                                                        <SelectItem value="delivery">
+                                                                        <SelectItem value={StopType.Delivery}>
                                                                             Delivery
                                                                         </SelectItem>
                                                                     </SelectContent>

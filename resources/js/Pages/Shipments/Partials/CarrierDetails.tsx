@@ -49,7 +49,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                 <CardTitle className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                         <Truck className="h-5 w-5" />
-                        Carrier Details
+                        Carrier
                     </div>
                     {editMode ? (
                         <>

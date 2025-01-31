@@ -56,6 +56,7 @@ class ShipmentFactory extends Factory
                 ->count($numberOfStops)
                 ->sequence(fn ($sequence) => ['stop_number' => $sequence->index + 1])
                 ->for($shipment)
+                ->withAppointment()
                 ->create();
         });
     }

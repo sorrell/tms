@@ -2,6 +2,7 @@
 
 namespace App\Models\Shipments;
 
+use App\Enums\StopType;
 use App\Models\Facility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,14 @@ class ShipmentStop extends Model
         'special_instructions',
         'reference_numbers',
         'stop_number',
+        'eta',
+        'arrived_at',
+        'loaded_unloaded_at',
+        'left_at',
+    ];
+
+    protected $casts = [
+        'stop_type' => StopType::class,
     ];
 
     /**

@@ -51,7 +51,7 @@ class CreateShipment
             ]);
 
             $stop->appointment()->create([
-                'appointment_datetime' => Carbon::parse($stopData['appointment']['datetime']),
+                'appointment_at' => Carbon::parse($stopData['appointment']['datetime']),
             ]);
         }
 

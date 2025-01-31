@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Shipments;
 
+use App\Enums\StopType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreShipmentRequest extends FormRequest
 {
@@ -36,7 +38,7 @@ class StoreShipmentRequest extends FormRequest
 
             'carrier_id' => ['required', 'exists:carriers,id'],
             'stops' => ['required', 'array'],
-            'stops.*.stop_type' => ['required', 'in:pickup,delivery'],
+            'stops.*.stop_type' => ['required', Rule::enum(StopType::class)],
             'stops.*.facility_id' => ['required', 'exists:facilities,id'],
             'stops.*.appointment.datetime' => ['required', 'date'],
             'stops.*.special_instructions' => ['nullable', 'string'],
