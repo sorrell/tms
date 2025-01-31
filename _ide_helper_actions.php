@@ -74,6 +74,34 @@ class UpdateShipmentGeneral
 class UpdateShipmentNumber
 {
 }
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ * @method static \App\Models\Shipments\Shipment run(\App\Models\Shipments\Shipment $shipment, array $shipperIds)
+ */
+class UpdateShipmentShippers
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, array $stops)
+ * @method static \App\Models\Shipments\Shipment run(\App\Models\Shipments\Shipment $shipment, array $stops)
+ */
+class UpdateShipmentStops
+{
+}
 namespace Lorisleiva\Actions\Concerns;
 
 /**
