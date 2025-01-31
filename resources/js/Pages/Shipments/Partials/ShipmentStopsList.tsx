@@ -158,530 +158,610 @@ export default function ShipmentStopsList({
 
                     return (
                         <div
-                            key={stop.stop_number}
-                            className="flex flex-col gap-4 border-l-2 border-primary pl-4"
+                            className="flex items-center justify-between space-x-2"
+                            key={'stops-div-' + index}
                         >
-                            <div className="grid gap-4 md:grid-cols-2">
-                                <div>
-                                    {editMode ? (
-                                        <>
-                                            <label className="text-sm font-medium">
-                                                Stop Type
-                                            </label>
-                                            <Select
-                                                value={stop.stop_type}
-                                                onValueChange={(value) => {
-                                                    const updatedStops = [
-                                                        ...data.stops,
-                                                    ];
-                                                    updatedStops[index] = {
-                                                        ...updatedStops[index],
-                                                        stop_type: value,
-                                                    };
-                                                    setData(
-                                                        'stops',
-                                                        updatedStops,
-                                                    );
-                                                }}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem
-                                                        value={StopType.Pickup}
-                                                    >
-                                                        Pickup
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value={
-                                                            StopType.Delivery
-                                                        }
-                                                    >
-                                                        Delivery
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            {errors[`stops.${index}.type`] && (
-                                                <InputError
-                                                    message={
-                                                        errors[
-                                                            `stops.${index}.type`
-                                                        ]
-                                                    }
-                                                    className="mt-2"
-                                                />
-                                            )}
-                                        </>
-                                    ) : (
-                                        <Avatar>
-                                            <AvatarFallback className="bg-primary p-1 text-white">
-                                                {stop.stop_type ===
-                                                StopType.Delivery ? (
-                                                    <ArrowDown className="inline h-4 w-4" />
-                                                ) : (
-                                                    <ArrowUp className="inline h-4 w-4" />
-                                                )}
-                                                <p className="font-semibold">
-                                                    {stop.stop_type
-                                                        .charAt(0)
-                                                        .toUpperCase()}
-                                                    {stop.stop_number}
-                                                </p>
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    )}
-                                </div>
-                                <div>
-                                    <div className="flex items-center justify-between">
-                                        <label className="text-sm font-medium">
-                                            Facility
-                                        </label>
-                                        {editMode && (
-                                            <Button
-                                                disabled={data.stops.length <= 2}
-                                                variant="destructive"
-                                                className="m-1"
-                                                onClick={() => {
-                                                    const updatedStops = [
-                                                        ...data.stops,
-                                                    ];
-                                                    updatedStops.splice(
-                                                        index,
-                                                        1,
-                                                    );
-                                                    setData(
-                                                        'stops',
-                                                        updatedStops,
-                                                    );
-                                                }}
-                                            >
-                                                <Trash className="h-4 w-4" />
-                                            </Button>
-                                        )}
-                                    </div>
-
-                                    {editMode ? (
-                                        <>
-                                            <ResourceSearchSelect
-                                                searchRoute={route(
-                                                    'facilities.search',
-                                                )}
-                                                allowMultiple={false}
-                                                onValueObjectChange={(
-                                                    selected,
-                                                ) => {
-                                                    const updatedStops = [
-                                                        ...data.stops,
-                                                    ];
-                                                    updatedStops[index] = {
-                                                        ...updatedStops[index],
-                                                        facility_id:
-                                                            selected?.value,
-                                                        facility: {
+                            {editMode && (
+                            <div className="flex h-full flex-shrink-0 flex-col justify-between gap-2">
+                                <Button
+                                    variant="secondary"
+                                    size="icon"
+                                    onClick={(e) => {
+                                        const updatedStops = [...data.stops];
+                                        const temp = updatedStops[index];
+                                        updatedStops[index] =
+                                            updatedStops[index - 1];
+                                        updatedStops[index - 1] = temp;
+                                        updatedStops.forEach((stop, i) => {
+                                            stop.stop_number = i + 1;
+                                        });
+                                        setData('stops', updatedStops);
+                                    }}
+                                    disabled={index === 0}
+                                >
+                                    <ArrowUp className="h-4 w-4" />
+                                </Button>
+                                <span className="text-center text-sm font-bold">
+                                    {stop.stop_number}
+                                </span>
+                                <Button
+                                    variant="secondary"
+                                    size="icon"
+                                    onClick={(e) => {
+                                        const updatedStops = [...data.stops];
+                                        const temp = updatedStops[index];
+                                        updatedStops[index] =
+                                            updatedStops[index + 1];
+                                        updatedStops[index + 1] = temp;
+                                        updatedStops.forEach((stop, i) => {
+                                            stop.stop_number = i + 1;
+                                        });
+                                        setData('stops', updatedStops);
+                                    }}
+                                    disabled={
+                                        index ===
+                                        data.stops.length - 1
+                                    }
+                                >
+                                    <ArrowDown className="h-4 w-4" />
+                                </Button>
+                            </div>
+                            )}
+                            <div className="flex flex-col gap-4 border-l-2 border-primary pl-4 flex-grow">
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div>
+                                        {editMode ? (
+                                            <>
+                                                <label className="text-sm font-medium">
+                                                    Stop Type
+                                                </label>
+                                                <Select
+                                                    value={stop.stop_type}
+                                                    onValueChange={(value) => {
+                                                        const updatedStops = [
+                                                            ...data.stops,
+                                                        ];
+                                                        updatedStops[index] = {
                                                             ...updatedStops[
                                                                 index
-                                                            ].facility,
-                                                            id: selected?.value,
-                                                            name: selected?.label,
-                                                        },
-                                                    };
-                                                    setData(
-                                                        'stops',
-                                                        updatedStops,
-                                                    );
-                                                }}
-                                                defaultSelectedItems={
-                                                    stop.facility?.id
-                                                }
-                                                className="w-full"
-                                            />
-
-                                            {errors[
-                                                `stops.${index}.facility.name`
-                                            ] && (
-                                                <InputError
-                                                    message={
-                                                        errors[
-                                                            `stops.${index}.facility.name`
-                                                        ]
-                                                    }
-                                                    className="mt-2"
-                                                />
-                                            )}
-                                        </>
-                                    ) : (
-                                        <p>{stop.facility?.name}</p>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="text-sm font-medium text-muted-foreground">
-                                        Appointment Type
-                                    </label>
-                                    {editMode ? (
-                                        <>
-                                            <Select
-                                                disabled={true}
-                                                value={
-                                                    stop.appointment_type || ''
-                                                }
-                                                onValueChange={(value) => {
-                                                    const updatedStops = [
-                                                        ...data.stops,
-                                                    ];
-                                                    updatedStops[index] = {
-                                                        ...updatedStops[index],
-                                                        appointment_type: value,
-                                                    };
-                                                    setData(
-                                                        'stops',
-                                                        updatedStops,
-                                                    );
-                                                }}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="firm">
-                                                        Firm
-                                                    </SelectItem>
-                                                    <SelectItem value="first_come">
-                                                        First Come First Serve
-                                                    </SelectItem>
-                                                    <SelectItem value="live">
-                                                        Live Load/Unload
-                                                    </SelectItem>
-                                                    <SelectItem value="drop">
-                                                        Drop
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            {errors[
-                                                `stops.${index}.appointment_type`
-                                            ] && (
-                                                <InputError
-                                                    message={
-                                                        errors[
-                                                            `stops.${index}.appointment_type`
-                                                        ]
-                                                    }
-                                                    className="mt-2"
-                                                />
-                                            )}
-                                        </>
-                                    ) : (
-                                        <p className="capitalize">
-                                            {stop.appointment_type || 'Not set'}
-                                        </p>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="text-sm font-medium">
-                                        Appointment Time
-                                    </label>
-                                    {editMode ? (
-                                        <>
-                                            <Input
-                                                type="datetime-local"
-                                                value={
-                                                    stop.appointment_at || ''
-                                                }
-                                                onChange={(e) => {
-                                                    const updatedStops = [
-                                                        ...data.stops,
-                                                    ];
-                                                    updatedStops[index] = {
-                                                        ...updatedStops[index],
-                                                        appointment_at:
-                                                            e.target.value,
-                                                    };
-                                                    setData(
-                                                        'stops',
-                                                        updatedStops,
-                                                    );
-                                                }}
-                                            />
-                                            {errors[
-                                                `stops.${index}.appointment_at`
-                                            ] && (
-                                                <InputError
-                                                    message={
-                                                        errors[
-                                                            `stops.${index}.appointment_at`
-                                                        ]
-                                                    }
-                                                    className="mt-2"
-                                                />
-                                            )}
-                                        </>
-                                    ) : (
-                                        <p>
-                                            {stop.appointment_at
-                                                ? new Date(
-                                                      stop.appointment_at,
-                                                  ).toLocaleString()
-                                                : 'Not set'}
-                                        </p>
-                                    )}
-                                </div>
-                                {!shouldHideFields && (
-                                    <>
-                                        <div>
-                                            <label className="text-sm font-medium">
-                                                ETA
-                                            </label>
-                                            {editMode ? (
-                                                <>
-                                                    <Input
-                                                        type="datetime-local"
-                                                        value={stop.eta}
-                                                        onChange={(e) => {
-                                                            const updatedStops =
-                                                                [...data.stops];
-                                                            updatedStops[
-                                                                index
-                                                            ] = {
-                                                                ...updatedStops[
-                                                                    index
-                                                                ],
-                                                                eta: e.target
-                                                                    .value,
-                                                            };
-                                                            setData(
-                                                                'stops',
-                                                                updatedStops,
-                                                            );
-                                                        }}
-                                                    />
-                                                    {errors[
-                                                        `stops.${index}.eta`
-                                                    ] && (
-                                                        <InputError
-                                                            message={
-                                                                errors[
-                                                                    `stops.${index}.eta`
-                                                                ]
+                                                            ],
+                                                            stop_type: value,
+                                                        };
+                                                        setData(
+                                                            'stops',
+                                                            updatedStops,
+                                                        );
+                                                    }}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem
+                                                            value={
+                                                                StopType.Pickup
                                                             }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <p>
-                                                    {stop.eta
-                                                        ? new Date(
-                                                              stop.eta,
-                                                          ).toLocaleString()
-                                                        : 'Not set'}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div>
-                                            <label className="text-sm font-medium">
-                                                Arrived At
-                                            </label>
-                                            {editMode ? (
-                                                <>
-                                                    <Input
-                                                        type="datetime-local"
-                                                        value={stop.arrived_at}
-                                                        onChange={(e) => {
-                                                            const updatedStops =
-                                                                [...data.stops];
-                                                            updatedStops[
-                                                                index
-                                                            ] = {
-                                                                ...updatedStops[
-                                                                    index
-                                                                ],
-                                                                arrived_at:
-                                                                    e.target
-                                                                        .value,
-                                                            };
-                                                            setData(
-                                                                'stops',
-                                                                updatedStops,
-                                                            );
-                                                        }}
-                                                    />
-                                                    {errors[
-                                                        `stops.${index}.arrived_at`
-                                                    ] && (
-                                                        <InputError
-                                                            message={
-                                                                errors[
-                                                                    `stops.${index}.arrived_at`
-                                                                ]
+                                                        >
+                                                            Pickup
+                                                        </SelectItem>
+                                                        <SelectItem
+                                                            value={
+                                                                StopType.Delivery
                                                             }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <p>
-                                                    {stop.arrived_at
-                                                        ? new Date(
-                                                              stop.arrived_at,
-                                                          ).toLocaleString()
-                                                        : 'Not set'}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div>
-                                            <label className="text-sm font-medium">
-                                                {stop.stop_type === 'pickup'
-                                                    ? 'Loaded At'
-                                                    : 'Unloaded At'}
-                                            </label>
-                                            {editMode ? (
-                                                <>
-                                                    <Input
-                                                        type="datetime-local"
-                                                        value={
-                                                            stop.loaded_unloaded_at
+                                                        >
+                                                            Delivery
+                                                        </SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                {errors[
+                                                    `stops.${index}.type`
+                                                ] && (
+                                                    <InputError
+                                                        message={
+                                                            errors[
+                                                                `stops.${index}.type`
+                                                            ]
                                                         }
-                                                        onChange={(e) => {
-                                                            const updatedStops =
-                                                                [...data.stops];
-                                                            updatedStops[
-                                                                index
-                                                            ] = {
-                                                                ...updatedStops[
-                                                                    index
-                                                                ],
-                                                                loaded_unloaded_at:
-                                                                    e.target
-                                                                        .value,
-                                                            };
-                                                            setData(
-                                                                'stops',
-                                                                updatedStops,
-                                                            );
-                                                        }}
+                                                        className="mt-2"
                                                     />
-                                                    {errors[
-                                                        `stops.${index}.loaded_unloaded_at`
-                                                    ] && (
-                                                        <InputError
-                                                            message={
-                                                                errors[
-                                                                    `stops.${index}.loaded_unloaded_at`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
+                                                )}
+                                            </>
+                                        ) : (
+                                            <Avatar>
+                                                <AvatarFallback className="bg-primary p-1 text-white">
+                                                    {stop.stop_type ===
+                                                    StopType.Delivery ? (
+                                                        <ArrowDown className="inline h-4 w-4" />
+                                                    ) : (
+                                                        <ArrowUp className="inline h-4 w-4" />
                                                     )}
-                                                </>
-                                            ) : (
-                                                <p>
-                                                    {stop.loaded_unloaded_at
-                                                        ? new Date(
-                                                              stop.loaded_unloaded_at,
-                                                          ).toLocaleString()
-                                                        : 'Not set'}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div>
+                                                    <p className="font-semibold">
+                                                        {stop.stop_type
+                                                            .charAt(0)
+                                                            .toUpperCase()}
+                                                        {stop.stop_number}
+                                                    </p>
+                                                </AvatarFallback>
+                                            </Avatar>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center justify-between">
                                             <label className="text-sm font-medium">
-                                                Left At
+                                                Facility
                                             </label>
-                                            {editMode ? (
-                                                <>
-                                                    <Input
-                                                        type="datetime-local"
-                                                        value={stop.left_at}
-                                                        onChange={(e) => {
-                                                            const updatedStops =
-                                                                [...data.stops];
-                                                            updatedStops[
-                                                                index
-                                                            ] = {
-                                                                ...updatedStops[
-                                                                    index
-                                                                ],
-                                                                left_at:
-                                                                    e.target
-                                                                        .value,
-                                                            };
-                                                            setData(
-                                                                'stops',
-                                                                updatedStops,
-                                                            );
-                                                        }}
-                                                    />
-                                                    {errors[
-                                                        `stops.${index}.left_at`
-                                                    ] && (
-                                                        <InputError
-                                                            message={
-                                                                errors[
-                                                                    `stops.${index}.left_at`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <p>
-                                                    {stop.left_at
-                                                        ? new Date(
-                                                              stop.left_at,
-                                                          ).toLocaleString()
-                                                        : 'Not set'}
-                                                </p>
+                                            {editMode && (
+                                                <Button
+                                                    disabled={
+                                                        data.stops.length <= 2
+                                                    }
+                                                    variant="destructive"
+                                                    className="m-1"
+                                                    onClick={() => {
+                                                        const updatedStops = [
+                                                            ...data.stops,
+                                                        ];
+                                                        updatedStops.splice(
+                                                            index,
+                                                            1,
+                                                        );
+                                                        setData(
+                                                            'stops',
+                                                            updatedStops,
+                                                        );
+                                                    }}
+                                                >
+                                                    <Trash className="h-4 w-4" />
+                                                </Button>
                                             )}
                                         </div>
-                                    </>
-                                )}
 
-                                <div className="col-span-2">
-                                    <label className="text-sm font-medium">
-                                        Special Instructions
-                                    </label>
-                                    {editMode ? (
-                                        <>
-                                            <Textarea
-                                                value={
-                                                    stop.special_instructions ||
-                                                    ''
-                                                }
-                                                onChange={(e) => {
-                                                    const updatedStops = [
-                                                        ...data.stops,
-                                                    ];
-                                                    updatedStops[index] = {
-                                                        ...updatedStops[index],
-                                                        special_instructions:
-                                                            e.target.value,
-                                                    };
-                                                    setData(
-                                                        'stops',
-                                                        updatedStops,
-                                                    );
-                                                }}
-                                            />
-                                            {errors[
-                                                `stops.${index}.special_instructions`
-                                            ] && (
-                                                <InputError
-                                                    message={
-                                                        errors[
-                                                            `stops.${index}.special_instructions`
-                                                        ]
+                                        {editMode ? (
+                                            <>
+                                                <ResourceSearchSelect
+                                                    searchRoute={route(
+                                                        'facilities.search',
+                                                    )}
+                                                    allowMultiple={false}
+                                                    onValueObjectChange={(
+                                                        selected,
+                                                    ) => {
+                                                        const updatedStops = [
+                                                            ...data.stops,
+                                                        ];
+                                                        updatedStops[index] = {
+                                                            ...updatedStops[
+                                                                index
+                                                            ],
+                                                            facility_id:
+                                                                selected?.value,
+                                                            facility: {
+                                                                ...updatedStops[
+                                                                    index
+                                                                ].facility,
+                                                                id: selected?.value,
+                                                                name: selected?.label,
+                                                            },
+                                                        };
+                                                        setData(
+                                                            'stops',
+                                                            updatedStops,
+                                                        );
+                                                    }}
+                                                    defaultSelectedItems={
+                                                        stop.facility?.id
                                                     }
-                                                    className="mt-2"
+                                                    className="w-full"
                                                 />
-                                            )}
+
+                                                {errors[
+                                                    `stops.${index}.facility.name`
+                                                ] && (
+                                                    <InputError
+                                                        message={
+                                                            errors[
+                                                                `stops.${index}.facility.name`
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
+                                            </>
+                                        ) : (
+                                            <p>{stop.facility?.name}</p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-muted-foreground">
+                                            Appointment Type
+                                        </label>
+                                        {editMode ? (
+                                            <>
+                                                <Select
+                                                    disabled={true}
+                                                    value={
+                                                        stop.appointment_type ||
+                                                        ''
+                                                    }
+                                                    onValueChange={(value) => {
+                                                        const updatedStops = [
+                                                            ...data.stops,
+                                                        ];
+                                                        updatedStops[index] = {
+                                                            ...updatedStops[
+                                                                index
+                                                            ],
+                                                            appointment_type:
+                                                                value,
+                                                        };
+                                                        setData(
+                                                            'stops',
+                                                            updatedStops,
+                                                        );
+                                                    }}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="firm">
+                                                            Firm
+                                                        </SelectItem>
+                                                        <SelectItem value="first_come">
+                                                            First Come First
+                                                            Serve
+                                                        </SelectItem>
+                                                        <SelectItem value="live">
+                                                            Live Load/Unload
+                                                        </SelectItem>
+                                                        <SelectItem value="drop">
+                                                            Drop
+                                                        </SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                {errors[
+                                                    `stops.${index}.appointment_type`
+                                                ] && (
+                                                    <InputError
+                                                        message={
+                                                            errors[
+                                                                `stops.${index}.appointment_type`
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
+                                            </>
+                                        ) : (
+                                            <p className="capitalize">
+                                                {stop.appointment_type ||
+                                                    'Not set'}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">
+                                            Appointment Time
+                                        </label>
+                                        {editMode ? (
+                                            <>
+                                                <Input
+                                                    type="datetime-local"
+                                                    value={
+                                                        stop.appointment_at ||
+                                                        ''
+                                                    }
+                                                    onChange={(e) => {
+                                                        const updatedStops = [
+                                                            ...data.stops,
+                                                        ];
+                                                        updatedStops[index] = {
+                                                            ...updatedStops[
+                                                                index
+                                                            ],
+                                                            appointment_at:
+                                                                e.target.value,
+                                                        };
+                                                        setData(
+                                                            'stops',
+                                                            updatedStops,
+                                                        );
+                                                    }}
+                                                />
+                                                {errors[
+                                                    `stops.${index}.appointment_at`
+                                                ] && (
+                                                    <InputError
+                                                        message={
+                                                            errors[
+                                                                `stops.${index}.appointment_at`
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
+                                            </>
+                                        ) : (
+                                            <p>
+                                                {stop.appointment_at
+                                                    ? new Date(
+                                                          stop.appointment_at,
+                                                      ).toLocaleString()
+                                                    : 'Not set'}
+                                            </p>
+                                        )}
+                                    </div>
+                                    {!shouldHideFields && (
+                                        <>
+                                            <div>
+                                                <label className="text-sm font-medium">
+                                                    ETA
+                                                </label>
+                                                {editMode ? (
+                                                    <>
+                                                        <Input
+                                                            type="datetime-local"
+                                                            value={stop.eta}
+                                                            onChange={(e) => {
+                                                                const updatedStops =
+                                                                    [
+                                                                        ...data.stops,
+                                                                    ];
+                                                                updatedStops[
+                                                                    index
+                                                                ] = {
+                                                                    ...updatedStops[
+                                                                        index
+                                                                    ],
+                                                                    eta: e
+                                                                        .target
+                                                                        .value,
+                                                                };
+                                                                setData(
+                                                                    'stops',
+                                                                    updatedStops,
+                                                                );
+                                                            }}
+                                                        />
+                                                        {errors[
+                                                            `stops.${index}.eta`
+                                                        ] && (
+                                                            <InputError
+                                                                message={
+                                                                    errors[
+                                                                        `stops.${index}.eta`
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <p>
+                                                        {stop.eta
+                                                            ? new Date(
+                                                                  stop.eta,
+                                                              ).toLocaleString()
+                                                            : 'Not set'}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">
+                                                    Arrived At
+                                                </label>
+                                                {editMode ? (
+                                                    <>
+                                                        <Input
+                                                            type="datetime-local"
+                                                            value={
+                                                                stop.arrived_at
+                                                            }
+                                                            onChange={(e) => {
+                                                                const updatedStops =
+                                                                    [
+                                                                        ...data.stops,
+                                                                    ];
+                                                                updatedStops[
+                                                                    index
+                                                                ] = {
+                                                                    ...updatedStops[
+                                                                        index
+                                                                    ],
+                                                                    arrived_at:
+                                                                        e.target
+                                                                            .value,
+                                                                };
+                                                                setData(
+                                                                    'stops',
+                                                                    updatedStops,
+                                                                );
+                                                            }}
+                                                        />
+                                                        {errors[
+                                                            `stops.${index}.arrived_at`
+                                                        ] && (
+                                                            <InputError
+                                                                message={
+                                                                    errors[
+                                                                        `stops.${index}.arrived_at`
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <p>
+                                                        {stop.arrived_at
+                                                            ? new Date(
+                                                                  stop.arrived_at,
+                                                              ).toLocaleString()
+                                                            : 'Not set'}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">
+                                                    {stop.stop_type === 'pickup'
+                                                        ? 'Loaded At'
+                                                        : 'Unloaded At'}
+                                                </label>
+                                                {editMode ? (
+                                                    <>
+                                                        <Input
+                                                            type="datetime-local"
+                                                            value={
+                                                                stop.loaded_unloaded_at
+                                                            }
+                                                            onChange={(e) => {
+                                                                const updatedStops =
+                                                                    [
+                                                                        ...data.stops,
+                                                                    ];
+                                                                updatedStops[
+                                                                    index
+                                                                ] = {
+                                                                    ...updatedStops[
+                                                                        index
+                                                                    ],
+                                                                    loaded_unloaded_at:
+                                                                        e.target
+                                                                            .value,
+                                                                };
+                                                                setData(
+                                                                    'stops',
+                                                                    updatedStops,
+                                                                );
+                                                            }}
+                                                        />
+                                                        {errors[
+                                                            `stops.${index}.loaded_unloaded_at`
+                                                        ] && (
+                                                            <InputError
+                                                                message={
+                                                                    errors[
+                                                                        `stops.${index}.loaded_unloaded_at`
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <p>
+                                                        {stop.loaded_unloaded_at
+                                                            ? new Date(
+                                                                  stop.loaded_unloaded_at,
+                                                              ).toLocaleString()
+                                                            : 'Not set'}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">
+                                                    Left At
+                                                </label>
+                                                {editMode ? (
+                                                    <>
+                                                        <Input
+                                                            type="datetime-local"
+                                                            value={stop.left_at}
+                                                            onChange={(e) => {
+                                                                const updatedStops =
+                                                                    [
+                                                                        ...data.stops,
+                                                                    ];
+                                                                updatedStops[
+                                                                    index
+                                                                ] = {
+                                                                    ...updatedStops[
+                                                                        index
+                                                                    ],
+                                                                    left_at:
+                                                                        e.target
+                                                                            .value,
+                                                                };
+                                                                setData(
+                                                                    'stops',
+                                                                    updatedStops,
+                                                                );
+                                                            }}
+                                                        />
+                                                        {errors[
+                                                            `stops.${index}.left_at`
+                                                        ] && (
+                                                            <InputError
+                                                                message={
+                                                                    errors[
+                                                                        `stops.${index}.left_at`
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <p>
+                                                        {stop.left_at
+                                                            ? new Date(
+                                                                  stop.left_at,
+                                                              ).toLocaleString()
+                                                            : 'Not set'}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </>
-                                    ) : (
-                                        <p>
-                                            {stop.special_instructions ||
-                                                'None'}
-                                        </p>
                                     )}
+
+                                    <div className="col-span-2">
+                                        <label className="text-sm font-medium">
+                                            Special Instructions
+                                        </label>
+                                        {editMode ? (
+                                            <>
+                                                <Textarea
+                                                    value={
+                                                        stop.special_instructions ||
+                                                        ''
+                                                    }
+                                                    onChange={(e) => {
+                                                        const updatedStops = [
+                                                            ...data.stops,
+                                                        ];
+                                                        updatedStops[index] = {
+                                                            ...updatedStops[
+                                                                index
+                                                            ],
+                                                            special_instructions:
+                                                                e.target.value,
+                                                        };
+                                                        setData(
+                                                            'stops',
+                                                            updatedStops,
+                                                        );
+                                                    }}
+                                                />
+                                                {errors[
+                                                    `stops.${index}.special_instructions`
+                                                ] && (
+                                                    <InputError
+                                                        message={
+                                                            errors[
+                                                                `stops.${index}.special_instructions`
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
+                                            </>
+                                        ) : (
+                                            <p>
+                                                {stop.special_instructions ||
+                                                    'None'}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

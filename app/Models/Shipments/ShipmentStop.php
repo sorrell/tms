@@ -36,6 +36,19 @@ class ShipmentStop extends Model
     ];
 
     /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // Default order to the stop number order
+        static::addGlobalScope('order', function ($query) {
+            $query->orderBy('stop_number', 'asc');
+        });
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Shipment, $this>
      */
     public function shipment(): BelongsTo
