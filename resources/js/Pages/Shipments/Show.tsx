@@ -48,7 +48,7 @@ export default function Show({ shipment, stops }: { shipment: any, stops: Shipme
                         </Card>
 
                         {/* Stops Timeline */}
-                        <ShipmentStopsList stops={stops} />
+                        <ShipmentStopsList shipmentId={shipment.id} stops={stops} />
 
                         {/* Tabbed Content */}
                         <Tabs defaultValue="financials">

@@ -20,15 +20,41 @@ import { ArrowDown, ArrowUp, Check, CheckCircle2, MapPin, Pencil, X } from 'luci
 import { useState } from 'react';
 
 export default function ShipmentStopsList({
+    shipmentId,
     stops,
 }: {
+    shipmentId: number;
     stops: ShipmentStop[];
 }) {
     const [editMode, setEditMode] = useState(false);
     const { toast } = useToast();
 
-    const { patch, setData, data, errors } = useForm({
-        stops: stops.map((stop) => ({
+    const updateStops = () => {
+        patch(
+            route('shipments.updateStops', {
+                shipment: shipmentId,
+            }),
+            {
+                onSuccess: () => {
+                    setEditMode(false);
+                    toast({
+                        description: (
+                            <>
+                                <CheckCircle2
+                                    className="mr-2 inline h-4 w-4"
+                                    color="green"
+                                />
+                                Stops updated successfully
+                            </>
+                        ),
+                    });
+                },
+            },
+        );
+    };
+
+    const getSavedStops = () => {
+        return stops.map((stop) => ({
             ...stop,
             eta: stop.eta ? new Date(stop.eta).toISOString().slice(0, 16) : '',
             facility_id: stop.facility?.id,
@@ -52,32 +78,12 @@ export default function ShipmentStopsList({
             left_at: stop.left_at
                 ? new Date(stop.left_at).toISOString().slice(0, 16)
                 : '',
-        })),
-    });
-
-    const updateStops = () => {
-        patch(
-            route('shipments.updateStops', {
-                shipment: stops[0].shipment_id,
-            }),
-            {
-                onSuccess: () => {
-                    setEditMode(false);
-                    toast({
-                        description: (
-                            <>
-                                <CheckCircle2
-                                    className="mr-2 inline h-4 w-4"
-                                    color="green"
-                                />
-                                Stops updated successfully
-                            </>
-                        ),
-                    });
-                },
-            },
-        );
+        }));
     };
+
+    const { patch, setData, data, errors } = useForm({
+        stops: getSavedStops(),
+    });
 
     return (
         <Card>
@@ -98,52 +104,7 @@ export default function ShipmentStopsList({
                                     setEditMode(false);
                                     setData(
                                         'stops',
-                                        stops.map((stop) => ({
-                                            ...stop,
-                                            eta: stop.eta
-                                                ? new Date(stop.eta)
-                                                      .toISOString()
-                                                      .slice(0, 16)
-                                                : '',
-                                            appointment: {
-                                                ...stop.appointment,
-                                                appointment_at: stop.appointment
-                                                    ?.appointment_at
-                                                    ? new Date(
-                                                          stop.appointment.appointment_at,
-                                                      )
-                                                          .toISOString()
-                                                          .slice(0, 16)
-                                                    : '',
-                                                appointment_end_at: stop
-                                                    .appointment
-                                                    ?.appointment_end_at
-                                                    ? new Date(
-                                                          stop.appointment.appointment_end_at,
-                                                      )
-                                                          .toISOString()
-                                                          .slice(0, 16)
-                                                    : '',
-                                            },
-                                            arrived_at: stop.arrived_at
-                                                ? new Date(stop.arrived_at)
-                                                      .toISOString()
-                                                      .slice(0, 16)
-                                                : '',
-                                            loaded_unloaded_at:
-                                                stop.loaded_unloaded_at
-                                                    ? new Date(
-                                                          stop.loaded_unloaded_at,
-                                                      )
-                                                          .toISOString()
-                                                          .slice(0, 16)
-                                                    : '',
-                                            left_at: stop.left_at
-                                                ? new Date(stop.left_at)
-                                                      .toISOString()
-                                                      .slice(0, 16)
-                                                : '',
-                                        })),
+                                        getSavedStops()
                                     );
                                 }}
                             >
