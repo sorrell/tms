@@ -93,13 +93,12 @@ export default function ShipmentStopsList({
                         <MapPin className="h-5 w-5" />
                         Stops
                         {editMode && <Button onClick={() => {
-                            const lastStop = data.stops[data.stops.length - 1];
                             const updatedStops = [...data.stops];
                             updatedStops.push({
                                 id: null,
                                 shipment_id: shipmentId,
                                 stop_type: StopType.Delivery,
-                                stop_number: lastStop.stop_number + 1,
+                                stop_number: data.stops.length + 1,
                                 facility_id: null,
                                 eta: '',
                                 appointment_type: '',
