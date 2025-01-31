@@ -8,6 +8,7 @@ import { FileText, MapPin, MessageSquare, Truck } from 'lucide-react';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import CarrierDetails from './Partials/CarrierDetails';
+import ShipperDetails from './Partials/ShipperDetails';
 
 export default function Show({ shipment }: { shipment: any }) {
     return (
@@ -188,6 +189,9 @@ export default function Show({ shipment }: { shipment: any }) {
 
                         {/* Carrier Details */}
                         <CarrierDetails shipment={shipment} />
+
+                        {/* Shippers */}
+                        <ShipperDetails shipment={shipment} />
 
                         {/* Quick Actions */}
                         <Card>

@@ -69,7 +69,7 @@ class ShipmentController extends ResourceSearchController
     public function show(Shipment $shipment)
     {
         return Inertia::render('Shipments/Show', [
-            'shipment' => $shipment->load('carrier'),
+            'shipment' => $shipment->load('carrier', 'shippers'),
         ]);
     }
 
