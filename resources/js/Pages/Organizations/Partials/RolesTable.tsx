@@ -20,7 +20,6 @@ import { Organization, Permission, Role } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';
 
-import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import {
     Dialog,
@@ -33,6 +32,8 @@ import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { toast, useToast } from '@/hooks/use-toast';
 import { FormEventHandler, useEffect, useState } from 'react';
+import { Checkbox } from '@/Components/ui/checkbox';
+import { CheckedState } from '@radix-ui/react-checkbox';
 
 export default function RolesTable({
     roles,
@@ -269,8 +270,8 @@ function RoleForm({
                                                 checked={data?.permissions?.includes(
                                                     permission.id,
                                                 )}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
+                                                onCheckedChange={(checked : CheckedState) => {
+                                                    if (checked) {
                                                         setData('permissions', [
                                                             ...data.permissions,
                                                             permission.id,
@@ -327,8 +328,8 @@ function RoleForm({
                                                     checked={data?.users?.includes(
                                                         user.id,
                                                     )}
-                                                    onChange={(e) => {
-                                                        if (e.target.checked) {
+                                                    onCheckedChange={(checked : CheckedState) => {
+                                                        if (checked) {
                                                             setData('users', [
                                                                 ...data.users,
                                                                 user.id,
