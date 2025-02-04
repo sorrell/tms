@@ -32,12 +32,12 @@ class CreateNote
         
     }
 
-    public function asController(ActionRequest $request): Note
+    public function asController(ActionRequest $request, string $notableType, int $notableId): Note
     {
         $note = $this->handle(
             $request->validated('note'),
-            Notable::from($request->validated('notable_type'))->getClassName(),
-            $request->validated('notable_id'),
+            Notable::from($notableType)->getClassName(),
+            $notableId,
             $request->validated('user_id'),
         );
 
@@ -58,8 +58,6 @@ class CreateNote
     {
         return [
             'note' => ['required', 'string', 'min:5', 'max:512'],
-            'notable_type' => ['required', 'string', Rule::enum(Notable::class)],
-            'notable_id' => ['required', 'integer'],
             'user_id' => ['nullable', 'integer'],
         ];
     }

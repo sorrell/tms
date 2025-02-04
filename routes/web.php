@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Notes\CreateNote;
+use App\Actions\Notes\GetNotes;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
@@ -85,8 +86,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
 
     Route::delete('notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
-    Route::post('notes', CreateNote::class)->name('notes.store');
-
+    Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');
+    Route::post('notes/{notableType}/{notableId}', CreateNote::class)->name('notes.store');
 });
 
 require __DIR__ . '/auth.php';

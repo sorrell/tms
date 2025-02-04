@@ -130,12 +130,7 @@ export default function Show({
                             </TabsContent>
 
                             <TabsContent value="notes">
-                                <Deferred
-                                    data="notes"
-                                    fallback={<Skeleton className="h-40 w-full" />}
-                                >
-                                    <ShipmentNotes shipmentId={shipment.id} notes={notes} />
-                                </Deferred>
+                                <ShipmentNotes shipmentId={shipment.id} />
                             </TabsContent>
 
                             <TabsContent value="tracking">
@@ -172,13 +167,15 @@ export default function Show({
                                 <CardTitle>Quick Actions</CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-2">
-                                <Button className="w-full justify-start">
+                                <Button className="w-full justify-start"
+                                disabled={true}>
                                     <MessageSquare className="mr-2 h-4 w-4" />
                                     Send Message
                                 </Button>
                                 <Button
                                     className="w-full justify-start"
                                     variant="outline"
+                                    disabled={true}
                                 >
                                     <FileText className="mr-2 h-4 w-4" />
                                     Upload Document
