@@ -70,11 +70,11 @@ export default function Notes({
     };
 
     const {
+        post: postNewNote,
         setData: setNewNoteData,
         data: newNoteData,
         reset: resetNewNote,
         errors: newNoteErrors,
-        setError: setNewNoteErrors,
     } = useForm({
         note: '',
         notable_type: notableType,
@@ -94,31 +94,23 @@ export default function Notes({
     const handleNewNote: FormEventHandler = async (e) => {
         e.preventDefault();
 
-        try {
-            await axios.post(route('notes.store', { notableType, notableId }), {
-                note: newNoteData.note,
-                user_id: user?.id,
-            });
-
-            toast({
-                description: 'Note added successfully',
-            });
-            setDialogOpen(false);
-            resetNewNote();
-            refreshNotes();
-        } catch (error: any) {
-            toast({
-                title: 'Error',
-                description: 'Note failed to add',
-                variant: 'destructive',
-            });
-
-            if (error.response?.data?.errors) {
-                setNewNoteErrors(error.response.data.errors);
-            }
-
-            setDialogOpen(true);
-        }
+        postNewNote(route('notes.store', { notableType, notableId }), {
+            onSuccess: () => {
+                toast({
+                    description: 'Note added successfully',
+                });
+                refreshNotes();
+                resetNewNote();
+                setDialogOpen(false);
+            },
+            onError: () => {
+                toast({
+                    title: 'Error',
+                    description: 'Note failed to add',
+                    variant: 'destructive',
+                });
+            },
+        });
     };
 
     return (
