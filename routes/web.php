@@ -2,6 +2,7 @@
 
 use App\Actions\Notes\CreateNote;
 use App\Actions\Notes\GetNotes;
+use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
@@ -77,7 +78,10 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::resource('shippers', ShipperController::class);
 
     Route::get('shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
-    Route::resource('shipments', ShipmentController::class);
+    Route::resource('shipments', ShipmentController::class, [
+        'except' => ['store'],
+    ]);
+    Route::post('shipments', CreateShipment::class)->name('shipments.store');
     Route::patch('shipments/{shipment}/shipment-number', UpdateShipmentNumber::class)->name('shipments.updateShipmentNumber');
     Route::patch('shipments/{shipment}/general', UpdateShipmentGeneral::class)->name('shipments.updateGeneral');
     Route::patch('shipments/{shipment}/carrier-details', UpdateShipmentCarrierDetails::class)->name('shipments.updateCarrierDetails');

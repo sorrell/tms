@@ -13,9 +13,11 @@ use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Resources\NoteResource;
 use App\Http\Resources\ShipmentResource;
 use App\Http\Resources\ShipmentStopResource;
+use App\Http\Resources\TrailerSizeResource;
 use App\Http\Resources\TrailerTypeResource;
 use App\Models\Carrier;
 use App\Models\Facility;
+use App\Models\Shipments\TrailerSize;
 use App\Models\Shipments\TrailerType;
 use App\Models\Shipper;
 use Inertia\Inertia;
@@ -42,29 +44,10 @@ class ShipmentController extends ResourceSearchController
     {
         return Inertia::render('Shipments/Create', [
             'trailerTypes' => TrailerTypeResource::collection(TrailerType::all()),
+            'trailerSizes' => TrailerSizeResource::collection(TrailerSize::all()),
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreShipmentRequest $request)
-    {
-        $shipment = CreateShipment::run(
-            shipperIds: $request->shipper_ids,
-            carrierId: $request->carrier_id,
-            stops: $request->stops,
-            weight: $request->weight,
-            tripDistance: $request->trip_distance,
-            trailerTypeId: $request->trailer_type_id,
-            trailerTemperatureRange: $request->trailer_temperature_range,
-            trailerTemperature: $request->trailer_temperature,
-            trailerTemperatureMaximum: $request->trailer_temperature_maximum,
-            shipmentNumber: $request->shipment_number,
-        );
-
-        return redirect()->route('shipments.show', $shipment);
-    }
 
     /**
      * Display the specified resource.

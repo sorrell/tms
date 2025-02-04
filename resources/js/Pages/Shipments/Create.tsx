@@ -32,8 +32,10 @@ import { z } from 'zod';
 
 export default function Create({
     trailerTypes,
+    trailerSizes,
 }: {
     trailerTypes: TrailerType[];
+    trailerSizes: TrailerSize[];
 }) {
     const { errors } = usePage().props;
 
@@ -46,6 +48,7 @@ export default function Create({
         trip_distance: z.string().nullable(),
 
         trailer_type_id: z.string().nullable(),
+        trailer_size_id: z.string().nullable(),
         trailer_temperature_range: z.boolean().nullable(),
         trailer_temperature: z.string().optional(),
         trailer_temperature_maximum: z.string().nullable().optional(),
@@ -72,6 +75,7 @@ export default function Create({
         resolver: zodResolver(formSchema),
         defaultValues: {
             trailer_type_id: undefined,
+            trailer_size_id: undefined,
             trailer_temperature_range: false,
             trailer_temperature: undefined,
             trailer_temperature_maximum: undefined,
@@ -373,51 +377,103 @@ export default function Create({
                                     </FormItem>
                                 )}
                             />
+                            <div className="flex flex-row space-x-2">
+                                <FormField
+                                    control={form.control}
+                                    name={`trailer_type_id`}
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel>Trailer Type</FormLabel>
+                                            <FormControl>
+                                                <div className="flex flex-grow">
+                                                    <Select
+                                                        onValueChange={
+                                                            field.onChange
+                                                        }
+                                                        value={
+                                                            field.value ??
+                                                            undefined
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="w-fit min-w-[100px]">
+                                                            <SelectValue placeholder="Select ..." />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {trailerTypes.map(
+                                                                (
+                                                                    trailerType,
+                                                                ) => (
+                                                                    <SelectItem
+                                                                        key={
+                                                                            trailerType.id
+                                                                        }
+                                                                        value={trailerType.id.toString()}
+                                                                    >
+                                                                        {
+                                                                            trailerType.name
+                                                                        }
+                                                                    </SelectItem>
+                                                                ),
+                                                            )}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage>
+                                                {errors.trailer_type_id}
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
 
-                            <FormField
-                                control={form.control}
-                                name={`trailer_type_id`}
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel>Trailer Type</FormLabel>
-                                        <FormControl>
-                                            <div className="flex flex-grow">
-                                                <Select
-                                                    onValueChange={
-                                                        field.onChange
-                                                    }
-                                                    value={
-                                                        field.value ?? undefined
-                                                    }
-                                                >
-                                                    <SelectTrigger className="w-fit min-w-[100px]">
-                                                        <SelectValue placeholder="Select ..." />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {trailerTypes.map(
-                                                            (trailerType) => (
-                                                                <SelectItem
-                                                                    key={
-                                                                        trailerType.id
-                                                                    }
-                                                                    value={trailerType.id.toString()}
-                                                                >
-                                                                    {
-                                                                        trailerType.name
-                                                                    }
-                                                                </SelectItem>
-                                                            ),
-                                                        )}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage>
-                                            {errors.trailer_type_id}
-                                        </FormMessage>
-                                    </FormItem>
-                                )}
-                            />
+                                <FormField
+                                    control={form.control}
+                                    name={`trailer_size_id`}
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel>Trailer Size</FormLabel>
+                                            <FormControl>
+                                                <div className="flex flex-grow">
+                                                    <Select
+                                                        onValueChange={
+                                                            field.onChange
+                                                        }
+                                                        value={
+                                                            field.value ??
+                                                            undefined
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="w-fit min-w-[100px]">
+                                                            <SelectValue placeholder="Select ..." />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {trailerSizes.map(
+                                                                (
+                                                                    trailerSize,
+                                                                ) => (
+                                                                    <SelectItem
+                                                                        key={
+                                                                            trailerSize.id
+                                                                        }
+                                                                        value={trailerSize.id.toString()}
+                                                                    >
+                                                                        {
+                                                                            trailerSize.name
+                                                                        }
+                                                                    </SelectItem>
+                                                                ),
+                                                            )}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage>
+                                                {errors.trailer_size_id}
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </CardContent>
                     </Card>
                     <Card>
@@ -558,10 +614,18 @@ export default function Create({
                                                                         <SelectValue placeholder="Select a stop type" />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
-                                                                        <SelectItem value={StopType.Pickup}>
+                                                                        <SelectItem
+                                                                            value={
+                                                                                StopType.Pickup
+                                                                            }
+                                                                        >
                                                                             Pickup
                                                                         </SelectItem>
-                                                                        <SelectItem value={StopType.Delivery}>
+                                                                        <SelectItem
+                                                                            value={
+                                                                                StopType.Delivery
+                                                                            }
+                                                                        >
                                                                             Delivery
                                                                         </SelectItem>
                                                                     </SelectContent>

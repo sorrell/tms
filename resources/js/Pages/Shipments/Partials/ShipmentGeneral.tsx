@@ -20,6 +20,7 @@ export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
         trailer_temperature_maximum: shipment.trailer_temperature_maximum,
         trailer_temperature_range: shipment.trailer_temperature_range,
         trailer_type_id: shipment.trailer_type_id,
+        trailer_size_id: shipment.trailer_size_id,
         weight: shipment.weight,
         trip_distance: shipment.trip_distance,
     });
@@ -78,6 +79,8 @@ export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
                                                 shipment.trailer_temperature_range,
                                             trailer_type_id:
                                                 shipment.trailer_type_id,
+                                            trailer_size_id:
+                                                shipment.trailer_size_id,
                                             weight: shipment.weight,
                                             trip_distance:
                                                 shipment.trip_distance,
