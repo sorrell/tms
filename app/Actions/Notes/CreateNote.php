@@ -32,22 +32,32 @@ class CreateNote
         
     }
 
-    public function asController(ActionRequest $request): NoteResource
+    public function asController(ActionRequest $request): Note
     {
         $note = $this->handle(
             $request->validated('note'),
-            $request->validated('notable_type'),
+            Notable::from($request->validated('notable_type'))->getClassName(),
             $request->validated('notable_id'),
             $request->validated('user_id'),
         );
 
+        return $note;
+    }
+
+    public function jsonResponse(Note $note)
+    {
         return NoteResource::make($note);
+    }
+
+    public function htmlResponse(Note $note)
+    {
+        return redirect()->back()->with('success', 'Note added successfully');
     }
 
     public function rules(): array
     {
         return [
-            'note' => ['required', 'string'],
+            'note' => ['required', 'string', 'min:5', 'max:512'],
             'notable_type' => ['required', 'string', Rule::enum(Notable::class)],
             'notable_id' => ['required', 'integer'],
             'user_id' => ['nullable', 'integer'],
