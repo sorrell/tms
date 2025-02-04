@@ -1,5 +1,21 @@
 <?php
 
+namespace App\Actions\Notes;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static dispatchSync(string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static dispatchNow(string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static dispatchAfterResponse(string $note, string $notableType, int $notableId, ?int $userId = null)
+ * @method static \App\Models\Note run(string $note, string $notableType, int $notableId, ?int $userId = null)
+ */
+class CreateNote
+{
+}
 namespace App\Actions\Organizations;
 
 /**

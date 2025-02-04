@@ -33,6 +33,10 @@ class Note extends Model
             $model->user_id = $model->user_id ?? Auth::id();
         });
 
+        static::addGlobalScope('order', function ($query) {
+            $query->orderBy('created_at', 'desc');
+        });
+
     }
 
     /**
@@ -44,7 +48,7 @@ class Note extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo<Notable, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo<Model, $this>
      */
     public function notable(): MorphTo
     {
