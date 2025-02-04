@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\Notes\CreateNote;
+use App\Actions\Notes\GetNotes;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
@@ -7,6 +9,7 @@ use App\Actions\Shipments\UpdateShipmentShippers;
 use App\Actions\Shipments\UpdateShipmentStops;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\PermissionController;
@@ -80,6 +83,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/carrier-details', UpdateShipmentCarrierDetails::class)->name('shipments.updateCarrierDetails');
     Route::patch('shipments/{shipment}/shippers', UpdateShipmentShippers::class)->name('shipments.updateShippers');
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
+
+
+    Route::delete('notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
+    Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');
+    Route::post('notes/{notableType}/{notableId}', CreateNote::class)->name('notes.store');
 });
 
 require __DIR__ . '/auth.php';

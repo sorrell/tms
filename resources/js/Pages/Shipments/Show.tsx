@@ -3,16 +3,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import { FileText, MapPin, MessageSquare, Truck } from 'lucide-react';
-import ShipmentHeader from './Partials/ShipmentHeader';
-import ShipmentGeneral from './Partials/ShipmentGeneral';
+import { Note, ShipmentStop } from '@/types';
+import { Deferred, Head, WhenVisible } from '@inertiajs/react';
+import { FileText, MapPin, MessageSquare } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
-import ShipperDetails from './Partials/ShipperDetails';
-import { ShipmentStop } from '@/types';
+import ShipmentGeneral from './Partials/ShipmentGeneral';
+import ShipmentHeader from './Partials/ShipmentHeader';
+import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
+import ShipperDetails from './Partials/ShipperDetails';
 
-export default function Show({ shipment, stops }: { shipment: any, stops: ShipmentStop[] }) {
+export default function Show({
+    shipment,
+    stops,
+    notes,
+}: {
+    shipment: any;
+    stops: ShipmentStop[];
+    notes: Note[];
+}) {
     return (
         <AuthenticatedLayout
             breadcrumbs={[
@@ -48,7 +57,10 @@ export default function Show({ shipment, stops }: { shipment: any, stops: Shipme
                         </Card>
 
                         {/* Stops Timeline */}
-                        <ShipmentStopsList shipmentId={shipment.id} stops={stops} />
+                        <ShipmentStopsList
+                            shipmentId={shipment.id}
+                            stops={stops}
+                        />
 
                         {/* Tabbed Content */}
                         <Tabs defaultValue="financials">
@@ -118,24 +130,7 @@ export default function Show({ shipment, stops }: { shipment: any, stops: Shipme
                             </TabsContent>
 
                             <TabsContent value="notes">
-                                <Card>
-                                    <CardContent className="pt-6">
-                                        <div className="space-y-4">
-                                            <div className="flex gap-2">
-                                                <Button>Add Note</Button>
-                                                <Button variant="outline">
-                                                    Filter
-                                                </Button>
-                                            </div>
-                                            {[1, 2, 3].map((note) => (
-                                                <Skeleton
-                                                    key={note}
-                                                    className="h-24 w-full"
-                                                />
-                                            ))}
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                <ShipmentNotes shipmentId={shipment.id} />
                             </TabsContent>
 
                             <TabsContent value="tracking">
@@ -172,13 +167,15 @@ export default function Show({ shipment, stops }: { shipment: any, stops: Shipme
                                 <CardTitle>Quick Actions</CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-2">
-                                <Button className="w-full justify-start">
+                                <Button className="w-full justify-start"
+                                disabled={true}>
                                     <MessageSquare className="mr-2 h-4 w-4" />
                                     Send Message
                                 </Button>
                                 <Button
                                     className="w-full justify-start"
                                     variant="outline"
+                                    disabled={true}
                                 >
                                     <FileText className="mr-2 h-4 w-4" />
                                     Upload Document
