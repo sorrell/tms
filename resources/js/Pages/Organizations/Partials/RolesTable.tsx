@@ -30,7 +30,7 @@ import {
 } from '@/Components/ui/dialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
-import { toast, useToast } from '@/hooks/use-toast';
+import { toast, useToast } from '@/hooks/UseToast';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { Checkbox } from '@/Components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';

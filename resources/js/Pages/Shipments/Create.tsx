@@ -10,7 +10,7 @@ import {
     FormMessage,
 } from '@/Components/ui/form';
 import { Input } from '@/Components/ui/input';
-import { ResourceSearchSelect } from '@/Components/ui/resource-search-select';
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import {
     Select,
     SelectContent,

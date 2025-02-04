@@ -1,4 +1,4 @@
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/UseToast';
 import { Note } from '@/types';
 import { Notable } from '@/types/enums';
 import { useForm, usePage } from '@inertiajs/react';

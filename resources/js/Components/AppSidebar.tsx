@@ -1,8 +1,8 @@
 import { Building, Dot, GalleryVerticalEnd, Home, Truck } from 'lucide-react';
 import * as React from 'react';
 
-import { NavUser } from '@/Components/nav-user';
-import { TeamSwitcher } from '@/Components/team-switcher';
+import { NavUser } from '@/Components/NavUser';
+import { TeamSwitcher } from '@/Components/TeamSwitcher';
 import {
     Sidebar,
     SidebarContent,

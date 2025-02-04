@@ -1,6 +1,6 @@
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, CheckCircle2, FileText, Pencil, X } from 'lucide-react';

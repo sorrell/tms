@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
-import { ResourceSearchSelect } from '@/Components/ui/resource-search-select';
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import {
     Select,
     SelectContent,
@@ -12,7 +12,7 @@ import {
     SelectValue,
 } from '@/Components/ui/select';
 import { Textarea } from '@/Components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/UseToast';
 import { ShipmentStop } from '@/types';
 import { StopType } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
