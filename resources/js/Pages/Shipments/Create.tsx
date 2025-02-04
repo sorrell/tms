@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@/Components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { cn } from '@/lib/utils';
-import { TrailerType } from '@/types';
+import { TrailerSize, TrailerType } from '@/types';
 import { StopType } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
@@ -29,6 +29,7 @@ import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
+import FacilityForm from '@/Components/CreateForms/FacilityForm';
 
 export default function Create({
     trailerTypes,
@@ -227,6 +228,8 @@ export default function Create({
                                             <FormControl>
                                                 <Checkbox
                                                     {...field}
+                                                    value={field.name}
+                                                    checked={field.value ?? false}
                                                     onCheckedChange={
                                                         field.onChange
                                                     }
@@ -700,6 +703,7 @@ export default function Create({
                                                                 searchRoute={route(
                                                                     'facilities.search',
                                                                 )}
+                                                                createForm={FacilityForm}
                                                                 allowMultiple={
                                                                     false
                                                                 }
@@ -758,6 +762,7 @@ export default function Create({
                                                         <FormControl>
                                                             <Textarea
                                                                 {...field}
+                                                                value={field.value ?? ''}
                                                             />
                                                         </FormControl>
                                                         <FormMessage>
@@ -781,6 +786,7 @@ export default function Create({
                                                         <FormControl>
                                                             <Textarea
                                                                 {...field}
+                                                                value={field.value ?? ''}
                                                             />
                                                         </FormControl>
                                                         <FormMessage>
