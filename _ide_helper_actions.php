@@ -16,6 +16,20 @@ namespace App\Actions\Notes;
 class CreateNote
 {
 }
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $notableType, int $notableId)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $notableType, int $notableId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $notableType, int $notableId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $notableType, int $notableId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $notableType, int $notableId)
+ * @method static dispatchSync(string $notableType, int $notableId)
+ * @method static dispatchNow(string $notableType, int $notableId)
+ * @method static dispatchAfterResponse(string $notableType, int $notableId)
+ * @method static \Illuminate\Database\Eloquent\Collection run(string $notableType, int $notableId)
+ */
+class GetNotes
+{
+}
 namespace App\Actions\Organizations;
 
 /**
