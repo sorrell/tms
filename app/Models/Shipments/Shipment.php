@@ -23,11 +23,16 @@ class Shipment extends Model
         'weight',
         'trip_distance',
         'trailer_type_id',
+        'trailer_size_id',
         'trailer_temperature_range',
         'trailer_temperature',
         'trailer_temperature_maximum',
         'shipment_number',
     ];  
+
+    protected $casts = [
+        'trailer_temperature_range' => 'boolean',
+    ];
 
     protected $appends = [ 'selectable_label' ];
 
@@ -42,6 +47,14 @@ class Shipment extends Model
     public function trailer_type(): BelongsTo
     {
         return $this->belongsTo(TrailerType::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrailerSize, $this>
+     */
+    public function trailer_size(): BelongsTo
+    {
+        return $this->belongsTo(TrailerSize::class);
     }
 
     /**

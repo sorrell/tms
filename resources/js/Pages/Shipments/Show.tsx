@@ -16,11 +16,13 @@ import ShipperDetails from './Partials/ShipperDetails';
 export default function Show({
     shipment,
     stops,
-    notes,
+    trailerTypes,
+    trailerSizes,
 }: {
     shipment: any;
     stops: ShipmentStop[];
-    notes: Note[];
+    trailerTypes: TrailerType[];
+    trailerSizes: TrailerSize[];
 }) {
     return (
         <AuthenticatedLayout
@@ -153,7 +155,11 @@ export default function Show({
                     {/* Sidebar - 1 column */}
                     <div className="space-y-4">
                         {/* General */}
-                        <ShipmentGeneral shipment={shipment} />
+                        <ShipmentGeneral
+                            shipment={shipment}
+                            trailerTypes={trailerTypes}
+                            trailerSizes={trailerSizes}
+                        />
 
                         {/* Carrier Details */}
                         <CarrierDetails shipment={shipment} />

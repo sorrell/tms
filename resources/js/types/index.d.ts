@@ -63,9 +63,10 @@ export interface Shipment {
     weight: number;
     trip_distance: number;
     trailer_type_id: number;
+    trailer_size_id: number;
     trailer_temperature_range: boolean;
     trailer_temperature: number;
-    trailer_temperature_maximum: number;
+    trailer_temperature_maximum?: number;
 }
 
 export interface Note {
@@ -78,6 +79,11 @@ export interface Note {
 }
 
 export interface TrailerType {
+    id: number;
+    name: string;
+}
+
+export interface TrailerSize {
     id: number;
     name: string;
 }

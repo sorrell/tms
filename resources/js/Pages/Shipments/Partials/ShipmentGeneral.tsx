@@ -3,14 +3,29 @@ import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Checkbox } from '@/Components/ui/checkbox';
 import { Input } from '@/Components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { Shipment } from '@/types';
+import { Shipment, TrailerSize, TrailerType } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, CheckCircle2, FileText, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
-export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
+export default function ShipmentGeneral({
+    shipment,
+    trailerTypes,
+    trailerSizes,
+}: {
+    shipment: Shipment;
+    trailerTypes: TrailerType[];
+    trailerSizes: TrailerSize[];
+}) {
     let [editMode, setEditMode] = useState(false);
 
     const { toast } = useToast();
@@ -20,6 +35,7 @@ export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
         trailer_temperature_maximum: shipment.trailer_temperature_maximum,
         trailer_temperature_range: shipment.trailer_temperature_range,
         trailer_type_id: shipment.trailer_type_id,
+        trailer_size_id: shipment.trailer_size_id,
         weight: shipment.weight,
         trip_distance: shipment.trip_distance,
     });
@@ -78,6 +94,8 @@ export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
                                                 shipment.trailer_temperature_range,
                                             trailer_type_id:
                                                 shipment.trailer_type_id,
+                                            trailer_size_id:
+                                                shipment.trailer_size_id,
                                             weight: shipment.weight,
                                             trip_distance:
                                                 shipment.trip_distance,
@@ -141,7 +159,7 @@ export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
                             <>
                                 <Input
                                     type="number"
-                                    value={data.trailer_temperature_maximum}
+                                    value={data.trailer_temperature_maximum ?? ''}
                                     onChange={(e) =>
                                         setData(
                                             'trailer_temperature_maximum',
@@ -178,7 +196,7 @@ export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
                                         if (!e) {
                                             setData(
                                                 'trailer_temperature_maximum',
-                                                null,
+                                                undefined,
                                             );
                                         }
                                     }}
@@ -199,33 +217,92 @@ export default function ShipmentGeneral({ shipment }: { shipment: Shipment }) {
                         )}
                     </div>
 
-                    {/* TODO - Disabled until we fix trailer type and length */}
-                    <div>
-                        <label className="text-sm font-medium text-muted-foreground">
-                            Trailer Type ID
+                    <div className="col-span-2">
+                        <label className="text-sm font-medium">
+                            Trailer
                         </label>
                         {editMode ? (
-                            <>
-                                <Input
-                                    disabled={true}
-                                    type="number"
-                                    value={data.trailer_type_id}
-                                    onChange={(e) =>
+                            <div className="flex flex-row items-center gap-2">
+                                <Select
+                                    value={data.trailer_size_id.toString()}
+                                    onValueChange={(value) =>
                                         setData(
-                                            'trailer_type_id',
-                                            Number(e.target.value),
+                                            'trailer_size_id',
+                                            Number(value),
                                         )
                                     }
-                                />
+                                >
+                                    <SelectTrigger className="w-fit min-w-[100px]">
+                                        <SelectValue placeholder="Select ..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {trailerSizes.map((trailerSize) => (
+                                            <SelectItem
+                                                key={trailerSize.id}
+                                                value={trailerSize.id.toString()}
+                                            >
+                                                {trailerSize.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.trailer_size_id && (
+                                    <InputError
+                                        message={errors.trailer_size_id}
+                                        className="mt-2"
+                                    />
+                                )}
+                                <Select
+                                    value={data.trailer_type_id.toString()}
+                                    onValueChange={(value) =>
+                                        setData(
+                                            'trailer_type_id',
+                                            Number(value),
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger className="w-fit min-w-[100px]">
+                                        <SelectValue placeholder="Select ..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {trailerTypes.map((trailerType) => (
+                                            <SelectItem
+                                                key={trailerType.id}
+                                                value={trailerType.id.toString()}
+                                            >
+                                                {trailerType.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 {errors.trailer_type_id && (
                                     <InputError
                                         message={errors.trailer_type_id}
                                         className="mt-2"
                                     />
                                 )}
-                            </>
+                            </div>
                         ) : (
-                            <p>{data.trailer_type_id}</p>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs">
+                                    {
+                                        trailerSizes.find(
+                                            (trailerSize) =>
+                                                trailerSize.id ==
+                                                data.trailer_size_id,
+                                        )?.name
+                                    }
+                                </span>
+                                <span>
+                                    {
+                                        trailerTypes.find(
+                                            (trailerType) =>
+                                                trailerType.id ===
+                                                data.trailer_type_id,
+                                        )?.name
+                                    }
+                                </span>
+                            </div>
                         )}
                     </div>
                     <div>
