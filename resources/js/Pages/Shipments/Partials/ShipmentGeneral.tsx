@@ -10,7 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/UseToast';
 import { cn } from '@/lib/utils';
 import { Shipment, TrailerSize, TrailerType } from '@/types';
 import { useForm } from '@inertiajs/react';

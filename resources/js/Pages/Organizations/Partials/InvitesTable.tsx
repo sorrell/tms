@@ -27,7 +27,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/UseToast';
 import { OrganizationInvite } from '@/types/organization';
 import { useForm, usePage } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';

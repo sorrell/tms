@@ -20,7 +20,7 @@ import {
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { CommandLoading } from 'cmdk';
-import { Badge } from './badge';
+import { Badge } from './ui/badge';
 
 export function ResourceSearchSelect({
     searchRoute,
