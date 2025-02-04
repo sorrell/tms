@@ -30,6 +30,10 @@ class Shipment extends Model
         'shipment_number',
     ];  
 
+    protected $casts = [
+        'trailer_temperature_range' => 'boolean',
+    ];
+
     protected $appends = [ 'selectable_label' ];
 
     public function getSelectableLabelAttribute() : string

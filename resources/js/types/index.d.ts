@@ -66,7 +66,7 @@ export interface Shipment {
     trailer_size_id: number;
     trailer_temperature_range: boolean;
     trailer_temperature: number;
-    trailer_temperature_maximum: number;
+    trailer_temperature_maximum?: number;
 }
 
 export interface Note {

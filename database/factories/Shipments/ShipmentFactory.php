@@ -10,6 +10,7 @@ use App\Models\Shipments\TrailerType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Facility;
 use App\Models\Shipments\ShipmentStop;
+use App\Models\Shipments\TrailerSize;
 use App\Models\Shipper;
 use Carbon\Carbon;
 
@@ -31,7 +32,8 @@ class ShipmentFactory extends Factory
             'weight' => fake()->randomFloat(2, 1000, 45000), // typical truck load weights in lbs
             'trip_distance' => fake()->randomFloat(2, 10, 3000), // distance in miles
             'trailer_type_id' => TrailerType::inRandomOrder()->first()->id,
-            'trailer_temperature_range' => fake()->randomElement(['frozen', 'refrigerated', 'ambient']),
+            'trailer_size_id' => TrailerSize::inRandomOrder()->first()->id,
+            'trailer_temperature_range' => fake()->boolean(),
             'trailer_temperature' => fake()->randomFloat(1, -10, 70), // temperature in fahrenheit
             'trailer_temperature_maximum' => fake()->randomFloat(1, -10, 70),
             'shipment_number' => fake()->unique()->numerify('######'),

@@ -27,11 +27,11 @@ return new class extends Migration
         });
 
         TrailerSize::create([
-            'name' => '53'
+            'name' => '53\''
         ]);
 
         TrailerSize::create([
-            'name' => '48'
+            'name' => '48\''
         ]);
 
         TrailerType::where('name', '53\' Dry Van')->update([
