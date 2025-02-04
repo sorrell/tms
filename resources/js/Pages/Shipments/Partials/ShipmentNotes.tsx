@@ -17,7 +17,7 @@ import { Notable } from '@/types/enums';
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 
 export default function ShipmentNotes({
     shipmentId,
@@ -27,14 +27,11 @@ export default function ShipmentNotes({
     notes: Note[];
 }) {
     const user = usePage().props.auth.user;
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [newNote, setNewNote] = useState('');
-    const [newNoteError, setNewNoteError] = useState("");
 
     const { toast } = useToast();
 
+    
     const { delete: destroyNote, errors: destroyNoteErrors } = useForm({});
-
     const handleDeleteNote = (noteId: number) => {
         destroyNote(route('notes.destroy', { note: noteId }), {
             onSuccess: () => {
@@ -45,24 +42,61 @@ export default function ShipmentNotes({
         });
     };
 
-    const handleNewNote: FormEventHandler = (e) => {
+    const {
+        post: postNewNote,
+        setData: setNewNoteData,
+        data: newNoteData,
+        reset: resetNewNote,
+        errors: newNoteErrors,
+        setError: setNewNoteErrors,
+    } = useForm({
+        note: '',
+        notable_type: Notable.Shipment,
+        notable_id: shipmentId,
+        user_id: user?.id,
+    });
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    useEffect(() => {
+        // Keep dialog open if there are note errors
+        if (Object.keys(newNoteErrors).length > 0) {
+            setDialogOpen(true);
+        }
+    }, [newNoteErrors]);
+
+    const handleNewNote: FormEventHandler = async (e) => {
         e.preventDefault();
-        return axios.post(route('notes.store'), {
-            note: newNote,
-            notable_type: Notable.Shipment,
-            notable_id: shipmentId,
-            user_id: user?.id,
-        }).then(
-            response => {
-                toast({
-                    description: 'Note added successfully',
-                });
-                setDialogOpen(false);
-                setNewNote('');
-            })
-            .catch((error) => {
-                setNewNoteError(error.response?.data?.errors?.note[0]);
+        
+        try {
+            await axios.post(route('notes.store'), {
+                note: newNoteData.note,
+                notable_type: Notable.Shipment,
+                notable_id: shipmentId,
+                user_id: user?.id,
             });
+            
+            // Manually refresh the notes using Inertia visit
+            window.location.reload();
+            
+            toast({
+                description: 'Note added successfully',
+            });
+            setDialogOpen(false);
+            resetNewNote();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: 'Note failed to add',
+                variant: 'destructive',
+            });
+            
+            if (error.response?.data?.errors) {
+                setNewNoteErrors(error.response.data.errors);
+            }
+            
+            setDialogOpen(true);
+        }
     };
 
     return (
@@ -70,7 +104,11 @@ export default function ShipmentNotes({
             <CardContent className="pt-6">
                 <div className="space-y-4">
                     <div className="flex gap-2">
-                        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <Dialog 
+                            open={dialogOpen} 
+                            onOpenChange={setDialogOpen}
+                            modal={true}
+                        >
                             <DialogTrigger asChild>
                                 <Button>Add Note</Button>
                             </DialogTrigger>
@@ -81,16 +119,16 @@ export default function ShipmentNotes({
                                 </DialogHeader>
                                 <div className="">
                                     <Textarea
-                                        value={newNote}
+                                        value={newNoteData.note}
                                         rows={6}
                                         placeholder="Something helpful..."
                                         onChange={(e) =>
-                                            setNewNote(e.target.value)
+                                            setNewNoteData('note', e.target.value)
                                         }
                                     />
                                 </div>
                                 <div className="pt-2">
-                                    <InputError message={newNoteError} />
+                                    <InputError message={newNoteErrors.note} />
                                 </div>
                                 <DialogFooter>
                                     <Button
