@@ -378,12 +378,60 @@ export default function Create({
                                 )}
                             />
                             <div className="flex flex-row space-x-2">
+                            <FormField
+                                    control={form.control}
+                                    name={`trailer_size_id`}
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel>Trailer</FormLabel>
+                                            <FormControl>
+                                                <div className="flex flex-grow">
+                                                    <Select
+                                                        onValueChange={
+                                                            field.onChange
+                                                        }
+                                                        value={
+                                                            field.value ??
+                                                            undefined
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="w-fit min-w-[100px]">
+                                                            <SelectValue placeholder="Select ..." />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {trailerSizes.map(
+                                                                (
+                                                                    trailerSize,
+                                                                ) => (
+                                                                    <SelectItem
+                                                                        key={
+                                                                            trailerSize.id
+                                                                        }
+                                                                        value={trailerSize.id.toString()}
+                                                                    >
+                                                                        {
+                                                                            trailerSize.name
+                                                                        }
+                                                                    </SelectItem>
+                                                                ),
+                                                            )}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage>
+                                                {errors.trailer_size_id}
+                                            </FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+
                                 <FormField
                                     control={form.control}
                                     name={`trailer_type_id`}
                                     render={({ field }) => (
                                         <FormItem className="flex flex-col">
-                                            <FormLabel>Trailer Type</FormLabel>
+                                            <FormLabel className="invisible">Trailer Type</FormLabel>
                                             <FormControl>
                                                 <div className="flex flex-grow">
                                                     <Select
@@ -426,53 +474,7 @@ export default function Create({
                                     )}
                                 />
 
-                                <FormField
-                                    control={form.control}
-                                    name={`trailer_size_id`}
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Trailer Size</FormLabel>
-                                            <FormControl>
-                                                <div className="flex flex-grow">
-                                                    <Select
-                                                        onValueChange={
-                                                            field.onChange
-                                                        }
-                                                        value={
-                                                            field.value ??
-                                                            undefined
-                                                        }
-                                                    >
-                                                        <SelectTrigger className="w-fit min-w-[100px]">
-                                                            <SelectValue placeholder="Select ..." />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {trailerSizes.map(
-                                                                (
-                                                                    trailerSize,
-                                                                ) => (
-                                                                    <SelectItem
-                                                                        key={
-                                                                            trailerSize.id
-                                                                        }
-                                                                        value={trailerSize.id.toString()}
-                                                                    >
-                                                                        {
-                                                                            trailerSize.name
-                                                                        }
-                                                                    </SelectItem>
-                                                                ),
-                                                            )}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors.trailer_size_id}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
+                                
                             </div>
                         </CardContent>
                     </Card>
