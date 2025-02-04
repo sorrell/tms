@@ -7,6 +7,7 @@ use App\Actions\Shipments\UpdateShipmentShippers;
 use App\Actions\Shipments\UpdateShipmentStops;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\PermissionController;
@@ -80,6 +81,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/carrier-details', UpdateShipmentCarrierDetails::class)->name('shipments.updateCarrierDetails');
     Route::patch('shipments/{shipment}/shippers', UpdateShipmentShippers::class)->name('shipments.updateShippers');
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
+
+
+    Route::delete('notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 });
 
 require __DIR__ . '/auth.php';

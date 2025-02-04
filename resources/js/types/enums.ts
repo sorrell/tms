@@ -7,3 +7,7 @@ export enum StopType {
     Pickup = 'pickup',
     Delivery = 'delivery',
 }
+
+export enum Notable {
+    Shipment = 'shipment',
+}

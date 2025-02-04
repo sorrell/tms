@@ -46,6 +46,6 @@ class NoteController extends Controller
     public function destroy(Note $note)
     {
         $note->delete();
-        return NoteResource::make($note);
+        return redirect()->back()->with('success', 'Note deleted successfully');
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Actions\Notes;
 
+use App\Enums\Notable;
 use App\Http\Resources\NoteResource;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -46,7 +48,7 @@ class CreateNote
     {
         return [
             'note' => ['required', 'string'],
-            'notable_type' => ['required', 'string'],
+            'notable_type' => ['required', 'string', Rule::enum(Notable::class)],
             'notable_id' => ['required', 'integer'],
             'user_id' => ['nullable', 'integer'],
         ];

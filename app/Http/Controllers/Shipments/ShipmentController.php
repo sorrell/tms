@@ -10,6 +10,7 @@ use App\Models\Shipments\Shipment;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResourceSearchController;
 use App\Http\Requests\ResourceSearchRequest;
+use App\Http\Resources\NoteResource;
 use App\Http\Resources\ShipmentResource;
 use App\Http\Resources\ShipmentStopResource;
 use App\Http\Resources\TrailerTypeResource;
@@ -73,6 +74,7 @@ class ShipmentController extends ResourceSearchController
         return Inertia::render('Shipments/Show', [
             'shipment' => $shipment->load('carrier', 'shippers'),
             'stops' => ShipmentStopResource::collection($shipment->stops->load('facility')),
+            'notes' => Inertia::defer(fn () => NoteResource::collection($shipment->notes->load('user'))),
         ]);
     }
 

@@ -68,6 +68,14 @@ export interface Shipment {
     trailer_temperature_maximum: number;
 }
 
+export interface Note {
+    id: number;
+    user_id: number;
+    note: string;
+    created_at: string;
+    updated_at: string;
+    user: User | null;
+}
 
 export interface TrailerType {
     id: number;
