@@ -75,7 +75,7 @@ export default function Show({
                                 </TabsTrigger>
                                 <TabsTrigger value="notes">Notes</TabsTrigger>
                                 <TabsTrigger value="tracking">
-                                    Tracking Updates
+                                    Tracking
                                 </TabsTrigger>
                             </TabsList>
 

@@ -208,8 +208,8 @@ export default function ShipmentStopsList({
                                 </Button>
                             </div>
                             )}
-                            <div className="flex flex-col gap-4 border-l-2 border-primary pl-4 flex-grow">
-                                <div className="grid gap-4 md:grid-cols-2">
+                            <div className="flex flex-col border-l-2 border-primary pl-4 flex-grow min-w-0">
+                                <div className="md:grid gap-4 md:grid-cols-2 flex flex-wrap">
                                     <div>
                                         {editMode ? (
                                             <>
@@ -352,7 +352,7 @@ export default function ShipmentStopsList({
                                                     defaultSelectedItems={
                                                         stop.facility?.id
                                                     }
-                                                    className="w-full"
+                                                    className="md:w-full"
                                                 />
 
                                                 {errors[
