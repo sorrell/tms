@@ -1,17 +1,15 @@
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Label } from '@/Components/ui/label';
-import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { Check, CheckCircle2, Pencil, Truck, X } from 'lucide-react';
 import { useState } from 'react';
 
-
 export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
-    let [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     const { toast } = useToast();
 
@@ -90,7 +88,9 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                         <ResourceSearchSelect
                             className="w-full"
                             searchRoute={route('carriers.search')}
-                            onValueChange={(value) => setData({ carrier_id: value })}
+                            onValueChange={(value) =>
+                                setData({ carrier_id: value })
+                            }
                             allowMultiple={false}
                             defaultSelectedItems={data.carrier_id}
                             allowUnselect={false}

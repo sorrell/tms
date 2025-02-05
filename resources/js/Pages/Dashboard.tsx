@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -7,12 +7,12 @@ export default function Dashboard() {
     const getGreeting = () => {
         const hour = new Date().getHours();
         const day = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-        
+
         let timeGreeting;
         if (hour < 12) timeGreeting = 'Good morning';
         else if (hour < 17) timeGreeting = 'Good afternoon';
         else timeGreeting = 'Good evening';
-        
+
         return `${timeGreeting}! Happy ${day}!`;
     };
 
@@ -27,7 +27,7 @@ export default function Dashboard() {
             <Head title="Dashboard" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 flex flex-col gap-4">
+                <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:px-6 lg:px-8">
                     <Card>
                         <CardHeader>
                             <CardTitle>{getGreeting()}</CardTitle>

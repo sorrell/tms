@@ -1,17 +1,19 @@
+import { Skeleton } from '@/Components/ui/skeleton';
 import { Shipment } from '@/types';
-import { columns } from './Columns';
-import { DataTable } from './DataTable';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Skeleton } from '@/Components/ui/skeleton';
+import { columns } from './Columns';
+import { DataTable } from './DataTable';
 
 function getData(): Promise<Shipment[]> {
-    return axios.get(route('shipments.search'), {
-        params: {
-            query: '',
-            with: ['carrier', 'shippers', 'stops'],
-        },
-    }).then(response => response.data);
+    return axios
+        .get(route('shipments.search'), {
+            params: {
+                query: '',
+                with: ['carrier', 'shippers', 'stops'],
+            },
+        })
+        .then((response) => response.data);
 }
 
 export default function ShipmentList() {
@@ -20,19 +22,18 @@ export default function ShipmentList() {
 
     useEffect(() => {
         getData()
-            .then(shipments => {
+            .then((shipments) => {
                 setData(shipments);
                 setIsLoading(false);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching shipments:', error);
                 setIsLoading(false);
             });
     }, []);
-    
 
     if (isLoading) {
-        return <Skeleton className="w-1/2 mx-auto h-[200px] rounded-md" />;
+        return <Skeleton className="mx-auto h-[200px] w-1/2 rounded-md" />;
     }
 
     return (

@@ -1,3 +1,4 @@
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Checkbox } from '@/Components/ui/checkbox';
@@ -10,7 +11,6 @@ import {
     FormMessage,
 } from '@/Components/ui/form';
 import { Input } from '@/Components/ui/input';
-import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import {
     Select,
     SelectContent,
@@ -28,8 +28,8 @@ import { Head, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { z } from 'zod';
 import FacilityForm from '@/Components/CreateForms/FacilityForm';
+import { z } from 'zod';
 
 export default function Create({
     trailerTypes,
@@ -229,7 +229,9 @@ export default function Create({
                                                 <Checkbox
                                                     {...field}
                                                     value={field.name}
-                                                    checked={field.value ?? false}
+                                                    checked={
+                                                        field.value ?? false
+                                                    }
                                                     onCheckedChange={
                                                         field.onChange
                                                     }
@@ -381,7 +383,7 @@ export default function Create({
                                 )}
                             />
                             <div className="flex flex-row space-x-2">
-                            <FormField
+                                <FormField
                                     control={form.control}
                                     name={`trailer_size_id`}
                                     render={({ field }) => (
@@ -434,7 +436,9 @@ export default function Create({
                                     name={`trailer_type_id`}
                                     render={({ field }) => (
                                         <FormItem className="flex flex-col">
-                                            <FormLabel className="invisible">Trailer Type</FormLabel>
+                                            <FormLabel className="invisible">
+                                                Trailer Type
+                                            </FormLabel>
                                             <FormControl>
                                                 <div className="flex flex-grow">
                                                     <Select
@@ -476,8 +480,6 @@ export default function Create({
                                         </FormItem>
                                     )}
                                 />
-
-                                
                             </div>
                         </CardContent>
                     </Card>
@@ -648,7 +650,7 @@ export default function Create({
                                                                 type="button"
                                                                 variant="ghost"
                                                                 onClick={() => {
-                                                                    let stops =
+                                                                    const stops =
                                                                         [
                                                                             ...form.getValues(
                                                                                 'stops',
@@ -703,7 +705,9 @@ export default function Create({
                                                                 searchRoute={route(
                                                                     'facilities.search',
                                                                 )}
-                                                                createForm={FacilityForm}
+                                                                createForm={
+                                                                    FacilityForm
+                                                                }
                                                                 allowMultiple={
                                                                     false
                                                                 }
@@ -762,7 +766,10 @@ export default function Create({
                                                         <FormControl>
                                                             <Textarea
                                                                 {...field}
-                                                                value={field.value ?? ''}
+                                                                value={
+                                                                    field.value ??
+                                                                    ''
+                                                                }
                                                             />
                                                         </FormControl>
                                                         <FormMessage>
@@ -786,7 +793,10 @@ export default function Create({
                                                         <FormControl>
                                                             <Textarea
                                                                 {...field}
-                                                                value={field.value ?? ''}
+                                                                value={
+                                                                    field.value ??
+                                                                    ''
+                                                                }
                                                             />
                                                         </FormControl>
                                                         <FormMessage>

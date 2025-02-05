@@ -1,9 +1,9 @@
 import InputError from '@/Components/InputError';
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
-import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import {
     Select,
     SelectContent,
@@ -90,9 +90,11 @@ export default function ShipmentStopsList({
         }));
     };
 
-    const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>({
-        stops: getSavedStops(),
-    });
+    const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>(
+        {
+            stops: getSavedStops(),
+        },
+    );
 
     const formErrors = errors as FormErrors;
 
@@ -168,53 +170,56 @@ export default function ShipmentStopsList({
                             key={'stops-div-' + index}
                         >
                             {editMode && (
-                            <div className="flex h-full flex-shrink-0 flex-col justify-between gap-2">
-                                <Button
-                                    variant="secondary"
-                                    size="icon"
-                                    onClick={(e) => {
-                                        const updatedStops = [...data.stops];
-                                        const temp = updatedStops[index];
-                                        updatedStops[index] =
-                                            updatedStops[index - 1];
-                                        updatedStops[index - 1] = temp;
-                                        updatedStops.forEach((stop, i) => {
-                                            stop.stop_number = i + 1;
-                                        });
-                                        setData('stops', updatedStops);
-                                    }}
-                                    disabled={index === 0}
-                                >
-                                    <ArrowUp className="h-4 w-4" />
-                                </Button>
-                                <span className="text-center text-sm font-bold">
-                                    {stop.stop_number}
-                                </span>
-                                <Button
-                                    variant="secondary"
-                                    size="icon"
-                                    onClick={(e) => {
-                                        const updatedStops = [...data.stops];
-                                        const temp = updatedStops[index];
-                                        updatedStops[index] =
-                                            updatedStops[index + 1];
-                                        updatedStops[index + 1] = temp;
-                                        updatedStops.forEach((stop, i) => {
-                                            stop.stop_number = i + 1;
-                                        });
-                                        setData('stops', updatedStops);
-                                    }}
-                                    disabled={
-                                        index ===
-                                        data.stops.length - 1
-                                    }
-                                >
-                                    <ArrowDown className="h-4 w-4" />
-                                </Button>
-                            </div>
+                                <div className="flex h-full flex-shrink-0 flex-col justify-between gap-2">
+                                    <Button
+                                        variant="secondary"
+                                        size="icon"
+                                        onClick={(e) => {
+                                            const updatedStops = [
+                                                ...data.stops,
+                                            ];
+                                            const temp = updatedStops[index];
+                                            updatedStops[index] =
+                                                updatedStops[index - 1];
+                                            updatedStops[index - 1] = temp;
+                                            updatedStops.forEach((stop, i) => {
+                                                stop.stop_number = i + 1;
+                                            });
+                                            setData('stops', updatedStops);
+                                        }}
+                                        disabled={index === 0}
+                                    >
+                                        <ArrowUp className="h-4 w-4" />
+                                    </Button>
+                                    <span className="text-center text-sm font-bold">
+                                        {stop.stop_number}
+                                    </span>
+                                    <Button
+                                        variant="secondary"
+                                        size="icon"
+                                        onClick={(e) => {
+                                            const updatedStops = [
+                                                ...data.stops,
+                                            ];
+                                            const temp = updatedStops[index];
+                                            updatedStops[index] =
+                                                updatedStops[index + 1];
+                                            updatedStops[index + 1] = temp;
+                                            updatedStops.forEach((stop, i) => {
+                                                stop.stop_number = i + 1;
+                                            });
+                                            setData('stops', updatedStops);
+                                        }}
+                                        disabled={
+                                            index === data.stops.length - 1
+                                        }
+                                    >
+                                        <ArrowDown className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             )}
-                            <div className="flex flex-col border-l-2 border-primary pl-4 flex-grow min-w-0">
-                                <div className="md:grid gap-4 md:grid-cols-2 flex flex-wrap">
+                            <div className="flex min-w-0 flex-grow flex-col border-l-2 border-primary pl-4">
+                                <div className="flex flex-wrap gap-4 md:grid md:grid-cols-2">
                                     <div>
                                         {editMode ? (
                                             <>

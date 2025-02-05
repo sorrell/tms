@@ -27,8 +27,9 @@ export default function Show({
     const canManageOrganization = userPermissions.ORGANIZATION_MANAGER;
 
     return (
-        <AuthenticatedLayout breadcrumbs={[
-            {
+        <AuthenticatedLayout
+            breadcrumbs={[
+                {
                     title: 'Organization',
                 },
             ]}

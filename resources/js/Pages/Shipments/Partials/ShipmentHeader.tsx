@@ -7,7 +7,7 @@ import { Check, CheckCircle2, FileText, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
-    let [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     const { toast } = useToast();
 
@@ -17,29 +17,27 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
 
     const updateShipmentNumber = () => {
         patch(
-            route(
-                'shipments.updateShipmentNumber',
-                {
-                    shipment: shipment.id,
-                },
-            ),
+            route('shipments.updateShipmentNumber', {
+                shipment: shipment.id,
+            }),
             {
                 onSuccess: () => {
                     toast({
-                        description:
-                            (
-                                <>
-                                    <CheckCircle2 className="h-4 w-4 inline mr-2" color="green" />
-                                    Shipment number updated
-                                </>
-                            )
+                        description: (
+                            <>
+                                <CheckCircle2
+                                    className="mr-2 inline h-4 w-4"
+                                    color="green"
+                                />
+                                Shipment number updated
+                            </>
+                        ),
                     });
                 },
             },
         );
-    }
+    };
 
-    
     return (
         <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -55,7 +53,9 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                                     updateShipmentNumber();
                                 }
                             }}
-                            onChange={(e) => setData('shipment_number', e.target.value)}
+                            onChange={(e) =>
+                                setData('shipment_number', e.target.value)
+                            }
                             placeholder="#####"
                             className="text-2xl font-bold"
                         />
@@ -66,16 +66,25 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     )}
                     {editMode ? (
                         <>
-                            <Button variant="ghost" onClick={() => {
-                                setEditMode(false);
-                                updateShipmentNumber();
-                            }}>
+                            <Button
+                                variant="ghost"
+                                onClick={() => {
+                                    setEditMode(false);
+                                    updateShipmentNumber();
+                                }}
+                            >
                                 <Check />
                             </Button>
-                            <Button variant="ghost" onClick={() => {
-                                setEditMode(false);
-                                setData('shipment_number', shipment.shipment_number);
-                            }}>
+                            <Button
+                                variant="ghost"
+                                onClick={() => {
+                                    setEditMode(false);
+                                    setData(
+                                        'shipment_number',
+                                        shipment.shipment_number,
+                                    );
+                                }}
+                            >
                                 <X />
                             </Button>
                         </>

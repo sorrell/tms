@@ -26,7 +26,7 @@ export default function ShipmentGeneral({
     trailerTypes: TrailerType[];
     trailerSizes: TrailerSize[];
 }) {
-    let [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     const { toast } = useToast();
 
@@ -159,7 +159,9 @@ export default function ShipmentGeneral({
                             <>
                                 <Input
                                     type="number"
-                                    value={data.trailer_temperature_maximum ?? ''}
+                                    value={
+                                        data.trailer_temperature_maximum ?? ''
+                                    }
                                     onChange={(e) =>
                                         setData(
                                             'trailer_temperature_maximum',
@@ -218,9 +220,7 @@ export default function ShipmentGeneral({
                     </div>
 
                     <div className="col-span-2">
-                        <label className="text-sm font-medium">
-                            Trailer
-                        </label>
+                        <label className="text-sm font-medium">Trailer</label>
                         {editMode ? (
                             <div className="flex flex-row items-center gap-2">
                                 <Select

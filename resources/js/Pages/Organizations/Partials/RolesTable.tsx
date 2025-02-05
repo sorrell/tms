@@ -21,6 +21,7 @@ import { useForm } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';
 
 import InputError from '@/Components/InputError';
+import { Checkbox } from '@/Components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -31,9 +32,8 @@ import {
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { toast, useToast } from '@/hooks/UseToast';
-import { FormEventHandler, useEffect, useState } from 'react';
-import { Checkbox } from '@/Components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
+import { FormEventHandler, useEffect, useState } from 'react';
 
 export default function RolesTable({
     roles,
@@ -270,7 +270,9 @@ function RoleForm({
                                                 checked={data?.permissions?.includes(
                                                     permission.id,
                                                 )}
-                                                onCheckedChange={(checked : CheckedState) => {
+                                                onCheckedChange={(
+                                                    checked: CheckedState,
+                                                ) => {
                                                     if (checked) {
                                                         setData('permissions', [
                                                             ...data.permissions,
@@ -328,7 +330,9 @@ function RoleForm({
                                                     checked={data?.users?.includes(
                                                         user.id,
                                                     )}
-                                                    onCheckedChange={(checked : CheckedState) => {
+                                                    onCheckedChange={(
+                                                        checked: CheckedState,
+                                                    ) => {
                                                         if (checked) {
                                                             setData('users', [
                                                                 ...data.users,

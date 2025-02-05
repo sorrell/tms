@@ -13,7 +13,7 @@ export const columns: ColumnDef<Shipment>[] = [
         header: 'Shippers',
         cell: ({ row }) => {
             const shippers = row.original.shippers;
-            return shippers.map(shipper => shipper.name).join(', ');
+            return shippers.map((shipper) => shipper.name).join(', ');
         },
     },
     {

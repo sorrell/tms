@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Note, ShipmentStop, TrailerSize, TrailerType } from '@/types';
-import { Deferred, Head, WhenVisible } from '@inertiajs/react';
+import { ShipmentStop, TrailerSize, TrailerType } from '@/types';
+import { Head } from '@inertiajs/react';
 import { FileText, MapPin, MessageSquare } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
@@ -173,8 +173,10 @@ export default function Show({
                                 <CardTitle>Quick Actions</CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-2">
-                                <Button className="w-full justify-start"
-                                disabled={true}>
+                                <Button
+                                    className="w-full justify-start"
+                                    disabled={true}
+                                >
                                     <MessageSquare className="mr-2 h-4 w-4" />
                                     Send Message
                                 </Button>
