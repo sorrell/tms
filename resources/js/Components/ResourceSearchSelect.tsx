@@ -293,13 +293,15 @@ export function ResourceSearchSelect({
                         </Command>
                     </PopoverContent>
                 </Popover>
-                <Button
-                    type="button"
-                    variant="ghost"
+                {createForm && (
+                    <Button
+                        type="button"
+                        variant="ghost"
                     onClick={() => setNewFormOpen(true)}
                 >
                     <Plus />
-                </Button>
+                    </Button>
+                )}
             </div>
             <Dialog open={newFormOpen} onOpenChange={setNewFormOpen}>
                 <DialogContent>
@@ -307,8 +309,20 @@ export function ResourceSearchSelect({
                         {createForm &&
                             React.createElement(createForm, {
                                 formRef: newFormRef,
-                                onSubmit: (data: any) => {
-                                    console.log('submitted', data);
+                                onCreate: (data: any) => {
+                                    let newSelectedId = data?.id?.toString();
+                                    if (newSelectedId) {
+                                        if (allowMultiple) {
+                                            let newSelectedItems = [
+                                                ...(selectedItems.map((v) => v.value) ?? []),
+                                                newSelectedId,
+                                            ]
+                                            searchData('', newSelectedItems);
+                                        } else {
+                                            searchData('', [newSelectedId]);
+                                        }
+                                    }
+                                    setNewFormOpen(false);
                                 },
                             })}
                     </div>
@@ -325,6 +339,7 @@ export function ResourceSearchSelect({
                             variant="default"
                             onClick={(e) => {
                                 e.preventDefault();
+                                e.stopPropagation();
                                 newFormRef.current?.requestSubmit();
                             }}
                         >
