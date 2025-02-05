@@ -38,12 +38,12 @@ class CreateLocation
     public function asController(ActionRequest $request): Location
     {
         $location = $this->handle(
-            $request->validated('name'),
-            $request->validated('address_line_1'),
-            $request->validated('address_line_2'),
-            $request->validated('address_city'),
-            $request->validated('address_state'),
-            $request->validated('address_zipcode'),
+            name: $request->validated('name'),
+            address_line_1: $request->validated('address_line_1'),
+            address_line_2: $request->validated('address_line_2'),
+            address_city: $request->validated('address_city'),
+            address_state: $request->validated('address_state'),
+            address_zipcode: $request->validated('address_zipcode'),
         );
 
         return $location;
