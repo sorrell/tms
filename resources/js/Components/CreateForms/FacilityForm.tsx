@@ -27,6 +27,7 @@ export default function FacilityForm({
 
         const data = {
             name: facilityName,
+            location_id: locationId,
         };
 
         axios

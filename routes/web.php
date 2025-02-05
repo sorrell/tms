@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Facilities\CreateFacility;
 use App\Actions\Locations\CreateLocation;
 use App\Actions\Notes\CreateNote;
 use App\Actions\Notes\GetNotes;
@@ -71,7 +72,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     });
 
     Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
-    Route::resource('facilities', FacilityController::class);
+    Route::post('facilities', CreateFacility::class)->name('facilities.store');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
     Route::resource('carriers', CarrierController::class);

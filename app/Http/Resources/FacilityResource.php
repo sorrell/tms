@@ -21,6 +21,9 @@ class FacilityResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'location' => $this->whenLoaded('location', LocationResource::make($this->location)),
+            'location_id' => $this->location_id,
+            'selectable_label' => $this->selectable_label,
         ];
     }
 }

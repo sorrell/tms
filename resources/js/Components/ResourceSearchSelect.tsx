@@ -91,8 +91,22 @@ export function ResourceSearchSelect({
                 setSearch(searchInput);
                 setDataOptions(options);
                 if (searchIds) {
-                    setSelectedItems(
-                        options.filter((o: any) => searchIds.includes(o.value)),
+                    let newSelected = options.filter((o: any) => searchIds.includes(o.value));
+
+                    setSelectedItems(newSelected);
+
+                    onValueChange?.(
+                        allowMultiple
+                            ? newSelected.map(
+                                  (v: any) => v.value,
+                              )
+                            : newSelected[0].value,
+                    );
+
+                    onValueObjectChange?.(
+                        allowMultiple
+                            ? newSelected
+                            : newSelected[0],
                     );
                 }
                 setLoading(false);
