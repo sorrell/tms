@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { Check, ChevronsUpDown, Loader2, Plus } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '@/Components/ui/button';
@@ -20,12 +20,16 @@ import {
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { CommandLoading } from 'cmdk';
+import { useRef } from 'react';
+import FacilityForm from './CreateForms/FacilityForm';
 import { Badge } from './ui/badge';
+import { Dialog, DialogContent, DialogFooter } from './ui/dialog';
 
 export function ResourceSearchSelect({
     searchRoute,
     onValueChange,
     onValueObjectChange,
+    createForm,
     defaultSelectedItems = null,
     allowMultiple = true,
     allowUnselect = true,
@@ -35,19 +39,22 @@ export function ResourceSearchSelect({
     searchRoute: string;
     onValueChange?: (value: any) => void;
     onValueObjectChange?: (selected: any) => void;
+    createForm?: typeof FacilityForm;
     defaultSelectedItems?: any[] | any;
     allowMultiple?: boolean;
     allowUnselect?: boolean;
     autoLoadOptions?: boolean;
     className?: string;
 }) {
+    const [newFormOpen, setNewFormOpen] = React.useState(false);
+    const newFormRef = useRef<HTMLFormElement>(null);
+
     const [open, setOpen] = React.useState(false);
     const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
     const [search, setSearch] = React.useState('');
     const [dataOptions, setDataOptions] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
-
 
     React.useEffect(() => {
         let items = Array.isArray(defaultSelectedItems)
@@ -59,9 +66,8 @@ export function ResourceSearchSelect({
         // Check if the current selection is different from the defaultSelectedItems
         const currentSelectedIds = selectedItems.map((item) => item.value);
         const hasChanges =
-            items.some(
-                (id) => !currentSelectedIds.includes(id?.toString()),
-            ) || currentSelectedIds.some((id) => !items.includes(id));
+            items.some((id) => !currentSelectedIds.includes(id?.toString())) ||
+            currentSelectedIds.some((id) => !items.includes(id));
 
         if (hasChanges) {
             searchData('', items);
@@ -85,8 +91,22 @@ export function ResourceSearchSelect({
                 setSearch(searchInput);
                 setDataOptions(options);
                 if (searchIds) {
-                    setSelectedItems(
-                        options.filter((o: any) => searchIds.includes(o.value)),
+                    let newSelected = options.filter((o: any) => searchIds.includes(o.value));
+
+                    setSelectedItems(newSelected);
+
+                    onValueChange?.(
+                        allowMultiple
+                            ? newSelected.map(
+                                  (v: any) => v.value,
+                              )
+                            : newSelected[0].value,
+                    );
+
+                    onValueObjectChange?.(
+                        allowMultiple
+                            ? newSelected
+                            : newSelected[0],
                     );
                 }
                 setLoading(false);
@@ -128,145 +148,220 @@ export function ResourceSearchSelect({
     }, []);
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className={cn('w-[200px] justify-between h-fit', className)}
+        <>
+            <div className="flex">
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className={cn(
+                                'h-fit w-[200px] justify-between',
+                                className,
+                            )}
+                        >
+                            <div className="flex flex-wrap gap-1">
+                                {selectedItems.length > 0
+                                    ? selectedItems.map((v) =>
+                                          allowMultiple ? (
+                                              <Badge
+                                                  variant="secondary"
+                                                  key={v.value}
+                                              >
+                                                  {
+                                                      getAllOptions().find(
+                                                          (f) =>
+                                                              f.value ===
+                                                              v.value,
+                                                      )?.label
+                                                  }
+                                              </Badge>
+                                          ) : (
+                                              <span key={v.value}>
+                                                  {
+                                                      getAllOptions().find(
+                                                          (f) =>
+                                                              f.value ===
+                                                              v.value,
+                                                      )?.label
+                                                  }
+                                              </span>
+                                          ),
+                                      )
+                                    : 'Select ...'}
+                            </div>
+                            <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="p-0">
+                        <Command shouldFilter={false}>
+                            <CommandInput
+                                placeholder={`Search ...`}
+                                className="h-9"
+                                value={search}
+                                onInput={(e) => {
+                                    debouncedSearch(e.currentTarget.value);
+                                }}
+                            />
+                            <CommandList>
+                                {loading && (
+                                    <CommandLoading>
+                                        <div className="flex h-full items-center justify-center p-4">
+                                            <Loader2 className="animate-spin" />
+                                            <span>Fetching results...</span>
+                                        </div>
+                                    </CommandLoading>
+                                )}
+                                <CommandEmpty>No results found.</CommandEmpty>
+                                <CommandGroup>
+                                    {getAllOptions().map((option: any) => (
+                                        <CommandItem
+                                            key={option.value}
+                                            value={option.value}
+                                            onSelect={(currentValue) => {
+                                                let newSelected = [];
+
+                                                if (allowMultiple) {
+                                                    // If selected item is already selected, remove it
+                                                    if (
+                                                        selectedItems
+                                                            .map((v) => v.value)
+                                                            .includes(
+                                                                currentValue,
+                                                            )
+                                                    ) {
+                                                        newSelected =
+                                                            selectedItems.filter(
+                                                                (v) =>
+                                                                    v.value !==
+                                                                    currentValue,
+                                                            );
+                                                    } else {
+                                                        // If selected item is not already selected, add it to the full list
+                                                        newSelected = [
+                                                            ...selectedItems,
+                                                            getAllOptions().find(
+                                                                (f) =>
+                                                                    f.value ===
+                                                                    currentValue,
+                                                            ),
+                                                        ];
+                                                    }
+                                                } else {
+                                                    // If selected item is already selected, remove it
+                                                    if (
+                                                        selectedItems
+                                                            .map((v) => v.value)
+                                                            .includes(
+                                                                option.value,
+                                                            )
+                                                    ) {
+                                                        newSelected = [];
+                                                    } else {
+                                                        newSelected = [option];
+                                                    }
+                                                }
+
+                                                if (
+                                                    !allowUnselect &&
+                                                    newSelected.length === 0
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // But save the whole selected for this component to reference
+                                                setSelectedItems(newSelected);
+
+                                                // Just the ids for the on value change for parent users
+                                                onValueChange?.(
+                                                    allowMultiple
+                                                        ? newSelected.map(
+                                                              (v) => v.value,
+                                                          )
+                                                        : newSelected[0].value,
+                                                );
+
+                                                onValueObjectChange?.(
+                                                    allowMultiple
+                                                        ? newSelected
+                                                        : newSelected[0],
+                                                );
+                                            }}
+                                        >
+                                            {option.label}
+                                            <Check
+                                                className={cn(
+                                                    'ml-auto',
+                                                    selectedItems
+                                                        .map((v) => v.value)
+                                                        .includes(option.value)
+                                                        ? 'opacity-100'
+                                                        : 'opacity-0',
+                                                )}
+                                            />
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </CommandList>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+                {createForm && (
+                    <Button
+                        type="button"
+                        variant="ghost"
+                    onClick={() => setNewFormOpen(true)}
                 >
-                    <div className="flex flex-wrap gap-1">
-                        {selectedItems.length > 0
-                            ? selectedItems.map((v) =>
-                                  allowMultiple ? (
-                                      <Badge variant="secondary" key={v.value}>
-                                          {
-                                              getAllOptions().find(
-                                                  (f) => f.value === v.value,
-                                              )?.label
-                                          }
-                                      </Badge>
-                                  ) : (
-                                      <span key={v.value}>
-                                          {
-                                              getAllOptions().find(
-                                                  (f) => f.value === v.value,
-                                              )?.label
-                                          }
-                                      </span>
-                                  ),
-                              )
-                            : 'Select ...'}
-                    </div>
-                    <ChevronsUpDown className="opacity-50" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0">
-                <Command shouldFilter={false}>
-                    <CommandInput
-                        placeholder={`Search ...`}
-                        className="h-9"
-                        value={search}
-                        onInput={(e) => {
-                            debouncedSearch(e.currentTarget.value);
-                        }}
-                    />
-                    <CommandList>
-                        {loading && (
-                            <CommandLoading>
-                                <div className="flex h-full items-center justify-center p-4">
-                                    <Loader2 className="animate-spin" />
-                                    <span>Fetching results...</span>
-                                </div>
-                            </CommandLoading>
-                        )}
-                        <CommandEmpty>No results found.</CommandEmpty>
-                        <CommandGroup>
-                            {getAllOptions().map((option: any) => (
-                                <CommandItem
-                                    key={option.value}
-                                    value={option.value}
-                                    onSelect={(currentValue) => {
-                                        let newSelected = [];
-
+                    <Plus />
+                    </Button>
+                )}
+            </div>
+            <Dialog open={newFormOpen} onOpenChange={setNewFormOpen}>
+                <DialogContent>
+                    <div className="flex flex-col gap-2">
+                        {createForm &&
+                            React.createElement(createForm, {
+                                formRef: newFormRef,
+                                onCreate: (data: any) => {
+                                    let newSelectedId = data?.id?.toString();
+                                    if (newSelectedId) {
                                         if (allowMultiple) {
-                                            // If selected item is already selected, remove it
-                                            if (
-                                                selectedItems
-                                                    .map((v) => v.value)
-                                                    .includes(currentValue)
-                                            ) {
-                                                newSelected =
-                                                    selectedItems.filter(
-                                                        (v) =>
-                                                            v.value !==
-                                                            currentValue,
-                                                    );
-                                            } else {
-                                                // If selected item is not already selected, add it to the full list
-                                                newSelected = [
-                                                    ...selectedItems,
-                                                    getAllOptions().find(
-                                                        (f) =>
-                                                            f.value ===
-                                                            currentValue,
-                                                    ),
-                                                ];
-                                            }
+                                            let newSelectedItems = [
+                                                ...(selectedItems.map((v) => v.value) ?? []),
+                                                newSelectedId,
+                                            ]
+                                            searchData('', newSelectedItems);
                                         } else {
-                                            // If selected item is already selected, remove it
-                                            if (
-                                                selectedItems
-                                                    .map((v) => v.value)
-                                                    .includes(option.value)
-                                            ) {
-                                                newSelected = [];
-                                            } else {
-                                                newSelected = [option];
-                                            }
+                                            searchData('', [newSelectedId]);
                                         }
-
-                                        if (!allowUnselect && newSelected.length === 0) {
-                                            return;
-                                        }
-
-                                        // But save the whole selected for this component to reference
-                                        setSelectedItems(newSelected);
-
-                                        // Just the ids for the on value change for parent users
-                                        onValueChange?.(
-                                            allowMultiple
-                                                ? newSelected.map(
-                                                      (v) => v.value,
-                                                  )
-                                                : newSelected[0].value,
-                                        );
-
-                                        onValueObjectChange?.(
-                                            allowMultiple
-                                                ? newSelected
-                                                : newSelected[0],
-                                        );
-                                    }}
-                                >
-                                    {option.label}
-                                    <Check
-                                        className={cn(
-                                            'ml-auto',
-                                            selectedItems
-                                                .map((v) => v.value)
-                                                .includes(option.value)
-                                                ? 'opacity-100'
-                                                : 'opacity-0',
-                                        )}
-                                    />
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
+                                    }
+                                    setNewFormOpen(false);
+                                },
+                            })}
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setNewFormOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="default"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                newFormRef.current?.requestSubmit();
+                            }}
+                        >
+                            Create
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\Facilities\CreateFacility;
+use App\Actions\Locations\CreateLocation;
 use App\Actions\Notes\CreateNote;
 use App\Actions\Notes\GetNotes;
 use App\Actions\Shipments\CreateShipment;
@@ -10,6 +12,7 @@ use App\Actions\Shipments\UpdateShipmentShippers;
 use App\Actions\Shipments\UpdateShipmentStops;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
@@ -69,7 +72,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     });
 
     Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
-    Route::resource('facilities', FacilityController::class);
+    Route::post('facilities', CreateFacility::class)->name('facilities.store');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
     Route::resource('carriers', CarrierController::class);
@@ -88,10 +91,12 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/shippers', UpdateShipmentShippers::class)->name('shipments.updateShippers');
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
 
-
     Route::delete('notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
     Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');
     Route::post('notes/{notableType}/{notableId}', CreateNote::class)->name('notes.store');
+
+    Route::get('locations/search', [LocationController::class, 'search'])->name('locations.search');
+    Route::post('locations', CreateLocation::class)->name('locations.store');
 });
 
 require __DIR__ . '/auth.php';
