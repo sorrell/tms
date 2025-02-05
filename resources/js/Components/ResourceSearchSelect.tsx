@@ -74,6 +74,28 @@ export function ResourceSearchSelect({
         }
     }, [defaultSelectedItems, autoLoadOptions]);
 
+    const valuesChangedHandler = (newSelected: any[]) => {
+        onValueChange?.(
+            allowMultiple
+                ? newSelected.map(
+                      (v: any) => v.value,
+                  )
+                : newSelected[0].value,
+        );
+
+        onValueObjectChange?.(
+            allowMultiple
+                ? newSelected
+                : newSelected[0],
+        );
+
+        // If not multiple, close the popup since the user
+        // selected an item
+        if (!allowMultiple) {
+            setOpen(false);
+        }
+    }
+
     const searchData = (searchInput: string, searchIds?: string[]) => {
         setLoading(true);
         axios
@@ -95,19 +117,8 @@ export function ResourceSearchSelect({
 
                     setSelectedItems(newSelected);
 
-                    onValueChange?.(
-                        allowMultiple
-                            ? newSelected.map(
-                                  (v: any) => v.value,
-                              )
-                            : newSelected[0].value,
-                    );
-
-                    onValueObjectChange?.(
-                        allowMultiple
-                            ? newSelected
-                            : newSelected[0],
-                    );
+                    valuesChangedHandler(newSelected);
+                    
                 }
                 setLoading(false);
             })
@@ -274,19 +285,7 @@ export function ResourceSearchSelect({
                                                 setSelectedItems(newSelected);
 
                                                 // Just the ids for the on value change for parent users
-                                                onValueChange?.(
-                                                    allowMultiple
-                                                        ? newSelected.map(
-                                                              (v) => v.value,
-                                                          )
-                                                        : newSelected[0].value,
-                                                );
-
-                                                onValueObjectChange?.(
-                                                    allowMultiple
-                                                        ? newSelected
-                                                        : newSelected[0],
-                                                );
+                                                valuesChangedHandler(newSelected);
                                             }}
                                         >
                                             {option.label}

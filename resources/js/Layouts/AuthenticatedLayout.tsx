@@ -25,8 +25,15 @@ export default function Authenticated({
     children,
     breadcrumbs = [],
 }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
+    
+    
+    const sideBarOpen = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('sidebar:state'))
+        ?.split('=')[1] === 'true';
+
     return (
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={sideBarOpen}>
             <AppSidebar />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
