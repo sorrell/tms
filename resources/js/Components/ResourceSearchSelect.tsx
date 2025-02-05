@@ -77,24 +77,18 @@ export function ResourceSearchSelect({
     const valuesChangedHandler = (newSelected: any[]) => {
         onValueChange?.(
             allowMultiple
-                ? newSelected.map(
-                      (v: any) => v.value,
-                  )
+                ? newSelected.map((v: any) => v.value)
                 : newSelected[0].value,
         );
 
-        onValueObjectChange?.(
-            allowMultiple
-                ? newSelected
-                : newSelected[0],
-        );
+        onValueObjectChange?.(allowMultiple ? newSelected : newSelected[0]);
 
         // If not multiple, close the popup since the user
         // selected an item
         if (!allowMultiple) {
             setOpen(false);
         }
-    }
+    };
 
     const searchData = (searchInput: string, searchIds?: string[]) => {
         setLoading(true);
@@ -106,19 +100,20 @@ export function ResourceSearchSelect({
                 },
             })
             .then((response) => {
-                let options = response.data.map((item: any) => ({
+                const options = response.data.map((item: any) => ({
                     value: item.id.toString(),
                     label: item.selectable_label ?? item.name,
                 }));
                 setSearch(searchInput);
                 setDataOptions(options);
                 if (searchIds) {
-                    let newSelected = options.filter((o: any) => searchIds.includes(o.value));
+                    const newSelected = options.filter((o: any) =>
+                        searchIds.includes(o.value),
+                    );
 
                     setSelectedItems(newSelected);
 
                     valuesChangedHandler(newSelected);
-                    
                 }
                 setLoading(false);
             })
@@ -173,7 +168,7 @@ export function ResourceSearchSelect({
                                 className,
                             )}
                         >
-                            <div className="flex flex-wrap gap-1 min-w-0">
+                            <div className="flex min-w-0 flex-wrap gap-1">
                                 {selectedItems.length > 0
                                     ? selectedItems.map((v) =>
                                           allowMultiple ? (
@@ -190,7 +185,10 @@ export function ResourceSearchSelect({
                                                   }
                                               </Badge>
                                           ) : (
-                                              <span key={v.value} className="truncate">
+                                              <span
+                                                  key={v.value}
+                                                  className="truncate"
+                                              >
                                                   {
                                                       getAllOptions().find(
                                                           (f) =>
@@ -286,7 +284,9 @@ export function ResourceSearchSelect({
                                                 setSelectedItems(newSelected);
 
                                                 // Just the ids for the on value change for parent users
-                                                valuesChangedHandler(newSelected);
+                                                valuesChangedHandler(
+                                                    newSelected,
+                                                );
                                             }}
                                         >
                                             {option.label}
@@ -311,9 +311,9 @@ export function ResourceSearchSelect({
                     <Button
                         type="button"
                         variant="ghost"
-                    onClick={() => setNewFormOpen(true)}
-                >
-                    <Plus />
+                        onClick={() => setNewFormOpen(true)}
+                    >
+                        <Plus />
                     </Button>
                 )}
             </div>
@@ -324,13 +324,15 @@ export function ResourceSearchSelect({
                             React.createElement(createForm, {
                                 formRef: newFormRef,
                                 onCreate: (data: any) => {
-                                    let newSelectedId = data?.id?.toString();
+                                    const newSelectedId = data?.id?.toString();
                                     if (newSelectedId) {
                                         if (allowMultiple) {
-                                            let newSelectedItems = [
-                                                ...(selectedItems.map((v) => v.value) ?? []),
+                                            const newSelectedItems = [
+                                                ...(selectedItems.map(
+                                                    (v) => v.value,
+                                                ) ?? []),
                                                 newSelectedId,
-                                            ]
+                                            ];
                                             searchData('', newSelectedItems);
                                         } else {
                                             searchData('', [newSelectedId]);

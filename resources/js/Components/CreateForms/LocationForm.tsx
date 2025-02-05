@@ -2,7 +2,6 @@ import { useToast } from '@/hooks/UseToast';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { useState } from 'react';
-import { ResourceSearchSelect } from '../ResourceSearchSelect';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
@@ -114,7 +113,6 @@ export default function LocationForm({
                     onChange={(e) => setAddressZipcode(e.target.value)}
                 />
             </div>
-
         </form>
     );
 }

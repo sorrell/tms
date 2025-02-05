@@ -1,18 +1,15 @@
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Label } from '@/Components/ui/label';
-import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
-import { Skeleton } from '@/Components/ui/skeleton';
 import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
-import { Box, Check, CheckCircle2, Pencil, Truck, X } from 'lucide-react';
+import { useForm } from '@inertiajs/react';
+import { Box, Check, CheckCircle2, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
-
 export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
-    let [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     const { toast } = useToast();
 
@@ -65,7 +62,12 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                                     variant="ghost"
                                     onClick={() => {
                                         setEditMode(false);
-                                        setData('shipper_ids', shipment.shippers.map((shipper) => shipper.id));
+                                        setData(
+                                            'shipper_ids',
+                                            shipment.shippers.map(
+                                                (shipper) => shipper.id,
+                                            ),
+                                        );
                                     }}
                                 >
                                     <X />
@@ -89,7 +91,9 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                         <ResourceSearchSelect
                             className="w-full"
                             searchRoute={route('shippers.search')}
-                            onValueChange={(value) => setData({ shipper_ids: value })}
+                            onValueChange={(value) =>
+                                setData({ shipper_ids: value })
+                            }
                             allowMultiple={true}
                             defaultSelectedItems={data.shipper_ids}
                             allowUnselect={false}
@@ -97,7 +101,9 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                     ) : (
                         <div className="flex flex-wrap gap-2">
                             {shipment.shippers.map((shipper) => (
-                                <Badge variant="secondary" key={shipper.id}>{shipper.name}</Badge>
+                                <Badge variant="secondary" key={shipper.id}>
+                                    {shipper.name}
+                                </Badge>
                             ))}
                         </div>
                     )}

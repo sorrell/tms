@@ -25,12 +25,11 @@ export default function Authenticated({
     children,
     breadcrumbs = [],
 }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
-    
-    
-    const sideBarOpen = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('sidebar:state'))
-        ?.split('=')[1] === 'true';
+    const sideBarOpen =
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('sidebar:state'))
+            ?.split('=')[1] === 'true';
 
     return (
         <SidebarProvider defaultOpen={sideBarOpen}>
@@ -47,9 +46,7 @@ export default function Authenticated({
                             <BreadcrumbList>
                                 {breadcrumbs.map((item, index) => (
                                     <Fragment key={index}>
-                                        <BreadcrumbItem
-                                            className="hidden md:block"
-                                        >
+                                        <BreadcrumbItem className="hidden md:block">
                                             {item.url ? (
                                                 <BreadcrumbLink href={item.url}>
                                                     {item.title}

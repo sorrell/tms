@@ -1,4 +1,4 @@
-import { Building, Dot, GalleryVerticalEnd, Home, Truck } from 'lucide-react';
+import { Building, GalleryVerticalEnd, Home, Truck } from 'lucide-react';
 import * as React from 'react';
 
 import { NavUser } from '@/Components/NavUser';
@@ -34,7 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const userData = {
         name: user.name,
         email: user.email,
-        avatar: "",
+        avatar: '',
     };
 
     return (
@@ -44,13 +44,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarMenuButton asChild isActive={route().current('dashboard')}>
+                    <SidebarMenuButton
+                        asChild
+                        isActive={route().current('dashboard')}
+                    >
                         <a href={route('dashboard')}>
                             <Home />
                             <span>Dashboard</span>
                         </a>
                     </SidebarMenuButton>
-                    <SidebarMenuButton asChild isActive={route().current('shipments.index')}>
+                    <SidebarMenuButton
+                        asChild
+                        isActive={route().current('shipments.index')}
+                    >
                         <a href={route('shipments.index')}>
                             <Truck />
                             <span>Shipments</span>
@@ -58,9 +64,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </SidebarMenuButton>
                     {(permissions.ORGANIZATION_MANAGER ||
                         permissions.ORGANIZATION_MANAGE_USERS) && (
-                        <SidebarMenuButton asChild isActive={route().current('organizations.show', [
-                            user.current_organization_id,
-                        ])}>
+                        <SidebarMenuButton
+                            asChild
+                            isActive={route().current('organizations.show', [
+                                user.current_organization_id,
+                            ])}
+                        >
                             <a
                                 href={route('organizations.show', [
                                     user.current_organization_id,
