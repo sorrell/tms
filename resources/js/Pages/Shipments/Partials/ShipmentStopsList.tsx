@@ -27,7 +27,10 @@ import {
     X,
 } from 'lucide-react';
 import { useState } from 'react';
-import FacilityForm from '@/Components/CreateForms/FacilityForm';
+
+type FormErrors = {
+    [key: `stops.${number}.${string}`]: string;
+};
 
 export default function ShipmentStopsList({
     shipmentId,
@@ -87,9 +90,11 @@ export default function ShipmentStopsList({
         }));
     };
 
-    const { patch, setData, data, errors } = useForm({
+    const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>({
         stops: getSavedStops(),
     });
+
+    const formErrors = errors as FormErrors;
 
     return (
         <Card>
@@ -107,7 +112,7 @@ export default function ShipmentStopsList({
                                         shipment_id: shipmentId,
                                         stop_type: StopType.Delivery,
                                         stop_number: data.stops.length + 1,
-                                        facility_id: null,
+                                        facility_id: undefined,
                                         eta: '',
                                         appointment_type: '',
                                         appointment_at: '',
@@ -254,12 +259,12 @@ export default function ShipmentStopsList({
                                                         </SelectItem>
                                                     </SelectContent>
                                                 </Select>
-                                                {errors[
+                                                {formErrors[
                                                     `stops.${index}.type`
                                                 ] && (
                                                     <InputError
                                                         message={
-                                                            errors[
+                                                            formErrors[
                                                                 `stops.${index}.type`
                                                             ]
                                                         }
@@ -355,12 +360,12 @@ export default function ShipmentStopsList({
                                                     className="md:w-full"
                                                 />
 
-                                                {errors[
+                                                {formErrors[
                                                     `stops.${index}.facility.name`
                                                 ] && (
                                                     <InputError
                                                         message={
-                                                            errors[
+                                                            formErrors[
                                                                 `stops.${index}.facility.name`
                                                             ]
                                                         }
@@ -420,12 +425,12 @@ export default function ShipmentStopsList({
                                                         </SelectItem>
                                                     </SelectContent>
                                                 </Select>
-                                                {errors[
+                                                {formErrors[
                                                     `stops.${index}.appointment_type`
                                                 ] && (
                                                     <InputError
                                                         message={
-                                                            errors[
+                                                            formErrors[
                                                                 `stops.${index}.appointment_type`
                                                             ]
                                                         }
@@ -469,12 +474,12 @@ export default function ShipmentStopsList({
                                                         );
                                                     }}
                                                 />
-                                                {errors[
+                                                {formErrors[
                                                     `stops.${index}.appointment_at`
                                                 ] && (
                                                     <InputError
                                                         message={
-                                                            errors[
+                                                            formErrors[
                                                                 `stops.${index}.appointment_at`
                                                             ]
                                                         }
@@ -524,12 +529,12 @@ export default function ShipmentStopsList({
                                                                 );
                                                             }}
                                                         />
-                                                        {errors[
+                                                        {formErrors[
                                                             `stops.${index}.eta`
                                                         ] && (
                                                             <InputError
                                                                 message={
-                                                                    errors[
+                                                                    formErrors[
                                                                         `stops.${index}.eta`
                                                                     ]
                                                                 }
@@ -579,12 +584,12 @@ export default function ShipmentStopsList({
                                                                 );
                                                             }}
                                                         />
-                                                        {errors[
+                                                        {formErrors[
                                                             `stops.${index}.arrived_at`
                                                         ] && (
                                                             <InputError
                                                                 message={
-                                                                    errors[
+                                                                    formErrors[
                                                                         `stops.${index}.arrived_at`
                                                                     ]
                                                                 }
@@ -636,12 +641,12 @@ export default function ShipmentStopsList({
                                                                 );
                                                             }}
                                                         />
-                                                        {errors[
+                                                        {formErrors[
                                                             `stops.${index}.loaded_unloaded_at`
                                                         ] && (
                                                             <InputError
                                                                 message={
-                                                                    errors[
+                                                                    formErrors[
                                                                         `stops.${index}.loaded_unloaded_at`
                                                                     ]
                                                                 }
@@ -689,12 +694,12 @@ export default function ShipmentStopsList({
                                                                 );
                                                             }}
                                                         />
-                                                        {errors[
+                                                        {formErrors[
                                                             `stops.${index}.left_at`
                                                         ] && (
                                                             <InputError
                                                                 message={
-                                                                    errors[
+                                                                    formErrors[
                                                                         `stops.${index}.left_at`
                                                                     ]
                                                                 }
@@ -743,12 +748,12 @@ export default function ShipmentStopsList({
                                                         );
                                                     }}
                                                 />
-                                                {errors[
+                                                {formErrors[
                                                     `stops.${index}.special_instructions`
                                                 ] && (
                                                     <InputError
                                                         message={
-                                                            errors[
+                                                            formErrors[
                                                                 `stops.${index}.special_instructions`
                                                             ]
                                                         }
