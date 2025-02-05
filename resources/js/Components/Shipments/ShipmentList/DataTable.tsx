@@ -17,12 +17,12 @@ import {
 } from '@/Components/ui/table';
 import { router } from '@inertiajs/react';
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: number | string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: number | string }, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
