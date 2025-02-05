@@ -169,10 +169,11 @@ export function ResourceSearchSelect({
                             aria-expanded={open}
                             className={cn(
                                 'h-fit w-[200px] justify-between',
+                                'overflow-hidden',
                                 className,
                             )}
                         >
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1 min-w-0">
                                 {selectedItems.length > 0
                                     ? selectedItems.map((v) =>
                                           allowMultiple ? (
@@ -189,7 +190,7 @@ export function ResourceSearchSelect({
                                                   }
                                               </Badge>
                                           ) : (
-                                              <span key={v.value}>
+                                              <span key={v.value} className="truncate">
                                                   {
                                                       getAllOptions().find(
                                                           (f) =>
