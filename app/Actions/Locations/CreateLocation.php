@@ -16,12 +16,12 @@ class CreateLocation
     use AsAction;
 
     public function handle(
-        string $name,
         string $address_line_1,
-        ?string $address_line_2 = null,
         string $address_city,
         string $address_state,
         string $address_zipcode,
+        ?string $name = null,
+        ?string $address_line_2 = null,
     ): Location
     {
         return Location::create([
@@ -62,7 +62,7 @@ class CreateLocation
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'name' => ['nullable', 'string', 'min:3', 'max:255'],
             'address_line_1' => ['required', 'string', 'min:3', 'max:255'],
             'address_line_2' => ['nullable', 'string', 'min:3', 'max:255'],
             'address_city' => ['required', 'string', 'min:3', 'max:255'],

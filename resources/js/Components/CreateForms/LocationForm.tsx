@@ -26,6 +26,7 @@ export default function LocationForm({
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        e.stopPropagation();
 
         const data = {
             name: name,
