@@ -6,7 +6,7 @@ import { Button } from '@/Components/ui/button';
 import { Shipment } from '@/types';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpRight, ArrowUpRightFromSquare } from 'lucide-react';
+import { ArrowUpRightFromSquare } from 'lucide-react';
 
 export const columns: ColumnDef<Shipment>[] = [
     {
@@ -15,12 +15,18 @@ export const columns: ColumnDef<Shipment>[] = [
         cell: ({ row }) => {
             return (
                 <Button variant="outline" asChild>
-                    <Link href={route('shipments.show', row.original.id)} className="flex gap-1" prefetch={true}>
-                        <span className="text-sm">{row.original.shipment_number ?? row.original.id}</span>
-                        <ArrowUpRightFromSquare className="w-2 h-2" />
+                    <Link
+                        href={route('shipments.show', row.original.id)}
+                        className="flex gap-1"
+                        prefetch={true}
+                    >
+                        <span className="text-sm">
+                            {row.original.shipment_number ?? row.original.id}
+                        </span>
+                        <ArrowUpRightFromSquare className="h-2 w-2" />
                     </Link>
                 </Button>
-            )
+            );
         },
     },
     {
@@ -31,7 +37,13 @@ export const columns: ColumnDef<Shipment>[] = [
             return (
                 <div className="flex flex-col space-y-2">
                     {shippers.map((shipper) => (
-                        <Badge variant="outline" className="w-fit" key={shipper.id}>{shipper.name}</Badge>
+                        <Badge
+                            variant="outline"
+                            className="w-fit"
+                            key={shipper.id}
+                        >
+                            {shipper.name}
+                        </Badge>
                     ))}
                 </div>
             );
@@ -46,20 +58,19 @@ export const columns: ColumnDef<Shipment>[] = [
             return (
                 <div className="flex flex-col space-y-2">
                     <span>{carrier.name}</span>
-                    <span className='text-muted-foreground'>{row.original.trailer_size?.name} {row.original.trailer_type?.name}</span>
+                    <span className="text-muted-foreground">
+                        {row.original.trailer_size?.name}{' '}
+                        {row.original.trailer_type?.name}
+                    </span>
                 </div>
-            )
+            );
         },
     },
     {
         accessorKey: 'lane',
         header: 'Lane',
         cell: ({ row }) => {
-            return (
-                <span className="text-nowrap">
-                    {row.original.lane}
-                </span>
-            );
+            return <span className="text-nowrap">{row.original.lane}</span>;
         },
     },
     {
@@ -68,10 +79,14 @@ export const columns: ColumnDef<Shipment>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex flex-col space-y-2">
-                    <DatetimeDisplay datetime={row.original.next_stop?.appointment_at} />
-                    <span className='text-muted-foreground'>{row.original.next_stop?.stop_type}</span>
+                    <DatetimeDisplay
+                        datetime={row.original.next_stop?.appointment_at}
+                    />
+                    <span className="text-muted-foreground">
+                        {row.original.next_stop?.stop_type}
+                    </span>
                 </div>
-            )
+            );
         },
     },
     // {

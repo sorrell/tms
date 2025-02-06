@@ -5,7 +5,6 @@ export default function DatetimeDisplay({
     className = '',
     ...props
 }: HTMLAttributes<HTMLDivElement> & { datetime?: string }) {
-
     let formattedDatetime = datetime;
 
     if (datetime) {
@@ -13,11 +12,8 @@ export default function DatetimeDisplay({
     }
 
     return (
-        <div
-            {...props}
-            className={className}
-        >
+        <div {...props} className={className}>
             {formattedDatetime}
         </div>
-    )
+    );
 }

@@ -32,9 +32,7 @@ class ShipmentController extends ResourceSearchController
      */
     public function index()
     {
-        return Inertia::render('Shipments/Index', [
-            'shipments' => Shipment::all(),
-        ]);  
+        return Inertia::render('Shipments/Index');  
     }
 
     /**

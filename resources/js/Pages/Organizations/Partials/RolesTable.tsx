@@ -44,7 +44,7 @@ export default function RolesTable({
     organization: Organization;
     permissions: Permission[];
 }) {
-    const { delete: destroy, post } = useForm();
+    const { delete: destroy } = useForm();
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
@@ -180,15 +180,13 @@ function RoleForm({
     });
 
     useEffect(() => {
-        ((setData) => {
-            setData('name', role?.name || '');
-            setData(
-                'permissions',
+        setData({
+            name: role?.name || '',
+            permissions:
                 role?.permissions.map((permission) => permission.id) || [],
-            );
-            setData('users', role?.users.map((user) => user.id) || []);
-        })(setData);
-    }, [role]);
+            users: role?.users.map((user) => user.id) || [],
+        });
+    }, [role, setData]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();

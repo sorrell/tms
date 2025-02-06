@@ -1,10 +1,11 @@
 import { useToast } from '@/hooks/UseToast';
+import { cn } from '@/lib/utils';
 import { Note } from '@/types';
 import { Notable } from '@/types/enums';
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import InputError from './InputError';
 import { Button } from './ui/button';
 import {
@@ -35,7 +36,7 @@ export default function Notes({
 
     const { toast } = useToast();
 
-    const refreshNotes = () => {
+    const refreshNotes = useCallback(() => {
         setLoading(true);
         axios
             .get(route('notes.index', { notableType, notableId }))
@@ -43,7 +44,7 @@ export default function Notes({
                 setNotes(response.data);
                 setLoading(false);
             })
-            .catch((error) => {
+            .catch(() => {
                 toast({
                     title: 'Error',
                     description: 'Failed to fetch notes',
@@ -51,13 +52,13 @@ export default function Notes({
                 });
                 setLoading(false);
             });
-    };
+    }, [notableType, notableId, toast]);
 
     useEffect(() => {
         refreshNotes();
-    }, [notableType, notableId]);
+    }, [refreshNotes]);
 
-    const { delete: destroyNote, errors: destroyNoteErrors } = useForm({});
+    const { delete: destroyNote } = useForm({});
     const handleDeleteNote = (noteId: number) => {
         destroyNote(route('notes.destroy', { note: noteId }), {
             onSuccess: () => {
@@ -114,7 +115,7 @@ export default function Notes({
     };
 
     return (
-        <div className="space-y-4">
+        <div className={cn('space-y-4', className)} {...props}>
             <div className="flex gap-2">
                 <Dialog
                     open={dialogOpen}

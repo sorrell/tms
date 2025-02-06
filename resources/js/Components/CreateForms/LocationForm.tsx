@@ -1,5 +1,6 @@
 import { useToast } from '@/hooks/UseToast';
 import { cn } from '@/lib/utils';
+import { CreateFormResult } from '@/types/create-form';
 import axios from 'axios';
 import { useState } from 'react';
 import { Input } from '../ui/input';
@@ -11,7 +12,7 @@ export default function LocationForm({
     formRef,
     ...props
 }: {
-    onCreate: (data: any) => void;
+    onCreate: (data: CreateFormResult) => void;
     formRef?: React.RefObject<HTMLFormElement>;
 } & React.ComponentPropsWithoutRef<'form'>) {
     const [name, setName] = useState('');

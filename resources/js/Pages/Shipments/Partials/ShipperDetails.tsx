@@ -13,7 +13,7 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
 
     const { toast } = useToast();
 
-    const { patch, setData, data, errors } = useForm({
+    const { patch, setData, data } = useForm({
         shipper_ids: shipment.shippers.map((shipper) => shipper.id),
     });
 
@@ -23,7 +23,7 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                 shipment: shipment.id,
             }),
             {
-                onSuccess: (e) => {
+                onSuccess: () => {
                     setEditMode(false);
                     toast({
                         description: (
