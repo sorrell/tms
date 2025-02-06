@@ -28,7 +28,8 @@ class PreCommitChecks extends Command
         $checks = [
             'ide-helper' => true,  // Assume ide-helper succeeds if it runs
             'phpstan' => false,
-            'npm-lint' => false
+            'npm-lint' => false,
+            'typescript' => false   // Renamed from npm-build
         ];
 
         $this->info("Running pre-commit checks and prep");
@@ -87,6 +88,22 @@ class PreCommitChecks extends Command
             $checks['npm-lint'] = $process->isSuccessful();
         } catch (\Exception $e) {
             $this->error("Failed to run npm lint: " . $e->getMessage());
+        }
+
+        $this->newLine(2);
+        $this->info("========== Running TypeScript check ==========");  // Updated message
+        try {
+            $process = new \Symfony\Component\Process\Process(['npm', 'exec', 'tsc']);  // Changed command
+            $process->run(function ($type, $buffer) {
+                if (\Symfony\Component\Process\Process::ERR === $type) {
+                    $this->output->write($buffer);
+                } else {
+                    $this->output->write($buffer);
+                }
+            });
+            $checks['typescript'] = $process->isSuccessful();  // Updated check key
+        } catch (\Exception $e) {
+            $this->error("Failed to run TypeScript check: " . $e->getMessage());  // Updated error message
         }
 
         $this->newLine(2);
