@@ -67,7 +67,10 @@ export const columns: ColumnDef<Shipment>[] = [
         header: 'Next Appointment',
         cell: ({ row }) => {
             return (
-                <DatetimeDisplay datetime={row.original.next_stop?.appointment_at} />
+                <div className="flex flex-col space-y-2">
+                    <DatetimeDisplay datetime={row.original.next_stop?.appointment_at} />
+                    <span className='text-muted-foreground'>{row.original.next_stop?.stop_type}</span>
+                </div>
             )
         },
     },

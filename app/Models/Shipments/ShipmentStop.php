@@ -4,7 +4,6 @@ namespace App\Models\Shipments;
 
 use App\Enums\StopType;
 use App\Models\Facility;
-use App\Models\Location;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\HasOrganization;
