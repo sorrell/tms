@@ -89,7 +89,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                             className="w-full"
                             searchRoute={route('carriers.search')}
                             onValueChange={(value) =>
-                                setData({ carrier_id: value })
+                                setData({ carrier_id: Number(value) })
                             }
                             allowMultiple={false}
                             defaultSelectedItems={data.carrier_id}

@@ -91,9 +91,13 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                         <ResourceSearchSelect
                             className="w-full"
                             searchRoute={route('shippers.search')}
-                            onValueChange={(value) =>
-                                setData({ shipper_ids: value })
-                            }
+                            onValueChange={(value) => {
+                                if (Array.isArray(value)) {
+                                    setData('shipper_ids', value.map(Number));
+                                } else {
+                                    setData('shipper_ids', [Number(value)]);
+                                }
+                            }}
                             allowMultiple={true}
                             defaultSelectedItems={data.shipper_ids}
                             allowUnselect={false}

@@ -1,5 +1,8 @@
 import InputError from '@/Components/InputError';
-import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
+import {
+    ResourceSearchSelect,
+    SelectOption,
+} from '@/Components/ResourceSearchSelect';
 import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
@@ -337,6 +340,8 @@ export default function ShipmentStopsList({
                                                     onValueObjectChange={(
                                                         selected,
                                                     ) => {
+                                                        selected =
+                                                            selected as SelectOption;
                                                         const updatedStops = [
                                                             ...data.stops,
                                                         ];
@@ -344,13 +349,16 @@ export default function ShipmentStopsList({
                                                             ...updatedStops[
                                                                 index
                                                             ],
-                                                            facility_id:
+                                                            facility_id: Number(
                                                                 selected?.value,
+                                                            ),
                                                             facility: {
                                                                 ...updatedStops[
                                                                     index
                                                                 ].facility,
-                                                                id: selected?.value,
+                                                                id: Number(
+                                                                    selected?.value,
+                                                                ),
                                                                 name: selected?.label,
                                                             },
                                                         };

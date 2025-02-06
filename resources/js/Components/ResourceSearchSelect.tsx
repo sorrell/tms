@@ -26,12 +26,12 @@ import FacilityForm from './CreateForms/FacilityForm';
 import { Badge } from './ui/badge';
 import { Dialog, DialogContent, DialogFooter } from './ui/dialog';
 
-interface SelectOption {
+export interface SelectOption {
     value: string;
     label: string;
 }
 
-interface ApiSearchResponse {
+export interface ApiSearchResponse {
     id: number;
     selectable_label?: string;
     name?: string;
@@ -128,20 +128,24 @@ export function ResourceSearchSelect({
     );
 
     React.useEffect(() => {
-        let items = Array.isArray(defaultSelectedItems)
-            ? defaultSelectedItems
-            : [defaultSelectedItems];
+        if (defaultSelectedItems) {
+            const items = (
+                Array.isArray(defaultSelectedItems)
+                    ? defaultSelectedItems
+                    : [defaultSelectedItems]
+            ).map((item: string | number) => item?.toString());
 
-        items = items.map((item) => item?.toString());
+            // Check if the current selection is different from the defaultSelectedItems
+            const currentSelectedIds = selectedItems.map((item) => item.value);
+            const hasChanges =
+                items.some(
+                    (id: string | null) =>
+                        !currentSelectedIds.includes(id?.toString() ?? ''),
+                ) || currentSelectedIds.some((id) => !items.includes(id));
 
-        // Check if the current selection is different from the defaultSelectedItems
-        const currentSelectedIds = selectedItems.map((item) => item.value);
-        const hasChanges =
-            items.some((id) => !currentSelectedIds.includes(id?.toString())) ||
-            currentSelectedIds.some((id) => !items.includes(id));
-
-        if (hasChanges) {
-            searchData('', items as string[]);
+            if (hasChanges) {
+                searchData('', items as string[]);
+            }
         }
     }, [defaultSelectedItems, autoLoadOptions, searchData, selectedItems]);
 
