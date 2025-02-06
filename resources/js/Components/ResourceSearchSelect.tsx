@@ -42,7 +42,7 @@ export function ResourceSearchSelect({
     onValueChange,
     onValueObjectChange,
     createForm,
-    defaultSelectedItems = [],
+    defaultSelectedItems = null,
     allowMultiple = true,
     allowUnselect = true,
     autoLoadOptions = true,
@@ -52,7 +52,7 @@ export function ResourceSearchSelect({
     onValueChange?: (value: string | string[]) => void;
     onValueObjectChange?: (selected: SelectOption[] | SelectOption) => void;
     createForm?: typeof FacilityForm;
-    defaultSelectedItems?: string[] | string | number[] | number;
+    defaultSelectedItems?: string[] | string | number[] | number | null;
     allowMultiple?: boolean;
     allowUnselect?: boolean;
     autoLoadOptions?: boolean;
@@ -146,6 +146,8 @@ export function ResourceSearchSelect({
             if (hasChanges) {
                 searchData('', items as string[]);
             }
+        } else if (autoLoadOptions) {
+            searchData('');
         }
     }, [defaultSelectedItems, autoLoadOptions, searchData, selectedItems]);
 
