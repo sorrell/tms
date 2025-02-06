@@ -18,7 +18,7 @@ export default function FacilityForm({
     formRef?: React.RefObject<HTMLFormElement>;
 } & React.ComponentPropsWithoutRef<'form'>) {
     const [facilityName, setFacilityName] = useState('');
-    const [locationId, setLocationId] = useState(null);
+    const [locationId, setLocationId] = useState<number | null>(null);
 
     const { toast } = useToast();
 
@@ -68,9 +68,9 @@ export default function FacilityForm({
                 <ResourceSearchSelect
                     className="w-full"
                     searchRoute={route('locations.search')}
-                    onValueChange={setLocationId}
+                    onValueChange={(value) => setLocationId(Number(value))}
                     allowMultiple={false}
-                    defaultSelectedItems={locationId}
+                    defaultSelectedItems={locationId?.toString()}
                     createForm={LocationForm}
                 />
             </div>
