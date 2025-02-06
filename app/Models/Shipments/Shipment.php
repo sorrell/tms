@@ -2,11 +2,13 @@
 
 namespace App\Models\Shipments;
 
+use App\Http\Resources\ShipmentResource;
 use App\Models\Carrier;
 use App\Models\Shipper;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
 use App\Traits\Notable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -28,17 +30,27 @@ class Shipment extends Model
         'trailer_temperature',
         'trailer_temperature_maximum',
         'shipment_number',
-    ];  
+    ];
 
     protected $casts = [
         'trailer_temperature_range' => 'boolean',
     ];
 
-    protected $appends = [ 'selectable_label' ];
+    protected $appends = ['selectable_label'];
 
-    public function getSelectableLabelAttribute() : string
+    public function getSelectableLabelAttribute(): string
     {
         return sprintf("Shipment %s", $this->id);
+    }
+
+    /**
+     * Defines the searchable content for scout search
+     */
+    public function toSearchableArray()
+    {
+        return new ShipmentResource(
+            $this->load('carrier', 'shippers', 'stops', 'trailer_type', 'trailer_size')
+        );
     }
 
     /**
@@ -79,5 +91,29 @@ class Shipment extends Model
     public function stops(): HasMany
     {
         return $this->hasMany(ShipmentStop::class);
+    }
+
+    public function getNextStopAttribute(): ?ShipmentStop
+    {
+        return $this->stops()->whereNull('arrived_at')->first();
+    }
+
+    public function getCurrentStopAttribute(): ?ShipmentStop
+    {
+        return $this->stops()->whereNotNull('arrived_at')->whereNull('left_at')->first();
+    }
+
+    public function getPreviousStopAttribute(): ?ShipmentStop
+    {
+        return $this->stops()->whereNotNull('arrived_at')->latest()->first();
+    }
+
+    public function lane(): string
+    {
+        return sprintf(
+            "%s - %s",
+            $this->stops()->first()?->facility->location->state_shorthand,
+            $this->stops()->latest()->first()?->facility->location->state_shorthand
+        );
     }
 }

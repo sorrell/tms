@@ -14,6 +14,7 @@ import {
     SidebarTrigger,
 } from '@/Components/ui/sidebar';
 import { Toaster } from '@/Components/ui/toaster';
+import { Link } from '@inertiajs/react';
 import { Fragment, PropsWithChildren } from 'react';
 
 interface BreadcrumbItem {
@@ -48,8 +49,13 @@ export default function Authenticated({
                                     <Fragment key={index}>
                                         <BreadcrumbItem className="hidden md:block">
                                             {item.url ? (
-                                                <BreadcrumbLink href={item.url}>
-                                                    {item.title}
+                                                <BreadcrumbLink asChild>
+                                                    <Link
+                                                        prefetch={true}
+                                                        href={item.url}
+                                                    >
+                                                        {item.title}
+                                                    </Link>
                                                 </BreadcrumbLink>
                                             ) : (
                                                 <BreadcrumbPage>

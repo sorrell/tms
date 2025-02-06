@@ -67,6 +67,10 @@ export interface Shipment {
     trailer_temperature_range: boolean;
     trailer_temperature: number;
     trailer_temperature_maximum?: number;
+    lane?: string;
+    next_stop?: ShipmentStop;
+    trailer_type?: TrailerType;
+    trailer_size?: TrailerSize;
 }
 
 export interface Note {

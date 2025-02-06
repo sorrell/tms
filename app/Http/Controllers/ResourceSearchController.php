@@ -3,21 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ResourceSearchRequest;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class ResourceSearchController extends Controller
 {
     protected $model;
     protected $modelResource;
 
+    public function searchQuery(Builder $query)
+    {
+        return $query;
+    }
+
+
     public function search(ResourceSearchRequest $request)
     {
+        $query = $this->model::search($request->input('query'))
+                    ->query(
+                        fn (Builder $eloquentQuery) => $this->searchQuery($eloquentQuery)
+                    );
+
+        // If ids are provided, we are searching for specific records
         if ($request->has('ids')) {
-            $query = $this->model::whereIn('id', $request->input('ids'))->limit(10);
-            $results = $query->get();
-        } else {
-            $query = $this->model::search($request->input('query'));
-            $results = $query->get()->take(10);
-        }
+            $query = $query->query(
+                fn (Builder $eloquentQuery) => $eloquentQuery->whereIn('id', $request->input('ids'))
+            );
+        } 
+
+        $results = $query->get()->take(10);
 
         // If relationships are requested to be loaded
         if ($request->has('with') && is_array($request->input('with'))) {
