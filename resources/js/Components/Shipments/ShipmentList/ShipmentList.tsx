@@ -1,12 +1,12 @@
+import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Shipment } from '@/types';
 import axios from 'axios';
+import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
-import { Button } from '@/Components/ui/button';
-import { Search } from 'lucide-react';
 
 export default function ShipmentList() {
     const [data, setData] = useState<Shipment[]>([]);
@@ -19,7 +19,13 @@ export default function ShipmentList() {
             .get(route('shipments.search'), {
                 params: {
                     query: searchTerm,
-                    with: ['carrier', 'shippers', 'stops', 'trailer_type', 'trailer_size'],
+                    with: [
+                        'carrier',
+                        'shippers',
+                        'stops',
+                        'trailer_type',
+                        'trailer_size',
+                    ],
                 },
             })
             .then((response) => response.data);
@@ -68,7 +74,7 @@ export default function ShipmentList() {
                     }}
                 />
                 <Button onClick={getShipments}>
-                    <Search className="w-4 h-4" />
+                    <Search className="h-4 w-4" />
                 </Button>
             </div>
             {isLoading ? (
