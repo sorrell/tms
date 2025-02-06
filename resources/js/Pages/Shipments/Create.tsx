@@ -515,303 +515,321 @@ export default function Create({
                         <CardContent className="space-y-8">
                             {form
                                 .watch('stops')
-                                .map((stop: any, index: number) => (
-                                    <div
-                                        className="flex items-center justify-between space-x-2"
-                                        key={'stops-div-' + index}
-                                    >
-                                        <div className="flex h-full flex-shrink-0 flex-col justify-between gap-2">
-                                            <Button
-                                                variant="secondary"
-                                                size="icon"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    const stops = [
-                                                        ...form.getValues(
-                                                            'stops',
-                                                        ),
-                                                    ];
-                                                    const temp = stops[index];
-                                                    stops[index] =
-                                                        stops[index - 1];
-                                                    stops[index - 1] = temp;
-
-                                                    stops.forEach((stop, i) => {
-                                                        stop.stop_number =
-                                                            i + 1;
-                                                    });
-                                                    form.setValue(
-                                                        'stops',
-                                                        stops,
-                                                        {
-                                                            shouldValidate:
-                                                                false,
-                                                            shouldTouch: false,
-                                                        },
-                                                    );
-                                                }}
-                                                disabled={index === 0}
-                                            >
-                                                <ArrowUp className="h-4 w-4" />
-                                            </Button>
-                                            <span className="text-center text-sm font-bold">
-                                                {stop.stop_number}
-                                            </span>
-                                            <Button
-                                                variant="secondary"
-                                                size="icon"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    const stops = [
-                                                        ...form.getValues(
-                                                            'stops',
-                                                        ),
-                                                    ];
-                                                    const temp = stops[index];
-                                                    stops[index] =
-                                                        stops[index + 1];
-                                                    stops[index + 1] = temp;
-
-                                                    stops.forEach((stop, i) => {
-                                                        stop.stop_number =
-                                                            i + 1;
-                                                    });
-
-                                                    form.setValue(
-                                                        'stops',
-                                                        stops,
-                                                        {
-                                                            shouldValidate:
-                                                                false,
-                                                            shouldTouch: false,
-                                                        },
-                                                    );
-                                                }}
-                                                disabled={
-                                                    index ===
-                                                    form.getValues('stops')
-                                                        .length -
-                                                        1
-                                                }
-                                            >
-                                                <ArrowDown className="h-4 w-4" />
-                                            </Button>
-                                        </div>
+                                .map(
+                                    (
+                                        stop: z.infer<
+                                            typeof formSchema.shape.stops
+                                        >[number],
+                                        index: number,
+                                    ) => (
                                         <div
-                                            key={'stop' + index}
-                                            className="flex flex-grow flex-col space-y-4 border-l-2 border-primary py-2 pl-2 md:border-l-4 md:pl-4"
+                                            className="flex items-center justify-between space-x-2"
+                                            key={'stops-div-' + index}
                                         >
-                                            <FormField
-                                                key={index}
-                                                control={form.control}
-                                                name={`stops.${index}.stop_type`}
-                                                render={({ field }) => (
-                                                    <FormItem className="flex flex-row">
-                                                        <FormControl>
-                                                            <div className="flex flex-grow">
-                                                                <Select
+                                            <div className="flex h-full flex-shrink-0 flex-col justify-between gap-2">
+                                                <Button
+                                                    variant="secondary"
+                                                    size="icon"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        const stops = [
+                                                            ...form.getValues(
+                                                                'stops',
+                                                            ),
+                                                        ];
+                                                        const temp =
+                                                            stops[index];
+                                                        stops[index] =
+                                                            stops[index - 1];
+                                                        stops[index - 1] = temp;
+
+                                                        stops.forEach(
+                                                            (stop, i) => {
+                                                                stop.stop_number =
+                                                                    i + 1;
+                                                            },
+                                                        );
+                                                        form.setValue(
+                                                            'stops',
+                                                            stops,
+                                                            {
+                                                                shouldValidate:
+                                                                    false,
+                                                                shouldTouch:
+                                                                    false,
+                                                            },
+                                                        );
+                                                    }}
+                                                    disabled={index === 0}
+                                                >
+                                                    <ArrowUp className="h-4 w-4" />
+                                                </Button>
+                                                <span className="text-center text-sm font-bold">
+                                                    {stop.stop_number}
+                                                </span>
+                                                <Button
+                                                    variant="secondary"
+                                                    size="icon"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        const stops = [
+                                                            ...form.getValues(
+                                                                'stops',
+                                                            ),
+                                                        ];
+                                                        const temp =
+                                                            stops[index];
+                                                        stops[index] =
+                                                            stops[index + 1];
+                                                        stops[index + 1] = temp;
+
+                                                        stops.forEach(
+                                                            (stop, i) => {
+                                                                stop.stop_number =
+                                                                    i + 1;
+                                                            },
+                                                        );
+
+                                                        form.setValue(
+                                                            'stops',
+                                                            stops,
+                                                            {
+                                                                shouldValidate:
+                                                                    false,
+                                                                shouldTouch:
+                                                                    false,
+                                                            },
+                                                        );
+                                                    }}
+                                                    disabled={
+                                                        index ===
+                                                        form.getValues('stops')
+                                                            .length -
+                                                            1
+                                                    }
+                                                >
+                                                    <ArrowDown className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                            <div
+                                                key={'stop' + index}
+                                                className="flex flex-grow flex-col space-y-4 border-l-2 border-primary py-2 pl-2 md:border-l-4 md:pl-4"
+                                            >
+                                                <FormField
+                                                    key={index}
+                                                    control={form.control}
+                                                    name={`stops.${index}.stop_type`}
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex flex-row">
+                                                            <FormControl>
+                                                                <div className="flex flex-grow">
+                                                                    <Select
+                                                                        onValueChange={
+                                                                            field.onChange
+                                                                        }
+                                                                        value={
+                                                                            field.value
+                                                                        }
+                                                                    >
+                                                                        <SelectTrigger className="w-fit min-w-[100px]">
+                                                                            <SelectValue placeholder="Select a stop type" />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            <SelectItem
+                                                                                value={
+                                                                                    StopType.Pickup
+                                                                                }
+                                                                            >
+                                                                                Pickup
+                                                                            </SelectItem>
+                                                                            <SelectItem
+                                                                                value={
+                                                                                    StopType.Delivery
+                                                                                }
+                                                                            >
+                                                                                Delivery
+                                                                            </SelectItem>
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                </div>
+                                                            </FormControl>
+                                                            <FormLabel className="">
+                                                                <Button
+                                                                    disabled={
+                                                                        form.getValues(
+                                                                            'stops',
+                                                                        )
+                                                                            .length <=
+                                                                        2
+                                                                    }
+                                                                    type="button"
+                                                                    variant="ghost"
+                                                                    onClick={() => {
+                                                                        const stops =
+                                                                            [
+                                                                                ...form.getValues(
+                                                                                    'stops',
+                                                                                ),
+                                                                            ];
+                                                                        stops.splice(
+                                                                            index,
+                                                                            1,
+                                                                        );
+
+                                                                        stops.forEach(
+                                                                            (
+                                                                                stop,
+                                                                                i,
+                                                                            ) => {
+                                                                                stop.stop_number =
+                                                                                    i +
+                                                                                    1;
+                                                                            },
+                                                                        );
+
+                                                                        form.setValue(
+                                                                            'stops',
+                                                                            stops,
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Remove
+                                                                    <Trash className="h-4 w-4" />
+                                                                </Button>
+                                                            </FormLabel>
+                                                            <FormMessage>
+                                                                {
+                                                                    errors[
+                                                                        `stops.${index}.stop_type`
+                                                                    ]
+                                                                }
+                                                            </FormMessage>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`stops.${index}.facility_id`}
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex flex-col">
+                                                            <FormLabel>
+                                                                Facility
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <ResourceSearchSelect
+                                                                    searchRoute={route(
+                                                                        'facilities.search',
+                                                                    )}
+                                                                    createForm={
+                                                                        FacilityForm
+                                                                    }
+                                                                    allowMultiple={
+                                                                        false
+                                                                    }
                                                                     onValueChange={
                                                                         field.onChange
                                                                     }
-                                                                    value={
+                                                                    defaultSelectedItems={
                                                                         field.value
                                                                     }
-                                                                >
-                                                                    <SelectTrigger className="w-fit min-w-[100px]">
-                                                                        <SelectValue placeholder="Select a stop type" />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent>
-                                                                        <SelectItem
-                                                                            value={
-                                                                                StopType.Pickup
-                                                                            }
-                                                                        >
-                                                                            Pickup
-                                                                        </SelectItem>
-                                                                        <SelectItem
-                                                                            value={
-                                                                                StopType.Delivery
-                                                                            }
-                                                                        >
-                                                                            Delivery
-                                                                        </SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
-                                                            </div>
-                                                        </FormControl>
-                                                        <FormLabel className="">
-                                                            <Button
-                                                                disabled={
-                                                                    form.getValues(
-                                                                        'stops',
-                                                                    ).length <=
-                                                                    2
+                                                                    className="w-full"
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage>
+                                                                {
+                                                                    errors[
+                                                                        `stops.${index}.facility_id`
+                                                                    ]
                                                                 }
-                                                                type="button"
-                                                                variant="ghost"
-                                                                onClick={() => {
-                                                                    const stops =
-                                                                        [
-                                                                            ...form.getValues(
-                                                                                'stops',
-                                                                            ),
-                                                                        ];
-                                                                    stops.splice(
-                                                                        index,
-                                                                        1,
-                                                                    );
+                                                            </FormMessage>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`stops.${index}.appointment_at`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>
+                                                                Appointment Date
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Input
+                                                                    type="datetime-local"
+                                                                    {...field}
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage>
+                                                                {
+                                                                    errors[
+                                                                        `stops.${index}.appointment_at`
+                                                                    ]
+                                                                }
+                                                            </FormMessage>
+                                                        </FormItem>
+                                                    )}
+                                                />
 
-                                                                    stops.forEach(
-                                                                        (
-                                                                            stop,
-                                                                            i,
-                                                                        ) => {
-                                                                            stop.stop_number =
-                                                                                i +
-                                                                                1;
-                                                                        },
-                                                                    );
-
-                                                                    form.setValue(
-                                                                        'stops',
-                                                                        stops,
-                                                                    );
-                                                                }}
-                                                            >
-                                                                Remove
-                                                                <Trash className="h-4 w-4" />
-                                                            </Button>
-                                                        </FormLabel>
-                                                        <FormMessage>
-                                                            {
-                                                                errors[
-                                                                    `stops.${index}.stop_type`
-                                                                ]
-                                                            }
-                                                        </FormMessage>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name={`stops.${index}.facility_id`}
-                                                render={({ field }) => (
-                                                    <FormItem className="flex flex-col">
-                                                        <FormLabel>
-                                                            Facility
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <ResourceSearchSelect
-                                                                searchRoute={route(
-                                                                    'facilities.search',
-                                                                )}
-                                                                createForm={
-                                                                    FacilityForm
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`stops.${index}.special_instructions`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>
+                                                                Special
+                                                                Instructions
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Textarea
+                                                                    {...field}
+                                                                    value={
+                                                                        field.value ??
+                                                                        ''
+                                                                    }
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage>
+                                                                {
+                                                                    errors[
+                                                                        `stops.${index}.special_instructions`
+                                                                    ]
                                                                 }
-                                                                allowMultiple={
-                                                                    false
+                                                            </FormMessage>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`stops.${index}.reference_numbers`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>
+                                                                Reference
+                                                                Numbers
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Textarea
+                                                                    {...field}
+                                                                    value={
+                                                                        field.value ??
+                                                                        ''
+                                                                    }
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage>
+                                                                {
+                                                                    errors[
+                                                                        `stops.${index}.reference_numbers`
+                                                                    ]
                                                                 }
-                                                                onValueChange={
-                                                                    field.onChange
-                                                                }
-                                                                defaultSelectedItems={
-                                                                    field.value
-                                                                }
-                                                                className="w-full"
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage>
-                                                            {
-                                                                errors[
-                                                                    `stops.${index}.facility_id`
-                                                                ]
-                                                            }
-                                                        </FormMessage>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name={`stops.${index}.appointment_at`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>
-                                                            Appointment Date
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Input
-                                                                type="datetime-local"
-                                                                {...field}
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage>
-                                                            {
-                                                                errors[
-                                                                    `stops.${index}.appointment_at`
-                                                                ]
-                                                            }
-                                                        </FormMessage>
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name={`stops.${index}.special_instructions`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>
-                                                            Special Instructions
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Textarea
-                                                                {...field}
-                                                                value={
-                                                                    field.value ??
-                                                                    ''
-                                                                }
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage>
-                                                            {
-                                                                errors[
-                                                                    `stops.${index}.special_instructions`
-                                                                ]
-                                                            }
-                                                        </FormMessage>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name={`stops.${index}.reference_numbers`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>
-                                                            Reference Numbers
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Textarea
-                                                                {...field}
-                                                                value={
-                                                                    field.value ??
-                                                                    ''
-                                                                }
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage>
-                                                            {
-                                                                errors[
-                                                                    `stops.${index}.reference_numbers`
-                                                                ]
-                                                            }
-                                                        </FormMessage>
-                                                    </FormItem>
-                                                )}
-                                            />
+                                                            </FormMessage>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ),
+                                )}
                         </CardContent>
                     </Card>
 

@@ -46,7 +46,7 @@ export default function ShipmentList() {
 
     useEffect(() => {
         getShipments();
-    }, []);
+    });
 
     useEffect(() => {
         if (!isLoading) {

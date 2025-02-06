@@ -13,7 +13,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
 
     const { toast } = useToast();
 
-    const { patch, setData, data, errors } = useForm({
+    const { patch, setData, data } = useForm({
         carrier_id: shipment.carrier.id,
     });
 
@@ -23,7 +23,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                 shipment: shipment.id,
             }),
             {
-                onSuccess: (e) => {
+                onSuccess: () => {
                     setEditMode(false);
                     toast({
                         description: (

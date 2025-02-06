@@ -18,29 +18,41 @@ import {
     PopoverTrigger,
 } from '@/Components/ui/popover';
 import { cn } from '@/lib/utils';
+import { CreateFormResult } from '@/types/create-form';
 import axios from 'axios';
 import { CommandLoading } from 'cmdk';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import FacilityForm from './CreateForms/FacilityForm';
 import { Badge } from './ui/badge';
 import { Dialog, DialogContent, DialogFooter } from './ui/dialog';
+
+interface SelectOption {
+    value: string;
+    label: string;
+}
+
+interface ApiSearchResponse {
+    id: number;
+    selectable_label?: string;
+    name?: string;
+}
 
 export function ResourceSearchSelect({
     searchRoute,
     onValueChange,
     onValueObjectChange,
     createForm,
-    defaultSelectedItems = null,
+    defaultSelectedItems = [],
     allowMultiple = true,
     allowUnselect = true,
     autoLoadOptions = true,
     className,
 }: {
     searchRoute: string;
-    onValueChange?: (value: any) => void;
-    onValueObjectChange?: (selected: any) => void;
+    onValueChange?: (value: string | string[]) => void;
+    onValueObjectChange?: (selected: SelectOption[] | SelectOption) => void;
     createForm?: typeof FacilityForm;
-    defaultSelectedItems?: any[] | any;
+    defaultSelectedItems?: string[] | string | number[] | number;
     allowMultiple?: boolean;
     allowUnselect?: boolean;
     autoLoadOptions?: boolean;
@@ -50,11 +62,70 @@ export function ResourceSearchSelect({
     const newFormRef = useRef<HTMLFormElement>(null);
 
     const [open, setOpen] = React.useState(false);
-    const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
+    const [selectedItems, setSelectedItems] = React.useState<SelectOption[]>(
+        [],
+    );
     const [search, setSearch] = React.useState('');
-    const [dataOptions, setDataOptions] = React.useState<any[]>([]);
+    const [dataOptions, setDataOptions] = React.useState<SelectOption[]>([]);
     const [loading, setLoading] = React.useState(false);
     const searchTimeout = React.useRef<NodeJS.Timeout>();
+
+    const valuesChangedHandler = useCallback(
+        (newSelected: SelectOption[]) => {
+            onValueChange?.(
+                allowMultiple
+                    ? newSelected.map((v: SelectOption) => v.value)
+                    : newSelected[0].value,
+            );
+
+            onValueObjectChange?.(allowMultiple ? newSelected : newSelected[0]);
+
+            // If not multiple, close the popup since the user
+            // selected an item
+            if (!allowMultiple) {
+                setOpen(false);
+            }
+        },
+        [allowMultiple, onValueChange, onValueObjectChange],
+    );
+
+    const searchData = useCallback(
+        (searchInput: string, searchIds?: string[]) => {
+            setLoading(true);
+            axios
+                .get(searchRoute, {
+                    params: {
+                        query: searchInput,
+                        ids: searchIds ?? null,
+                    },
+                })
+                .then((response) => {
+                    const options = response.data.map(
+                        (item: ApiSearchResponse) => ({
+                            value: item.id.toString(),
+                            label: item.selectable_label ?? item.name,
+                        }),
+                    );
+                    setSearch(searchInput);
+                    setDataOptions(options);
+                    if (searchIds) {
+                        const newSelected = options.filter((o: SelectOption) =>
+                            searchIds.includes(o.value),
+                        );
+
+                        setSelectedItems(newSelected);
+
+                        valuesChangedHandler(newSelected);
+                    }
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data', error);
+                    setLoading(false);
+                });
+        },
+        [searchRoute, valuesChangedHandler],
+    );
 
     React.useEffect(() => {
         let items = Array.isArray(defaultSelectedItems)
@@ -70,58 +141,9 @@ export function ResourceSearchSelect({
             currentSelectedIds.some((id) => !items.includes(id));
 
         if (hasChanges) {
-            searchData('', items);
+            searchData('', items as string[]);
         }
-    }, [defaultSelectedItems, autoLoadOptions]);
-
-    const valuesChangedHandler = (newSelected: any[]) => {
-        onValueChange?.(
-            allowMultiple
-                ? newSelected.map((v: any) => v.value)
-                : newSelected[0].value,
-        );
-
-        onValueObjectChange?.(allowMultiple ? newSelected : newSelected[0]);
-
-        // If not multiple, close the popup since the user
-        // selected an item
-        if (!allowMultiple) {
-            setOpen(false);
-        }
-    };
-
-    const searchData = (searchInput: string, searchIds?: string[]) => {
-        setLoading(true);
-        axios
-            .get(searchRoute, {
-                params: {
-                    query: searchInput,
-                    ids: searchIds ?? null,
-                },
-            })
-            .then((response) => {
-                const options = response.data.map((item: any) => ({
-                    value: item.id.toString(),
-                    label: item.selectable_label ?? item.name,
-                }));
-                setSearch(searchInput);
-                setDataOptions(options);
-                if (searchIds) {
-                    const newSelected = options.filter((o: any) =>
-                        searchIds.includes(o.value),
-                    );
-
-                    setSelectedItems(newSelected);
-
-                    valuesChangedHandler(newSelected);
-                }
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching data', error);
-                setLoading(false);
-            });
-    };
+    }, [defaultSelectedItems, autoLoadOptions, searchData, selectedItems]);
 
     const debouncedSearch = (searchInput: string) => {
         setSearch(searchInput);
@@ -225,83 +247,107 @@ export function ResourceSearchSelect({
                                 )}
                                 <CommandEmpty>No results found.</CommandEmpty>
                                 <CommandGroup>
-                                    {getAllOptions().map((option: any) => (
-                                        <CommandItem
-                                            key={option.value}
-                                            value={option.value}
-                                            onSelect={(currentValue) => {
-                                                let newSelected = [];
+                                    {getAllOptions().map(
+                                        (option: SelectOption) => (
+                                            <CommandItem
+                                                key={option.value}
+                                                value={option.value}
+                                                onSelect={(currentValue) => {
+                                                    let newSelected: SelectOption[] =
+                                                        [];
 
-                                                if (allowMultiple) {
-                                                    // If selected item is already selected, remove it
-                                                    if (
-                                                        selectedItems
-                                                            .map((v) => v.value)
-                                                            .includes(
-                                                                currentValue,
-                                                            )
-                                                    ) {
-                                                        newSelected =
-                                                            selectedItems.filter(
-                                                                (v) =>
-                                                                    v.value !==
+                                                    if (allowMultiple) {
+                                                        // If selected item is already selected, remove it
+                                                        if (
+                                                            selectedItems
+                                                                .map(
+                                                                    (v) =>
+                                                                        v.value,
+                                                                )
+                                                                .includes(
                                                                     currentValue,
-                                                            );
+                                                                )
+                                                        ) {
+                                                            newSelected =
+                                                                selectedItems.filter(
+                                                                    (v) =>
+                                                                        v.value !==
+                                                                        currentValue,
+                                                                );
+                                                        } else {
+                                                            // If selected item is not already selected, add it to the full list
+                                                            const newSelectedItem =
+                                                                getAllOptions().find(
+                                                                    (f) =>
+                                                                        f.value ===
+                                                                        currentValue,
+                                                                );
+                                                            newSelected = [
+                                                                ...selectedItems,
+                                                            ];
+
+                                                            if (
+                                                                newSelectedItem
+                                                            ) {
+                                                                newSelected.push(
+                                                                    newSelectedItem,
+                                                                );
+                                                            }
+                                                        }
                                                     } else {
-                                                        // If selected item is not already selected, add it to the full list
-                                                        newSelected = [
-                                                            ...selectedItems,
-                                                            getAllOptions().find(
-                                                                (f) =>
-                                                                    f.value ===
-                                                                    currentValue,
-                                                            ),
-                                                        ];
+                                                        // If selected item is already selected, remove it
+                                                        if (
+                                                            selectedItems
+                                                                .map(
+                                                                    (v) =>
+                                                                        v.value,
+                                                                )
+                                                                .includes(
+                                                                    option.value,
+                                                                )
+                                                        ) {
+                                                            newSelected = [];
+                                                        } else {
+                                                            newSelected = [
+                                                                option,
+                                                            ];
+                                                        }
                                                     }
-                                                } else {
-                                                    // If selected item is already selected, remove it
+
                                                     if (
+                                                        !allowUnselect &&
+                                                        newSelected.length === 0
+                                                    ) {
+                                                        return;
+                                                    }
+
+                                                    // But save the whole selected for this component to reference
+                                                    setSelectedItems(
+                                                        newSelected,
+                                                    );
+
+                                                    // Just the ids for the on value change for parent users
+                                                    valuesChangedHandler(
+                                                        newSelected,
+                                                    );
+                                                }}
+                                            >
+                                                {option.label}
+                                                <Check
+                                                    className={cn(
+                                                        'ml-auto',
                                                         selectedItems
                                                             .map((v) => v.value)
                                                             .includes(
                                                                 option.value,
                                                             )
-                                                    ) {
-                                                        newSelected = [];
-                                                    } else {
-                                                        newSelected = [option];
-                                                    }
-                                                }
-
-                                                if (
-                                                    !allowUnselect &&
-                                                    newSelected.length === 0
-                                                ) {
-                                                    return;
-                                                }
-
-                                                // But save the whole selected for this component to reference
-                                                setSelectedItems(newSelected);
-
-                                                // Just the ids for the on value change for parent users
-                                                valuesChangedHandler(
-                                                    newSelected,
-                                                );
-                                            }}
-                                        >
-                                            {option.label}
-                                            <Check
-                                                className={cn(
-                                                    'ml-auto',
-                                                    selectedItems
-                                                        .map((v) => v.value)
-                                                        .includes(option.value)
-                                                        ? 'opacity-100'
-                                                        : 'opacity-0',
-                                                )}
-                                            />
-                                        </CommandItem>
-                                    ))}
+                                                            ? 'opacity-100'
+                                                            : 'opacity-0',
+                                                    )}
+                                                />
+                                            </CommandItem>
+                                        ),
+                                    )}
                                 </CommandGroup>
                             </CommandList>
                         </Command>
@@ -323,7 +369,7 @@ export function ResourceSearchSelect({
                         {createForm &&
                             React.createElement(createForm, {
                                 formRef: newFormRef,
-                                onCreate: (data: any) => {
+                                onCreate: (data: CreateFormResult) => {
                                     const newSelectedId = data?.id?.toString();
                                     if (newSelectedId) {
                                         if (allowMultiple) {

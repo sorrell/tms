@@ -174,7 +174,7 @@ export default function ShipmentStopsList({
                                     <Button
                                         variant="secondary"
                                         size="icon"
-                                        onClick={(e) => {
+                                        onClick={() => {
                                             const updatedStops = [
                                                 ...data.stops,
                                             ];
@@ -197,7 +197,7 @@ export default function ShipmentStopsList({
                                     <Button
                                         variant="secondary"
                                         size="icon"
-                                        onClick={(e) => {
+                                        onClick={() => {
                                             const updatedStops = [
                                                 ...data.stops,
                                             ];

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { ShipmentStop, TrailerSize, TrailerType } from '@/types';
+import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Head } from '@inertiajs/react';
 import { FileText, MapPin, MessageSquare } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
@@ -19,7 +19,7 @@ export default function Show({
     trailerTypes,
     trailerSizes,
 }: {
-    shipment: any;
+    shipment: Shipment;
     stops: ShipmentStop[];
     trailerTypes: TrailerType[];
     trailerSizes: TrailerSize[];

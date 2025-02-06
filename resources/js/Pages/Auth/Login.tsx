@@ -2,27 +2,7 @@ import { LoginForm } from '@/Components/LoginForm';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head } from '@inertiajs/react';
 
-export default function Login({
-    status,
-    canResetPassword,
-}: {
-    status?: string;
-    canResetPassword: boolean;
-}) {
-    // const { data, setData, post, processing, errors, reset } = useForm({
-    //     email: '',
-    //     password: '',
-    //     remember: false,
-    // });
-
-    // const submit: FormEventHandler = (e) => {
-    //     e.preventDefault();
-
-    //     post(route('login'), {
-    //         onFinish: () => reset('password'),
-    //     });
-    // };
-
+export default function Login({ status }: { status?: string }) {
     return (
         <GuestLayout>
             <Head title="Log in" />
