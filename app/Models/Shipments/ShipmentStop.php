@@ -4,11 +4,11 @@ namespace App\Models\Shipments;
 
 use App\Enums\StopType;
 use App\Models\Facility;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ShipmentStop extends Model
 {
