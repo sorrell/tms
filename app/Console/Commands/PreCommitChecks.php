@@ -26,7 +26,7 @@ class PreCommitChecks extends Command
     public function handle()
     {
         $checks = [
-            'ide-helper' => true,  // Assume ide-helper succeeds if it runs
+            'ide-helper' => false, 
             'phpstan' => false,
             'npm-lint' => false,
             'typescript' => false   // Renamed from npm-build
@@ -36,7 +36,23 @@ class PreCommitChecks extends Command
 
         $this->newLine(2);
         $this->info("========== Running ide-helper:actions ==========");
+        
+        // Get hash of existing file
+        $helperPath = base_path('_ide_helper_actions.php');
+        $originalHash = file_exists($helperPath) ? md5_file($helperPath) : null;
+        
+        // Run the command
         $this->call('ide-helper:actions');
+        
+        // Compare hashes
+        $newHash = file_exists($helperPath) ? md5_file($helperPath) : null;
+        
+        if ($originalHash !== $newHash) {
+            $this->error('The ide-helper:actions file has changed. Please commit the updated _ide_helper_actions.php file.');
+            $checks['ide-helper'] = false;
+        } else {
+            $checks['ide-helper'] = true;
+        }
 
         $this->newLine(2);
         $this->info("========== Running phpstan ==========");
@@ -119,5 +135,8 @@ class PreCommitChecks extends Command
         
         $this->newLine();
         $this->comment("Please check messages above for any errors or warnings");
+
+        // Return 1 (failure) if any check failed, 0 (success) if all passed
+        return in_array(false, $checks) ? 1 : 0;
     }
 }
