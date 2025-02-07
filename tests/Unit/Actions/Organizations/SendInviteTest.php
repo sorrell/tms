@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Illuminate\Support\Carbon;
-use Mockery;
 
 uses(RefreshDatabase::class);
 

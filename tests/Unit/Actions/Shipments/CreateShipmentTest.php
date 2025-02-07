@@ -24,10 +24,8 @@ test('it creates basic shipment with required fields', function () {
             'stop_type' => 'pickup',
             'stop_number' => 1,
             'special_instructions' => 'Handle with care',
-            'reference_numbers' => "['REF123', 'REF456']",
-            'appointment' => [
-                'datetime' => now()->addDays(2)->toDateTimeString(),
-            ],
+            'reference_numbers' => 'REF123,REF456',
+            'appointment_at' => now()->addDays(2)->toDateTimeString(),
         ],
     ];
 
@@ -52,10 +50,11 @@ test('it creates basic shipment with required fields', function () {
         'stop_type' => 'pickup',
         'stop_number' => 1,
         'special_instructions' => 'Handle with care',
+        'reference_numbers' => 'REF123,REF456',
     ])->exists())->toBeTrue();
 
     expect($shipment->stops)->toHaveCount(1)
-        ->first()->appointment->not->toBeNull();
+        ->first()->appointment_at->not->toBeNull();
 });
 
 test('it creates shipment with all optional fields', function () {
@@ -66,9 +65,7 @@ test('it creates shipment with all optional fields', function () {
             'stop_number' => 1,
             'special_instructions' => 'Handle with care',
             'reference_numbers' => 'REF123',
-            'appointment' => [
-                'datetime' => now()->addDays(2)->toDateTimeString(),
-            ],
+            'appointment_at' => now()->addDays(2)->toDateTimeString(),
         ],
     ];
 
@@ -111,9 +108,7 @@ test('it creates shipment with multiple stops', function () {
             'stop_number' => 1,
             'special_instructions' => 'First pickup',
             'reference_numbers' => 'REF123',
-            'appointment' => [
-                'datetime' => now()->addDays(1)->toDateTimeString(),
-            ],
+            'appointment_at' => now()->addDays(1)->toDateTimeString(),
         ],
         [
             'facility_id' => $delivery->id,
@@ -121,9 +116,7 @@ test('it creates shipment with multiple stops', function () {
             'stop_number' => 2,
             'special_instructions' => 'Final delivery',
             'reference_numbers' => 'REF456',
-            'appointment' => [
-                'datetime' => now()->addDays(2)->toDateTimeString(),
-            ],
+            'appointment_at' => now()->addDays(2)->toDateTimeString(),
         ],
     ];
 

@@ -29,7 +29,8 @@ class PreCommitChecks extends Command
             'ide-helper' => false, 
             'phpstan' => false,
             'npm-lint' => false,
-            'typescript' => false   // Renamed from npm-build
+            'typescript' => false,   // Renamed from npm-build
+            'tests:php' => false,
         ];
 
         $this->info("Running pre-commit checks and prep");
@@ -64,14 +65,13 @@ class PreCommitChecks extends Command
                 $output .= $buffer;
                 if (\Symfony\Component\Process\Process::ERR === $type) {
                     $this->output->write($buffer);
-                    throw new \Exception("Failed to run phpstan via sail");
                 } else {
                     $this->output->write($buffer);
                 }
             });
             $checks['phpstan'] = str_contains($output, '[OK] No errors');
         } catch (\Exception $e) {
-            $this->comment("Trying to run phpstan directly with php");
+            $this->comment("Trying to run phpstan directly with php due to error: " . $e->getMessage());
 
             try {
                 $process = new \Symfony\Component\Process\Process(['php', './vendor/bin/phpstan', 'analyse']);
@@ -122,6 +122,38 @@ class PreCommitChecks extends Command
             $this->error("Failed to run TypeScript check: " . $e->getMessage());  // Updated error message
         }
 
+        $this->newLine(2);
+        $this->info("========== Running tests:php ==========");
+        try {
+            $process = new \Symfony\Component\Process\Process(['./vendor/bin/sail', 'pest']);
+            $process->run(function ($type, $buffer) {
+                if (\Symfony\Component\Process\Process::ERR === $type) {
+                    $this->output->write($buffer);
+                } else {
+                    $this->output->write($buffer);
+                }
+            });
+            $checks['tests:php'] = $process->isSuccessful();
+        } catch (\Exception $e) {
+            $this->comment("Trying to run pest directly with php due to error: " . $e->getMessage());
+
+            try {
+                $process = new \Symfony\Component\Process\Process(['php', './vendor/bin/pest']);
+                $output = '';
+                $process->run(function ($type, $buffer) use (&$output) {
+                    $output .= $buffer;
+                    if (\Symfony\Component\Process\Process::ERR === $type) {
+                        $this->output->write($buffer);
+                    } else {
+                        $this->output->write($buffer);
+                    }
+                });
+                $checks['tests:php'] = $process->isSuccessful();
+            } catch (\Exception $e) {
+                $this->error("Failed to run pest: " . $e->getMessage());
+            }
+        }
+        
         $this->newLine(2);
         $this->info("========== Completed pre-commit checks and prep ==========");
         
