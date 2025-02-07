@@ -3,9 +3,15 @@ import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 
-export default function Index({ shipments }: { shipments: any }) {
+export default function Index() {
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout
+            breadcrumbs={[
+                {
+                    title: 'Shipments',
+                },
+            ]}
+        >
             <Head title="Shipments" />
             <div className="flex justify-end px-8">
                 <Link
@@ -16,15 +22,6 @@ export default function Index({ shipments }: { shipments: any }) {
                 </Link>
             </div>
             <div className="mx-auto flex flex-col gap-4">
-                {/* {shipments.map((shipment: any) => (
-                    <Link
-                        href={route('shipments.show', shipment.id)}
-                        key={shipment.id}
-                        className={buttonVariants({ variant: 'outline' })}
-                    >
-                        View Shipment {shipment.id}
-                    </Link>
-                ))} */}
                 <ShipmentList />
             </div>
         </AuthenticatedLayout>

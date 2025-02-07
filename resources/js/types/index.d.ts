@@ -37,30 +37,57 @@ export interface Shipper {
 }
 
 export interface ShipmentStop {
-    id: number;
+    id: number | null;
     shipment_id: number;
-    facility: Facility;
-    stop_type: string;
+    facility?: Facility | null;
+    facility_id?: number | null;
+    stop_type: StopType;
     stop_number: number;
     special_instructions: string;
     reference_numbers: string;
+    eta: string;
+    arrived_at: string;
+    loaded_unloaded_at: string;
+    left_at: string;
+    appointment_at: string;
+    appointment_end_at: string;
+    appointment_type: string;
 }
 
 export interface Shipment {
     id: number;
+    shipment_number: string;
     shippers: Shipper[];
     carrier: Carrier;
     stops: ShipmentStop[];
     weight: number;
     trip_distance: number;
     trailer_type_id: number;
+    trailer_size_id: number;
     trailer_temperature_range: boolean;
     trailer_temperature: number;
-    trailer_temperature_maximum: number;
+    trailer_temperature_maximum?: number;
+    lane?: string;
+    next_stop?: ShipmentStop;
+    trailer_type?: TrailerType;
+    trailer_size?: TrailerSize;
 }
 
+export interface Note {
+    id: number;
+    user_id: number;
+    note: string;
+    created_at: string;
+    updated_at: string;
+    user: User | null;
+}
 
 export interface TrailerType {
+    id: number;
+    name: string;
+}
+
+export interface TrailerSize {
     id: number;
     name: string;
 }

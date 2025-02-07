@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLocationRequest;
 use App\Http\Requests\UpdateLocationRequest;
+use App\Http\Resources\LocationResource;
 use App\Models\Location;
 
-class LocationController extends Controller
+class LocationController extends ResourceSearchController
 {
+
+    protected $model = Location::class;
+    protected $modelResource = LocationResource::class;
+
     /**
      * Display a listing of the resource.
      */
@@ -20,14 +25,6 @@ class LocationController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreLocationRequest $request)
     {
         //
     }

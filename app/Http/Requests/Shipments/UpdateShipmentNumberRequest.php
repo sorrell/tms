@@ -4,14 +4,14 @@ namespace App\Http\Requests\Shipments;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateShipmentStopAppointmentRequest extends FormRequest
+class UpdateShipmentNumberRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateShipmentStopAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'shipment_number' => ['required', 'string'],
         ];
     }
 }

@@ -15,7 +15,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/UseToast';
 import { User } from '@/types';
 import { Organization } from '@/types/organization';
 import { useForm, usePage } from '@inertiajs/react';

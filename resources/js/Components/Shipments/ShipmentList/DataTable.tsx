@@ -15,14 +15,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
-import { router } from '@inertiajs/react';
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: number | string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: number | string }, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
@@ -33,14 +32,14 @@ export function DataTable<TData, TValue>({
     });
 
     return (
-        <div className="rounded-md border">
+        <div className="w-full rounded-md border">
             <Table className="w-full">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
                                 return (
-                                    <TableHead key={header.id}>
+                                    <TableHead key={header.id} className="p-4">
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
@@ -58,20 +57,12 @@ export function DataTable<TData, TValue>({
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
                             <TableRow
-                                className="cursor-pointer"
+                                className=""
                                 key={row.id}
                                 data-state={row.getIsSelected() && 'selected'}
-                                onClick={() => {
-                                    router.visit(
-                                        route(
-                                            'shipments.show',
-                                            row.original.id,
-                                        ),
-                                    );
-                                }}
                             >
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
+                                    <TableCell key={cell.id} className="p-4">
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext(),

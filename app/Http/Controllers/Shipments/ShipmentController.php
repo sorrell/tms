@@ -3,16 +3,21 @@
 namespace App\Http\Controllers\Shipments;
 
 use App\Actions\Shipments\CreateShipment;
+use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Http\Requests\Shipments\StoreShipmentRequest;
 use App\Http\Requests\Shipments\UpdateShipmentRequest;
 use App\Models\Shipments\Shipment;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResourceSearchController;
 use App\Http\Requests\ResourceSearchRequest;
+use App\Http\Resources\NoteResource;
 use App\Http\Resources\ShipmentResource;
+use App\Http\Resources\ShipmentStopResource;
+use App\Http\Resources\TrailerSizeResource;
 use App\Http\Resources\TrailerTypeResource;
 use App\Models\Carrier;
 use App\Models\Facility;
+use App\Models\Shipments\TrailerSize;
 use App\Models\Shipments\TrailerType;
 use App\Models\Shipper;
 use Inertia\Inertia;
@@ -20,16 +25,14 @@ use Inertia\Inertia;
 class ShipmentController extends ResourceSearchController
 {
     protected $model = Shipment::class;
-    protected $resource = ShipmentResource::class;
+    protected $modelResource = ShipmentResource::class;
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Shipments/Index', [
-            'shipments' => Shipment::all(),
-        ]);  
+        return Inertia::render('Shipments/Index');  
     }
 
     /**
@@ -39,28 +42,10 @@ class ShipmentController extends ResourceSearchController
     {
         return Inertia::render('Shipments/Create', [
             'trailerTypes' => TrailerTypeResource::collection(TrailerType::all()),
+            'trailerSizes' => TrailerSizeResource::collection(TrailerSize::all()),
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreShipmentRequest $request)
-    {
-        $shipment = CreateShipment::run(
-            shipperIds: $request->shipper_ids,
-            carrierId: $request->carrier_id,
-            stops: $request->stops,
-            weight: $request->weight,
-            tripDistance: $request->trip_distance,
-            trailerTypeId: $request->trailer_type_id,
-            trailerTemperatureRange: $request->trailer_temperature_range,
-            trailerTemperature: $request->trailer_temperature,
-            trailerTemperatureMaximum: $request->trailer_temperature_maximum,
-        );
-
-        return redirect()->route('shipments.show', $shipment);
-    }
 
     /**
      * Display the specified resource.
@@ -68,7 +53,10 @@ class ShipmentController extends ResourceSearchController
     public function show(Shipment $shipment)
     {
         return Inertia::render('Shipments/Show', [
-            'shipment' => $shipment,
+            'shipment' => $shipment->load('carrier', 'shippers'),
+            'stops' => ShipmentStopResource::collection($shipment->stops->load('facility')),
+            'trailerTypes' => TrailerTypeResource::collection(TrailerType::all()),
+            'trailerSizes' => TrailerSizeResource::collection(TrailerSize::all()),
         ]);
     }
 
@@ -85,7 +73,7 @@ class ShipmentController extends ResourceSearchController
      */
     public function update(UpdateShipmentRequest $request, Shipment $shipment)
     {
-        //
+        
     }
 
     /**

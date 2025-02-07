@@ -20,8 +20,8 @@ import { Organization, Permission, Role } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';
 
-import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
+import { Checkbox } from '@/Components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -31,7 +31,8 @@ import {
 } from '@/Components/ui/dialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
-import { toast, useToast } from '@/hooks/use-toast';
+import { toast, useToast } from '@/hooks/UseToast';
+import { CheckedState } from '@radix-ui/react-checkbox';
 import { FormEventHandler, useEffect, useState } from 'react';
 
 export default function RolesTable({
@@ -43,7 +44,7 @@ export default function RolesTable({
     organization: Organization;
     permissions: Permission[];
 }) {
-    const { delete: destroy, post } = useForm();
+    const { delete: destroy } = useForm();
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
@@ -179,15 +180,13 @@ function RoleForm({
     });
 
     useEffect(() => {
-        ((setData) => {
-            setData('name', role?.name || '');
-            setData(
-                'permissions',
+        setData({
+            name: role?.name || '',
+            permissions:
                 role?.permissions.map((permission) => permission.id) || [],
-            );
-            setData('users', role?.users.map((user) => user.id) || []);
-        })(setData);
-    }, [role]);
+            users: role?.users.map((user) => user.id) || [],
+        });
+    }, [role, setData]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -269,8 +268,10 @@ function RoleForm({
                                                 checked={data?.permissions?.includes(
                                                     permission.id,
                                                 )}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
+                                                onCheckedChange={(
+                                                    checked: CheckedState,
+                                                ) => {
+                                                    if (checked) {
                                                         setData('permissions', [
                                                             ...data.permissions,
                                                             permission.id,
@@ -327,8 +328,10 @@ function RoleForm({
                                                     checked={data?.users?.includes(
                                                         user.id,
                                                     )}
-                                                    onChange={(e) => {
-                                                        if (e.target.checked) {
+                                                    onCheckedChange={(
+                                                        checked: CheckedState,
+                                                    ) => {
+                                                        if (checked) {
                                                             setData('users', [
                                                                 ...data.users,
                                                                 user.id,

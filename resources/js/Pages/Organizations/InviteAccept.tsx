@@ -14,7 +14,7 @@ export default function InviteAccept({
     organization: Organization;
     showCreateOption: boolean;
 }) {
-    const { data, setData, post, processing, errors } = useForm({});
+    const { post, processing } = useForm();
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();

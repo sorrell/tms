@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Policies\Shipments;
+namespace App\Policies;
 
-use App\Models\Shipments\ShipmentStopAppointment;
+use App\Models\Note;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ShipmentStopAppointmentPolicy
+class NotePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, ShipmentStopAppointment $shipmentStopAppointment): bool
+    public function view(User $user, Note $note): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,29 +29,29 @@ class ShipmentStopAppointmentPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, ShipmentStopAppointment $shipmentStopAppointment): bool
+    public function update(User $user, Note $note): bool
     {
-        return false;
+        return $note->user_id === $user->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, ShipmentStopAppointment $shipmentStopAppointment): bool
+    public function delete(User $user, Note $note): bool
     {
-        return false;
+        return $note->user_id === $user->id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, ShipmentStopAppointment $shipmentStopAppointment): bool
+    public function restore(User $user, Note $note): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class ShipmentStopAppointmentPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, ShipmentStopAppointment $shipmentStopAppointment): bool
+    public function forceDelete(User $user, Note $note): bool
     {
         return false;
     }
