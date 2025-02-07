@@ -11,9 +11,16 @@
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature', 'Unit');
+use Tests\Traits\WithOrganization;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(
+    Tests\TestCase::class,
+    RefreshDatabase::class,
+    WithOrganization::class
+)->beforeEach(function () {
+    $this->setUpOrganization();
+})->in('Unit', 'Feature');
 
 /*
 |--------------------------------------------------------------------------

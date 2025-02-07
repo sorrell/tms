@@ -5,29 +5,16 @@ namespace Tests\Unit\Actions\Shipments;
 use App\Actions\Shipments\CreateShipment;
 use App\Models\Carrier;
 use App\Models\Facility;
-use App\Models\Organizations\Organization;
 use App\Models\Shipper;
 use App\Models\Shipments\Shipment;
 use App\Models\Shipments\TrailerType;
-use App\Models\User;
-use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\DB;
 
-
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = Organization::create([
-        'name' => 'Test Organization',
-        'owner_id' => $this->user->id,
-    ]);
-    Context::addHidden('current_organization_id', $this->organization->id);
-
     $this->shipper = Shipper::factory()->create();
     $this->carrier = Carrier::factory()->create();
     $this->facility = Facility::factory()->create();
     $this->trailerType = TrailerType::factory()->create();
-    
-    // $this->action = new CreateShipment();
 });
 
 test('it creates basic shipment with required fields', function () {
