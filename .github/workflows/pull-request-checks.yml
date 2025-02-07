@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  laravel-tests:
+  code-standards-checks:
     runs-on: ubuntu-latest
     
     steps:
