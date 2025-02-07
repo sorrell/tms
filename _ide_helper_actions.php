@@ -29,7 +29,7 @@ namespace App\Actions\Locations;
  * @method static dispatchAfterResponse(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null)
  * @method static \App\Models\Location run(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null)
  */
-class CreateLocationa
+class CreateLocation
 {
 }
 namespace App\Actions\Notes;
