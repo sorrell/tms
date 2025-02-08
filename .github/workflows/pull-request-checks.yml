@@ -38,11 +38,11 @@ jobs:
     
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
-    
+
     - name: Prepare Directory Permissions
       run: |
         mkdir -p public/build
         chmod -R 755 public/build
-    
+
     - name: Run Pre-Commit Checks
       run: php artisan dev:check      
