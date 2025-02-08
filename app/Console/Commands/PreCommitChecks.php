@@ -96,9 +96,9 @@ class PreCommitChecks extends Command
         }
 
         $manifest = [
-            "resources/js/app.js" => [
+            "resources/js/app.tsx" => [
                 "file" => "assets/app-4ed993c7.js",
-                "src" => "resources/js/app.js",
+                "src" => "resources/js/app.tsx",
                 "isEntry" => true,
                 "css" => ["assets/app-4ed993c7.css"]
             ]
