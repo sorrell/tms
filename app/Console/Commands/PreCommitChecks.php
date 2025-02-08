@@ -29,7 +29,7 @@ class PreCommitChecks extends Command
             'ide-helper' => false, 
             'phpstan' => false,
             'npm-lint' => false,
-            'typescript' => false,   // Renamed from npm-build
+            'typescript' => false,
             'tests:php' => false,
         ];
 
@@ -57,37 +57,16 @@ class PreCommitChecks extends Command
 
         $this->newLine(2);
         $this->info("========== Running phpstan ==========");
-        // run php or sail php ./vendor/bin/phpstan analyse from command line
         try {
-            $process = new \Symfony\Component\Process\Process(['./vendor/bin/sail', 'php', './vendor/bin/phpstan', 'analyse']);
+            $process = new \Symfony\Component\Process\Process(['php', './vendor/bin/phpstan', 'analyse']);
             $output = '';
             $process->run(function ($type, $buffer) use (&$output) {
                 $output .= $buffer;
-                if (\Symfony\Component\Process\Process::ERR === $type) {
-                    $this->output->write($buffer);
-                } else {
-                    $this->output->write($buffer);
-                }
+                $this->output->write($buffer);
             });
             $checks['phpstan'] = str_contains($output, '[OK] No errors');
         } catch (\Exception $e) {
-            $this->comment("Trying to run phpstan directly with php due to error: " . $e->getMessage());
-
-            try {
-                $process = new \Symfony\Component\Process\Process(['php', './vendor/bin/phpstan', 'analyse']);
-                $output = '';
-                $process->run(function ($type, $buffer) use (&$output) {
-                    $output .= $buffer;
-                    if (\Symfony\Component\Process\Process::ERR === $type) {
-                        $this->output->write($buffer);
-                    } else {
-                        $this->output->write($buffer);
-                    }
-                });
-                $checks['phpstan'] = str_contains($output, '[OK] No errors');
-            } catch (\Exception $e) {
-                $this->error("Failed to run phpstan: " . $e->getMessage());
-            }
+            $this->error("Failed to run phpstan: " . $e->getMessage());
         }
 
         $this->newLine(2);
@@ -95,11 +74,7 @@ class PreCommitChecks extends Command
         try {
             $process = new \Symfony\Component\Process\Process(['npm', 'run', 'lint']);
             $process->run(function ($type, $buffer) {
-                if (\Symfony\Component\Process\Process::ERR === $type) {
-                    $this->output->write($buffer);
-                } else {
-                    $this->output->write($buffer);
-                }
+                $this->output->write($buffer);
             });
             $checks['npm-lint'] = $process->isSuccessful();
         } catch (\Exception $e) {
@@ -107,51 +82,30 @@ class PreCommitChecks extends Command
         }
 
         $this->newLine(2);
-        $this->info("========== Running TypeScript check ==========");  // Updated message
+        $this->info("========== Running TypeScript check ==========");
         try {
-            $process = new \Symfony\Component\Process\Process(['npm', 'exec', 'tsc']);  // Changed command
+            $process = new \Symfony\Component\Process\Process(['npm', 'exec', 'tsc']);
             $process->run(function ($type, $buffer) {
-                if (\Symfony\Component\Process\Process::ERR === $type) {
-                    $this->output->write($buffer);
-                } else {
-                    $this->output->write($buffer);
-                }
+                $this->output->write($buffer);
             });
-            $checks['typescript'] = $process->isSuccessful();  // Updated check key
+            $checks['typescript'] = $process->isSuccessful();
         } catch (\Exception $e) {
-            $this->error("Failed to run TypeScript check: " . $e->getMessage());  // Updated error message
+            $this->error("Failed to run TypeScript check: " . $e->getMessage());
         }
 
         $this->newLine(2);
         $this->info("========== Running tests:php ==========");
         try {
-            $process = new \Symfony\Component\Process\Process(['./vendor/bin/sail', 'pest']);
+            $process = new \Symfony\Component\Process\Process(['php', './vendor/bin/pest']);
+            $process->setEnv([
+                'APP_ENV' => 'testing',
+            ]);
             $process->run(function ($type, $buffer) {
-                if (\Symfony\Component\Process\Process::ERR === $type) {
-                    $this->output->write($buffer);
-                } else {
-                    $this->output->write($buffer);
-                }
+                $this->output->write($buffer);
             });
             $checks['tests:php'] = $process->isSuccessful();
         } catch (\Exception $e) {
-            $this->comment("Trying to run pest directly with php due to error: " . $e->getMessage());
-
-            try {
-                $process = new \Symfony\Component\Process\Process(['php', './vendor/bin/pest']);
-                $output = '';
-                $process->run(function ($type, $buffer) use (&$output) {
-                    $output .= $buffer;
-                    if (\Symfony\Component\Process\Process::ERR === $type) {
-                        $this->output->write($buffer);
-                    } else {
-                        $this->output->write($buffer);
-                    }
-                });
-                $checks['tests:php'] = $process->isSuccessful();
-            } catch (\Exception $e) {
-                $this->error("Failed to run pest: " . $e->getMessage());
-            }
+            $this->error("Failed to run pest: " . $e->getMessage());
         }
         
         $this->newLine(2);
