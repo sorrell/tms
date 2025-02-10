@@ -1,4 +1,4 @@
-import { Building, GalleryVerticalEnd, Home, Truck, Users, Warehouse } from 'lucide-react';
+import { Building, GalleryVerticalEnd, Home, Package, Truck, Users, Warehouse } from 'lucide-react';
 import * as React from 'react';
 
 import { NavUser } from '@/Components/NavUser';
@@ -58,8 +58,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         isActive={route().current('shipments.index')}
                     >
                         <a href={route('shipments.index')}>
-                            <Truck />
+                            <Package />
                             <span>Shipments</span>
+                        </a>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton
+                        asChild
+                        isActive={route().current('carriers.index')}
+                    >
+                        <a href={route('carriers.index')}>
+                            <Truck />
+                            <span>Carriers</span>
                         </a>
                     </SidebarMenuButton>
                     <SidebarMenuButton
@@ -80,6 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <span>Facilities</span>
                         </a>
                     </SidebarMenuButton>
+                    
 
                     {(permissions.ORGANIZATION_MANAGER ||
                         permissions.ORGANIZATION_MANAGE_USERS) && (
