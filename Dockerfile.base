@@ -53,7 +53,8 @@ COPY ${DOCKERFILE_PATH}/php.ini /etc/php/${PHP_VERSION}/fpm/conf.d/99-php.ini
 COPY ${DOCKERFILE_PATH}/php-fpm.conf /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 RUN chmod +x /usr/local/bin/start-container
 
-RUN composer install \
+RUN cp .env.example .env \
+    && composer install \
     && touch database/database.sqlite \
     && npm install \
     && php artisan key:generate \
