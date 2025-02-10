@@ -8,9 +8,9 @@ import FacilityDetails from './Partials/FacilityDetails';
 
 export default function Index() {
     const { facility } = usePage().props;
-    const [selectedFacility, setSelectedFacility] = useState<Facility | undefined>(
-        facility as Facility,
-    );
+    const [selectedFacility, setSelectedFacility] = useState<
+        Facility | undefined
+    >(facility as Facility);
 
     useEffect(() => {
         if (selectedFacility) {

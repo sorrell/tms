@@ -1,4 +1,12 @@
-import { Building, GalleryVerticalEnd, Home, Package, Truck, Users, Warehouse } from 'lucide-react';
+import {
+    Building,
+    GalleryVerticalEnd,
+    Home,
+    Package,
+    Truck,
+    Users,
+    Warehouse,
+} from 'lucide-react';
 import * as React from 'react';
 
 import { NavUser } from '@/Components/NavUser';
@@ -89,7 +97,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <span>Facilities</span>
                         </a>
                     </SidebarMenuButton>
-                    
 
                     {(permissions.ORGANIZATION_MANAGER ||
                         permissions.ORGANIZATION_MANAGE_USERS) && (

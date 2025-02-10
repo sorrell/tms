@@ -45,7 +45,8 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
-                                                  header.column.columnDef.header,
+                                                  header.column.columnDef
+                                                      .header,
                                                   header.getContext(),
                                               )}
                                     </TableHead>
@@ -88,4 +89,4 @@ export function DataTable<TData extends { id: number | string }, TValue>({
             </Table>
         </div>
     );
-} 
+}

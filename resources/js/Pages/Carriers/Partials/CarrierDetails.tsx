@@ -9,4 +9,4 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
             </div>
         </Card>
     );
-} 
+}

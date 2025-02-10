@@ -1,7 +1,7 @@
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { Shipper, Facility } from '@/types';
+import { Facility } from '@/types';
 import axios from 'axios';
 import { Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
