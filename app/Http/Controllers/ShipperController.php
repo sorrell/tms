@@ -19,7 +19,11 @@ class ShipperController extends ResourceSearchController
      */
     public function index(Request $request)
     {
-        if ($request->has('shipper_id')) {
+        $request->validate([
+            'shipper_id' => 'nullable|exists:shippers,id',
+        ]);
+
+        if ($request->input('shipper_id')) {
             $shipper = Shipper::find($request->input('shipper_id'));
             return Inertia::render('Shippers/Index', [
                 'shipper' => ShipperResource::make($shipper),
