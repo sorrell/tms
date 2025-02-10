@@ -1,27 +1,27 @@
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { Shipper } from '@/types';
+import { Shipper, Facility } from '@/types';
 import axios from 'axios';
 import { Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
 
-export default function ShipperList({
+export default function FacilityList({
     onSelect,
 }: {
-    onSelect: (shipper: Shipper) => void;
+    onSelect: (facility: Facility) => void;
 }) {
-    const [data, setData] = useState<Shipper[]>([]);
+    const [data, setData] = useState<Facility[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const getShippers = useCallback((searchTerm?: string) => {
-        const getData = (): Promise<Shipper[]> => {
+    const getFacilities = useCallback((searchTerm?: string) => {
+        const getData = (): Promise<Facility[]> => {
             return axios
-                .get(route('shippers.search'), {
+                .get(route('facilities.search'), {
                     params: {
                         query: searchTerm,
                         with: [],
@@ -33,12 +33,12 @@ export default function ShipperList({
         setIsLoading(true);
 
         getData()
-            .then((shippers) => {
-                setData(shippers);
+            .then((facilities) => {
+                setData(facilities);
                 setIsLoading(false);
             })
             .catch((error) => {
-                console.error('Error fetching shippers:', error);
+                console.error('Error fetching facilities:', error);
                 setIsLoading(false);
             });
     }, []);
@@ -50,8 +50,8 @@ export default function ShipperList({
     }, [isLoading]);
 
     useEffect(() => {
-        getShippers();
-    }, [getShippers]);
+        getFacilities();
+    }, [getFacilities]);
 
     return (
         <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-2">
@@ -59,16 +59,16 @@ export default function ShipperList({
                 <Input
                     ref={inputRef}
                     className="max-w-md"
-                    placeholder="Search shippers"
+                    placeholder="Search facilities"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            getShippers(searchTerm);
+                            getFacilities(searchTerm);
                         }
                     }}
                 />
-                <Button onClick={() => getShippers(searchTerm)}>
+                <Button onClick={() => getFacilities(searchTerm)}>
                     <Search className="h-4 w-4" />
                 </Button>
             </div>
