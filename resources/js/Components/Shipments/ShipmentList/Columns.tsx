@@ -30,19 +30,19 @@ export const columns: ColumnDef<Shipment>[] = [
         },
     },
     {
-        accessorKey: 'shippers',
-        header: 'Shippers',
+        accessorKey: 'customers',
+        header: 'Customers',
         cell: ({ row }) => {
-            const shippers = row.original.shippers;
+            const customers = row.original.customers;
             return (
                 <div className="flex flex-col space-y-2">
-                    {shippers.map((shipper) => (
+                    {customers.map((customer) => (
                         <Badge
                             variant="outline"
                             className="w-fit"
-                            key={shipper.id}
+                            key={customer.id}
                         >
-                            {shipper.name}
+                            {customer.name}
                         </Badge>
                     ))}
                 </div>
