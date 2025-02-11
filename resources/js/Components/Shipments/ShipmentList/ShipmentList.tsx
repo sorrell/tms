@@ -22,7 +22,7 @@ export default function ShipmentList() {
                         query: searchTerm,
                         with: [
                             'carrier',
-                            'shippers',
+                            'customers',
                             'stops',
                             'trailer_type',
                             'trailer_size',

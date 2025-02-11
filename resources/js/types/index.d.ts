@@ -31,7 +31,7 @@ export interface Carrier {
     name: string;
 }
 
-export interface Shipper {
+export interface Customer {
     id: number;
     name: string;
 }
@@ -57,7 +57,7 @@ export interface ShipmentStop {
 export interface Shipment {
     id: number;
     shipment_number: string;
-    shippers: Shipper[];
+    customers: Customer[];
     carrier: Carrier;
     stops: ShipmentStop[];
     weight: number;

@@ -1,27 +1,27 @@
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { Shipper } from '@/types';
+import { Customer } from '@/types';
 import axios from 'axios';
 import { Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
 
-export default function ShipperList({
+export default function CustomerList({
     onSelect,
 }: {
-    onSelect: (shipper: Shipper) => void;
+    onSelect: (customer: Customer) => void;
 }) {
-    const [data, setData] = useState<Shipper[]>([]);
+    const [data, setData] = useState<Customer[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const getShippers = useCallback((searchTerm?: string) => {
-        const getData = (): Promise<Shipper[]> => {
+    const getCustomers = useCallback((searchTerm?: string) => {
+        const getData = (): Promise<Customer[]> => {
             return axios
-                .get(route('shippers.search'), {
+                .get(route('customers.search'), {
                     params: {
                         query: searchTerm,
                         with: [],
@@ -33,12 +33,12 @@ export default function ShipperList({
         setIsLoading(true);
 
         getData()
-            .then((shippers) => {
-                setData(shippers);
+            .then((customers) => {
+                setData(customers);
                 setIsLoading(false);
             })
             .catch((error) => {
-                console.error('Error fetching shippers:', error);
+                console.error('Error fetching customers:', error);
                 setIsLoading(false);
             });
     }, []);
@@ -50,8 +50,8 @@ export default function ShipperList({
     }, [isLoading]);
 
     useEffect(() => {
-        getShippers();
-    }, [getShippers]);
+        getCustomers();
+    }, [getCustomers]);
 
     return (
         <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-2">
@@ -59,16 +59,16 @@ export default function ShipperList({
                 <Input
                     ref={inputRef}
                     className="max-w-md"
-                    placeholder="Search shippers"
+                    placeholder="Search customers"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            getShippers(searchTerm);
+                            getCustomers(searchTerm);
                         }
                     }}
                 />
-                <Button onClick={() => getShippers(searchTerm)}>
+                <Button onClick={() => getCustomers(searchTerm)}>
                     <Search className="h-4 w-4" />
                 </Button>
             </div>

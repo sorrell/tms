@@ -40,7 +40,7 @@ return new class extends Migration
             $table->timestampsTz();
         });
 
-        Schema::create('shippers', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
@@ -55,11 +55,11 @@ return new class extends Migration
             $table->timestampsTz();
         });
 
-        Schema::create('shipment_shippers', function (Blueprint $table) {
+        Schema::create('shipment_customers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->foreignId('shipment_id')->constrained('shipments');
-            $table->foreignId('shipper_id')->constrained('shippers');
+            $table->foreignId('customer_id')->constrained('customers');
             $table->timestampsTz();
         });
 
@@ -92,9 +92,9 @@ return new class extends Migration
     {
         Schema::dropIfExists('shipment_stop_appointments');
         Schema::dropIfExists('shipment_stops');
-        Schema::dropIfExists('shipment_shippers');
+        Schema::dropIfExists('shipment_customers');
         Schema::dropIfExists('shipments');
-        Schema::dropIfExists('shippers');
+        Schema::dropIfExists('customers');
         Schema::dropIfExists('facilities');
         Schema::dropIfExists('carriers');
         Schema::dropIfExists('locations');

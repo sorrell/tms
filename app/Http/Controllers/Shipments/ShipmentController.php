@@ -19,7 +19,7 @@ use App\Models\Carrier;
 use App\Models\Facility;
 use App\Models\Shipments\TrailerSize;
 use App\Models\Shipments\TrailerType;
-use App\Models\Shipper;
+use App\Models\Customer;
 use Inertia\Inertia;
 
 class ShipmentController extends ResourceSearchController
@@ -53,7 +53,7 @@ class ShipmentController extends ResourceSearchController
     public function show(Shipment $shipment)
     {
         return Inertia::render('Shipments/Show', [
-            'shipment' => $shipment->load('carrier', 'shippers'),
+            'shipment' => $shipment->load('carrier', 'customers'),
             'stops' => ShipmentStopResource::collection($shipment->stops->load('facility')),
             'trailerTypes' => TrailerTypeResource::collection(TrailerType::all()),
             'trailerSizes' => TrailerSizeResource::collection(TrailerSize::all()),

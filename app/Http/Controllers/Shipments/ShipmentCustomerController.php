@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Shipments;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Shipments\StoreShipmentShipperRequest;
-use App\Http\Requests\Shipments\UpdateShipmentShipperRequest;
-use App\Models\Shipments\ShipmentShipper;
+use App\Http\Requests\Shipments\StoreShipmentCustomerRequest;
+use App\Http\Requests\Shipments\UpdateShipmentCustomerRequest;
+use App\Models\Shipments\ShipmentCustomer;
 
-class ShipmentShipperController extends Controller
+class ShipmentCustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,7 +28,7 @@ class ShipmentShipperController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreShipmentShipperRequest $request)
+    public function store(StoreShipmentCustomerRequest $request)
     {
         //
     }
@@ -36,7 +36,7 @@ class ShipmentShipperController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ShipmentShipper $shipmentShipper)
+    public function show(ShipmentCustomer $shipmentCustomer)
     {
         //
     }
@@ -44,7 +44,7 @@ class ShipmentShipperController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShipmentShipper $shipmentShipper)
+    public function edit(ShipmentCustomer $shipmentCustomer)
     {
         //
     }
@@ -52,7 +52,7 @@ class ShipmentShipperController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateShipmentShipperRequest $request, ShipmentShipper $shipmentShipper)
+    public function update(UpdateShipmentCustomerRequest $request, ShipmentCustomer $shipmentCustomer)
     {
         //
     }
@@ -60,7 +60,7 @@ class ShipmentShipperController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ShipmentShipper $shipmentShipper)
+    public function destroy(ShipmentCustomer $shipmentCustomer)
     {
         //
     }

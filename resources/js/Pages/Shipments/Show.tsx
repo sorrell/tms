@@ -7,11 +7,11 @@ import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Head } from '@inertiajs/react';
 import { FileText, MapPin, MessageSquare } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
+import CustomerDetails from './Partials/CustomerDetails';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
-import ShipperDetails from './Partials/ShipperDetails';
 
 export default function Show({
     shipment,
@@ -83,10 +83,10 @@ export default function Show({
                                 value="financials"
                                 className="space-y-4"
                             >
-                                {/* Shipper Billing */}
+                                {/* Customer Billing */}
                                 <Card>
                                     <CardHeader>
-                                        <CardTitle>Shipper Billing</CardTitle>
+                                        <CardTitle>Customer Billing</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <Skeleton className="h-40 w-full" />
@@ -164,8 +164,8 @@ export default function Show({
                         {/* Carrier Details */}
                         <CarrierDetails shipment={shipment} />
 
-                        {/* Shippers */}
-                        <ShipperDetails shipment={shipment} />
+                        {/* Customers */}
+                        <CustomerDetails shipment={shipment} />
 
                         {/* Quick Actions */}
                         <Card>

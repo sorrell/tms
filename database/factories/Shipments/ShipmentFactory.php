@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Facility;
 use App\Models\Shipments\ShipmentStop;
 use App\Models\Shipments\TrailerSize;
-use App\Models\Shipper;
+use App\Models\Customer;
 use Carbon\Carbon;
 
 /**
@@ -41,16 +41,16 @@ class ShipmentFactory extends Factory
     }
 
     /**
-     * Configure the model factory to attach shippers and create stops.
+     * Configure the model factory to attach customers and create stops.
      *
      * @return $this
      */
-    public function withShippersAndStops(int $numberOfStops = 2): static
+    public function withCustomersAndStops(int $numberOfStops = 2): static
     {
         return $this->afterCreating(function (Shipment $shipment) use ($numberOfStops) {
-            // Attach shippers (typically 1-3)
-            $shipment->shippers()->attach(
-                Shipper::factory()->count(fake()->numberBetween(1, 3))->create()
+            // Attach customers (typically 1-3)
+            $shipment->customers()->attach(
+                Customer::factory()->count(fake()->numberBetween(1, 3))->create()
             );
 
             // Create stops with appointments

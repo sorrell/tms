@@ -6,16 +6,16 @@ use App\Models\Shipments\Shipment;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class UpdateShipmentShippers
+class UpdateShipmentCustomers
 {
     use AsAction;
 
     public function handle(
         Shipment $shipment,
-        array $shipperIds,
+        array $customerIds,
     ): Shipment {
 
-        $shipment->shippers()->sync($shipperIds);
+        $shipment->customers()->sync($customerIds);
 
         return $shipment;
     }
@@ -24,17 +24,17 @@ class UpdateShipmentShippers
     {
         $this->handle(
             $shipment,
-            $request->shipper_ids,
+            $request->customer_ids,
         );
 
-        return redirect()->back()->with('success', 'Shipment shippers updated successfully');
+        return redirect()->back()->with('success', 'Shipment customers updated successfully');
     }
 
     public function rules(): array
     {
         return [
-            'shipper_ids' => ['required', 'array'],
-            'shipper_ids.*' => ['required', 'exists:shippers,id'],
+            'customer_ids' => ['required', 'array'],
+            'customer_ids.*' => ['required', 'exists:customers,id'],
         ];
     }
 }

@@ -5,15 +5,15 @@ namespace App\Models\Shipments;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use App\Traits\HasOrganization;
 
-class ShipmentShipper extends Pivot
+class ShipmentCustomer extends Pivot
 {
     use HasOrganization;
 
-    protected $table = 'shipment_shippers';
+    protected $table = 'shipment_customers';
 
     protected $fillable = [
         'organization_id',
         'shipment_id',
-        'shipper_id',
+        'customer_id',
     ];
 }
