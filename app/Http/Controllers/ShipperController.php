@@ -7,6 +7,8 @@ use App\Http\Requests\StoreShipperRequest;
 use App\Http\Requests\UpdateShipperRequest;
 use App\Http\Resources\ShipperResource;
 use App\Models\Shipper;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ShipperController extends ResourceSearchController
 {
@@ -15,9 +17,20 @@ class ShipperController extends ResourceSearchController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $request->validate([
+            'shipper_id' => 'nullable|exists:shippers,id',
+        ]);
+
+        if ($request->input('shipper_id')) {
+            $shipper = Shipper::find($request->input('shipper_id'));
+            return Inertia::render('Shippers/Index', [
+                'shipper' => ShipperResource::make($shipper),
+            ]);
+        }
+
+        return Inertia::render('Shippers/Index');
     }
 
     /**
