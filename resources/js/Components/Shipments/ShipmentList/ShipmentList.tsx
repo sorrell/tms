@@ -8,7 +8,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
 
-export default function ShipmentList() {
+export default function ShipmentList({
+    requiredFilters = [],
+}: {
+    requiredFilters?: {
+        name: string;
+        value: string;
+    }[];
+}) {
     const [data, setData] = useState<Shipment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -27,6 +34,7 @@ export default function ShipmentList() {
                             'trailer_type',
                             'trailer_size',
                         ],
+                        filters: requiredFilters,
                     },
                 })
                 .then((response) => response.data);

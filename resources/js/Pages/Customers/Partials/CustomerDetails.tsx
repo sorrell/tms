@@ -1,5 +1,6 @@
 import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
 import Notes from '@/Components/Notes';
+import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
@@ -183,11 +184,14 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                 <TabsContent value="shipments">
                     <Card>
                         <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <Skeleton className="h-20 w-full" />
-                                <Skeleton className="h-20 w-full" />
-                                <Skeleton className="h-20 w-full" />
-                            </div>
+                            <ShipmentList
+                                requiredFilters={[
+                                    {
+                                        name: 'customers.id',
+                                        value: customer?.id?.toString() || '',
+                                    },
+                                ]}
+                            />
                         </CardContent>
                     </Card>
                 </TabsContent>
