@@ -22,7 +22,7 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
             <Tabs defaultValue="overview" className="w-full">
                 <TabsList>
                     <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="locations">Locations</TabsTrigger>
+                    <TabsTrigger value="facilities">Facilities</TabsTrigger>
                     <TabsTrigger value="contacts">Contacts</TabsTrigger>
                     <TabsTrigger value="documents">Documents</TabsTrigger>
                     <TabsTrigger value="shipments">Shipment History</TabsTrigger>
@@ -92,8 +92,8 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                     </div>
                 </TabsContent>
 
-                {/* Locations Tab */}
-                <TabsContent value="locations">
+                {/* Facilities Tab */}
+                <TabsContent value="facilities">
                     <Card>
                         <CardContent className="pt-6">
                             <div className="space-y-4">
