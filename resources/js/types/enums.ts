@@ -10,4 +10,5 @@ export enum StopType {
 
 export enum Notable {
     Shipment = 'shipment',
+    Customer = 'customer',
 }
