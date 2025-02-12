@@ -17,7 +17,6 @@ RUN cp .env.example .env \
     && npm run build \
     && find . -path './vendor' -prune -o -path './node_modules' -prune -o -exec chown www-data:www-data {} +
 
-# Remove the broad chown since we've already set permissions where needed
 EXPOSE 8080/tcp
 
 ENTRYPOINT ["start-container"]
