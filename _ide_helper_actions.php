@@ -1,5 +1,21 @@
 <?php
 
+namespace App\Actions\Customers;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $customer_id, int $facility_id)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $customer_id, int $facility_id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $customer_id, int $facility_id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, int $customer_id, int $facility_id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, int $customer_id, int $facility_id)
+ * @method static dispatchSync(int $customer_id, int $facility_id)
+ * @method static dispatchNow(int $customer_id, int $facility_id)
+ * @method static dispatchAfterResponse(int $customer_id, int $facility_id)
+ * @method static \App\Models\Facility run(int $customer_id, int $facility_id)
+ */
+class CreateCustomerFacility
+{
+}
 namespace App\Actions\Facilities;
 
 /**

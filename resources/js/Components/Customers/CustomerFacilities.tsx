@@ -21,13 +21,10 @@ export default function CustomerFacilities({
     customer?: Customer;
 }) {
     const [facilityModalOpen, setFacilityModalOpen] = useState(false);
-    const {
-        setData: setAttachFacilityData,
-        post: attachFacilityPost,
-        errors,
-    } = useForm({
-        facility_id: null,
-    });
+    const { setData: setAttachFacilityData, post: attachFacilityPost } =
+        useForm<{ facility_id: string | null }>({
+            facility_id: null,
+        });
     const [facilities, setFacilities] = useState<Facility[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -95,7 +92,7 @@ export default function CustomerFacilities({
                             onValueChange={(value) => {
                                 // Handle the facility selection
                                 setAttachFacilityData({
-                                    facility_id: value,
+                                    facility_id: value as string,
                                 });
                             }}
                             createForm={FacilityForm}

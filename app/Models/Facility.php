@@ -35,7 +35,7 @@ class Facility extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Customer>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Customer, $this>
      */
     public function customers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
