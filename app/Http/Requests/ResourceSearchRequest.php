@@ -23,6 +23,11 @@ class ResourceSearchRequest extends FormRequest
     {
         return [
             'query' => 'nullable|string',
+            'ids' => 'nullable|array',
+            'with' => 'nullable|array',
+            'filters' => 'nullable|array',
+            'filters.*.name' => 'required|string',
+            'filters.*.value' => 'required|string',
         ];
     }
 }

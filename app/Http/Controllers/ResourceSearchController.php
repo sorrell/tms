@@ -10,8 +10,20 @@ abstract class ResourceSearchController extends Controller
     protected $model;
     protected $modelResource;
 
-    public function searchQuery(Builder $query)
+    public function searchQuery(Builder $query, array $filters = [])
     {
+        if (count($filters) > 0) {
+            foreach ($filters as $filter) {
+                // this allows for customers.id to be correctly queried
+                if (str_contains($filter['name'], '.')) {
+                    $relation = explode('.', $filter['name'])[0];
+                    $query = $query->whereHas($relation, fn ($b) => $b->where($filter['name'], $filter['value']));
+                } else {
+                    $query = $query->where($filter['name'], $filter['value']);
+                }
+            }
+        }
+
         return $query;
     }
 
@@ -20,7 +32,7 @@ abstract class ResourceSearchController extends Controller
     {
         $query = $this->model::search($request->input('query'))
                     ->query(
-                        fn (Builder $eloquentQuery) => $this->searchQuery($eloquentQuery)
+                        fn (Builder $eloquentQuery) => $this->searchQuery($eloquentQuery, $request->input('filters', []))
                     );
 
         // If ids are provided, we are searching for specific records

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Facility;
 use App\Models\Shipments\ShipmentStop;
 use App\Models\Shipments\TrailerSize;
-use App\Models\Customer;
+use App\Models\Customers\Customer;
 use Carbon\Carbon;
 
 /**

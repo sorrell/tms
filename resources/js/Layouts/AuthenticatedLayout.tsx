@@ -19,7 +19,7 @@ import { Fragment, PropsWithChildren } from 'react';
 
 interface BreadcrumbItem {
     title: string;
-    url?: string;
+    href?: string;
 }
 
 export default function Authenticated({
@@ -48,11 +48,11 @@ export default function Authenticated({
                                 {breadcrumbs.map((item, index) => (
                                     <Fragment key={index}>
                                         <BreadcrumbItem className="hidden md:block">
-                                            {item.url ? (
+                                            {item.href ? (
                                                 <BreadcrumbLink asChild>
                                                     <Link
                                                         prefetch={true}
-                                                        href={item.url}
+                                                        href={item.href}
                                                     >
                                                         {item.title}
                                                     </Link>
