@@ -5,13 +5,13 @@ namespace Tests\Unit\Actions\Shipments;
 use App\Actions\Shipments\CreateShipment;
 use App\Models\Carrier;
 use App\Models\Facility;
-use App\Models\Shipper;
+use App\Models\Customer;
 use App\Models\Shipments\Shipment;
 use App\Models\Shipments\TrailerType;
 use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
-    $this->shipper = Shipper::factory()->create();
+    $this->customer = Customer::factory()->create();
     $this->carrier = Carrier::factory()->create();
     $this->facility = Facility::factory()->create();
     $this->trailerType = TrailerType::factory()->create();
@@ -31,7 +31,7 @@ test('it creates basic shipment with required fields', function () {
 
     // Act
     $shipment = CreateShipment::run(
-        shipperIds: [$this->shipper->id],
+        customerIds: [$this->customer->id],
         carrierId: $this->carrier->id,
         stops: $stops,
     );
@@ -71,7 +71,7 @@ test('it creates shipment with all optional fields', function () {
 
     // Act
     $shipment = CreateShipment::run(
-        shipperIds: [$this->shipper->id],
+        customerIds: [$this->customer->id],
         carrierId: $this->carrier->id,
         stops: $stops,
         weight: 1000.5,
@@ -122,7 +122,7 @@ test('it creates shipment with multiple stops', function () {
 
     // Act
     $shipment = CreateShipment::run(
-        shipperIds: [$this->shipper->id],
+        customerIds: [$this->customer->id],
         carrierId: $this->carrier->id,
         stops: $stops,
     );
