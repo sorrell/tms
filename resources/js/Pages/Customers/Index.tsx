@@ -1,50 +1,50 @@
-import ShipperList from '@/Components/Shipper/ShipperList/ShipperList';
+import CustomerList from '@/Components/Customers/CustomerList/CustomerList';
 import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Shipper } from '@/types';
+import { Customer } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import ShipperDetails from './Partials/ShipperDetails';
+import CustomerDetails from './Partials/CustomerDetails';
 
 export default function Index() {
-    const { shipper } = usePage().props;
-    const [selectedShipper, setSelectedShipper] = useState<Shipper | undefined>(
-        shipper as Shipper,
-    );
+    const { customer } = usePage().props;
+    const [selectedCustomer, setSelectedCustomer] = useState<
+        Customer | undefined
+    >(customer as Customer);
 
     useEffect(() => {
-        if (selectedShipper) {
+        if (selectedCustomer) {
             const url = new URL(window.location.href);
-            url.searchParams.set('shipper_id', selectedShipper.id.toString());
+            url.searchParams.set('customer_id', selectedCustomer.id.toString());
             window.history.pushState({}, '', url.toString());
         } else {
             const url = new URL(window.location.href);
-            url.searchParams.delete('shipper_id');
+            url.searchParams.delete('customer_id');
             window.history.pushState({}, '', url.toString());
         }
-    }, [selectedShipper]);
+    }, [selectedCustomer]);
 
     return (
         <AuthenticatedLayout
             breadcrumbs={[
                 {
-                    title: 'Shippers',
+                    title: 'Customers',
                 },
             ]}
         >
-            <Head title="Shippers" />
+            <Head title="Customers" />
             <div className="flex justify-end px-8">
                 <Link
-                    href={route('shippers.create')}
+                    href={route('customers.create')}
                     disabled={true}
                     className={buttonVariants({ variant: 'default' })}
                 >
-                    Create Shipper
+                    Create Customer
                 </Link>
             </div>
             <div className="mx-auto flex max-w-screen-2xl flex-col gap-4">
-                <ShipperList onSelect={setSelectedShipper} />
-                <ShipperDetails shipper={selectedShipper} />
+                <CustomerList onSelect={setSelectedCustomer} />
+                <CustomerDetails customer={selectedCustomer} />
             </div>
         </AuthenticatedLayout>
     );

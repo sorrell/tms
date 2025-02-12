@@ -18,7 +18,7 @@ class CreateShipment
     use AsAction;
 
     public function handle(
-        array $shipperIds,
+        array $customerIds,
         int $carrierId,
         array $stops,
         ?float $weight = null,
@@ -45,7 +45,7 @@ class CreateShipment
             'shipment_number' => $shipmentNumber,
         ]);
 
-        $shipment->shippers()->attach($shipperIds);
+        $shipment->customers()->attach($customerIds);
 
         foreach ($stops as $stopData) {
             $stop = $shipment->stops()->create([
@@ -66,7 +66,7 @@ class CreateShipment
     public function asController(ActionRequest $request) : Shipment 
     {
         return $this->handle(
-            shipperIds: $request->shipper_ids,
+            customerIds: $request->customer_ids,
             carrierId: $request->carrier_id,
             stops: $request->stops,
             weight: $request->weight,
@@ -93,8 +93,8 @@ class CreateShipment
     public function rules()
     {
         return [
-            'shipper_ids' => ['required', 'array'],
-            'shipper_ids.*' => ['required', 'exists:shippers,id'],
+            'customer_ids' => ['required', 'array'],
+            'customer_ids.*' => ['required', 'exists:customers,id'],
 
             'shipment_number' => ['nullable', 'string'],
 

@@ -8,18 +8,18 @@ import { useForm } from '@inertiajs/react';
 import { Box, Check, CheckCircle2, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
-export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
+export default function CustomerDetails({ shipment }: { shipment: Shipment }) {
     const [editMode, setEditMode] = useState(false);
 
     const { toast } = useToast();
 
     const { patch, setData, data } = useForm({
-        shipper_ids: shipment.shippers.map((shipper) => shipper.id),
+        customer_ids: shipment.customers.map((customer) => customer.id),
     });
 
     const updateShipment = () => {
         patch(
-            route('shipments.updateShippers', {
+            route('shipments.updateCustomers', {
                 shipment: shipment.id,
             }),
             {
@@ -32,7 +32,7 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                                     className="mr-2 inline h-4 w-4"
                                     color="green"
                                 />
-                                Shippers updated
+                                Customers updated
                             </>
                         ),
                     });
@@ -47,7 +47,7 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                 <CardTitle className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                         <Box className="h-5 w-5" />
-                        Shippers
+                        Customers
                     </div>
                     {editMode ? (
                         <>
@@ -63,9 +63,9 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
                                     onClick={() => {
                                         setEditMode(false);
                                         setData(
-                                            'shipper_ids',
-                                            shipment.shippers.map(
-                                                (shipper) => shipper.id,
+                                            'customer_ids',
+                                            shipment.customers.map(
+                                                (customer) => customer.id,
                                             ),
                                         );
                                     }}
@@ -86,27 +86,27 @@ export default function ShipperDetails({ shipment }: { shipment: Shipment }) {
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium">Shippers</label>
+                    <label className="text-sm font-medium">Customers</label>
                     {editMode ? (
                         <ResourceSearchSelect
                             className="w-full"
-                            searchRoute={route('shippers.search')}
+                            searchRoute={route('customers.search')}
                             onValueChange={(value) => {
                                 if (Array.isArray(value)) {
-                                    setData('shipper_ids', value.map(Number));
+                                    setData('customer_ids', value.map(Number));
                                 } else {
-                                    setData('shipper_ids', [Number(value)]);
+                                    setData('customer_ids', [Number(value)]);
                                 }
                             }}
                             allowMultiple={true}
-                            defaultSelectedItems={data.shipper_ids}
+                            defaultSelectedItems={data.customer_ids}
                             allowUnselect={false}
                         />
                     ) : (
                         <div className="flex flex-wrap gap-2">
-                            {shipment.shippers.map((shipper) => (
-                                <Badge variant="secondary" key={shipper.id}>
-                                    {shipper.name}
+                            {shipment.customers.map((customer) => (
+                                <Badge variant="secondary" key={customer.id}>
+                                    {customer.name}
                                 </Badge>
                             ))}
                         </div>

@@ -81,11 +81,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </SidebarMenuButton>
                     <SidebarMenuButton
                         asChild
-                        isActive={route().current('shippers.index')}
+                        isActive={route().current('customers.index')}
                     >
-                        <a href={route('shippers.index')}>
+                        <a href={route('customers.index')}>
                             <Users />
-                            <span>Shippers</span>
+                            <span>Customers</span>
                         </a>
                     </SidebarMenuButton>
                     <SidebarMenuButton

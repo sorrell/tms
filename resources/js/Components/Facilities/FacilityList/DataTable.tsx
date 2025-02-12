@@ -19,7 +19,7 @@ import {
 interface DataTableProps<TData extends { id: number | string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    onSelect: (shipper: TData) => void;
+    onSelect: (customer: TData) => void;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
