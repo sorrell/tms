@@ -1,7 +1,7 @@
 import FacilityForm from '@/Components/CreateForms/FacilityForm';
 import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Button } from '@/Components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Card, CardContent, CardHeader } from '@/Components/ui/card';
 import {
     Dialog,
     DialogContent,
@@ -12,6 +12,7 @@ import {
 import { Customer, Facility } from '@/types';
 import { useForm } from '@inertiajs/react';
 import axios from 'axios';
+import { ExternalLink } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 
@@ -47,7 +48,7 @@ export default function CustomerFacilities({
         axios
             .get(
                 route('customers.facilities.index', {
-                    customer: customer.id,
+                    customer: customer?.id,
                 }),
             )
             .then((response) => {
@@ -63,8 +64,7 @@ export default function CustomerFacilities({
     return (
         <Card>
             <CardHeader>
-                <div className="flex items-center justify-between">
-                    <CardTitle>Facilities</CardTitle>
+                <div className="flex items-center justify-end">
                     <Button
                         variant="default"
                         onClick={() => setFacilityModalOpen(true)}
@@ -73,26 +73,64 @@ export default function CustomerFacilities({
                     </Button>
                 </div>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent className="pt-2">
                 <div className="flex flex-col gap-2 space-y-4">
                     {isLoading ? (
                         <Skeleton className="h-32 w-full" />
                     ) : (
                         <>
-                            {facilities.map((facility) => (
-                                <div
-                                    key={facility.id}
-                                    className="flex items-center justify-between"
-                                >
-                                    <span>{facility.name}</span>
-                                    <Button
-                                        variant="destructive"
-                                        onClick={() => detachFacility(facility)}
+                            {facilities.length === 0 ? (
+                                <p className="py-8 text-center text-muted-foreground">
+                                    No facilities attached to this customer
+                                </p>
+                            ) : (
+                                facilities.map((facility) => (
+                                    <Card
+                                        key={facility.id}
+                                        className="flex items-center justify-between p-4"
                                     >
-                                        Detach
-                                    </Button>
-                                </div>
-                            ))}
+                                        <div className="flex flex-col gap-2">
+                                            <span>{facility.name}</span>
+                                            <span className="text-sm text-muted-foreground">
+                                                {facility.location.address_city}
+                                                ,&nbsp;
+                                                {
+                                                    facility.location
+                                                        .address_state
+                                                }
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => {
+                                                    window.open(
+                                                        route(
+                                                            'facilities.index',
+                                                            {
+                                                                facility_id:
+                                                                    facility.id,
+                                                            },
+                                                        ),
+                                                        '_blank',
+                                                    );
+                                                }}
+                                            >
+                                                View{' '}
+                                                <ExternalLink className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="destructive"
+                                                onClick={() =>
+                                                    detachFacility(facility)
+                                                }
+                                            >
+                                                Detach
+                                            </Button>
+                                        </div>
+                                    </Card>
+                                ))
+                            )}
                         </>
                     )}
                 </div>

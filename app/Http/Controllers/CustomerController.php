@@ -86,6 +86,6 @@ class CustomerController extends ResourceSearchController
 
     public function facilities(Customer $customer)
     {
-        return FacilityResource::collection($customer->facilities);
+        return FacilityResource::collection($customer->facilities->load('location'));
     }
 }
