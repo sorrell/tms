@@ -5,8 +5,27 @@ import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { Customer } from '@/types';
 import { Notable } from '@/types/enums';
+import { router } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function CustomerDetails({ customer }: { customer?: Customer }) {
+    // Get initial tab from URL or default to 'overview'
+    const [tab, setTab] = useState(() => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('tab') || 'overview';
+    });
+
+    // Update URL when tab changes
+    const handleTabChange = (value: string) => {
+        setTab(value);
+        router.push({
+            url: route('customers.show', {
+                customer: customer?.id,
+                tab: value,
+            }),
+        });
+    };
+
     return (
         <div className="flex flex-col gap-6">
             {/* Header Section */}
@@ -20,13 +39,36 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
             </div>
 
             {/* Main Content */}
-            <Tabs defaultValue="overview" className="w-full">
+            <Tabs defaultValue={tab} value={tab} className="w-full">
                 <TabsList>
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="facilities">Facilities</TabsTrigger>
-                    <TabsTrigger value="contacts">Contacts</TabsTrigger>
-                    <TabsTrigger value="documents">Documents</TabsTrigger>
-                    <TabsTrigger value="shipments">
+                    <TabsTrigger
+                        value="overview"
+                        onClick={() => handleTabChange('overview')}
+                    >
+                        Overview
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="facilities"
+                        onClick={() => handleTabChange('facilities')}
+                    >
+                        Facilities
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="contacts"
+                        onClick={() => handleTabChange('contacts')}
+                    >
+                        Contacts
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="documents"
+                        onClick={() => handleTabChange('documents')}
+                    >
+                        Documents
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="shipments"
+                        onClick={() => handleTabChange('shipments')}
+                    >
                         Shipment History
                     </TabsTrigger>
                 </TabsList>
