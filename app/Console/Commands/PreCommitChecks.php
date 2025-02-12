@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Process\Process;
 
 class PreCommitChecks extends Command
 {
@@ -20,123 +21,110 @@ class PreCommitChecks extends Command
      */
     protected $description = 'Runs prep and checks before a commit is made';
 
+    protected $checks = [
+        'ide-helper' => false,
+        'phpstan' => false,
+        'npm-lint' => false,
+        'typescript' => false,
+        'npm-build' => false,
+        'tests:php' => false,
+    ];
+
+    protected $commands = [
+        'phpstan' => 'php ./vendor/bin/phpstan analyse',
+        'npm-lint' => 'npm run lint',
+        'typescript' => 'npm exec tsc',
+        'npm-build' => 'npm run build',
+        'tests:php' => 'php ./vendor/bin/pest',
+    ];
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $checks = [
-            'ide-helper' => false, 
-            'phpstan' => false,
-            'npm-lint' => false,
-            'typescript' => false   // Renamed from npm-build
-        ];
-
         $this->info("Running pre-commit checks and prep");
 
+        $this->runIdeHelperCheck();
+        
+        foreach ($this->commands as $check => $command) {
+            $this->newLine(2);
+            $this->info("========== Running $check ==========");
+            
+            $env = $check === 'tests:php' ? ['APP_ENV' => 'testing'] : [];
+            $successCallback = $this->getSuccessCallback($check);
+            
+            $this->runProcess(explode(' ', $command), $check, $successCallback, $env);
+        }
+
+        $this->displaySummary();
+
+        return in_array(false, $this->checks) ? 1 : 0;
+    }
+
+    protected function runProcess(array $command, string $check, callable $successCallback, array $env = []): void
+    {
+        try {
+            $process = new Process($command);
+            
+            if ($env) {
+                $process->setEnv($env);
+            }
+
+            $output = '';
+            $process->run(function ($type, $buffer) use (&$output) {
+                $this->output->write($buffer);
+                $output .= $buffer;
+            });
+
+            $this->checks[$check] = $successCallback($output, $process);
+        } catch (\Exception $e) {
+            $this->error("Failed to run $check: " . $e->getMessage());
+        }
+    }
+
+
+    protected function getSuccessCallback(string $check): callable
+    {
+        return match($check) {
+            'phpstan' => fn($output, $process) => str_contains($output, '[OK] No errors'),
+            default => fn($output, $process) => $process->isSuccessful()
+        };
+    }
+
+    protected function runIdeHelperCheck(): void
+    {
         $this->newLine(2);
         $this->info("========== Running ide-helper:actions ==========");
         
-        // Get hash of existing file
         $helperPath = base_path('_ide_helper_actions.php');
         $originalHash = file_exists($helperPath) ? md5_file($helperPath) : null;
         
-        // Run the command
         $this->call('ide-helper:actions');
         
-        // Compare hashes
         $newHash = file_exists($helperPath) ? md5_file($helperPath) : null;
         
         if ($originalHash !== $newHash) {
             $this->error('The ide-helper:actions file has changed. Please commit the updated _ide_helper_actions.php file.');
-            $checks['ide-helper'] = false;
+            $this->checks['ide-helper'] = false;
         } else {
-            $checks['ide-helper'] = true;
+            $this->checks['ide-helper'] = true;
         }
+    }
 
-        $this->newLine(2);
-        $this->info("========== Running phpstan ==========");
-        // run php or sail php ./vendor/bin/phpstan analyse from command line
-        try {
-            $process = new \Symfony\Component\Process\Process(['./vendor/bin/sail', 'php', './vendor/bin/phpstan', 'analyse']);
-            $output = '';
-            $process->run(function ($type, $buffer) use (&$output) {
-                $output .= $buffer;
-                if (\Symfony\Component\Process\Process::ERR === $type) {
-                    $this->output->write($buffer);
-                    throw new \Exception("Failed to run phpstan via sail");
-                } else {
-                    $this->output->write($buffer);
-                }
-            });
-            $checks['phpstan'] = str_contains($output, '[OK] No errors');
-        } catch (\Exception $e) {
-            $this->comment("Trying to run phpstan directly with php");
-
-            try {
-                $process = new \Symfony\Component\Process\Process(['php', './vendor/bin/phpstan', 'analyse']);
-                $output = '';
-                $process->run(function ($type, $buffer) use (&$output) {
-                    $output .= $buffer;
-                    if (\Symfony\Component\Process\Process::ERR === $type) {
-                        $this->output->write($buffer);
-                    } else {
-                        $this->output->write($buffer);
-                    }
-                });
-                $checks['phpstan'] = str_contains($output, '[OK] No errors');
-            } catch (\Exception $e) {
-                $this->error("Failed to run phpstan: " . $e->getMessage());
-            }
-        }
-
-        $this->newLine(2);
-        $this->info("========== Running npm lint ==========");
-        try {
-            $process = new \Symfony\Component\Process\Process(['npm', 'run', 'lint']);
-            $process->run(function ($type, $buffer) {
-                if (\Symfony\Component\Process\Process::ERR === $type) {
-                    $this->output->write($buffer);
-                } else {
-                    $this->output->write($buffer);
-                }
-            });
-            $checks['npm-lint'] = $process->isSuccessful();
-        } catch (\Exception $e) {
-            $this->error("Failed to run npm lint: " . $e->getMessage());
-        }
-
-        $this->newLine(2);
-        $this->info("========== Running TypeScript check ==========");  // Updated message
-        try {
-            $process = new \Symfony\Component\Process\Process(['npm', 'exec', 'tsc']);  // Changed command
-            $process->run(function ($type, $buffer) {
-                if (\Symfony\Component\Process\Process::ERR === $type) {
-                    $this->output->write($buffer);
-                } else {
-                    $this->output->write($buffer);
-                }
-            });
-            $checks['typescript'] = $process->isSuccessful();  // Updated check key
-        } catch (\Exception $e) {
-            $this->error("Failed to run TypeScript check: " . $e->getMessage());  // Updated error message
-        }
-
+    protected function displaySummary(): void
+    {
         $this->newLine(2);
         $this->info("========== Completed pre-commit checks and prep ==========");
         
-        // Display summary report
         $this->newLine();
         $this->info("Summary Report:");
-        foreach ($checks as $check => $passed) {
+        foreach ($this->checks as $check => $passed) {
             $icon = $passed ? '<fg=green>✓</>' : '<fg=red>✗</>';
             $this->line("$icon $check");
         }
         
         $this->newLine();
         $this->comment("Please check messages above for any errors or warnings");
-
-        // Return 1 (failure) if any check failed, 0 (success) if all passed
-        return in_array(false, $checks) ? 1 : 0;
     }
 }
