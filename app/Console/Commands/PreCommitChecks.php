@@ -26,6 +26,7 @@ class PreCommitChecks extends Command
         'phpstan' => false,
         'npm-lint' => false,
         'typescript' => false,
+        'npm-build' => false,
         'tests:php' => false,
     ];
 
@@ -33,6 +34,7 @@ class PreCommitChecks extends Command
         'phpstan' => 'php ./vendor/bin/phpstan analyse',
         'npm-lint' => 'npm run lint',
         'typescript' => 'npm exec tsc',
+        'npm-build' => 'npm run build',
         'tests:php' => 'php ./vendor/bin/pest',
     ];
 
@@ -69,11 +71,6 @@ class PreCommitChecks extends Command
                 $process->setEnv($env);
             }
 
-            // Add Vite mock for PHP tests
-            if ($check === 'tests:php') {
-                $this->setupViteMock();
-            }
-
             $output = '';
             $process->run(function ($type, $buffer) use (&$output) {
                 $this->output->write($buffer);
@@ -86,29 +83,6 @@ class PreCommitChecks extends Command
         }
     }
 
-    /**
-     * Setup Vite mock for testing
-     */
-    protected function setupViteMock(): void
-    {
-        if (!file_exists(public_path('build'))) {
-            mkdir(public_path('build'), 0755, true);
-        }
-
-        $manifest = [
-            "resources/js/app.tsx" => [
-                "file" => "assets/app-4ed993c7.js",
-                "src" => "resources/js/app.tsx",
-                "isEntry" => true,
-                "css" => ["assets/app-4ed993c7.css"]
-            ]
-        ];
-
-        file_put_contents(
-            public_path('build/manifest.json'),
-            json_encode($manifest, JSON_PRETTY_PRINT)
-        );
-    }
 
     protected function getSuccessCallback(string $check): callable
     {
