@@ -42,7 +42,7 @@ export default function Create({
 
     const formSchema = z.object({
         shipment_number: z.string().optional(),
-        shipper_ids: z.array(z.string()),
+        customer_ids: z.array(z.string()),
         carrier_id: z.string(),
 
         weight: z.string().nullable(),
@@ -323,19 +323,19 @@ export default function Create({
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Shippers</CardTitle>
+                            <CardTitle>Customers</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <FormField
                                 control={form.control}
-                                name={`shipper_ids`}
+                                name={`customer_ids`}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <ResourceSearchSelect
                                                 className="w-full"
                                                 searchRoute={route(
-                                                    'shippers.search',
+                                                    'customers.search',
                                                 )}
                                                 onValueChange={field.onChange}
                                                 allowMultiple={true}
@@ -345,7 +345,7 @@ export default function Create({
                                             />
                                         </FormControl>
                                         <FormMessage>
-                                            {errors.shipper_ids}
+                                            {errors.customer_ids}
                                         </FormMessage>
                                     </FormItem>
                                 )}

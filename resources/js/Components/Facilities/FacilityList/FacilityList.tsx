@@ -1,32 +1,30 @@
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { Shipment } from '@/types';
+import { Facility } from '@/types';
 import axios from 'axios';
 import { Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
 
-export default function ShipmentList() {
-    const [data, setData] = useState<Shipment[]>([]);
+export default function FacilityList({
+    onSelect,
+}: {
+    onSelect: (facility: Facility) => void;
+}) {
+    const [data, setData] = useState<Facility[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const getShipments = useCallback((searchTerm?: string) => {
-        const getData = (): Promise<Shipment[]> => {
+    const getFacilities = useCallback((searchTerm?: string) => {
+        const getData = (): Promise<Facility[]> => {
             return axios
-                .get(route('shipments.search'), {
+                .get(route('facilities.search'), {
                     params: {
                         query: searchTerm,
-                        with: [
-                            'carrier',
-                            'customers',
-                            'stops',
-                            'trailer_type',
-                            'trailer_size',
-                        ],
+                        with: [],
                     },
                 })
                 .then((response) => response.data);
@@ -35,12 +33,12 @@ export default function ShipmentList() {
         setIsLoading(true);
 
         getData()
-            .then((shipments) => {
-                setData(shipments);
+            .then((facilities) => {
+                setData(facilities);
                 setIsLoading(false);
             })
             .catch((error) => {
-                console.error('Error fetching shipments:', error);
+                console.error('Error fetching facilities:', error);
                 setIsLoading(false);
             });
     }, []);
@@ -52,8 +50,8 @@ export default function ShipmentList() {
     }, [isLoading]);
 
     useEffect(() => {
-        getShipments();
-    }, [getShipments]);
+        getFacilities();
+    }, [getFacilities]);
 
     return (
         <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-2">
@@ -61,16 +59,16 @@ export default function ShipmentList() {
                 <Input
                     ref={inputRef}
                     className="max-w-md"
-                    placeholder="Search shipments"
+                    placeholder="Search facilities"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            getShipments(searchTerm);
+                            getFacilities(searchTerm);
                         }
                     }}
                 />
-                <Button onClick={() => getShipments(searchTerm)}>
+                <Button onClick={() => getFacilities(searchTerm)}>
                     <Search className="h-4 w-4" />
                 </Button>
             </div>
@@ -80,7 +78,11 @@ export default function ShipmentList() {
                 </>
             ) : (
                 <>
-                    <DataTable columns={columns} data={data} />
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        onSelect={onSelect}
+                    />
                 </>
             )}
         </div>

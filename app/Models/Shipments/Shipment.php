@@ -4,7 +4,7 @@ namespace App\Models\Shipments;
 
 use App\Http\Resources\ShipmentResource;
 use App\Models\Carrier;
-use App\Models\Shipper;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
 use App\Traits\Notable;
@@ -49,7 +49,7 @@ class Shipment extends Model
     public function toSearchableArray()
     {
         return new ShipmentResource(
-            $this->load('carrier', 'shippers', 'stops', 'trailer_type', 'trailer_size')
+            $this->load('carrier', 'customers', 'stops', 'trailer_type', 'trailer_size')
         );
     }
 
@@ -78,11 +78,11 @@ class Shipment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Shipper, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Customer, $this>
      */
-    public function shippers(): BelongsToMany
+    public function customers(): BelongsToMany
     {
-        return $this->belongsToMany(Shipper::class, 'shipment_shippers')->using(ShipmentShipper::class);
+        return $this->belongsToMany(Customer::class, 'shipment_customers')->using(ShipmentCustomer::class);
     }
 
     /**

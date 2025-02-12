@@ -28,7 +28,7 @@ class ShipmentResource extends JsonResource
             'trailer_temperature_range' => $this->trailer_temperature_range,
             'trailer_temperature' => $this->trailer_temperature,
             'trailer_temperature_maximum' => $this->trailer_temperature_maximum,
-            'shippers' => ShipperResource::collection($this->whenLoaded('shippers')),
+            'customers' => CustomerResource::collection($this->whenLoaded('customers')),
             'carrier' => new CarrierResource($this->whenLoaded('carrier')),
             'stops' => ShipmentStopResource::collection($this->whenLoaded('stops')),
             'lane' => $this->whenLoaded('stops', $this->lane()),

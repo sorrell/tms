@@ -8,7 +8,7 @@ use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
-use App\Actions\Shipments\UpdateShipmentShippers;
+use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\FacilityController;
@@ -19,7 +19,7 @@ use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Shipments\ShipmentController;
-use App\Http\Controllers\ShipperController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -73,12 +73,14 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
     Route::post('facilities', CreateFacility::class)->name('facilities.store');
+    Route::get('facilities', [FacilityController::class, 'index'])->name('facilities.index');
+    Route::post('facilities', [FacilityController::class, 'store'])->name('facilities.store');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
     Route::resource('carriers', CarrierController::class);
 
-    Route::get('shippers/search', [ShipperController::class, 'search'])->name('shippers.search');
-    Route::resource('shippers', ShipperController::class);
+    Route::get('customers/search', [CustomerController::class, 'search'])->name('customers.search');
+    Route::resource('customers', CustomerController::class);
 
     Route::get('shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
     Route::resource('shipments', ShipmentController::class, [
@@ -88,7 +90,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/shipment-number', UpdateShipmentNumber::class)->name('shipments.updateShipmentNumber');
     Route::patch('shipments/{shipment}/general', UpdateShipmentGeneral::class)->name('shipments.updateGeneral');
     Route::patch('shipments/{shipment}/carrier-details', UpdateShipmentCarrierDetails::class)->name('shipments.updateCarrierDetails');
-    Route::patch('shipments/{shipment}/shippers', UpdateShipmentShippers::class)->name('shipments.updateShippers');
+    Route::patch('shipments/{shipment}/customers', UpdateShipmentCustomers::class)->name('shipments.updateCustomers');
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
 
     Route::delete('notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');

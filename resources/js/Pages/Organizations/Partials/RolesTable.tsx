@@ -186,7 +186,13 @@ function RoleForm({
                 role?.permissions.map((permission) => permission.id) || [],
             users: role?.users.map((user) => user.id) || [],
         });
-    }, [role, setData]);
+
+        // Unsure how to force form to refresh without this useEffect,
+        // but it requires a deps array of setData which is beign set therefore infinite loop
+        // only real solution i can find is to disable eslint here
+        //
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [role]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();

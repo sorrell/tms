@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shipments;
 
-use App\Http\Requests\ResourceSearchRequest;
-use App\Http\Requests\StoreShipperRequest;
-use App\Http\Requests\UpdateShipperRequest;
-use App\Http\Resources\ShipperResource;
-use App\Models\Shipper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Shipments\StoreShipmentCustomerRequest;
+use App\Http\Requests\Shipments\UpdateShipmentCustomerRequest;
+use App\Models\Shipments\ShipmentCustomer;
 
-class ShipperController extends ResourceSearchController
+class ShipmentCustomerController extends Controller
 {
-    protected $model = Shipper::class;
-    protected $modelResource = ShipperResource::class;
     /**
      * Display a listing of the resource.
      */
@@ -31,7 +28,7 @@ class ShipperController extends ResourceSearchController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreShipperRequest $request)
+    public function store(StoreShipmentCustomerRequest $request)
     {
         //
     }
@@ -39,7 +36,7 @@ class ShipperController extends ResourceSearchController
     /**
      * Display the specified resource.
      */
-    public function show(Shipper $shipper)
+    public function show(ShipmentCustomer $shipmentCustomer)
     {
         //
     }
@@ -47,7 +44,7 @@ class ShipperController extends ResourceSearchController
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Shipper $shipper)
+    public function edit(ShipmentCustomer $shipmentCustomer)
     {
         //
     }
@@ -55,7 +52,7 @@ class ShipperController extends ResourceSearchController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateShipperRequest $request, Shipper $shipper)
+    public function update(UpdateShipmentCustomerRequest $request, ShipmentCustomer $shipmentCustomer)
     {
         //
     }
@@ -63,7 +60,7 @@ class ShipperController extends ResourceSearchController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Shipper $shipper)
+    public function destroy(ShipmentCustomer $shipmentCustomer)
     {
         //
     }
