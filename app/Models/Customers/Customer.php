@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Customers;
 
+use App\Models\Facility;
 use App\Traits\HasOrganization;
 use App\Traits\Notable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Laravel\Scout\Searchable;
 
 class Customer extends Model
@@ -26,10 +28,10 @@ class Customer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Facility, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Facility>
      */
-    public function facilities(): HasMany
+    public function facilities(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->hasMany(Facility::class);
+        return $this->belongsToMany(Facility::class, 'customer_facilities');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Customers\Customer;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,13 @@ class Facility extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Customer>
+     */
+    public function customers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Customer::class, 'customer_facilities');
     }
 }

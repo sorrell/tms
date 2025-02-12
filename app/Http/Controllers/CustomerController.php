@@ -6,7 +6,8 @@ use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
-use App\Models\Customer;
+use App\Http\Resources\FacilityResource;
+use App\Models\Customers\Customer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -81,5 +82,10 @@ class CustomerController extends ResourceSearchController
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function facilities(Customer $customer)
+    {
+        return FacilityResource::collection($customer->facilities);
     }
 }

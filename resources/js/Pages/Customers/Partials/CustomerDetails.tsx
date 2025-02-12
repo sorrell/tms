@@ -1,3 +1,4 @@
+import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
 import Notes from '@/Components/Notes';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
@@ -25,7 +26,9 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                     <TabsTrigger value="facilities">Facilities</TabsTrigger>
                     <TabsTrigger value="contacts">Contacts</TabsTrigger>
                     <TabsTrigger value="documents">Documents</TabsTrigger>
-                    <TabsTrigger value="shipments">Shipment History</TabsTrigger>
+                    <TabsTrigger value="shipments">
+                        Shipment History
+                    </TabsTrigger>
                 </TabsList>
 
                 {/* Overview Tab */}
@@ -39,15 +42,21 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                             <CardContent className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <div className="text-sm text-gray-500">Open AR</div>
+                                        <div className="text-sm text-gray-500">
+                                            Open AR
+                                        </div>
                                         <Skeleton className="mt-1 h-6 w-24" />
                                     </div>
                                     <div>
-                                        <div className="text-sm text-gray-500">Closed AR</div>
+                                        <div className="text-sm text-gray-500">
+                                            Closed AR
+                                        </div>
                                         <Skeleton className="mt-1 h-6 w-24" />
                                     </div>
                                     <div>
-                                        <div className="text-sm text-gray-500">Credit Line</div>
+                                        <div className="text-sm text-gray-500">
+                                            Credit Line
+                                        </div>
                                         <Skeleton className="mt-1 h-6 w-24" />
                                     </div>
                                 </div>
@@ -62,11 +71,15 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                             <CardContent>
                                 <div className="space-y-4">
                                     <div>
-                                        <div className="text-sm text-gray-500">Invoice Preferences</div>
+                                        <div className="text-sm text-gray-500">
+                                            Invoice Preferences
+                                        </div>
                                         <Skeleton className="mt-1 h-6 w-full" />
                                     </div>
                                     <div>
-                                        <div className="text-sm text-gray-500">Billing Address</div>
+                                        <div className="text-sm text-gray-500">
+                                            Billing Address
+                                        </div>
                                         <Skeleton className="mt-1 h-20 w-full" />
                                     </div>
                                 </div>
@@ -94,15 +107,7 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
 
                 {/* Facilities Tab */}
                 <TabsContent value="facilities">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <Skeleton className="h-12 w-full" />
-                                <Skeleton className="h-12 w-full" />
-                                <Skeleton className="h-12 w-full" />
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <CustomerFacilities customer={customer} />
                 </TabsContent>
 
                 {/* Contacts Tab */}
