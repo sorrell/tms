@@ -54,7 +54,9 @@ class CustomerController extends ResourceSearchController
      */
     public function show(Customer $customer)
     {
-        //
+        return Inertia::render('Customers/Show', [
+            'customer' => CustomerResource::make($customer),
+        ]);
     }
 
     /**

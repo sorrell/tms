@@ -115,7 +115,7 @@ export default function Create({
             breadcrumbs={[
                 {
                     title: 'Shipments',
-                    url: route('shipments.index'),
+                    href: route('shipments.index'),
                 },
                 {
                     title: 'Create',
