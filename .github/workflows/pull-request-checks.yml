@@ -45,4 +45,4 @@ jobs:
         chmod -R 755 public/build
       
     - name: Run Pre-Commit Checks
-      run: php artisan dev:check      
+      run: php artisan dev:check --ansi  
