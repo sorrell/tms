@@ -21,9 +21,20 @@ export type PageProps<
     };
 };
 
+export interface Location {
+    id: number;
+    name: string;
+    address_line_1: string;
+    address_line_2: string;
+    address_city: string;
+    address_state: string;
+    address_zipcode: string;
+}
+
 export interface Facility {
     id: number;
     name: string;
+    location?: Location;
 }
 
 export interface Carrier {

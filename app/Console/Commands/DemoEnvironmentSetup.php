@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Carrier;
 use App\Models\Facility;
 use App\Models\Location;
-use App\Models\Customer;
+use App\Models\Customers\Customer;
 use Database\Seeders\DemoEnvironmentSeeder;
 use Illuminate\Console\Command;
 

@@ -4,7 +4,7 @@ namespace App\Models\Shipments;
 
 use App\Http\Resources\ShipmentResource;
 use App\Models\Carrier;
-use App\Models\Customer;
+use App\Models\Customers\Customer;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
 use App\Traits\Notable;

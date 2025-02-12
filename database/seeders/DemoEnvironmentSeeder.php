@@ -6,7 +6,7 @@ use App\Models\Carrier;
 use App\Models\Facility;
 use App\Models\Location;
 use App\Models\Shipments\Shipment;
-use App\Models\Customer;
+use App\Models\Customers\Customer;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

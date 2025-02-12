@@ -2,27 +2,12 @@ import CustomerList from '@/Components/Customers/CustomerList/CustomerList';
 import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Customer } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
-import CustomerDetails from './Partials/CustomerDetails';
+import { Head, Link, router } from '@inertiajs/react';
 
 export default function Index() {
-    const { customer } = usePage().props;
-    const [selectedCustomer, setSelectedCustomer] = useState<
-        Customer | undefined
-    >(customer as Customer);
-
-    useEffect(() => {
-        if (selectedCustomer) {
-            const url = new URL(window.location.href);
-            url.searchParams.set('customer_id', selectedCustomer.id.toString());
-            window.history.pushState({}, '', url.toString());
-        } else {
-            const url = new URL(window.location.href);
-            url.searchParams.delete('customer_id');
-            window.history.pushState({}, '', url.toString());
-        }
-    }, [selectedCustomer]);
+    const setSelectedCustomer = (customer: Customer) => {
+        router.visit(route('customers.show', { customer }));
+    };
 
     return (
         <AuthenticatedLayout
@@ -44,7 +29,6 @@ export default function Index() {
             </div>
             <div className="mx-auto flex max-w-screen-2xl flex-col gap-4">
                 <CustomerList onSelect={setSelectedCustomer} />
-                <CustomerDetails customer={selectedCustomer} />
             </div>
         </AuthenticatedLayout>
     );

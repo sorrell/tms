@@ -33,4 +33,4 @@ jobs:
       run: npm run build
   
     - name: Run Pre-Commit Checks
-      run: php artisan dev:check      
+      run: php artisan dev:check --ansi  

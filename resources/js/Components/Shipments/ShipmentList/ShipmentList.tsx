@@ -8,42 +8,53 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
 
-export default function ShipmentList() {
+export default function ShipmentList({
+    requiredFilters,
+}: {
+    requiredFilters?: {
+        name: string;
+        value: string;
+    }[];
+}) {
     const [data, setData] = useState<Shipment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const getShipments = useCallback((searchTerm?: string) => {
-        const getData = (): Promise<Shipment[]> => {
-            return axios
-                .get(route('shipments.search'), {
-                    params: {
-                        query: searchTerm,
-                        with: [
-                            'carrier',
-                            'customers',
-                            'stops',
-                            'trailer_type',
-                            'trailer_size',
-                        ],
-                    },
+    const getShipments = useCallback(
+        (searchTerm?: string) => {
+            const getData = (): Promise<Shipment[]> => {
+                return axios
+                    .get(route('shipments.search'), {
+                        params: {
+                            query: searchTerm,
+                            with: [
+                                'carrier',
+                                'customers',
+                                'stops',
+                                'trailer_type',
+                                'trailer_size',
+                            ],
+                            filters: requiredFilters,
+                        },
+                    })
+                    .then((response) => response.data);
+            };
+
+            setIsLoading(true);
+
+            getData()
+                .then((shipments) => {
+                    setData(shipments);
+                    setIsLoading(false);
                 })
-                .then((response) => response.data);
-        };
-
-        setIsLoading(true);
-
-        getData()
-            .then((shipments) => {
-                setData(shipments);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching shipments:', error);
-                setIsLoading(false);
-            });
-    }, []);
+                .catch((error) => {
+                    console.error('Error fetching shipments:', error);
+                    setIsLoading(false);
+                });
+        },
+        [requiredFilters],
+    );
 
     useEffect(() => {
         if (!isLoading) {

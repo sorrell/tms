@@ -29,7 +29,7 @@ export default function Show({
             breadcrumbs={[
                 {
                     title: 'Shipments',
-                    url: route('shipments.index'),
+                    href: route('shipments.index'),
                 },
                 {
                     title: `${shipment.shipment_number ?? `id:${shipment.id}`}`,

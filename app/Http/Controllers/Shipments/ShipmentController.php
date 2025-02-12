@@ -19,7 +19,7 @@ use App\Models\Carrier;
 use App\Models\Facility;
 use App\Models\Shipments\TrailerSize;
 use App\Models\Shipments\TrailerType;
-use App\Models\Customer;
+use App\Models\Customers\Customer;
 use Inertia\Inertia;
 
 class ShipmentController extends ResourceSearchController
