@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Customers\CreateCustomerFacility;
+use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Facilities\CreateFacility;
 use App\Actions\Locations\CreateLocation;
 use App\Actions\Notes\CreateNote;
@@ -84,6 +85,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::resource('customers', CustomerController::class);
     Route::post('customers/{customer}/facilities', CreateCustomerFacility::class)->name('customers.facilities.store');
     Route::get('customers/{customer}/facilities', [CustomerController::class, 'facilities'])->name('customers.facilities.index');
+    Route::delete('customers/{customer}/facilities/{facility}', DeleteCustomerFacility::class)->name('customers.facilities.destroy');
 
     Route::get('shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
     Route::resource('shipments', ShipmentController::class, [

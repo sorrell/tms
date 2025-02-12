@@ -25,31 +25,40 @@ export default function CustomerFacilities({
         useForm<{ facility_id: string | null }>({
             facility_id: null,
         });
+
     const [facilities, setFacilities] = useState<Facility[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const loadFacilities = useCallback(
-        (customer: Customer) => {
-            setIsLoading(true);
-            axios
-                .get(
-                    route('customers.facilities.index', {
-                        customer: customer.id,
-                    }),
-                )
-                .then((response) => {
-                    setFacilities(response.data);
-                    setIsLoading(false);
-                });
-        },
-        [setFacilities, setIsLoading],
-    );
+    const detachFacility = (facility: Facility) => {
+        axios
+            .delete(
+                route('customers.facilities.destroy', {
+                    customer: customer?.id,
+                    facility: facility.id,
+                }),
+            )
+            .then(() => {
+                loadFacilities();
+            });
+    };
+
+    const loadFacilities = useCallback(() => {
+        setIsLoading(true);
+        axios
+            .get(
+                route('customers.facilities.index', {
+                    customer: customer.id,
+                }),
+            )
+            .then((response) => {
+                setFacilities(response.data);
+                setIsLoading(false);
+            });
+    }, [setFacilities, setIsLoading, customer]);
 
     useEffect(() => {
-        if (customer) {
-            loadFacilities(customer);
-        }
-    }, [customer, loadFacilities]);
+        loadFacilities();
+    }, [loadFacilities]);
 
     return (
         <Card>
@@ -65,13 +74,24 @@ export default function CustomerFacilities({
                 </div>
             </CardHeader>
             <CardContent className="pt-6">
-                <div className="space-y-4">
+                <div className="flex flex-col gap-2 space-y-4">
                     {isLoading ? (
                         <Skeleton className="h-32 w-full" />
                     ) : (
                         <>
                             {facilities.map((facility) => (
-                                <div key={facility.id}>{facility.name}</div>
+                                <div
+                                    key={facility.id}
+                                    className="flex items-center justify-between"
+                                >
+                                    <span>{facility.name}</span>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => detachFacility(facility)}
+                                    >
+                                        Detach
+                                    </Button>
+                                </div>
                             ))}
                         </>
                     )}
@@ -116,7 +136,8 @@ export default function CustomerFacilities({
                                     }),
                                     {
                                         onSuccess: () => {
-                                            // TODO - refresh the list
+                                            loadFacilities();
+
                                             // TODO - show a toast
                                             setFacilityModalOpen(false);
                                         },
