@@ -1,12 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Customers;
 
-use App\Models\Location;
-use App\Models\Organizations\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Customer>

@@ -5,7 +5,7 @@ namespace Tests\Unit\Actions\Shipments;
 use App\Actions\Shipments\CreateShipment;
 use App\Models\Carrier;
 use App\Models\Facility;
-use App\Models\Customer;
+use App\Models\Customers\Customer;
 use App\Models\Shipments\Shipment;
 use App\Models\Shipments\TrailerType;
 use Illuminate\Support\Facades\DB;
