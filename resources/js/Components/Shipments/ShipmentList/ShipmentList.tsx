@@ -9,7 +9,7 @@ import { columns } from './Columns';
 import { DataTable } from './DataTable';
 
 export default function ShipmentList({
-    requiredFilters = [],
+    requiredFilters,
 }: {
     requiredFilters?: {
         name: string;
