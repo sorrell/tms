@@ -8,28 +8,18 @@ on:
 jobs:
   code-standards-checks:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/loadpartner/tms:image-base
     
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
-        tools: composer:v2
     
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    
-    - name: Install Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        
+            
     - name: Install NPM Dependencies
       run: npm install
       
@@ -39,10 +29,8 @@ jobs:
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
 
-    - name: Prepare Directory Permissions
-      run: |
-        mkdir -p public/build
-        chmod -R 755 public/build
-      
+    - name: Build Frontend Assets
+      run: npm run build
+  
     - name: Run Pre-Commit Checks
       run: php artisan dev:check --ansi  
