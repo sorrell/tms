@@ -92,11 +92,14 @@ export default function CustomerFacilities({
                                         <div className="flex flex-col gap-2">
                                             <span>{facility.name}</span>
                                             <span className="text-sm text-muted-foreground">
-                                                {facility.location.address_city}
+                                                {
+                                                    facility.location
+                                                        ?.address_city
+                                                }
                                                 ,&nbsp;
                                                 {
                                                     facility.location
-                                                        .address_state
+                                                        ?.address_state
                                                 }
                                             </span>
                                         </div>

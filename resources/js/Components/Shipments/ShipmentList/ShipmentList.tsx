@@ -21,37 +21,40 @@ export default function ShipmentList({
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const getShipments = useCallback((searchTerm?: string) => {
-        const getData = (): Promise<Shipment[]> => {
-            return axios
-                .get(route('shipments.search'), {
-                    params: {
-                        query: searchTerm,
-                        with: [
-                            'carrier',
-                            'customers',
-                            'stops',
-                            'trailer_type',
-                            'trailer_size',
-                        ],
-                        filters: requiredFilters,
-                    },
+    const getShipments = useCallback(
+        (searchTerm?: string) => {
+            const getData = (): Promise<Shipment[]> => {
+                return axios
+                    .get(route('shipments.search'), {
+                        params: {
+                            query: searchTerm,
+                            with: [
+                                'carrier',
+                                'customers',
+                                'stops',
+                                'trailer_type',
+                                'trailer_size',
+                            ],
+                            filters: requiredFilters,
+                        },
+                    })
+                    .then((response) => response.data);
+            };
+
+            setIsLoading(true);
+
+            getData()
+                .then((shipments) => {
+                    setData(shipments);
+                    setIsLoading(false);
                 })
-                .then((response) => response.data);
-        };
-
-        setIsLoading(true);
-
-        getData()
-            .then((shipments) => {
-                setData(shipments);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching shipments:', error);
-                setIsLoading(false);
-            });
-    }, []);
+                .catch((error) => {
+                    console.error('Error fetching shipments:', error);
+                    setIsLoading(false);
+                });
+        },
+        [requiredFilters],
+    );
 
     useEffect(() => {
         if (!isLoading) {

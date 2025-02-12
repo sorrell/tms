@@ -16,6 +16,20 @@ namespace App\Actions\Customers;
 class CreateCustomerFacility
 {
 }
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $customerId, int $facilityId)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $customerId, int $facilityId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $customerId, int $facilityId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, int $customerId, int $facilityId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, int $customerId, int $facilityId)
+ * @method static dispatchSync(int $customerId, int $facilityId)
+ * @method static dispatchNow(int $customerId, int $facilityId)
+ * @method static dispatchAfterResponse(int $customerId, int $facilityId)
+ * @method static \App\Models\Facility run(int $customerId, int $facilityId)
+ */
+class DeleteCustomerFacility
+{
+}
 namespace App\Actions\Facilities;
 
 /**
