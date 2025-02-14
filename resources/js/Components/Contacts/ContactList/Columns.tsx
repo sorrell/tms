@@ -118,7 +118,7 @@ export const columns: ColumnDef<
         header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             return (
-                <div className="flex gap-1 justify-end">
+                <div className="flex justify-end gap-1">
                     <Button
                         variant="outline"
                         size="icon"

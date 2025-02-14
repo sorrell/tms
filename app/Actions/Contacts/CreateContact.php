@@ -22,13 +22,15 @@ class CreateContact
         Model $contactFor,
     ): Contact
     {
-        return $contactFor->contacts()->create([
+        return Contact::create([
             'title' => $title,
             'name' => $name,
             'email' => $email,
             'mobile_phone' => $mobile_phone,
             'office_phone' => $office_phone,
             'office_phone_extension' => $office_phone_extension,
+            'contact_for_id' => $contactFor->getKey(),
+            'contact_for_type' => $contactFor->getMorphClass(),
         ]);
     }
 

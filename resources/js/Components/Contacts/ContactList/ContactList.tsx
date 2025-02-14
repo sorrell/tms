@@ -62,77 +62,81 @@ export default function ContactList({
         contact_for_type: contactForType,
     });
 
-    const onDeleteContact = useCallback((contact: Contact) => {
-        axios
-            .delete(route('contacts.destroy', contact.id))
-            .then(() => {
-                getContacts();
-                toast({
-                    variant: 'destructive',
-                    title: 'Contact deleted successfully',
+    const getContacts = useCallback(
+        (searchTerm?: string) => {
+            const onDeleteContact = (contact: Contact) => {
+                axios
+                    .delete(route('contacts.destroy', contact.id))
+                    .then(() => {
+                        getContacts();
+                        toast({
+                            variant: 'destructive',
+                            title: 'Contact deleted successfully',
+                        });
+                    })
+                    .catch(() => {
+                        console.error('Error deleting contact');
+                    });
+            };
+
+            const openEditContactDialog = (contact: Contact) => {
+                setEditContact(contact);
+                setContactFormData({
+                    title: contact.title ?? '',
+                    name: contact.name,
+                    email: contact.email ?? '',
+                    mobile_phone: contact.mobile_phone ?? '',
+                    office_phone: contact.office_phone ?? '',
+                    office_phone_extension:
+                        contact.office_phone_extension ?? '',
+                    contact_for_id: contact.contact_for_id,
+                    contact_for_type: contact.contact_for_type,
                 });
-            })
-            .catch(() => {
-                console.error('Error deleting contact');
-            });
-    }, []);
+                setIsAddContactDialogOpen(true); // we reuse the add dialog
+            };
 
-    const openEditContactDialog = useCallback((contact: Contact) => {
-        setEditContact(contact);
-        setContactFormData({
-            title: contact.title ?? '',
-            name: contact.name,
-            email: contact.email ?? '',
-            mobile_phone: contact.mobile_phone ?? '',
-            office_phone: contact.office_phone ?? '',
-            office_phone_extension: contact.office_phone_extension ?? '',
-            contact_for_id: contact.contact_for_id,
-            contact_for_type: contact.contact_for_type,
-        });
-        setIsAddContactDialogOpen(true); // we reuse the add dialog
-    }, []);
+            const getData = (): Promise<Contact[]> => {
+                return axios
+                    .get(route('contacts.search'), {
+                        params: {
+                            query: searchTerm,
+                            with: [],
+                            filters: [
+                                {
+                                    name: 'contact_for_id',
+                                    value: contactForId,
+                                },
+                                {
+                                    name: 'contact_for_type',
+                                    value: contactForType,
+                                },
+                            ],
+                        },
+                    })
+                    .then((response) => response.data);
+            };
 
-    const getContacts = useCallback((searchTerm?: string) => {
-        const getData = (): Promise<Contact[]> => {
-            return axios
-                .get(route('contacts.search'), {
-                    params: {
-                        query: searchTerm,
-                        with: [],
-                        filters: [
-                            {
-                                name: 'contact_for_id',
-                                value: contactForId,
-                            },
-                            {
-                                name: 'contact_for_type',
-                                value: contactForType,
-                            },
-                        ],
-                    },
+            setIsLoading(true);
+
+            getData()
+                .then((contacts) => {
+                    setData(
+                        contacts.map((contact) => ({
+                            ...contact,
+                            // Pass in our action button functions
+                            onDelete: onDeleteContact,
+                            onEdit: openEditContactDialog,
+                        })),
+                    );
+                    setIsLoading(false);
                 })
-                .then((response) => response.data);
-        };
-
-        setIsLoading(true);
-
-        getData()
-            .then((contacts) => {
-                setData(
-                    contacts.map((contact) => ({
-                        ...contact,
-                        // Pass in our action button functions
-                        onDelete: onDeleteContact,
-                        onEdit: openEditContactDialog,
-                    })),
-                );
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching contacts:', error);
-                setIsLoading(false);
-            });
-    }, []);
+                .catch((error) => {
+                    console.error('Error fetching contacts:', error);
+                    setIsLoading(false);
+                });
+        },
+        [contactForId, contactForType],
+    );
 
     useEffect(() => {
         if (!isLoading) {
