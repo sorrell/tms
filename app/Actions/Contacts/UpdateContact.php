@@ -67,7 +67,7 @@ class UpdateContact
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'mobile_phone' => ['nullable', 'string', 'max:255', 'phone'],
-            'office_phone' => ['nullable', 'string', 'max:255'],
+            'office_phone' => ['nullable', 'string', 'max:255', 'phone'],
             'office_phone_extension' => ['nullable', 'string', 'max:255'],
         ];
     }
