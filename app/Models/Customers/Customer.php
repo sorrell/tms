@@ -3,6 +3,7 @@
 namespace App\Models\Customers;
 
 use App\Models\Facility;
+use App\Traits\HasContacts;
 use App\Traits\HasOrganization;
 use App\Traits\Notable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Laravel\Scout\Searchable;
 
 class Customer extends Model
 {
-    use HasFactory, HasOrganization, Searchable, Notable;
+    use HasFactory, HasOrganization, Searchable, Notable, HasContacts;
 
     protected $fillable = [
         'organization_id',

@@ -1,5 +1,8 @@
 <?php
 
+use App\Actions\Contacts\CreateContact;
+use App\Actions\Contacts\DeleteContact;
+use App\Actions\Contacts\UpdateContact;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Facilities\CreateFacility;
@@ -13,6 +16,7 @@ use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
 use App\Http\Controllers\CarrierController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NoteController;
@@ -104,6 +108,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('locations/search', [LocationController::class, 'search'])->name('locations.search');
     Route::post('locations', CreateLocation::class)->name('locations.store');
+
+    Route::get('contacts/search', [ContactController::class, 'search'])->name('contacts.search');
+    Route::post('contacts', CreateContact::class)->name('contacts.store');
+    Route::put('contacts/{contact}', UpdateContact::class)->name('contacts.update');
+    Route::delete('contacts/{contact}', DeleteContact::class)->name('contacts.destroy');
 });
 
 require __DIR__ . '/auth.php';

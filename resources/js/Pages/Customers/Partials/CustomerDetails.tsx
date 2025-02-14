@@ -1,3 +1,4 @@
+import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
 import Notes from '@/Components/Notes';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
@@ -157,12 +158,10 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                 <TabsContent value="contacts">
                     <Card>
                         <CardContent className="pt-6">
-                            <div className="grid grid-cols-2 gap-6">
-                                <Skeleton className="h-32 w-full" />
-                                <Skeleton className="h-32 w-full" />
-                                <Skeleton className="h-32 w-full" />
-                                <Skeleton className="h-32 w-full" />
-                            </div>
+                            <ContactList
+                                contactForId={customer?.id || 0}
+                                contactForType={`App\\Models\\Customers\\Customer`}
+                            />
                         </CardContent>
                     </Card>
                 </TabsContent>

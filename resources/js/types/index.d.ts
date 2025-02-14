@@ -31,6 +31,21 @@ export interface Location {
     address_zipcode: string;
 }
 
+export interface Contact {
+    id: number;
+    title: string;
+    name: string;
+    email: string;
+    mobile_phone: string;
+    office_phone: string;
+    office_phone_extension: string;
+    contact_for_id: number;
+    contact_for_type: string;
+    contact_for?: {
+        id: number;
+    };
+}
+
 export interface Facility {
     id: number;
     name: string;
