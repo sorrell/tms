@@ -13,6 +13,7 @@ class Contact extends Model
 
     protected $fillable = [
         'organization_id',
+        'title',
         'name',
         'email',
         'mobile_phone',

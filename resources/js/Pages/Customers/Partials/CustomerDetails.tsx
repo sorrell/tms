@@ -158,12 +158,10 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                 <TabsContent value="contacts">
                     <Card>
                         <CardContent className="pt-6">
-                            <div className="grid grid-cols-2 gap-6">
-                                <ContactList
-                                    contactForId={customer?.id || 0}
-                                    contactForType={`App\\Models\\Customers\\Customer`}
-                                />
-                            </div>
+                            <ContactList
+                                contactForId={customer?.id || 0}
+                                contactForType={`App\\Models\\Customers\\Customer`}
+                            />
                         </CardContent>
                     </Card>
                 </TabsContent>

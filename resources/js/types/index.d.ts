@@ -33,6 +33,7 @@ export interface Location {
 
 export interface Contact {
     id: number;
+    title: string;
     name: string;
     email: string;
     mobile_phone: string;

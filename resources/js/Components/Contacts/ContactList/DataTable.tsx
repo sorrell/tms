@@ -19,7 +19,6 @@ import {
 interface DataTableProps<TData extends { id: number | string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    onSelect: (customer: TData) => void;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -58,7 +57,6 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
                             <TableRow
-                                className="cursor-pointer"
                                 key={row.id}
                                 data-state={row.getIsSelected() && 'selected'}
                             >

@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\Contacts\CreateContact;
+use App\Actions\Contacts\DeleteContact;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Facilities\CreateFacility;
@@ -107,6 +109,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::post('locations', CreateLocation::class)->name('locations.store');
 
     Route::get('contacts/search', [ContactController::class, 'search'])->name('contacts.search');
+    Route::post('contacts', CreateContact::class)->name('contacts.store');
+    Route::delete('contacts/{contact}', DeleteContact::class)->name('contacts.destroy');
 });
 
 require __DIR__ . '/auth.php';

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('contact_for');
             $table->foreignId('organization_id')->constrained('organizations');
+            $table->string('title')->nullable();
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('mobile_phone')->nullable();
