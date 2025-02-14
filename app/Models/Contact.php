@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\ContactResource;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -28,6 +29,14 @@ class Contact extends Model
     public function getSelectableLabelAttribute() : string
     {
         return sprintf('%s', $this->name);
+    }
+
+    /**
+     * Defines the searchable content for scout search
+     */
+    public function toSearchableArray()
+    {
+        return new ContactResource($this);
     }
 
     /**

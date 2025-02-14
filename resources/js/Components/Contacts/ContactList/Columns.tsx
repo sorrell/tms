@@ -6,7 +6,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Copy, Pencil, Trash } from 'lucide-react';
 
 export const columns: ColumnDef<
-    Contact & { onDelete?: (contact: Contact) => void }
+    Contact & {
+        onDelete?: (contact: Contact) => void;
+        onEdit?: (contact: Contact) => void;
+    }
 >[] = [
     {
         accessorKey: 'name',
@@ -112,11 +115,15 @@ export const columns: ColumnDef<
     },
     {
         accessorKey: 'actions',
-        header: 'Actions',
+        header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             return (
-                <div className="flex gap-1">
-                    <Button variant="outline" size="icon">
+                <div className="flex gap-1 justify-end">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => row.original.onEdit?.(row.original)}
+                    >
                         <Pencil className="h-4 w-4" />
                     </Button>
                     <Button

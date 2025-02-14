@@ -2,6 +2,7 @@
 
 use App\Actions\Contacts\CreateContact;
 use App\Actions\Contacts\DeleteContact;
+use App\Actions\Contacts\UpdateContact;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Facilities\CreateFacility;
@@ -110,6 +111,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('contacts/search', [ContactController::class, 'search'])->name('contacts.search');
     Route::post('contacts', CreateContact::class)->name('contacts.store');
+    Route::put('contacts/{contact}', UpdateContact::class)->name('contacts.update');
     Route::delete('contacts/{contact}', DeleteContact::class)->name('contacts.destroy');
 });
 

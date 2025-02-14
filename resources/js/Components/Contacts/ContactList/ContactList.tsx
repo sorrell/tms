@@ -31,15 +31,17 @@ export default function ContactList({
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const [isAddContactDialogOpen, setIsAddContactDialogOpen] = useState(false);
+    const [editContact, setEditContact] = useState<Contact | null>(null);
 
     const { toast } = useToast();
 
     const {
-        data: newContactFormData,
-        setData: setNewContactFormData,
-        post: createNewContact,
-        reset: resetNewContactForm,
-        errors: newContactFormErrors,
+        data: contactFormData,
+        setData: setContactFormData,
+        post: postContactForm,
+        reset: resetContactForm,
+        errors: contactFormErrors,
+        put: putContactForm,
     } = useForm<{
         title?: string;
         name: string;
@@ -75,6 +77,21 @@ export default function ContactList({
             });
     }, []);
 
+    const openEditContactDialog = useCallback((contact: Contact) => {
+        setEditContact(contact);
+        setContactFormData({
+            title: contact.title ?? '',
+            name: contact.name,
+            email: contact.email ?? '',
+            mobile_phone: contact.mobile_phone ?? '',
+            office_phone: contact.office_phone ?? '',
+            office_phone_extension: contact.office_phone_extension ?? '',
+            contact_for_id: contact.contact_for_id,
+            contact_for_type: contact.contact_for_type,
+        });
+        setIsAddContactDialogOpen(true); // we reuse the add dialog
+    }, []);
+
     const getContacts = useCallback((searchTerm?: string) => {
         const getData = (): Promise<Contact[]> => {
             return axios
@@ -104,7 +121,9 @@ export default function ContactList({
                 setData(
                     contacts.map((contact) => ({
                         ...contact,
+                        // Pass in our action button functions
                         onDelete: onDeleteContact,
+                        onEdit: openEditContactDialog,
                     })),
                 );
                 setIsLoading(false);
@@ -148,7 +167,8 @@ export default function ContactList({
                 <div>
                     <Button
                         onClick={() => {
-                            resetNewContactForm();
+                            resetContactForm();
+                            setEditContact(null);
                             setIsAddContactDialogOpen(true);
                         }}
                     >
@@ -172,78 +192,65 @@ export default function ContactList({
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add Contact</DialogTitle>
+                        <DialogTitle>
+                            {editContact ? 'Edit Contact' : 'Add Contact'}
+                        </DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div>
                             <Label htmlFor="title">Title</Label>
                             <Input
                                 id="title"
-                                value={newContactFormData.title}
+                                value={contactFormData.title}
                                 onChange={(e) =>
-                                    setNewContactFormData(
-                                        'title',
-                                        e.target.value,
-                                    )
+                                    setContactFormData('title', e.target.value)
                                 }
                             />
-                            {newContactFormErrors.title && (
-                                <InputError
-                                    message={newContactFormErrors.title}
-                                />
+                            {contactFormErrors.title && (
+                                <InputError message={contactFormErrors.title} />
                             )}
                         </div>
                         <div>
                             <Label htmlFor="name">Name</Label>
                             <Input
                                 id="name"
-                                value={newContactFormData.name}
+                                value={contactFormData.name}
                                 onChange={(e) =>
-                                    setNewContactFormData(
-                                        'name',
-                                        e.target.value,
-                                    )
+                                    setContactFormData('name', e.target.value)
                                 }
                             />
-                            {newContactFormErrors.name && (
-                                <InputError
-                                    message={newContactFormErrors.name}
-                                />
+                            {contactFormErrors.name && (
+                                <InputError message={contactFormErrors.name} />
                             )}
                         </div>
                         <div>
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
-                                value={newContactFormData.email}
+                                value={contactFormData.email}
                                 onChange={(e) =>
-                                    setNewContactFormData(
-                                        'email',
-                                        e.target.value,
-                                    )
+                                    setContactFormData('email', e.target.value)
                                 }
                             />
-                            {newContactFormErrors.email && (
-                                <InputError
-                                    message={newContactFormErrors.email}
-                                />
+                            {contactFormErrors.email && (
+                                <InputError message={contactFormErrors.email} />
                             )}
                         </div>
                         <div>
                             <Label htmlFor="mobile_phone">Mobile Phone</Label>
                             <Input
                                 id="mobile_phone"
-                                value={newContactFormData.mobile_phone}
+                                value={contactFormData.mobile_phone}
                                 onChange={(e) =>
-                                    setNewContactFormData(
+                                    setContactFormData(
                                         'mobile_phone',
                                         e.target.value,
                                     )
                                 }
                             />
-                            {newContactFormErrors.mobile_phone && (
+                            {contactFormErrors.mobile_phone && (
                                 <InputError
-                                    message={newContactFormErrors.mobile_phone}
+                                    message={contactFormErrors.mobile_phone}
                                 />
                             )}
                         </div>
@@ -254,19 +261,17 @@ export default function ContactList({
                                 </Label>
                                 <Input
                                     id="office_phone"
-                                    value={newContactFormData.office_phone}
+                                    value={contactFormData.office_phone}
                                     onChange={(e) =>
-                                        setNewContactFormData(
+                                        setContactFormData(
                                             'office_phone',
                                             e.target.value,
                                         )
                                     }
                                 />
-                                {newContactFormErrors.office_phone && (
+                                {contactFormErrors.office_phone && (
                                     <InputError
-                                        message={
-                                            newContactFormErrors.office_phone
-                                        }
+                                        message={contactFormErrors.office_phone}
                                     />
                                 )}
                             </div>
@@ -277,19 +282,19 @@ export default function ContactList({
                                 <Input
                                     id="office_phone_extension"
                                     value={
-                                        newContactFormData.office_phone_extension
+                                        contactFormData.office_phone_extension
                                     }
                                     onChange={(e) =>
-                                        setNewContactFormData(
+                                        setContactFormData(
                                             'office_phone_extension',
                                             e.target.value,
                                         )
                                     }
                                 />
-                                {newContactFormErrors.office_phone_extension && (
+                                {contactFormErrors.office_phone_extension && (
                                     <InputError
                                         message={
-                                            newContactFormErrors.office_phone_extension
+                                            contactFormErrors.office_phone_extension
                                         }
                                     />
                                 )}
@@ -305,18 +310,48 @@ export default function ContactList({
                         </Button>
                         <Button
                             onClick={() => {
-                                createNewContact(route('contacts.store'), {
-                                    onSuccess: () => {
-                                        setIsAddContactDialogOpen(false);
-                                        getContacts();
-                                    },
-                                    onError: () => {
-                                        console.error('Error creating contact');
-                                    },
-                                });
+                                if (editContact) {
+                                    putContactForm(
+                                        route(
+                                            'contacts.update',
+                                            editContact.id,
+                                        ),
+                                        {
+                                            onSuccess: () => {
+                                                setIsAddContactDialogOpen(
+                                                    false,
+                                                );
+                                                getContacts();
+                                                toast({
+                                                    title: 'Contact updated',
+                                                });
+                                            },
+                                            onError: () => {
+                                                console.error(
+                                                    'Error updating contact',
+                                                );
+                                            },
+                                        },
+                                    );
+                                } else {
+                                    postContactForm(route('contacts.store'), {
+                                        onSuccess: () => {
+                                            setIsAddContactDialogOpen(false);
+                                            getContacts();
+                                            toast({
+                                                title: 'Contact created',
+                                            });
+                                        },
+                                        onError: () => {
+                                            console.error(
+                                                'Error creating contact',
+                                            );
+                                        },
+                                    });
+                                }
                             }}
                         >
-                            Add Contact
+                            {editContact ? 'Update Contact' : 'Add Contact'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
