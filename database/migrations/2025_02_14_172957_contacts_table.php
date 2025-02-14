@@ -16,10 +16,10 @@ return new class extends Migration
             $table->morphs('contact_for');
             $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
-            $table->string('email');
-            $table->string('mobile_phone');
-            $table->string('office_phone');
-            $table->string('office_phone_extension');
+            $table->string('email')->nullable();
+            $table->string('mobile_phone')->nullable();
+            $table->string('office_phone')->nullable();
+            $table->string('office_phone_extension')->nullable();
             $table->timestampsTz();
         });
     }
