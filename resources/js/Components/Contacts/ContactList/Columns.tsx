@@ -5,7 +5,9 @@ import { Contact } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { Copy, Pencil, Trash } from 'lucide-react';
 
-export const columns: ColumnDef<Contact>[] = [
+export const columns: ColumnDef<
+    Contact & { onDelete?: (contact: Contact) => void }
+>[] = [
     {
         accessorKey: 'name',
         header: 'Name',
@@ -117,7 +119,11 @@ export const columns: ColumnDef<Contact>[] = [
                     <Button variant="outline" size="icon">
                         <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="destructive" size="icon">
+                    <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => row.original.onDelete?.(row.original)}
+                    >
                         <Trash className="h-4 w-4" />
                     </Button>
                 </div>

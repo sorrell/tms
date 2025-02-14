@@ -60,21 +60,19 @@ export default function ContactList({
         contact_for_type: contactForType,
     });
 
-    const { delete: deleteContact } = useForm();
-
     const onDeleteContact = useCallback((contact: Contact) => {
-        deleteContact(route('contacts.destroy', contact.id), {
-            onSuccess: () => {
+        axios
+            .delete(route('contacts.destroy', contact.id))
+            .then(() => {
                 getContacts();
                 toast({
                     variant: 'destructive',
                     title: 'Contact deleted successfully',
                 });
-            },
-            onError: () => {
+            })
+            .catch(() => {
                 console.error('Error deleting contact');
-            },
-        });
+            });
     }, []);
 
     const getContacts = useCallback((searchTerm?: string) => {
@@ -103,7 +101,12 @@ export default function ContactList({
 
         getData()
             .then((contacts) => {
-                setData(contacts);
+                setData(
+                    contacts.map((contact) => ({
+                        ...contact,
+                        onDelete: onDeleteContact,
+                    })),
+                );
                 setIsLoading(false);
             })
             .catch((error) => {
@@ -160,10 +163,7 @@ export default function ContactList({
                 </>
             ) : (
                 <>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                    />
+                    <DataTable columns={columns} data={data} />
                 </>
             )}
             <Dialog
