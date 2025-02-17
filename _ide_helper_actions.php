@@ -1,5 +1,21 @@
 <?php
 
+namespace App\Actions\Carriers;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static dispatchSync(\App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static dispatchNow(\App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static dispatchAfterResponse(\App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ * @method static \App\Models\Carrier run(\App\Models\Carrier $carrier, string $mc_number = null, string $dot_number = null, int $physical_location_id = null, string $contact_email = null, string $contact_phone = null)
+ */
+class UpdateCarrierGeneral
+{
+}
 namespace App\Actions\Contacts;
 
 /**

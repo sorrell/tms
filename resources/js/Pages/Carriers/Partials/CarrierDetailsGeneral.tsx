@@ -88,7 +88,7 @@ export default function CarrierDetailsGeneral({
                 <CardContent>
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-4">
-                        <div>
+                            <div>
                                 <Label
                                     htmlFor="dot_number"
                                     className="text-sm text-muted-foreground"

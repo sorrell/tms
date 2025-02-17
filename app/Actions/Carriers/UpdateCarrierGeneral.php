@@ -13,11 +13,11 @@ class UpdateCarrierGeneral
 
     public function handle(
         Carrier $carrier,
-        string $mc_number,
-        string $dot_number,
-        int $physical_location_id,
-        string $contact_email,
-        string $contact_phone,
+        string $mc_number = null,
+        string $dot_number = null,
+        int $physical_location_id = null,
+        string $contact_email = null,
+        string $contact_phone = null,
     ): Carrier
     {
         $carrier->update([
