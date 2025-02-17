@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-trait Notable
+trait HasNotes
 {
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Note, $this>
