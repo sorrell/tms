@@ -34,9 +34,7 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">{customer?.name}</h1>
                 <div className="flex gap-2">
-                    {/* Placeholder for action buttons */}
-                    <Skeleton className="h-10 w-24" />
-                    <Skeleton className="h-10 w-24" />
+                    {/* Space for future buttons */}
                 </div>
             </div>
 
@@ -171,9 +169,7 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                     <Card>
                         <CardContent className="pt-6">
                             <div className="space-y-4">
-                                <Skeleton className="h-16 w-full" />
-                                <Skeleton className="h-16 w-full" />
-                                <Skeleton className="h-16 w-full" />
+                                <Skeleton className="h-64 w-full" />
                             </div>
                         </CardContent>
                     </Card>
