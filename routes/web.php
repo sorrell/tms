@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Carriers\UpdateCarrierGeneral;
 use App\Actions\Contacts\CreateContact;
 use App\Actions\Contacts\DeleteContact;
 use App\Actions\Contacts\UpdateContact;
@@ -84,7 +85,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::post('facilities', [FacilityController::class, 'store'])->name('facilities.store');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
-    Route::resource('carriers', CarrierController::class);
+    Route::resource('carriers', CarrierController::class, [
+        'except' => ['store', 'update'],
+    ]);
+    Route::put('carriers/{carrier}', UpdateCarrierGeneral::class)->name('carriers.update');
+
 
     Route::get('customers/search', [CustomerController::class, 'search'])->name('customers.search');
     Route::resource('customers', CustomerController::class, [

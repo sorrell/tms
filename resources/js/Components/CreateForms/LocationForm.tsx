@@ -3,9 +3,9 @@ import { cn } from '@/lib/utils';
 import { CreateFormResult } from '@/types/create-form';
 import axios from 'axios';
 import { useState } from 'react';
+import InputError from '../InputError';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-
 export default function LocationForm({
     className,
     onCreate,
@@ -21,6 +21,8 @@ export default function LocationForm({
     const [addressCity, setAddressCity] = useState('');
     const [addressState, setAddressState] = useState('');
     const [addressZipcode, setAddressZipcode] = useState('');
+
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     const { toast } = useToast();
 
@@ -48,6 +50,7 @@ export default function LocationForm({
                     description: 'Failed to create location',
                     variant: 'destructive',
                 });
+                setErrors(error.response.data.errors);
                 console.error(error);
             });
     };
@@ -68,6 +71,7 @@ export default function LocationForm({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
+                {errors.name && <InputError message={errors.name} />}
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="address_line_1">Address Line 1</Label>
@@ -77,6 +81,9 @@ export default function LocationForm({
                     value={addressLine1}
                     onChange={(e) => setAddressLine1(e.target.value)}
                 />
+                {errors.address_line_1 && (
+                    <InputError message={errors.address_line_1} />
+                )}
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="address_line_2">Address Line 2</Label>
@@ -86,6 +93,9 @@ export default function LocationForm({
                     value={addressLine2}
                     onChange={(e) => setAddressLine2(e.target.value)}
                 />
+                {errors.address_line_2 && (
+                    <InputError message={errors.address_line_2} />
+                )}
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="address_city">City</Label>
@@ -95,6 +105,9 @@ export default function LocationForm({
                     value={addressCity}
                     onChange={(e) => setAddressCity(e.target.value)}
                 />
+                {errors.address_city && (
+                    <InputError message={errors.address_city} />
+                )}
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="address_state">State</Label>
@@ -104,6 +117,9 @@ export default function LocationForm({
                     value={addressState}
                     onChange={(e) => setAddressState(e.target.value)}
                 />
+                {errors.address_state && (
+                    <InputError message={errors.address_state} />
+                )}
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="address_zipcode">Zipcode</Label>
@@ -113,6 +129,9 @@ export default function LocationForm({
                     value={addressZipcode}
                     onChange={(e) => setAddressZipcode(e.target.value)}
                 />
+                {errors.address_zipcode && (
+                    <InputError message={errors.address_zipcode} />
+                )}
             </div>
         </form>
     );

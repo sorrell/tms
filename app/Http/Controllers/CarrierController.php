@@ -42,19 +42,13 @@ class CarrierController extends ResourceSearchController
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCarrierRequest $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Carrier $carrier)
     {
-        //
+        return Inertia::render('Carriers/Show', [
+            'carrier' => CarrierResource::make($carrier->load('physical_location', 'billing_location')),
+        ]);
     }
 
     /**
@@ -65,13 +59,6 @@ class CarrierController extends ResourceSearchController
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCarrierRequest $request, Carrier $carrier)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

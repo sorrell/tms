@@ -2,28 +2,13 @@ import CarrierList from '@/Components/Carriers/CarrierList/CarrierList';
 import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import CarrierDetails from './Partials/CarrierDetails';
 
 export default function Index() {
-    const { carrier } = usePage().props;
-    const [selectedCarrier, setSelectedCarrier] = useState<Carrier | undefined>(
-        carrier as Carrier,
-    );
-
-    useEffect(() => {
-        if (selectedCarrier) {
-            const url = new URL(window.location.href);
-            url.searchParams.set('carrier_id', selectedCarrier.id.toString());
-            window.history.pushState({}, '', url.toString());
-        } else {
-            const url = new URL(window.location.href);
-            url.searchParams.delete('carrier_id');
-            window.history.pushState({}, '', url.toString());
-        }
-    }, [selectedCarrier]);
+    const setSelectedCarrier = (carrier: Carrier) => {
+        router.visit(route('carriers.show', { carrier }));
+    };
 
     return (
         <AuthenticatedLayout
@@ -45,7 +30,6 @@ export default function Index() {
             </div>
             <div className="mx-auto flex max-w-screen-2xl flex-col gap-4">
                 <CarrierList onSelect={setSelectedCarrier} />
-                <CarrierDetails carrier={selectedCarrier} />
             </div>
         </AuthenticatedLayout>
     );

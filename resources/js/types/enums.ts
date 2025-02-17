@@ -11,9 +11,11 @@ export enum StopType {
 export enum Notable {
     Shipment = 'shipment',
     Customer = 'customer',
+    Carrier = 'carrier',
 }
 
 export enum Contactable {
     Shipment = 'shipment',
     Customer = 'customer',
+    Carrier = 'carrier',
 }
