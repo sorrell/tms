@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { Customer } from '@/types';
-import { Notable } from '@/types/enums';
+import { Contactable, Notable } from '@/types/enums';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -160,7 +160,7 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                         <CardContent className="pt-6">
                             <ContactList
                                 contactForId={customer?.id || 0}
-                                contactForType={`App\\Models\\Customers\\Customer`}
+                                contactForType={Contactable.Customer}
                             />
                         </CardContent>
                     </Card>

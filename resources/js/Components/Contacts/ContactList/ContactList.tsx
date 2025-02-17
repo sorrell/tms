@@ -12,6 +12,7 @@ import { Label } from '@/Components/ui/label';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { useToast } from '@/hooks/UseToast';
 import { Contact } from '@/types';
+import { Contactable } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { Plus, Search } from 'lucide-react';
@@ -24,7 +25,7 @@ export default function ContactList({
     contactForType,
 }: {
     contactForId: number;
-    contactForType: string;
+    contactForType: Contactable;
 }) {
     const [data, setData] = useState<Contact[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -202,6 +203,24 @@ export default function ContactList({
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div>
+                            <Label htmlFor="name">
+                                Name{' '}
+                                <span className="text-xs text-gray-500">
+                                    (required)
+                                </span>
+                            </Label>
+                            <Input
+                                id="name"
+                                value={contactFormData.name}
+                                onChange={(e) =>
+                                    setContactFormData('name', e.target.value)
+                                }
+                            />
+                            {contactFormErrors.name && (
+                                <InputError message={contactFormErrors.name} />
+                            )}
+                        </div>
+                        <div>
                             <Label htmlFor="title">Title</Label>
                             <Input
                                 id="title"
@@ -212,19 +231,6 @@ export default function ContactList({
                             />
                             {contactFormErrors.title && (
                                 <InputError message={contactFormErrors.title} />
-                            )}
-                        </div>
-                        <div>
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                                id="name"
-                                value={contactFormData.name}
-                                onChange={(e) =>
-                                    setContactFormData('name', e.target.value)
-                                }
-                            />
-                            {contactFormErrors.name && (
-                                <InputError message={contactFormErrors.name} />
                             )}
                         </div>
                         <div>
