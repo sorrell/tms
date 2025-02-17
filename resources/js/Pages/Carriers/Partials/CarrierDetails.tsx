@@ -1,8 +1,12 @@
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
+import LocationForm from '@/Components/CreateForms/LocationForm';
 import Notes from '@/Components/Notes';
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
 import {
     Select,
     SelectContent,
@@ -12,14 +16,27 @@ import {
 } from '@/Components/ui/select';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
+import { useToast } from '@/hooks/UseToast';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Carrier } from '@/types';
 import { Contactable, Notable } from '@/types/enums';
 import { router } from '@inertiajs/react';
-import { Pencil } from 'lucide-react';
+import axios from 'axios';
+import { Check, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const { toast } = useToast();
+
+    const [formState, setFormState] = useState({
+        mc_number: carrier?.mc_number || '',
+        dot_number: carrier?.dot_number || '',
+        physical_location_id: carrier?.physical_location_id || null,
+    });
+
+    const [errors, setErrors] = useState({});
+
     // Get initial tab from URL or default to 'overview'
     const [tab, setTab] = useState(() => {
         const params = new URLSearchParams(window.location.search);
@@ -35,6 +52,27 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                 tab: value,
             }),
         });
+    };
+
+    const handleSave = () => {
+        axios
+            .put(route('carriers.update', { carrier: carrier?.id }), {
+                mc_number: formState.mc_number,
+                dot_number: formState.dot_number,
+                physical_location_id: formState.physical_location_id,
+            })
+            .then(() => {
+                setIsEditing(false);
+                toast({
+                    description: 'Changes saved successfully',
+                });
+            })
+            .catch((error) => {
+                setErrors(error.response);
+                toast({
+                    description: 'Failed to save changes',
+                });
+            });
     };
 
     const isMobile = useMediaQuery('(max-width: 768px)');
@@ -111,31 +149,88 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-between">
                                     General Information
-                                    <Button variant="ghost" size="icon">
-                                        <Pencil />
-                                    </Button>
+                                    {!isEditing ? (
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => setIsEditing(true)}
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    ) : (
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={handleSave}
+                                            >
+                                                <Check className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() =>
+                                                    setIsEditing(false)
+                                                }
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    )}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
-                                    <div className="text-sm text-gray-500">
+                                    <Label
+                                        htmlFor="mc_number"
+                                        className="text-sm text-gray-500"
+                                    >
                                         MC Number
-                                    </div>
-                                    <div className="mt-1">
-                                        {carrier?.mc_number || (
-                                            <Skeleton className="h-6 w-32" />
-                                        )}
-                                    </div>
+                                    </Label>
+                                    {isEditing ? (
+                                        <Input
+                                            id="mc_number"
+                                            value={formState.mc_number}
+                                            onChange={(e) =>
+                                                setFormState({
+                                                    ...formState,
+                                                    mc_number: e.target.value,
+                                                })
+                                            }
+                                        />
+                                    ) : (
+                                        <div className="mt-1">
+                                            {carrier?.mc_number || (
+                                                <Skeleton className="h-6 w-32" />
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                                 <div>
-                                    <div className="text-sm text-gray-500">
+                                    <Label
+                                        htmlFor="dot_number"
+                                        className="text-sm text-gray-500"
+                                    >
                                         DOT Number
-                                    </div>
-                                    <div className="mt-1">
-                                        {carrier?.dot_number || (
-                                            <Skeleton className="h-6 w-32" />
-                                        )}
-                                    </div>
+                                    </Label>
+                                    {isEditing ? (
+                                        <Input
+                                            id="dot_number"
+                                            value={formState.dot_number}
+                                            onChange={(e) =>
+                                                setFormState({
+                                                    ...formState,
+                                                    dot_number: e.target.value,
+                                                })
+                                            }
+                                        />
+                                    ) : (
+                                        <div className="mt-1">
+                                            {carrier?.dot_number || (
+                                                <Skeleton className="h-6 w-32" />
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
@@ -145,13 +240,58 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-between">
                                     Physical Address
-                                    <Button variant="ghost" size="icon">
-                                        <Pencil />
-                                    </Button>
+                                    {!isEditing ? (
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => setIsEditing(true)}
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    ) : (
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={handleSave}
+                                            >
+                                                <Check className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() =>
+                                                    setIsEditing(false)
+                                                }
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    )}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                {carrier?.physical_location ? (
+                                {isEditing ? (
+                                    <div className="flex flex-col gap-4">
+                                        <Label>Location</Label>
+                                        <ResourceSearchSelect
+                                            className="w-full"
+                                            searchRoute={route(
+                                                'locations.search',
+                                            )}
+                                            onValueChange={(value) =>
+                                                setFormState({
+                                                    ...formState,
+                                                    physical_location_id:
+                                                        Number(value),
+                                                })
+                                            }
+                                            allowMultiple={false}
+                                            defaultSelectedItems={formState?.physical_location_id?.toString()}
+                                            createForm={LocationForm}
+                                        />
+                                    </div>
+                                ) : carrier?.physical_location ? (
                                     <div className="space-y-2">
                                         <div>
                                             {
