@@ -1,4 +1,5 @@
 import LocationForm from '@/Components/CreateForms/LocationForm';
+import InputError from '@/Components/InputError';
 import Notes from '@/Components/Notes';
 import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Button } from '@/Components/ui/button';
@@ -9,8 +10,8 @@ import { Skeleton } from '@/Components/ui/skeleton';
 import { useToast } from '@/hooks/UseToast';
 import { Carrier } from '@/types';
 import { Notable } from '@/types/enums';
-import axios from 'axios';
-import { Check, Pencil, X } from 'lucide-react';
+import { useForm } from '@inertiajs/react';
+import { Check, ExternalLink, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface CarrierDetailsGeneralProps {
@@ -23,36 +24,34 @@ export default function CarrierDetailsGeneral({
     const [isEditing, setIsEditing] = useState(false);
     const { toast } = useToast();
 
-    const [formState, setFormState] = useState({
+    const form = useForm({
         mc_number: carrier?.mc_number || '',
         dot_number: carrier?.dot_number || '',
         physical_location_id: carrier?.physical_location_id || null,
+        contact_email: carrier?.contact_email || '',
+        contact_phone: carrier?.contact_phone || '',
     });
 
     const handleSave = () => {
-        axios
-            .put(route('carriers.update', { carrier: carrier?.id }), {
-                mc_number: formState.mc_number,
-                dot_number: formState.dot_number,
-                physical_location_id: formState.physical_location_id,
-            })
-            .then(() => {
+        form.put(route('carriers.update', { carrier: carrier?.id }), {
+            onSuccess: () => {
                 setIsEditing(false);
                 toast({
                     description: 'Changes saved successfully',
                 });
-            })
-            .catch(() => {
+            },
+            onError: () => {
                 toast({
                     description: 'Failed to save changes',
                 });
-            });
+            },
+        });
     };
 
     return (
         <div className="grid grid-cols-2 gap-6">
             {/* General Information */}
-            <Card>
+            <Card className="">
                 <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                         General Information
@@ -70,6 +69,7 @@ export default function CarrierDetailsGeneral({
                                     variant="ghost"
                                     size="icon"
                                     onClick={handleSave}
+                                    disabled={form.processing}
                                 >
                                     <Check className="h-4 w-4" />
                                 </Button>
@@ -77,6 +77,7 @@ export default function CarrierDetailsGeneral({
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => setIsEditing(false)}
+                                    disabled={form.processing}
                                 >
                                     <X className="h-4 w-4" />
                                 </Button>
@@ -84,58 +85,166 @@ export default function CarrierDetailsGeneral({
                         )}
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div>
-                        <Label
-                            htmlFor="mc_number"
-                            className="text-sm text-gray-500"
-                        >
-                            MC Number
-                        </Label>
-                        {isEditing ? (
-                            <Input
-                                id="mc_number"
-                                value={formState.mc_number}
-                                onChange={(e) =>
-                                    setFormState({
-                                        ...formState,
-                                        mc_number: e.target.value,
-                                    })
-                                }
-                            />
-                        ) : (
-                            <div className="mt-1">
-                                {carrier?.mc_number || (
-                                    <Skeleton className="h-6 w-32" />
+                <CardContent>
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                        <div>
+                                <Label
+                                    htmlFor="dot_number"
+                                    className="text-sm text-muted-foreground"
+                                >
+                                    DOT Number
+                                </Label>
+                                {isEditing ? (
+                                    <div className="space-y-2">
+                                        <Input
+                                            id="dot_number"
+                                            value={form.data.dot_number}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'dot_number',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={form.processing}
+                                        />
+                                        {form.errors.dot_number && (
+                                            <InputError
+                                                message={form.errors.dot_number}
+                                            />
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="mt-1">
+                                        {carrier?.dot_number ? (
+                                            <a
+                                                href={`https://safer.fmcsa.dot.gov/query.asp?searchtype=DOT&query_type=queryCarrierSnapshot&query_param=USDOT&query_string=${carrier.dot_number}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-primary hover:underline"
+                                            >
+                                                {carrier.dot_number}{' '}
+                                                <ExternalLink className="inline h-4 w-4" />
+                                            </a>
+                                        ) : (
+                                            <Skeleton className="h-6 w-32" />
+                                        )}
+                                    </div>
                                 )}
                             </div>
-                        )}
-                    </div>
-                    <div>
-                        <Label
-                            htmlFor="dot_number"
-                            className="text-sm text-gray-500"
-                        >
-                            DOT Number
-                        </Label>
-                        {isEditing ? (
-                            <Input
-                                id="dot_number"
-                                value={formState.dot_number}
-                                onChange={(e) =>
-                                    setFormState({
-                                        ...formState,
-                                        dot_number: e.target.value,
-                                    })
-                                }
-                            />
-                        ) : (
-                            <div className="mt-1">
-                                {carrier?.dot_number || (
-                                    <Skeleton className="h-6 w-32" />
+                            <div>
+                                <Label
+                                    htmlFor="mc_number"
+                                    className="text-sm text-muted-foreground"
+                                >
+                                    MC Number
+                                </Label>
+                                {isEditing ? (
+                                    <div className="space-y-2">
+                                        <Input
+                                            id="mc_number"
+                                            value={form.data.mc_number}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'mc_number',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={form.processing}
+                                        />
+                                        {form.errors.mc_number && (
+                                            <InputError
+                                                message={form.errors.mc_number}
+                                            />
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="mt-1">
+                                        {carrier?.mc_number ? (
+                                            carrier?.mc_number
+                                        ) : (
+                                            <Skeleton className="h-6 w-32" />
+                                        )}
+                                    </div>
                                 )}
                             </div>
-                        )}
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <Label
+                                    htmlFor="contact_email"
+                                    className="text-sm text-muted-foreground"
+                                >
+                                    Contact Email
+                                </Label>
+                                {isEditing ? (
+                                    <div className="space-y-2">
+                                        <Input
+                                            id="contact_email"
+                                            type="email"
+                                            value={form.data.contact_email}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'contact_email',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={form.processing}
+                                        />
+                                        {form.errors.contact_email && (
+                                            <InputError
+                                                message={
+                                                    form.errors.contact_email
+                                                }
+                                            />
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="mt-1">
+                                        {carrier?.contact_email || (
+                                            <Skeleton className="h-6 w-32" />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <Label
+                                    htmlFor="contact_phone"
+                                    className="text-sm text-muted-foreground"
+                                >
+                                    Contact Phone
+                                </Label>
+                                {isEditing ? (
+                                    <div className="space-y-2">
+                                        <Input
+                                            id="contact_phone"
+                                            type="tel"
+                                            value={form.data.contact_phone}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'contact_phone',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={form.processing}
+                                        />
+                                        {form.errors.contact_phone && (
+                                            <InputError
+                                                message={
+                                                    form.errors.contact_phone
+                                                }
+                                            />
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="mt-1">
+                                        {carrier?.contact_phone || (
+                                            <Skeleton className="h-6 w-32" />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
@@ -144,7 +253,7 @@ export default function CarrierDetailsGeneral({
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                        Physical Address
+                        Primary Address
                         {!isEditing ? (
                             <Button
                                 variant="ghost"
@@ -159,6 +268,7 @@ export default function CarrierDetailsGeneral({
                                     variant="ghost"
                                     size="icon"
                                     onClick={handleSave}
+                                    disabled={form.processing}
                                 >
                                     <Check className="h-4 w-4" />
                                 </Button>
@@ -166,6 +276,7 @@ export default function CarrierDetailsGeneral({
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => setIsEditing(false)}
+                                    disabled={form.processing}
                                 >
                                     <X className="h-4 w-4" />
                                 </Button>
@@ -176,20 +287,31 @@ export default function CarrierDetailsGeneral({
                 <CardContent>
                     {isEditing ? (
                         <div className="flex flex-col gap-4">
-                            <Label>Location</Label>
-                            <ResourceSearchSelect
-                                className="w-full"
-                                searchRoute={route('locations.search')}
-                                onValueChange={(value) =>
-                                    setFormState({
-                                        ...formState,
-                                        physical_location_id: Number(value),
-                                    })
-                                }
-                                allowMultiple={false}
-                                defaultSelectedItems={formState?.physical_location_id?.toString()}
-                                createForm={LocationForm}
-                            />
+                            <Label className="text-sm text-muted-foreground">
+                                Location
+                            </Label>
+                            <div className="space-y-2">
+                                <ResourceSearchSelect
+                                    className="w-full"
+                                    searchRoute={route('locations.search')}
+                                    onValueChange={(value) =>
+                                        form.setData(
+                                            'physical_location_id',
+                                            Number(value),
+                                        )
+                                    }
+                                    allowMultiple={false}
+                                    defaultSelectedItems={form.data.physical_location_id?.toString()}
+                                    createForm={LocationForm}
+                                />
+                                {form.errors.physical_location_id && (
+                                    <InputError
+                                        message={
+                                            form.errors.physical_location_id
+                                        }
+                                    />
+                                )}
+                            </div>
                         </div>
                     ) : carrier?.physical_location ? (
                         <div className="space-y-2">

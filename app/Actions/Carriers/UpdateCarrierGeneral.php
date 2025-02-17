@@ -16,12 +16,16 @@ class UpdateCarrierGeneral
         string $mc_number,
         string $dot_number,
         int $physical_location_id,
+        string $contact_email,
+        string $contact_phone,
     ): Carrier
     {
         $carrier->update([
             'mc_number' => $mc_number,
             'dot_number' => $dot_number,
             'physical_location_id' => $physical_location_id,
+            'contact_email' => $contact_email,
+            'contact_phone' => $contact_phone,
         ]);
 
         return $carrier;
@@ -35,6 +39,8 @@ class UpdateCarrierGeneral
             mc_number: $request->validated('mc_number'),
             dot_number: $request->validated('dot_number'),
             physical_location_id: $request->validated('physical_location_id'),
+            contact_email: $request->validated('contact_email'),
+            contact_phone: $request->validated('contact_phone'),
         );
 
         return $carrier;
@@ -53,9 +59,11 @@ class UpdateCarrierGeneral
     public function rules(): array
     {
         return [
-            'mc_number' => ['nullable', 'string', 'min:3', 'max:255'],
-            'dot_number' => ['nullable', 'string', 'min:3', 'max:255'],
+            'mc_number' => ['nullable', 'string'],
+            'dot_number' => ['nullable', 'string'],
             'physical_location_id' => ['required', 'integer', 'exists:locations,id'],
+            'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_phone' => ['nullable', 'string', 'max:255', 'phone:US'],
         ];
     }
 }
