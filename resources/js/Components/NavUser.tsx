@@ -18,6 +18,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/Components/ui/sidebar';
+import { ThemeToggle } from '@/Components/ui/theme-toggle';
 import { Organization } from '@/types/organization';
 import { router, usePage } from '@inertiajs/react';
 
@@ -129,8 +130,11 @@ export function NavUser({
                                     router.visit(route('profile.edit'));
                                 }}
                             >
-                                <BadgeCheck />
+                                <BadgeCheck className="size-4" />
                                 Account
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <ThemeToggle />
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
@@ -141,7 +145,7 @@ export function NavUser({
                                 });
                             }}
                         >
-                            <LogOut />
+                            <LogOut className="size-4" />
                             Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>

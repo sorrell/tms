@@ -136,6 +136,7 @@ export default function ContactList({
                     setIsLoading(false);
                 });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [contactForId, contactForType],
     );
 
