@@ -3,6 +3,7 @@ import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Facility } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import FacilityDetails from './Partials/FacilityDetails';
 
@@ -39,6 +40,7 @@ export default function Index() {
                     className={buttonVariants({ variant: 'default' })}
                     disabled={true}
                 >
+                    <Plus />
                     Create Facility
                 </Link>
             </div>

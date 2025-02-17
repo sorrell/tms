@@ -2,6 +2,7 @@ import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 
 export default function Index() {
     return (
@@ -18,7 +19,7 @@ export default function Index() {
                     href={route('shipments.create')}
                     className={buttonVariants({ variant: 'default' })}
                 >
-                    Create Shipment
+                    <Plus /> Create Shipment
                 </Link>
             </div>
             <div className="mx-auto flex flex-col gap-4">

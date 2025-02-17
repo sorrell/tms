@@ -64,7 +64,7 @@ export default function CustomerFacilities({
     return (
         <Card>
             <CardHeader>
-                <div className="flex items-center justify-end">
+                <div className="flex items-center md:justify-end">
                     <Button
                         variant="default"
                         onClick={() => setFacilityModalOpen(true)}
@@ -73,8 +73,8 @@ export default function CustomerFacilities({
                     </Button>
                 </div>
             </CardHeader>
-            <CardContent className="pt-2">
-                <div className="flex flex-col gap-2 space-y-4">
+            <CardContent className="p-0 pt-2">
+                <div className="flex flex-col">
                     {isLoading ? (
                         <Skeleton className="h-32 w-full" />
                     ) : (
@@ -87,7 +87,7 @@ export default function CustomerFacilities({
                                 facilities.map((facility) => (
                                     <Card
                                         key={facility.id}
-                                        className="flex items-center justify-between p-4"
+                                        className="m-0 flex items-center justify-between p-2 md:p-4"
                                     >
                                         <div className="flex flex-col gap-2">
                                             <span>{facility.name}</span>

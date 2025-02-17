@@ -72,7 +72,7 @@ export default function Authenticated({
                         </Breadcrumb>
                     </div>
                 </header>
-                <main className="pb-2">{children}</main>
+                <main className="px-1 pb-2">{children}</main>
                 <Toaster />
             </SidebarInset>
         </SidebarProvider>
