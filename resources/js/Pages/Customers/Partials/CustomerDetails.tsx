@@ -3,8 +3,16 @@ import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
 import Notes from '@/Components/Notes';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Customer } from '@/types';
 import { Contactable, Notable } from '@/types/enums';
 import { router } from '@inertiajs/react';
@@ -28,6 +36,8 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
         });
     };
 
+    const isMobile = useMediaQuery('(max-width: 768px)');
+
     return (
         <div className="flex flex-col gap-6">
             {/* Header Section */}
@@ -40,38 +50,57 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
 
             {/* Main Content */}
             <Tabs defaultValue={tab} value={tab} className="w-full">
-                <TabsList>
-                    <TabsTrigger
-                        value="overview"
-                        onClick={() => handleTabChange('overview')}
-                    >
-                        Overview
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="facilities"
-                        onClick={() => handleTabChange('facilities')}
-                    >
-                        Facilities
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="contacts"
-                        onClick={() => handleTabChange('contacts')}
-                    >
-                        Contacts
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="documents"
-                        onClick={() => handleTabChange('documents')}
-                    >
-                        Documents
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="shipments"
-                        onClick={() => handleTabChange('shipments')}
-                    >
-                        Shipment History
-                    </TabsTrigger>
-                </TabsList>
+                {isMobile ? (
+                    <Select value={tab} onValueChange={handleTabChange}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select view" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="overview">Overview</SelectItem>
+                            <SelectItem value="facilities">
+                                Facilities
+                            </SelectItem>
+                            <SelectItem value="contacts">Contacts</SelectItem>
+                            <SelectItem value="documents">Documents</SelectItem>
+                            <SelectItem value="shipments">
+                                Shipment History
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                ) : (
+                    <TabsList>
+                        <TabsTrigger
+                            value="overview"
+                            onClick={() => handleTabChange('overview')}
+                        >
+                            Overview
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="facilities"
+                            onClick={() => handleTabChange('facilities')}
+                        >
+                            Facilities
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="contacts"
+                            onClick={() => handleTabChange('contacts')}
+                        >
+                            Contacts
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="documents"
+                            onClick={() => handleTabChange('documents')}
+                        >
+                            Documents
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="shipments"
+                            onClick={() => handleTabChange('shipments')}
+                        >
+                            Shipment History
+                        </TabsTrigger>
+                    </TabsList>
+                )}
 
                 {/* Overview Tab */}
                 <TabsContent value="overview">
