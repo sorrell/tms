@@ -152,7 +152,7 @@ export default function ContactList({
 
     return (
         <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-2">
-            <div className="flex justify-between">
+            <div className="flex flex-wrap justify-between gap-2">
                 <div className="flex gap-2">
                     <Input
                         ref={inputRef}
@@ -170,7 +170,7 @@ export default function ContactList({
                         <Search className="h-4 w-4" />
                     </Button>
                 </div>
-                <div>
+                <div className="order-first md:order-last">
                     <Button
                         onClick={() => {
                             resetContactForm();

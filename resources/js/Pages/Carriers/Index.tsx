@@ -3,6 +3,7 @@ import { buttonVariants } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Carrier } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CarrierDetails from './Partials/CarrierDetails';
 
@@ -39,7 +40,7 @@ export default function Index() {
                     className={buttonVariants({ variant: 'default' })}
                     disabled={true}
                 >
-                    Create Carrier
+                    <Plus /> Create Carrier
                 </Link>
             </div>
             <div className="mx-auto flex max-w-screen-2xl flex-col gap-4">

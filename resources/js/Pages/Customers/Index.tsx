@@ -51,12 +51,12 @@ export default function Index() {
         >
             <Head title="Customers" />
             <div className="mx-auto max-w-screen-2xl">
-                <div className="mb-4 flex justify-end px-8 md:mb-0">
+                <div className="mb-4 flex md:mb-0 md:justify-end md:px-8">
                     <button
                         onClick={() => setIsOpen(true)}
                         className={buttonVariants({ variant: 'default' })}
                     >
-                        <Plus /> Add Customer
+                        <Plus /> Create Customer
                     </button>
                 </div>
                 <div className="mx-auto flex flex-col gap-4">
@@ -67,7 +67,7 @@ export default function Index() {
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add New Customer</DialogTitle>
+                        <DialogTitle>Create New Customer</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <Input
@@ -93,7 +93,7 @@ export default function Index() {
                                     variant: 'default',
                                 })}
                             >
-                                Add
+                                Create
                             </button>
                         </DialogFooter>
                     </form>
