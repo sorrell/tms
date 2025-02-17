@@ -29,6 +29,7 @@ export interface Location {
     address_city: string;
     address_state: string;
     address_zipcode: string;
+    selectable_label: string;
 }
 
 export interface Contact {
@@ -55,6 +56,18 @@ export interface Facility {
 export interface Carrier {
     id: number;
     name: string;
+    mc_number: string;
+    dot_number: string;
+    contact_email: string;
+    contact_phone: string;
+
+    physical_location_id: number;
+    billing_email: string;
+    billing_phone: string;
+    billing_location_id: number;
+
+    billing_location?: Location;
+    physical_location?: Location;
 }
 
 export interface Customer {

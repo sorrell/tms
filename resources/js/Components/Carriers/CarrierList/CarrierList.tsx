@@ -24,7 +24,7 @@ export default function CarrierList({
                 .get(route('carriers.search'), {
                     params: {
                         query: searchTerm,
-                        with: [],
+                        with: ['physical_location', 'billing_location'],
                     },
                 })
                 .then((response) => response.data);
