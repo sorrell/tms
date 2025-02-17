@@ -3,6 +3,7 @@
 use App\Actions\Contacts\CreateContact;
 use App\Actions\Contacts\DeleteContact;
 use App\Actions\Contacts\UpdateContact;
+use App\Actions\Customers\CreateCustomer;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Facilities\CreateFacility;
@@ -86,7 +87,10 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::resource('carriers', CarrierController::class);
 
     Route::get('customers/search', [CustomerController::class, 'search'])->name('customers.search');
-    Route::resource('customers', CustomerController::class);
+    Route::resource('customers', CustomerController::class, [
+        'except' => ['store'],
+    ]);
+    Route::post('customers', CreateCustomer::class)->name('customers.store');
     Route::post('customers/{customer}/facilities', CreateCustomerFacility::class)->name('customers.facilities.store');
     Route::get('customers/{customer}/facilities', [CustomerController::class, 'facilities'])->name('customers.facilities.index');
     Route::delete('customers/{customer}/facilities/{facility}', DeleteCustomerFacility::class)->name('customers.facilities.destroy');

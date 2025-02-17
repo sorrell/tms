@@ -47,6 +47,20 @@ class UpdateContact
 namespace App\Actions\Customers;
 
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $name)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $name)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $name)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $name)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $name)
+ * @method static dispatchSync(string $name)
+ * @method static dispatchNow(string $name)
+ * @method static dispatchAfterResponse(string $name)
+ * @method static \App\Models\Customers\Customer run(string $name)
+ */
+class CreateCustomer
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $customer_id, int $facility_id)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $customer_id, int $facility_id)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $customer_id, int $facility_id)
