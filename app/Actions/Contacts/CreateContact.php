@@ -2,6 +2,7 @@
 
 namespace App\Actions\Contacts;
 
+use App\Enums\Contactable;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Database\Eloquent\Model;
@@ -36,7 +37,10 @@ class CreateContact
 
     public function asController(ActionRequest $request): Contact
     {
-        $contactForClass = $request->validated('contact_for_type');
+        $contactForClass = Contactable::from(
+            $request->validated('contact_for_type')
+        )->getClassName();
+
         $contactFor = $contactForClass::find($request->validated('contact_for_id'));
 
         $contact = $this->handle(
