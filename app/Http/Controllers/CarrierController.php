@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ResourceSearchRequest;
-use App\Http\Requests\StoreCarrierRequest;
-use App\Http\Requests\UpdateCarrierRequest;
 use App\Http\Resources\CarrierResource;
 use App\Models\Carrier;
 use Illuminate\Http\Request;

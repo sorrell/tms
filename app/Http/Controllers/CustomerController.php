@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ResourceSearchRequest;
 use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\FacilityResource;
 use App\Models\Customers\Customer;
@@ -15,6 +13,7 @@ class CustomerController extends ResourceSearchController
 {
     protected $model = Customer::class;
     protected $modelResource = CustomerResource::class;
+    
     /**
      * Display a listing of the resource.
      */
@@ -68,13 +67,6 @@ class CustomerController extends ResourceSearchController
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

@@ -3,6 +3,7 @@ import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
 import Notes from '@/Components/Notes';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Input } from '@/Components/ui/input';
 import {
     Select,
     SelectContent,
@@ -16,9 +17,13 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Customer } from '@/types';
 import { Contactable, Notable } from '@/types/enums';
 import { router } from '@inertiajs/react';
+import { Check, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function CustomerDetails({ customer }: { customer?: Customer }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedName, setEditedName] = useState(customer?.name || '');
+
     // Get initial tab from URL or default to 'overview'
     const [tab, setTab] = useState(() => {
         const params = new URLSearchParams(window.location.search);
@@ -38,11 +43,64 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
 
     const isMobile = useMediaQuery('(max-width: 768px)');
 
+    const handleSave = () => {
+        router.put(
+            route('customers.update', customer?.id),
+            {
+                name: editedName,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => setIsEditing(false),
+            },
+        );
+    };
+
+    const handleCancel = () => {
+        setEditedName(customer?.name || '');
+        setIsEditing(false);
+    };
+
     return (
         <div className="flex flex-col gap-6">
             {/* Header Section */}
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold">{customer?.name}</h1>
+                <div className="flex items-center gap-2">
+                    {isEditing ? (
+                        <>
+                            <Input
+                                value={editedName}
+                                onChange={(e) => setEditedName(e.target.value)}
+                                className="h-auto py-0 font-bold md:text-2xl"
+                                autoFocus
+                            />
+                            <button
+                                onClick={handleSave}
+                                className="p-1 text-confirm-600 hover:text-confirm-700"
+                            >
+                                <Check className="h-5 w-5" />
+                            </button>
+                            <button
+                                onClick={handleCancel}
+                                className="p-1 text-cancel-600 hover:text-cancel-700"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="text-2xl font-bold">
+                                {customer?.name}
+                            </h1>
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className="p-1 text-gray-400 hover:text-gray-600"
+                            >
+                                <Pencil className="h-4 w-4" />
+                            </button>
+                        </>
+                    )}
+                </div>
                 <div className="flex gap-2">
                     {/* Space for future buttons */}
                 </div>
