@@ -19,7 +19,7 @@ class UpdateShipmentGeneral
         ?int $trailerSizeId = null,
         ?float $trailerTemperature = null,
         ?float $trailerTemperatureMaximum = null,
-        ?bool $trailerTemperatureRange = null,
+        ?bool $trailerTemperatureRange = false,
     ): Shipment {
         $shipment->update([
             'weight' => $weight,
@@ -28,7 +28,7 @@ class UpdateShipmentGeneral
             'trailer_size_id' => $trailerSizeId,
             'trailer_temperature' => $trailerTemperature,
             'trailer_temperature_maximum' => $trailerTemperatureMaximum,
-            'trailer_temperature_range' => $trailerTemperatureRange,
+            'trailer_temperature_range' => $trailerTemperatureRange ?? false,
         ]);
 
         return $shipment;

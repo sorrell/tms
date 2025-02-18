@@ -39,7 +39,7 @@ class CreateShipment
             'trip_distance' => $tripDistance,
             'trailer_type_id' => $trailerTypeId,
             'trailer_size_id' => $trailerSizeId,
-            'trailer_temperature_range' => $trailerTemperatureRange,
+            'trailer_temperature_range' => $trailerTemperatureRange ?? false,
             'trailer_temperature' => $trailerTemperature,
             'trailer_temperature_maximum' => $trailerTemperatureMaximum,
             'shipment_number' => $shipmentNumber,
