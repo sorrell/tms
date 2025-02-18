@@ -75,13 +75,13 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                             />
                             <button
                                 onClick={handleSave}
-                                className="text-confirm-600 hover:text-confirm-700 p-1"
+                                className="p-1 text-confirm-600 hover:text-confirm-700"
                             >
                                 <Check className="h-5 w-5" />
                             </button>
                             <button
                                 onClick={handleCancel}
-                                className="text-cancel-600 hover:text-cancel-700 p-1"
+                                className="p-1 text-cancel-600 hover:text-cancel-700"
                             >
                                 <X className="h-5 w-5" />
                             </button>

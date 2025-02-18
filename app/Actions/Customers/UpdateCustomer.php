@@ -13,7 +13,7 @@ class UpdateCustomer
 
     public function handle(
         Customer $customer,
-        string $name,
+        ?string $name = null
     ): Customer
     {
         $customer->update(array_filter([

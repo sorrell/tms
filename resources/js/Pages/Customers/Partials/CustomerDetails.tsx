@@ -3,6 +3,7 @@ import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
 import Notes from '@/Components/Notes';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Input } from '@/Components/ui/input';
 import {
     Select,
     SelectContent,
@@ -16,9 +17,8 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Customer } from '@/types';
 import { Contactable, Notable } from '@/types/enums';
 import { router } from '@inertiajs/react';
-import { useState } from 'react';
-import { Input } from '@/Components/ui/input';
 import { Check, Pencil, X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function CustomerDetails({ customer }: { customer?: Customer }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -76,13 +76,13 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                             />
                             <button
                                 onClick={handleSave}
-                                className="text-confirm-600 hover:text-confirm-700 p-1"
+                                className="p-1 text-confirm-600 hover:text-confirm-700"
                             >
                                 <Check className="h-5 w-5" />
                             </button>
                             <button
                                 onClick={handleCancel}
-                                className="text-cancel-600 hover:text-cancel-700 p-1"
+                                className="p-1 text-cancel-600 hover:text-cancel-700"
                             >
                                 <X className="h-5 w-5" />
                             </button>
