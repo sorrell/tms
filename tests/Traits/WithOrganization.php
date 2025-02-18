@@ -18,6 +18,12 @@ trait WithOrganization
             'name' => 'Test Organization',
             'owner_id' => $this->user->id,
         ]);
+        
+        // Attach user to organization and set as current
+        $this->user->organizations()->attach($this->organization);
+        $this->user->current_organization_id = $this->organization->id;
+        $this->user->save();
+
         Context::addHidden('current_organization_id', $this->organization->id);
     }
 } 
