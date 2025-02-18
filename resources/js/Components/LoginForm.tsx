@@ -5,7 +5,7 @@ import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { cn } from '@/lib/utils';
 import { PageProps } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
 export function LoginForm({
@@ -44,12 +44,12 @@ export function LoginForm({
                         </h1>
                         <div className="text-center text-sm">
                             Don&apos;t have an account?{' '}
-                            <a
+                            <Link
                                 href={route('register')}
                                 className="underline underline-offset-4"
                             >
                                 Sign up
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="flex flex-col gap-6">
@@ -60,7 +60,6 @@ export function LoginForm({
                                 type="email"
                                 placeholder="m@example.com"
                                 required
-                                className="bg-white"
                                 value={data.email}
                                 onChange={(e) =>
                                     setData('email', e.target.value)
@@ -75,18 +74,17 @@ export function LoginForm({
                         <div className="grid gap-2">
                             <div className="flex items-center">
                                 <Label htmlFor="password">Password</Label>
-                                <a
+                                <Link
                                     href={route('password.request')}
                                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                                 >
                                     Forgot your password?
-                                </a>
+                                </Link>
                             </div>
                             <Input
                                 id="password"
                                 type="password"
                                 required
-                                className="bg-white"
                                 value={data.password}
                                 onChange={(e) =>
                                     setData('password', e.target.value)
