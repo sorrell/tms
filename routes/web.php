@@ -84,7 +84,6 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
     Route::post('facilities', CreateFacility::class)->name('facilities.store');
     Route::get('facilities', [FacilityController::class, 'index'])->name('facilities.index');
-    Route::post('facilities', [FacilityController::class, 'store'])->name('facilities.store');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
     Route::resource('carriers', CarrierController::class, [
