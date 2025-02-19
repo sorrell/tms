@@ -45,7 +45,7 @@ class FmcsaNameLookup
 
     public function htmlResponse(array $carrierSaferReports)
     {
-        return response(404);
+        return response('404');
     }
 
     public function rules(): array
