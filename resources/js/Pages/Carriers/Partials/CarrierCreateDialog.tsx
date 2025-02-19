@@ -12,6 +12,7 @@ import { Button } from '@/Components/ui/button';
 import { DialogContent } from '@/Components/ui/dialog';
 import { Label } from '@/Components/ui/label';
 import { router } from '@inertiajs/react';
+import axios from 'axios';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 
@@ -73,20 +74,39 @@ function CarrierFmcsaCreateForm({
     setIsOpen: (isOpen: boolean) => void;
     setFormState: (formState: 'manual' | 'fmcsa') => void;
 }) {
+    const [carrierName, setCarrierName] = useState('');
+    const [carrierDotNumber, setCarrierDotNumber] = useState('');
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('submitted');
+        e.stopPropagation();
+        axios
+            .get(route('carriers.fmcsa.lookup.name'), {
+                params: {
+                    name: carrierName,
+                },
+            })
+            .then((response) => {
+                console.log(response.data);
+            });
     };
 
     return (
         <form onSubmit={handleSearch} className="space-y-4">
             <div className="space-y-2">
                 <Label>Carrier Name</Label>
-                <Input placeholder="Carrier name" />
+                <Input
+                    placeholder="Carrier name"
+                    value={carrierName}
+                    onChange={(e) => setCarrierName(e.target.value)}
+                />
             </div>
             <div className="space-y-2">
                 <Label>DOT Number</Label>
-                <Input placeholder="#######" />
+                <Input
+                    placeholder="#######"
+                    value={carrierDotNumber}
+                    onChange={(e) => setCarrierDotNumber(e.target.value)}
+                />
             </div>
             <DialogFooter>
                 <Button

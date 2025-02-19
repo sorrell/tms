@@ -31,17 +31,27 @@ class FmcsaService
         $report['oos'] = $this->getCarrierOos($dotNumber)['content'] ?? [];
         $report['docket-numbers'] = $this->getCarrierDocketNumbers($dotNumber)['content'] ?? [];
         $report['authority'] = $this->getCarrierAuthority($dotNumber)['content'] ?? [];
-        
+        $report['full-report'] = 'true';
+
         return $report;
     }
 
     public function searchCarrierName($carrierName)
     {
-        return $this
-            ->getWithKey('carriers/name/' . $carrierName);
+        $report = [];
+
+        $searchResult = $this->getWithKey('carriers/name/' . $carrierName);
+
+        if (isset($searchResult['error'])) {
+            return $searchResult;
+        }
+
+        $report['carriers'] = ['general' => $searchResult['content'], 'full-report' => 'false'];
+
+        return $report;
     }
 
-    public function searchCarrierDOT($dotNumber)
+    private function searchCarrierDOT($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber);
@@ -49,47 +59,48 @@ class FmcsaService
 
     public function searchCarrierMC($mcNumber)
     {
+        throw new \Exception('Not implemented');
         return $this
             ->getWithKey('carriers/docket-number/' . $mcNumber);
     }
 
-    public function getCarrierMC($dotNumber)
+    private function getCarrierMC($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/mc-numbers');
     }
 
-    public function getCarrierBasics($dotNumber)
+    private function getCarrierBasics($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/basics');
     }
 
-    public function getCarrierCargoCarried($dotNumber)
+    private function getCarrierCargoCarried($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/cargo-carried');
     }
 
-    public function getCarrierOperationClassification($dotNumber)
+    private function getCarrierOperationClassification($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/operation-classification');
     }
 
-    public function getCarrierOos($dotNumber)
+    private function getCarrierOos($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/oos');
     }
 
-    public function getCarrierDocketNumbers($dotNumber)
+    private function getCarrierDocketNumbers($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/docket-numbers');
     }
 
-    public function getCarrierAuthority($dotNumber)
+    private function getCarrierAuthority($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/authority');
