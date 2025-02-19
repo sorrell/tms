@@ -22,6 +22,10 @@ class FmcsaNameLookup
 
         $results = $fmcsaService->searchCarrierName($name);
 
+        if (isset($results['error'])) {
+            return [];
+        }
+
         $carrierSaferReports = CarrierSaferReport::createFromFmcsaReports($results);
 
         return $carrierSaferReports;

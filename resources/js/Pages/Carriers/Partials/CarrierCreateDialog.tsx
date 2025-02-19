@@ -9,17 +9,21 @@ import {
 
 import InputError from '@/Components/InputError';
 import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { DialogContent } from '@/Components/ui/dialog';
 import { Label } from '@/Components/ui/label';
+import { CarrierSaferReport } from '@/types';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
-import { Search } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Search } from 'lucide-react';
 import { useState } from 'react';
 
 function CarrierManualCreateForm({
     setIsOpen,
+    setFormState,
 }: {
     setIsOpen: (isOpen: boolean) => void;
+    setFormState: (formState: 'manual' | 'fmcsa') => void;
 }) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,9 +61,9 @@ function CarrierManualCreateForm({
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => setFormState('fmcsa')}
                 >
-                    Cancel
+                    <ArrowLeft className="inline" /> Back to search
                 </Button>
                 <Button type="submit">Create</Button>
             </DialogFooter>
@@ -76,6 +80,13 @@ function CarrierFmcsaCreateForm({
 }) {
     const [carrierName, setCarrierName] = useState('');
     const [carrierDotNumber, setCarrierDotNumber] = useState('');
+
+    const [possibleCarriers, setPossibleCarriers] = useState<
+        CarrierSaferReport[]
+    >([]);
+
+    const [showCarrierSelectList, setShowCarrierSelectList] = useState(false);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -86,41 +97,125 @@ function CarrierFmcsaCreateForm({
                 },
             })
             .then((response) => {
-                console.log(response.data);
+                setPossibleCarriers(response.data);
+                setShowCarrierSelectList(true);
             });
     };
 
     return (
-        <form onSubmit={handleSearch} className="space-y-4">
-            <div className="space-y-2">
-                <Label>Carrier Name</Label>
-                <Input
-                    placeholder="Carrier name"
-                    value={carrierName}
-                    onChange={(e) => setCarrierName(e.target.value)}
-                />
-            </div>
-            <div className="space-y-2">
-                <Label>DOT Number</Label>
-                <Input
-                    placeholder="#######"
-                    value={carrierDotNumber}
-                    onChange={(e) => setCarrierDotNumber(e.target.value)}
-                />
-            </div>
-            <DialogFooter>
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsOpen(false)}
-                >
-                    Cancel
-                </Button>
-                <Button type="submit">
-                    <Search className="inline" /> Search
-                </Button>
-            </DialogFooter>
-        </form>
+        <>
+            {!showCarrierSelectList && (
+                <form onSubmit={handleSearch} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label>Carrier Name</Label>
+                        <Input
+                            placeholder="Carrier name"
+                            value={carrierName}
+                            onChange={(e) => setCarrierName(e.target.value)}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-muted-foreground">
+                            DOT Number
+                        </Label>
+                        <Input
+                            disabled={true}
+                            placeholder="#######"
+                            value={carrierDotNumber}
+                            onChange={(e) =>
+                                setCarrierDotNumber(e.target.value)
+                            }
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button type="submit">
+                            <Search className="inline" /> Search
+                        </Button>
+                    </DialogFooter>
+                </form>
+            )}
+
+            {showCarrierSelectList && (
+                <div className="space-y-2">
+                    <div className="max-h-[500px] space-y-2 overflow-y-auto">
+                        {possibleCarriers.length < 1 && (
+                            <p className="text-center text-muted-foreground">
+                                No carriers found
+                            </p>
+                        )}
+                        {possibleCarriers.map((carrier) => (
+                            <Card key={carrier.id} className="py-0">
+                                <CardHeader>
+                                    <CardTitle>{carrier.report.name}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex justify-between px-4">
+                                    <div className="flex-grow space-y-2">
+                                        <div className="text-sm">
+                                            <p>
+                                                {carrier.report.address.street}
+                                            </p>
+                                            <p>
+                                                {carrier.report.address.city},
+                                                {carrier.report.address.state}{' '}
+                                                {carrier.report.address.zip}
+                                            </p>
+                                        </div>
+                                        <p className="text-sm">
+                                            <p className="mr-2 inline text-muted-foreground">
+                                                DOT:
+                                            </p>
+                                            {carrier.dot_number}
+                                        </p>
+                                    </div>
+                                    <div className="items-end">
+                                        <Button
+                                            type="button"
+                                            onClick={() =>
+                                                router.post(
+                                                    route(
+                                                        'carriers.fmcsa.store',
+                                                        {
+                                                            carrierSaferReport:
+                                                                carrier.id,
+                                                        },
+                                                    ),
+                                                )
+                                            }
+                                        >
+                                            Create{' '}
+                                            <ArrowRight className="inline" />{' '}
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setFormState('manual')}
+                        >
+                            Create Manually
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowCarrierSelectList(false)}
+                        >
+                            Search again <Search className="inline" />
+                        </Button>
+                    </DialogFooter>
+                </div>
+            )}
+        </>
     );
 }
 
@@ -140,7 +235,10 @@ export default function CarrierCreateDialog({
                     <DialogTitle>Create Carrier</DialogTitle>
                 </DialogHeader>
                 {formState === 'manual' && (
-                    <CarrierManualCreateForm setIsOpen={setIsOpen} />
+                    <CarrierManualCreateForm
+                        setIsOpen={setIsOpen}
+                        setFormState={setFormState}
+                    />
                 )}
                 {formState === 'fmcsa' && (
                     <CarrierFmcsaCreateForm

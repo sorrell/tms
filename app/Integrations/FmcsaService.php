@@ -12,7 +12,6 @@ class FmcsaService
     public function getFullReport(string $dotNumber) : array
     {
         $report = [];
-        
 
         $searchResult = $this->searchCarrierDOT($dotNumber);
 
@@ -36,11 +35,11 @@ class FmcsaService
         return $report;
     }
 
-    public function searchCarrierName($carrierName)
+    public function searchCarrierName($carrierName, int $limit = 10)
     {
         $report = [];
 
-        $searchResult = $this->getWithKey('carriers/name/' . $carrierName);
+        $searchResult = $this->getWithKey('carriers/name/' . $carrierName, ['size' => $limit]);
 
         if (isset($searchResult['error'])) {
             return $searchResult;
@@ -56,65 +55,66 @@ class FmcsaService
         return $report;
     }
 
-    private function searchCarrierDOT($dotNumber)
+    protected function searchCarrierDOT($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber);
     }
 
-    public function searchCarrierMC($mcNumber)
+    protected function searchCarrierMC($mcNumber)
     {
         throw new \Exception('Not implemented');
         return $this
             ->getWithKey('carriers/docket-number/' . $mcNumber);
     }
 
-    private function getCarrierMC($dotNumber)
+    protected function getCarrierMC($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/mc-numbers');
     }
 
-    private function getCarrierBasics($dotNumber)
+    protected function getCarrierBasics($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/basics');
     }
 
-    private function getCarrierCargoCarried($dotNumber)
+    protected function getCarrierCargoCarried($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/cargo-carried');
     }
 
-    private function getCarrierOperationClassification($dotNumber)
+    protected function getCarrierOperationClassification($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/operation-classification');
     }
 
-    private function getCarrierOos($dotNumber)
+    protected function getCarrierOos($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/oos');
     }
 
-    private function getCarrierDocketNumbers($dotNumber)
+    protected function getCarrierDocketNumbers($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/docket-numbers');
     }
 
-    private function getCarrierAuthority($dotNumber)
+    protected function getCarrierAuthority($dotNumber)
     {
         return $this
             ->getWithKey('carriers/' . $dotNumber . '/authority');
     }
 
-    private function getWithKey($path)
+    protected function getWithKey(string $path, array $params = [])
     {
         $result = Http::withQueryParameters([
             'webKey' => config('fmcsa.api_key'),
+            ...$params
         ])->get(self::BASE_URL . $path);   
         
         $resultJson = $result->json();

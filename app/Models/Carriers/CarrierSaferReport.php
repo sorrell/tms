@@ -16,6 +16,11 @@ class CarrierSaferReport extends Model
         'report' => 'array',
     ];
 
+    public function getNameAttribute(): string 
+    {
+        return $this->report['general']['carrier']['legalName'];
+    }
+
     public function carrier(): ?Carrier
     {
         return Carrier::where('dot_number', $this->dot_number)->first();
