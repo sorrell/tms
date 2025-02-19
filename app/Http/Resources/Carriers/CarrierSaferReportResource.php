@@ -12,8 +12,18 @@ class CarrierSaferReportResource extends JsonResource
         return [
             'id' => $this->id,
             'dot_number' => $this->dot_number,
-            'report' => $this->report,
-            'full_report' => $this->report['full-report'] === 'true',
+            'report' => [
+                'name' => $this->report['general']['carrier']['legalName'],
+                'dba' => $this->report['general']['carrier']['dbaName'],
+                'address' => [
+                    'street' => $this->report['general']['carrier']['phyStreet'],
+                    'city' => $this->report['general']['carrier']['phyCity'],
+                    'state' => $this->report['general']['carrier']['phyState'],
+                    'zip' => $this->report['general']['carrier']['phyZipcode'],
+                ],
+                'raw' => $this->report,
+            ],
+            'is_full_report' => $this->report['full-report'] === 'true',
         ];
     }
 }

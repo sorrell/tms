@@ -46,7 +46,12 @@ class FmcsaService
             return $searchResult;
         }
 
-        $report['carriers'] = ['general' => $searchResult['content'], 'full-report' => 'false'];
+        foreach($searchResult['content'] as $carrier) {
+            $report[] = [
+                'general' => $carrier,
+                'full-report' => 'false',
+            ];
+        }
 
         return $report;
     }
