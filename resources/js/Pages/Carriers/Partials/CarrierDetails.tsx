@@ -202,7 +202,7 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                             <ShipmentList
                                 requiredFilters={[
                                     {
-                                        name: 'carrier.id',
+                                        name: 'carrier_id',
                                         value: carrier?.id?.toString() || '',
                                     },
                                 ]}
