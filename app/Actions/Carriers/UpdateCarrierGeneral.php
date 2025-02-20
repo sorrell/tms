@@ -4,9 +4,10 @@ namespace App\Actions\Carriers;
 
 use App\Http\Resources\CarrierResource;
 use App\Models\Carrier;
+use App\Rules\ValidPhoneNumber;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-
+use Propaganistas\LaravelPhone\PhoneNumber;
 class UpdateCarrierGeneral
 {
     use AsAction;
@@ -35,7 +36,10 @@ class UpdateCarrierGeneral
 
     public function asController(ActionRequest $request, Carrier $carrier): Carrier
     {
-
+        if ($request->has('contact_phone') && $request['contact_phone']) {
+            $phone = new PhoneNumber($request['contact_phone'], 'US');
+            $request->merge(['contact_phone' => $phone->formatE164()]);
+        }
         $carrier = $this->handle(
             carrier: $carrier,
             name: $request->validated('name'),
@@ -67,7 +71,7 @@ class UpdateCarrierGeneral
             'dot_number' => ['nullable', 'string'],
             'physical_location_id' => ['nullable', 'integer', 'exists:locations,id'],
             'contact_email' => ['nullable', 'email', 'max:255'],
-            'contact_phone' => ['nullable', 'string', 'max:255', 'phone:US'],
+            'contact_phone' => ['nullable', 'string', new ValidPhoneNumber],
         ];
     }
 }
