@@ -6,7 +6,7 @@ use App\Actions\Carriers\CreateCarrier;
 use App\Models\Location;
 use App\Models\Organizations\Organization;
 use App\Models\User;
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use Illuminate\Support\Facades\Context;
 use Inertia\Testing\AssertableInertia;
 

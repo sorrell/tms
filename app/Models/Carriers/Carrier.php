@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Carriers;
 
-use App\Http\Resources\CarrierResource;
+use App\Http\Resources\Carriers\CarrierResource;
+use App\Models\Location;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

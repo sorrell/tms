@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Carriers;
 
 use App\Models\Location;
 use App\Models\Organizations\Organization;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Carrier>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Carriers\Carrier>
  */
 class CarrierFactory extends Factory
 {

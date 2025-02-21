@@ -15,7 +15,7 @@ use App\Http\Resources\ShipmentResource;
 use App\Http\Resources\ShipmentStopResource;
 use App\Http\Resources\TrailerSizeResource;
 use App\Http\Resources\TrailerTypeResource;
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Facility;
 use App\Models\Shipments\TrailerSize;
 use App\Models\Shipments\TrailerType;

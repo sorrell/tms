@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Facility;
 use App\Models\Location;
 use App\Models\Shipments\Shipment;

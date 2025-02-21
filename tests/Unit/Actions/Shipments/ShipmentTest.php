@@ -8,7 +8,7 @@ use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Facility;
 use App\Models\Customers\Customer;
 use App\Models\Shipments\Shipment;

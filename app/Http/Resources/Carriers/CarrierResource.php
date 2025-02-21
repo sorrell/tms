@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Carriers;
 
+use App\Http\Resources\LocationResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\Models\Carrier
+ * @mixin \App\Models\Carriers\Carrier
  */
 class CarrierResource extends JsonResource
 {

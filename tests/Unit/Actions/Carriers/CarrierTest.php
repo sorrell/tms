@@ -4,7 +4,7 @@ namespace Tests\Unit\Actions\Carriers;
 
 use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\UpdateCarrierGeneral;
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Location;
 use Illuminate\Support\Facades\DB;
 

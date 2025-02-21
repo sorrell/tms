@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Carriers;
 
-use App\Http\Resources\CarrierResource;
+use App\Http\Resources\Carriers\CarrierResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
