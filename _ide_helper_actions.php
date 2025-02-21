@@ -31,6 +31,20 @@ class CreateCarrierFromSaferReport
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $dotNumber)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $dotNumber)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $dotNumber)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $dotNumber)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $dotNumber)
+ * @method static dispatchSync(string $dotNumber)
+ * @method static dispatchNow(string $dotNumber)
+ * @method static dispatchAfterResponse(string $dotNumber)
+ * @method static ?\App\Models\Carriers\CarrierSaferReport run(string $dotNumber)
+ */
+class FmcsaDOTLookup
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $name)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $name)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $name)
@@ -39,7 +53,7 @@ class CreateCarrierFromSaferReport
  * @method static dispatchSync(string $name)
  * @method static dispatchNow(string $name)
  * @method static dispatchAfterResponse(string $name)
- * @method static array run(string $name)
+ * @method static \Illuminate\Support\Collection run(string $name)
  */
 class FmcsaNameLookup
 {

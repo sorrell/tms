@@ -16,35 +16,39 @@ class FmcsaDOTLookup
 
     public function handle(
         string $dotNumber,
-    ): CarrierSaferReport
+    ): ?CarrierSaferReport
     {
         $fmcsaService = new FmcsaService();
 
         $results = $fmcsaService->getFullReport($dotNumber);
 
         if (isset($results['error'])) {
-            return [];
+            return null;
         }
 
         // We get a single result here so call single report not reports
         $carrierSaferReport = CarrierSaferReport::createFromFmcsaReport($results);
 
-        return $carrierSaferReport->load('carrier');
+        return $carrierSaferReport;
     }
 
-    public function asController(ActionRequest $request): CarrierSaferReport
+    public function asController(ActionRequest $request): ?CarrierSaferReport
     {
         return $this->handle(
             dotNumber: $request->validated('dotNumber'),
         );
     }
 
-    public function jsonResponse(CarrierSaferReport $carrierSaferReport)
+    public function jsonResponse(?CarrierSaferReport $carrierSaferReport)
     {
-        return new CarrierSaferReportResource($carrierSaferReport);
+        if ($carrierSaferReport) {
+            return new CarrierSaferReportResource($carrierSaferReport);
+        }
+
+        return response()->json(['error' => 'Carrier not found'], 404);
     }
 
-    public function htmlResponse(CarrierSaferReport $carrierSaferReport)
+    public function htmlResponse(?CarrierSaferReport $carrierSaferReport)
     {
         return response('404');
     }

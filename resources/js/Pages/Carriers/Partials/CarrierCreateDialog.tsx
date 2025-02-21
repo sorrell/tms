@@ -225,7 +225,7 @@ function CarrierFmcsaCreateForm({
                                                                     carrier:
                                                                         carrier
                                                                             .carrier
-                                                                            .id,
+                                                                            ?.id,
                                                                 },
                                                             ),
                                                         )
