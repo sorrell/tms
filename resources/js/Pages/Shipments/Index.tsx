@@ -14,7 +14,7 @@ export default function Index() {
             ]}
         >
             <Head title="Shipments" />
-            <div className="flex justify-end px-8">
+            <div className="mx-auto flex max-w-screen-2xl justify-end px-8">
                 <Link
                     href={route('shipments.create')}
                     className={buttonVariants({ variant: 'default' })}

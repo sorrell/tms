@@ -34,7 +34,7 @@ export default function Index() {
             ]}
         >
             <Head title="Facilities" />
-            <div className="flex justify-end px-8">
+            <div className="mx-auto flex max-w-screen-2xl justify-end px-8">
                 <Link
                     href="#"
                     className={buttonVariants({ variant: 'default' })}
