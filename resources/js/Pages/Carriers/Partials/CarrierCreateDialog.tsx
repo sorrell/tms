@@ -22,9 +22,11 @@ import { useState } from 'react';
 function CarrierManualCreateForm({
     setIsOpen,
     setFormState,
+    allowFmcsaSearch,
 }: {
     setIsOpen: (isOpen: boolean) => void;
     setFormState: (formState: 'manual' | 'fmcsa') => void;
+    allowFmcsaSearch: boolean;
 }) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,13 +61,15 @@ function CarrierManualCreateForm({
             />
             {errors.name && <InputError message={errors.name} />}
             <DialogFooter>
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setFormState('fmcsa')}
-                >
-                    <ArrowLeft className="inline" /> Back to search
-                </Button>
+                {allowFmcsaSearch && (
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setFormState('fmcsa')}
+                    >
+                        <ArrowLeft className="inline" /> Back to search
+                    </Button>
+                )}
                 <Button type="submit">Create</Button>
             </DialogFooter>
         </form>
@@ -137,9 +141,7 @@ function CarrierFmcsaCreateForm({
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-muted-foreground">
-                            DOT Number
-                        </Label>
+                        <Label>DOT Number</Label>
                         <Input
                             placeholder="#######"
                             value={carrierDotNumber}
@@ -286,11 +288,23 @@ function CarrierFmcsaCreateForm({
 export default function CarrierCreateDialog({
     isOpen,
     setIsOpen,
+    allowFmcsaSearch,
 }: {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    allowFmcsaSearch: boolean;
 }) {
-    const [formState, setFormState] = useState<'manual' | 'fmcsa'>('fmcsa');
+    const [formState, setFormState] = useState<'manual' | 'fmcsa'>(
+        allowFmcsaSearch ? 'fmcsa' : 'manual',
+    );
+
+    const changeFormStateCheckForSearch = (formState: 'manual' | 'fmcsa') => {
+        if (allowFmcsaSearch) {
+            setFormState(formState);
+        } else {
+            setFormState('manual');
+        }
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -301,13 +315,14 @@ export default function CarrierCreateDialog({
                 {formState === 'manual' && (
                     <CarrierManualCreateForm
                         setIsOpen={setIsOpen}
-                        setFormState={setFormState}
+                        setFormState={changeFormStateCheckForSearch}
+                        allowFmcsaSearch={allowFmcsaSearch}
                     />
                 )}
                 {formState === 'fmcsa' && (
                     <CarrierFmcsaCreateForm
                         setIsOpen={setIsOpen}
-                        setFormState={setFormState}
+                        setFormState={changeFormStateCheckForSearch}
                     />
                 )}
             </DialogContent>

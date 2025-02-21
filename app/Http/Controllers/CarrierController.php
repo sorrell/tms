@@ -16,18 +16,12 @@ class CarrierController extends ResourceSearchController
      */
     public function index(Request $request)
     {
-        $request->validate([
-            'carrier_id' => 'nullable|exists:carriers,id',
-        ]);
 
-        if ($request->input('carrier_id')) {
-            $carrier = Carrier::find($request->input('carrier_id'));
-            return Inertia::render('Carriers/Index', [
-                'carrier' => CarrierResource::make($carrier),
-            ]);
-        }
-
-        return Inertia::render('Carriers/Index');
+        return Inertia::render('Carriers/Index',
+            [
+                'allowFmcsaSearch' => config('fmcsa.api_key') ? true : false,
+            ]
+        );
     }
 
     /**
