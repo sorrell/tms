@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Carriers;
 
+use App\Http\Resources\CarrierResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,6 +29,9 @@ class CarrierSaferReportResource extends JsonResource
                 'raw' => $this->report,
             ],
             'is_full_report' => $this->report['full-report'] === 'true',
+            'carrier' => $this->whenLoaded('carrier', function () {
+                return new CarrierResource($this->carrier);
+            }),
         ];
     }
 }

@@ -4,6 +4,8 @@ namespace App\Models\Carriers;
 
 use App\Models\Carrier;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class CarrierSaferReport extends Model
 {
@@ -21,9 +23,12 @@ class CarrierSaferReport extends Model
         return $this->report['general']['carrier']['legalName'];
     }
 
-    public function carrier(): ?Carrier
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Carrier, $this>
+     */
+    public function carrier() : BelongsTo
     {
-        return Carrier::where('dot_number', $this->dot_number)->first();
+        return $this->belongsTo(Carrier::class, 'dot_number', 'dot_number');
     }
 
     public static function createFromFmcsaReport(array $report): self
@@ -31,17 +36,14 @@ class CarrierSaferReport extends Model
         return self::create([
             'dot_number' => $report['general']['carrier']['dotNumber'],
             'report' => $report,
-        ]);
+        ])->load('carrier');
     }
     
-    public static function createFromFmcsaReports(array $reports): array
+    /**
+     * @return \Illuminate\Support\Collection<int, self>
+     */
+    public static function createFromFmcsaReports(array $reports): Collection
     {
-        $carrierSaferReports = [];
-
-        foreach ($reports as $report) {
-            $carrierSaferReports[] = self::createFromFmcsaReport($report);
-        }
-
-        return $carrierSaferReports;
+        return collect($reports)->map(fn ($report) => self::createFromFmcsaReport($report));
     }
 }

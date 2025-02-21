@@ -29,7 +29,7 @@ class FmcsaDOTLookup
         // We get a single result here so call single report not reports
         $carrierSaferReport = CarrierSaferReport::createFromFmcsaReport($results);
 
-        return $carrierSaferReport;
+        return $carrierSaferReport->load('carrier');
     }
 
     public function asController(ActionRequest $request): CarrierSaferReport

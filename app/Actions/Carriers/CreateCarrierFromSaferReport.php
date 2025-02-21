@@ -18,18 +18,18 @@ class CreateCarrierFromSaferReport
     ): Carrier
     {
 
-        $location = Location::findOrCreate([
-            'address_line_1' => $carrierSaferReport->report['carrier']['phyStreet'],
-            //'address_line_2' => $carrierSaferReport->report['carrier']['phyStreet'],
-            'address_city' => $carrierSaferReport->report['carrier']['phyCity'],
-            'address_state' => $carrierSaferReport->report['carrier']['phyState'],
-            'address_zipcode' => $carrierSaferReport->report['carrier']['phyZipcode'],
+        $location = Location::firstOrCreate([
+            'address_line_1' => $carrierSaferReport->report['general']['carrier']['phyStreet'],
+            //'address_line_2' => $carrierSaferReport->report['general']['carrier']['phyStreet'],
+            'address_city' => $carrierSaferReport->report['general']['carrier']['phyCity'],
+            'address_state' => $carrierSaferReport->report['general']['carrier']['phyState'],
+            'address_zipcode' => $carrierSaferReport->report['general']['carrier']['phyZipcode'],
         ]);
 
         $carrier = Carrier::create([
             'name' => $carrierSaferReport->name,
             'dot_number' => $carrierSaferReport->dot_number,
-            'location_id' => $location->id,
+            'physical_location_id' => $location->id,
         ]);
 
         return $carrier;

@@ -7,6 +7,7 @@ use App\Http\Resources\Carriers\CarrierSaferReportResource;
 use App\Integrations\FmcsaService;
 use App\Models\Carrier;
 use App\Models\Carriers\CarrierSaferReport;
+use Illuminate\Support\Collection;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -14,10 +15,12 @@ class FmcsaNameLookup
 {
     use AsAction;
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\Carriers\CarrierSaferReport>
+     */
     public function handle(
         string $name,
-    ): array
-    {
+    ): Collection {
         $fmcsaService = new FmcsaService();
 
         $results = $fmcsaService->searchCarrierName($name);
@@ -31,19 +34,22 @@ class FmcsaNameLookup
         return $carrierSaferReports;
     }
 
-    public function asController(ActionRequest $request): array
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\Carriers\CarrierSaferReport>
+     */
+    public function asController(ActionRequest $request): Collection
     {
         return $this->handle(
             name: $request->validated('name'),
         );
     }
 
-    public function jsonResponse(array $carrierSaferReports)
+    public function jsonResponse(Collection $carrierSaferReports)
     {
         return CarrierSaferReportResource::collection($carrierSaferReports);
     }
 
-    public function htmlResponse(array $carrierSaferReports)
+    public function htmlResponse(Collection $carrierSaferReports)
     {
         return response('404');
     }

@@ -206,30 +206,54 @@ function CarrierFmcsaCreateForm({
                                                 </p>
                                             </div>
                                             <p className="text-sm">
-                                                <p className="mr-2 inline text-muted-foreground">
+                                                <span className="mr-2 inline text-muted-foreground">
                                                     DOT:
-                                                </p>
+                                                </span>
                                                 {carrier.dot_number}
                                             </p>
                                         </div>
                                         <div className="items-end">
-                                            <Button
-                                                type="button"
-                                                onClick={() =>
-                                                    router.post(
-                                                        route(
-                                                            'carriers.fmcsa.store',
-                                                            {
-                                                                carrierSaferReport:
-                                                                    carrier.id,
-                                                            },
-                                                        ),
-                                                    )
-                                                }
-                                            >
-                                                Create{' '}
-                                                <ArrowRight className="inline" />{' '}
-                                            </Button>
+                                            {carrier.carrier ? (
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={() =>
+                                                        router.get(
+                                                            route(
+                                                                'carriers.show',
+                                                                {
+                                                                    carrier:
+                                                                        carrier
+                                                                            .carrier
+                                                                            .id,
+                                                                },
+                                                            ),
+                                                        )
+                                                    }
+                                                >
+                                                    View{' '}
+                                                    <ArrowRight className="inline" />
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={() =>
+                                                        router.post(
+                                                            route(
+                                                                'carriers.fmcsa.store',
+                                                                {
+                                                                    carrierSaferReport:
+                                                                        carrier.id,
+                                                                },
+                                                            ),
+                                                        )
+                                                    }
+                                                >
+                                                    Create{' '}
+                                                    <ArrowRight className="inline" />{' '}
+                                                </Button>
+                                            )}
                                         </div>
                                     </CardContent>
                                 </Card>

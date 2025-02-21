@@ -84,6 +84,8 @@ export interface CarrierSaferReport {
             zip: string;
         };
     };
+    is_full_report: boolean;
+    carrier?: Carrier;
 }
 
 export interface Customer {
