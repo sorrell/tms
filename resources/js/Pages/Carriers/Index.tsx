@@ -7,7 +7,11 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import CarrierCreateDialog from './Partials/CarrierCreateDialog';
 
-export default function Index() {
+export default function Index({
+    allowFmcsaSearch,
+}: {
+    allowFmcsaSearch: boolean;
+}) {
     const [isOpen, setIsOpen] = useState(false);
 
     const setSelectedCarrier = (carrier: Carrier) => {
@@ -38,7 +42,11 @@ export default function Index() {
                     <CarrierList onSelect={setSelectedCarrier} />
                 </div>
             </div>
-            <CarrierCreateDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+            <CarrierCreateDialog
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                allowFmcsaSearch={allowFmcsaSearch}
+            />
         </AuthenticatedLayout>
     );
 }
