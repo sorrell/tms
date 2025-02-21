@@ -2,6 +2,7 @@
 
 use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
+use App\Actions\Carriers\FmcsaDOTLookup;
 use App\Actions\Carriers\FmcsaNameLookup;
 use App\Actions\Carriers\UpdateCarrierGeneral;
 use App\Actions\Contacts\CreateContact;
@@ -96,7 +97,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('carriers/fmcsa/name', FmcsaNameLookup::class)->name('carriers.fmcsa.lookup.name');
     Route::post('carriers/fmcsa/{carrierSaferReport}/create', CreateCarrierFromSaferReport::class)->name('carriers.fmcsa.store');
-
+    Route::get('carriers/fmcsa/dot', FmcsaDOTLookup::class)->name('carriers.fmcsa.lookup.dot');
 
     Route::get('customers/search', [CustomerController::class, 'search'])->name('customers.search');
     Route::resource('customers', CustomerController::class, [

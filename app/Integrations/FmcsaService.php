@@ -16,6 +16,7 @@ class FmcsaService
         $searchResult = $this->searchCarrierDOT($dotNumber);
 
         if (isset($searchResult['error'])) {
+            logger()->error('Failed to get data from FMCSa API', $searchResult);
             return $searchResult;
         }
 
@@ -112,23 +113,25 @@ class FmcsaService
 
     protected function getWithKey(string $path, array $params = [])
     {
-        $result = Http::withQueryParameters([
-            'webKey' => config('fmcsa.api_key'),
-            ...$params
-        ])->get(self::BASE_URL . $path);   
-        
-        $resultJson = $result->json();
+        return cache()->remember('fmcsa_api_' . $path . '_' . md5(serialize($params)), now()->addHours(12), function () use ($path, $params) {
+            $result = Http::withQueryParameters([
+                'webKey' => config('fmcsa.api_key'),
+                ...$params
+            ])->get(self::BASE_URL . $path);   
+            
+            $resultJson = $result->json();
 
-        if ($result->status() === 404 || empty($resultJson['content'])) {
-            return [
-                'error' => 'Carrier not found',
-            ];
-        }
+            if ($result->status() === 404 || empty($resultJson['content'])) {
+                return [
+                    'error' => 'Carrier not found',
+                ];
+            }
 
-        if ($result->successful()) {
-            return $resultJson;
-        }
+            if ($result->successful()) {
+                return $resultJson;
+            }
 
-        throw new \Exception('Failed to get data from FMCSa API - Unexpected server response');
+            throw new \Exception('Failed to get data from FMCSa API - Unexpected server response');
+        });
     }
 }

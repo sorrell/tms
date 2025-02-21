@@ -95,20 +95,35 @@ function CarrierFmcsaCreateForm({
         e.stopPropagation();
         setIsLoading(true);
         setShowCarrierSelectList(true);
-        axios
-            .get(route('carriers.fmcsa.lookup.name'), {
-                params: {
-                    name: carrierName,
-                },
-            })
-            .then((response) => {
-                setPossibleCarriers(response.data);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-    };
 
+        if (carrierDotNumber) {
+            axios
+                .get(route('carriers.fmcsa.lookup.dot'), {
+                    params: {
+                        dotNumber: carrierDotNumber,
+                    },
+                })
+                .then((response) => {
+                    setPossibleCarriers([response.data]);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        } else {
+            axios
+                .get(route('carriers.fmcsa.lookup.name'), {
+                    params: {
+                        name: carrierName,
+                    },
+                })
+                .then((response) => {
+                    setPossibleCarriers(response.data);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        }
+    };
     return (
         <>
             {!showCarrierSelectList && (
@@ -126,7 +141,6 @@ function CarrierFmcsaCreateForm({
                             DOT Number
                         </Label>
                         <Input
-                            disabled={true}
                             placeholder="#######"
                             value={carrierDotNumber}
                             onChange={(e) =>
