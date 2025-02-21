@@ -17,6 +17,48 @@ class CreateCarrier
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static dispatchSync(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static dispatchNow(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static dispatchAfterResponse(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static \App\Models\Carrier run(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ */
+class CreateCarrierFromSaferReport
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $dotNumber)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $dotNumber)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $dotNumber)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $dotNumber)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $dotNumber)
+ * @method static dispatchSync(string $dotNumber)
+ * @method static dispatchNow(string $dotNumber)
+ * @method static dispatchAfterResponse(string $dotNumber)
+ * @method static ?\App\Models\Carriers\CarrierSaferReport run(string $dotNumber)
+ */
+class FmcsaDOTLookup
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $name)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $name)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $name)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $name)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $name)
+ * @method static dispatchSync(string $name)
+ * @method static dispatchNow(string $name)
+ * @method static dispatchAfterResponse(string $name)
+ * @method static \Illuminate\Support\Collection run(string $name)
+ */
+class FmcsaNameLookup
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)

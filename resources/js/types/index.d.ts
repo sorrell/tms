@@ -70,6 +70,24 @@ export interface Carrier {
     physical_location?: Location;
 }
 
+export interface CarrierSaferReport {
+    id: number;
+    dot_number: string;
+    report: {
+        name: string;
+        dba: string;
+        full_address: string;
+        address: {
+            street: string;
+            city: string;
+            state: string;
+            zip: string;
+        };
+    };
+    is_full_report: boolean;
+    carrier?: Carrier;
+}
+
 export interface Customer {
     id: number;
     name: string;
