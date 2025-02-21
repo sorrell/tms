@@ -11,7 +11,7 @@ namespace App\Actions\Carriers;
  * @method static dispatchSync(string $name)
  * @method static dispatchNow(string $name)
  * @method static dispatchAfterResponse(string $name)
- * @method static \App\Models\Carrier run(string $name)
+ * @method static \App\Models\Carriers\Carrier run(string $name)
  */
 class CreateCarrier
 {
@@ -25,7 +25,7 @@ class CreateCarrier
  * @method static dispatchSync(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
  * @method static dispatchNow(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
  * @method static dispatchAfterResponse(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
- * @method static \App\Models\Carrier run(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
+ * @method static \App\Models\Carriers\Carrier run(\App\Models\Carriers\CarrierSaferReport $carrierSaferReport)
  */
 class CreateCarrierFromSaferReport
 {
@@ -59,15 +59,15 @@ class FmcsaNameLookup
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static dispatchSync(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static dispatchNow(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static dispatchAfterResponse(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
- * @method static \App\Models\Carrier run(\App\Models\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static dispatchSync(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static dispatchNow(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static dispatchAfterResponse(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
+ * @method static \App\Models\Carriers\Carrier run(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
  */
 class UpdateCarrierGeneral
 {

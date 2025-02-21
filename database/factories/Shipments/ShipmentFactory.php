@@ -4,7 +4,7 @@ namespace Database\Factories\Shipments;
 
 use App\Models\Location;
 use App\Models\Organizations\Organization;
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Shipments\Shipment;
 use App\Models\Shipments\TrailerType;
 use Illuminate\Database\Eloquent\Factories\Factory;

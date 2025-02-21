@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CarrierResource;
-use App\Models\Carrier;
+use App\Http\Resources\Carriers\CarrierResource;
+use App\Models\Carriers\Carrier;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Enums;
 
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Customers\Customer;
 use App\Models\Shipments\Shipment;
 

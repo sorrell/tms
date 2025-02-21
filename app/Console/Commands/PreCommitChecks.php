@@ -62,10 +62,11 @@ class PreCommitChecks extends Command
         return in_array(false, $this->checks) ? 1 : 0;
     }
 
-    protected function runProcess(array $command, string $check, callable $successCallback, array $env = []): void
+    protected function runProcess(array $command, string $check, callable $successCallback, array $env = [], bool $tty = true): void
     {
         try {
             $process = new Process($command);
+            $process->setTty(true);
             
             if ($env) {
                 $process->setEnv($env);
@@ -79,6 +80,12 @@ class PreCommitChecks extends Command
 
             $this->checks[$check] = $successCallback($output, $process);
         } catch (\Exception $e) {
+            if (str_contains($e->getMessage(), 'TTY')) {
+                logger()->info("TTY error, running without TTY");
+                $this->runProcess($command, $check, $successCallback, $env, false);
+                return;
+            }
+            
             $this->error("Failed to run $check: " . $e->getMessage());
         }
     }
@@ -87,7 +94,6 @@ class PreCommitChecks extends Command
     protected function getSuccessCallback(string $check): callable
     {
         return match($check) {
-            'phpstan' => fn($output, $process) => str_contains($output, '[OK] No errors'),
             default => fn($output, $process) => $process->isSuccessful()
         };
     }

@@ -1,7 +1,7 @@
 <?php
 
 use App\Actions\Shipments\CreateShipment;
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Facility;
 use App\Models\Customers\Customer;
 use App\Models\Organizations\Organization;

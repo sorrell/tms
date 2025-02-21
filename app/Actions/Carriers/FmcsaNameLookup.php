@@ -2,10 +2,10 @@
 
 namespace App\Actions\Carriers;
 
-use App\Http\Resources\CarrierResource;
+use App\Http\Resources\Carriers\CarrierResource;
 use App\Http\Resources\Carriers\CarrierSaferReportResource;
 use App\Integrations\FmcsaService;
-use App\Models\Carrier;
+use App\Models\Carriers\Carrier;
 use App\Models\Carriers\CarrierSaferReport;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\ActionRequest;
