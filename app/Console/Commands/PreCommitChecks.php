@@ -66,7 +66,7 @@ class PreCommitChecks extends Command
     {
         try {
             $process = new Process($command);
-            $process->setTty(true);
+            $process->setTty($tty);
             
             if ($env) {
                 $process->setEnv($env);
@@ -80,7 +80,7 @@ class PreCommitChecks extends Command
 
             $this->checks[$check] = $successCallback($output, $process);
         } catch (\Exception $e) {
-            if (str_contains($e->getMessage(), 'TTY')) {
+            if (str_contains($e->getMessage(), 'TTY') && $tty === true) {
                 logger()->info("TTY error, running without TTY");
                 $this->runProcess($command, $check, $successCallback, $env, false);
                 return;
