@@ -127,7 +127,7 @@ export default function CarrierDetailsGeneral({
                                                 <ExternalLink className="inline h-4 w-4" />
                                             </a>
                                         ) : (
-                                            <Skeleton className="h-6 w-32" />
+                                            <span>-</span>
                                         )}
                                     </div>
                                 )}
@@ -163,7 +163,7 @@ export default function CarrierDetailsGeneral({
                                         {carrier?.mc_number ? (
                                             carrier?.mc_number
                                         ) : (
-                                            <Skeleton className="h-6 w-32" />
+                                            <span>-</span>
                                         )}
                                     </div>
                                 )}
@@ -202,7 +202,7 @@ export default function CarrierDetailsGeneral({
                                 ) : (
                                     <div className="mt-1">
                                         {carrier?.contact_email || (
-                                            <Skeleton className="h-6 w-32" />
+                                            <span>-</span>
                                         )}
                                     </div>
                                 )}
@@ -239,7 +239,7 @@ export default function CarrierDetailsGeneral({
                                 ) : (
                                     <div className="mt-1">
                                         {carrier?.contact_phone || (
-                                            <Skeleton className="h-6 w-32" />
+                                            <span>-</span>
                                         )}
                                     </div>
                                 )}
