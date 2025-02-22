@@ -8,6 +8,8 @@ use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 
 class Carrier extends Model
@@ -57,6 +59,23 @@ class Carrier extends Model
     {
         return $this->belongsTo(Location::class, 'billing_location_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<CarrierSaferReport, $this>
+     */
+    public function safer_reports() : HasMany
+    {
+        return $this->hasMany(CarrierSaferReport::class, 'dot_number', 'dot_number');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<CarrierSaferReport, $this>
+     */
+    public function safer_report() : HasOne
+    {
+        return $this->hasOne(CarrierSaferReport::class, 'dot_number', 'dot_number')->latest();
+    }
+
 
 
 }

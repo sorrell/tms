@@ -10,6 +10,8 @@ use Illuminate\Support\Collection;
 class CarrierSaferReport extends Model
 {
     protected $fillable = [
+        'created_at',
+        'updated_at',
         'dot_number',
         'report',
     ];

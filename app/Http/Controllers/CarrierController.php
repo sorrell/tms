@@ -38,7 +38,7 @@ class CarrierController extends ResourceSearchController
     public function show(Carrier $carrier)
     {
         return Inertia::render('Carriers/Show', [
-            'carrier' => CarrierResource::make($carrier->load('physical_location', 'billing_location')),
+            'carrier' => CarrierResource::make($carrier->load('physical_location', 'billing_location', 'safer_report')),
         ]);
     }
 
