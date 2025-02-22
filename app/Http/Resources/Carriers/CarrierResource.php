@@ -39,8 +39,8 @@ class CarrierResource extends JsonResource
                 return new LocationResource($this->billing_location);
             }),
 
-            'safer_report' => $this->whenLoaded('safer_reports', function () {
-                return new CarrierSaferReportResource($this->safer_reports->first());
+            'safer_report' => $this->whenLoaded('safer_report', function () {
+                return new CarrierSaferReportResource($this->safer_report);
             }),
         ];
     }
