@@ -15,7 +15,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Carrier } from '@/types';
 import { Contactable } from '@/types/enums';
 import { router } from '@inertiajs/react';
-import { Check, Pencil, X } from 'lucide-react';
+import { Check, CheckCircle2, Pencil, X, XCircle } from 'lucide-react';
 import { useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
 
@@ -122,6 +122,7 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                             <SelectItem value="shipments">
                                 Shipment History
                             </SelectItem>
+                            <SelectItem value="safer">SAFER</SelectItem>
                         </SelectContent>
                     </Select>
                 ) : (
@@ -155,6 +156,12 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                             onClick={() => handleTabChange('shipments')}
                         >
                             Shipment History
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="safer"
+                            onClick={() => handleTabChange('safer')}
+                        >
+                            SAFER
                         </TabsTrigger>
                     </TabsList>
                 )}
@@ -251,6 +258,263 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                             </div>
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                {/* SAFER Tab */}
+                <TabsContent value="safer">
+                    <div className="grid gap-6">
+                        {/* Company Information */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Company Information</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Legal Name
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier?.legalName || '-'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            DBA Name
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier?.dbaName || '-'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            DOT Number
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier?.dotNumber || '-'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Status
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.statusCode === 'A' ? (
+                                                <>
+                                                    <CheckCircle2 className="h-4 w-4 text-confirm-600" />
+                                                    <span>Active</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <XCircle className="h-4 w-4 text-cancel-600" />
+                                                    <span>Inactive</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Report Date
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.created_at ? (
+                                                new Date(
+                                                    carrier.safer_report.created_at,
+                                                ).toLocaleDateString(
+                                                    'en-US',
+                                                    {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric',
+                                                    },
+                                                )
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Safety Information */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Safety Information</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Safety Rating
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.safetyRating || 'Not Rated'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Total Power Units
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.totalPowerUnits || '0'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Total Drivers
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.totalDrivers || '0'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            MCS-150 Form Date
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.mcs150Outdated === 'Y'
+                                                ? 'Outdated'
+                                                : 'Current'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Crash Statistics */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Crash Statistics</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid gap-4 md:grid-cols-3">
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Total Crashes
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.crashTotal || '0'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Fatal Crashes
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.fatalCrash || '0'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Injury Crashes
+                                        </div>
+                                        <div>
+                                            {carrier?.safer_report?.report
+                                                ?.general?.carrier
+                                                ?.injCrash || '0'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Inspection Summary */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Inspection Summary</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Driver Inspections
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div>
+                                                Total:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.driverInsp || '0'}
+                                            </div>
+                                            <div>
+                                                Out of Service:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.driverOosInsp || '0'}
+                                            </div>
+                                            <div>
+                                                Out of Service Rate:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.driverOosRate || '0'}
+                                                %
+                                            </div>
+                                            <div className="text-sm text-muted-foreground">
+                                                National Average:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.driverOosRateNationalAverage ||
+                                                    '-'}
+                                                %
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">
+                                            Vehicle Inspections
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div>
+                                                Total:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.vehicleInsp || '0'}
+                                            </div>
+                                            <div>
+                                                Out of Service:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.vehicleOosInsp || '0'}
+                                            </div>
+                                            <div>
+                                                Out of Service Rate:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.vehicleOosRate || '0'}
+                                                %
+                                            </div>
+                                            <div className="text-sm text-muted-foreground">
+                                                National Average:{' '}
+                                                {carrier?.safer_report?.report
+                                                    ?.general?.carrier
+                                                    ?.vehicleOosRateNationalAverage ||
+                                                    '-'}
+                                                %
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </TabsContent>
 
                 {/* Shipment History Tab */}

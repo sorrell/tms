@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Carriers;
 
 use App\Http\Resources\LocationResource;
+use App\Http\Resources\Carriers\CarrierSaferReportResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -36,6 +37,10 @@ class CarrierResource extends JsonResource
             
             'billing_location' => $this->whenLoaded('billing_location', function () {
                 return new LocationResource($this->billing_location);
+            }),
+
+            'safer_report' => $this->whenLoaded('safer_reports', function () {
+                return new CarrierSaferReportResource($this->safer_reports->first());
             }),
         ];
     }

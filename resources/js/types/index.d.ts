@@ -68,11 +68,13 @@ export interface Carrier {
 
     billing_location?: Location;
     physical_location?: Location;
+    safer_report?: CarrierSaferReport;
 }
 
 export interface CarrierSaferReport {
     id: number;
     dot_number: string;
+    created_at: string;
     report: {
         name: string;
         dba: string;
@@ -82,6 +84,29 @@ export interface CarrierSaferReport {
             city: string;
             state: string;
             zip: string;
+        };
+        general?: {
+            carrier?: {
+                legalName?: string;
+                dbaName?: string;
+                dotNumber?: string;
+                statusCode?: string;
+                safetyRating?: string;
+                totalPowerUnits?: number;
+                totalDrivers?: number;
+                mcs150Outdated?: string;
+                crashTotal?: number;
+                fatalCrash?: number;
+                injCrash?: number;
+                driverInsp?: number;
+                driverOosInsp?: number;
+                driverOosRate?: number;
+                driverOosRateNationalAverage?: string;
+                vehicleInsp?: number;
+                vehicleOosInsp?: number;
+                vehicleOosRate?: number;
+                vehicleOosRateNationalAverage?: string;
+            };
         };
     };
     is_full_report: boolean;

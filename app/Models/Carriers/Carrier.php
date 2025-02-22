@@ -58,5 +58,10 @@ class Carrier extends Model
         return $this->belongsTo(Location::class, 'billing_location_id');
     }
 
+    public function safer_reports()
+    {
+        return $this->hasMany(CarrierSaferReport::class, 'dot_number', 'dot_number');
+    }
+
 
 }
