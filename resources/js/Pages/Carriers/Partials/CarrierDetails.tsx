@@ -276,7 +276,8 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                         </div>
                                         <div>
                                             {carrier?.safer_report?.report
-                                                ?.general?.carrier?.legalName || '-'}
+                                                ?.general?.carrier?.legalName ||
+                                                '-'}
                                         </div>
                                     </div>
                                     <div>
@@ -285,7 +286,8 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                         </div>
                                         <div>
                                             {carrier?.safer_report?.report
-                                                ?.general?.carrier?.dbaName || '-'}
+                                                ?.general?.carrier?.dbaName ||
+                                                '-'}
                                         </div>
                                     </div>
                                     <div>
@@ -294,7 +296,8 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                         </div>
                                         <div>
                                             {carrier?.safer_report?.report
-                                                ?.general?.carrier?.dotNumber || '-'}
+                                                ?.general?.carrier?.dotNumber ||
+                                                '-'}
                                         </div>
                                     </div>
                                     <div>
@@ -322,20 +325,18 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                             Report Date
                                         </div>
                                         <div>
-                                            {carrier?.safer_report?.created_at ? (
-                                                new Date(
-                                                    carrier.safer_report.created_at,
-                                                ).toLocaleDateString(
-                                                    'en-US',
-                                                    {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric',
-                                                    },
-                                                )
-                                            ) : (
-                                                '-'
-                                            )}
+                                            {carrier?.safer_report?.created_at
+                                                ? new Date(
+                                                      carrier.safer_report.created_at,
+                                                  ).toLocaleDateString(
+                                                      'en-US',
+                                                      {
+                                                          year: 'numeric',
+                                                          month: 'long',
+                                                          day: 'numeric',
+                                                      },
+                                                  )
+                                                : '-'}
                                         </div>
                                     </div>
                                 </div>
@@ -428,8 +429,8 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                         </div>
                                         <div>
                                             {carrier?.safer_report?.report
-                                                ?.general?.carrier
-                                                ?.injCrash || '0'}
+                                                ?.general?.carrier?.injCrash ||
+                                                '0'}
                                         </div>
                                     </div>
                                 </div>
