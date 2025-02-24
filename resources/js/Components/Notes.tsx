@@ -19,6 +19,7 @@ import {
 } from './ui/dialog';
 import { Skeleton } from './ui/skeleton';
 import { Textarea } from './ui/textarea';
+import { ConfirmButton } from './ui/confirm-button';
 
 export default function Notes({
     notableType,
@@ -185,13 +186,14 @@ export default function Notes({
                         <p className="text-gray-700">{note.note}</p>
                         {note.user_id === user?.id && (
                             <div className="flex justify-end">
-                                <Button
+                                <ConfirmButton
                                     variant="destructive"
                                     size="icon"
-                                    onClick={() => handleDeleteNote(note.id)}
+                                    onConfirm={() => handleDeleteNote(note.id)}
+                                    confirmText="Are you sure you want to delete this note?"
                                 >
                                     <Trash className="h-4 w-4" />
-                                </Button>
+                                </ConfirmButton>
                             </div>
                         )}
                     </div>
