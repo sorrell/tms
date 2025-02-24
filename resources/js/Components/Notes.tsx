@@ -8,6 +8,7 @@ import { Trash } from 'lucide-react';
 import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import InputError from './InputError';
 import { Button } from './ui/button';
+import { ConfirmButton } from './ui/confirm-button';
 import {
     Dialog,
     DialogContent,
@@ -19,7 +20,6 @@ import {
 } from './ui/dialog';
 import { Skeleton } from './ui/skeleton';
 import { Textarea } from './ui/textarea';
-import { ConfirmButton } from './ui/confirm-button';
 
 export default function Notes({
     notableType,
@@ -190,7 +190,7 @@ export default function Notes({
                                     variant="destructive"
                                     size="icon"
                                     onConfirm={() => handleDeleteNote(note.id)}
-                                    confirmText="Are you sure you want to delete this note?"
+                                    confirmText="Delete"
                                 >
                                     <Trash className="h-4 w-4" />
                                 </ConfirmButton>

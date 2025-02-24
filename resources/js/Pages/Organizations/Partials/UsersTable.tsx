@@ -1,4 +1,5 @@
 import { Button } from '@/Components/ui/button';
+import { ConfirmDropdownMenuItem } from '@/Components/ui/confirm-dropdown-menu-item';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -104,12 +105,14 @@ export default function UsersTable({
                                         </DropdownMenuItem>
                                         <DropdownMenuLabel></DropdownMenuLabel>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem
+                                        <ConfirmDropdownMenuItem
                                             disabled={
                                                 user.id ===
                                                 organization.owner_id
                                             }
-                                            onClick={() =>
+                                            confirmText="Yes, transfer"
+                                            cancelText="Cancel"
+                                            onConfirm={() =>
                                                 post(
                                                     route(
                                                         'organizations.users.transfer',
@@ -131,7 +134,7 @@ export default function UsersTable({
                                             }
                                         >
                                             Transfer Ownership
-                                        </DropdownMenuItem>
+                                        </ConfirmDropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             )}
