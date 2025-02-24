@@ -8,6 +8,7 @@ import { Trash } from 'lucide-react';
 import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import InputError from './InputError';
 import { Button } from './ui/button';
+import { ConfirmButton } from './ui/confirm-button';
 import {
     Dialog,
     DialogContent,
@@ -185,13 +186,14 @@ export default function Notes({
                         <p className="text-gray-700">{note.note}</p>
                         {note.user_id === user?.id && (
                             <div className="flex justify-end">
-                                <Button
+                                <ConfirmButton
                                     variant="destructive"
                                     size="icon"
-                                    onClick={() => handleDeleteNote(note.id)}
+                                    onConfirm={() => handleDeleteNote(note.id)}
+                                    confirmText="Delete"
                                 >
                                     <Trash className="h-4 w-4" />
-                                </Button>
+                                </ConfirmButton>
                             </div>
                         )}
                     </div>
