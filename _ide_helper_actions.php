@@ -190,6 +190,20 @@ namespace App\Actions\Facilities;
 class CreateFacility
 {
 }
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static dispatchSync(\App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static dispatchNow(\App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static dispatchAfterResponse(\App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ * @method static \App\Models\Facility run(\App\Models\Facility $facility, ?string $name = null, ?int $location_id = null)
+ */
+class UpdateFacility
+{
+}
 namespace App\Actions\Locations;
 
 /**

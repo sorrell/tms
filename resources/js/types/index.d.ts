@@ -51,6 +51,7 @@ export interface Facility {
     id: number;
     name: string;
     location?: Location;
+    location_id?: number;
 }
 
 export interface Carrier {

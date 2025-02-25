@@ -12,10 +12,12 @@ export default function FacilityForm({
     className,
     onCreate,
     formRef,
+    showFormHeader = true,
     ...props
 }: {
     onCreate: (data: CreateFormResult) => void;
     formRef?: React.RefObject<HTMLFormElement>;
+    showFormHeader?: boolean;
 } & React.ComponentPropsWithoutRef<'form'>) {
     const [facilityName, setFacilityName] = useState('');
     const [locationId, setLocationId] = useState<number | null>(null);
@@ -53,7 +55,9 @@ export default function FacilityForm({
             className={cn('flex flex-col gap-2', className)}
             {...props}
         >
-            <h2 className="text-lg font-medium">Create Facility</h2>
+            {showFormHeader && (
+                <h2 className="text-lg font-medium">Create Facility</h2>
+            )}
             <div className="flex flex-col gap-2">
                 <Label htmlFor="facility-name">Facility Name</Label>
                 <Input

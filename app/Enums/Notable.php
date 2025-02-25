@@ -4,6 +4,7 @@ namespace App\Enums;
 
 use App\Models\Carriers\Carrier;
 use App\Models\Customers\Customer;
+use App\Models\Facility;
 use App\Models\Shipments\Shipment;
 
 enum Notable: string
@@ -11,6 +12,7 @@ enum Notable: string
     case SHIPMENT = 'shipment';
     case CUSTOMER = 'customer';
     case CARRIER = 'carrier';
+    case FACILITY = 'facility';
 
     public function getClassName(): string
     {
@@ -18,6 +20,7 @@ enum Notable: string
             self::SHIPMENT => Shipment::class,
             self::CUSTOMER => Customer::class,
             self::CARRIER => Carrier::class,
+            self::FACILITY => Facility::class,
         };
     }
 }

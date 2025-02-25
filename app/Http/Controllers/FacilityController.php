@@ -18,17 +18,16 @@ class FacilityController extends ResourceSearchController
 
     public function index(Request $request)
     {
-        $request->validate([
-            'facility_id' => 'nullable|exists:facilities,id',
-        ]);
-
-        if ($request->input('facility_id')) {
-            $facility = Facility::find($request->input('facility_id'));
-            return Inertia::render('Facilities/Index', [
-                'facility' => FacilityResource::make($facility),
-            ]);
-        }
-
         return Inertia::render('Facilities/Index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Facility $facility)
+    {
+        return Inertia::render('Facilities/Show', [
+            'facility' => FacilityResource::make($facility->load('location')),
+        ]);
     }
 }

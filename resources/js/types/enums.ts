@@ -12,10 +12,12 @@ export enum Notable {
     Shipment = 'shipment',
     Customer = 'customer',
     Carrier = 'carrier',
+    Facility = 'facility',
 }
 
 export enum Contactable {
     Shipment = 'shipment',
     Customer = 'customer',
     Carrier = 'carrier',
+    Facility = 'facility',
 }
