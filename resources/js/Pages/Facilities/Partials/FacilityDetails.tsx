@@ -25,7 +25,7 @@ import { router, useForm } from '@inertiajs/react';
 import { Check, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
-export default function FacilityDetails({ facility }: { facility?: Facility }) {
+export default function FacilityDetails({ facility }: { facility: Facility }) {
     const [isEditing, setIsEditing] = useState(false);
     const [isLocationEditing, setIsLocationEditing] = useState(false);
     const [editedName, setEditedName] = useState(facility?.name || '');
@@ -364,7 +364,7 @@ export default function FacilityDetails({ facility }: { facility?: Facility }) {
                                 requiredFilters={[
                                     {
                                         name: 'facility_id',
-                                        value: facility?.id?.toString() || '',
+                                        value: facility.id.toString() || '',
                                     },
                                 ]}
                             />
