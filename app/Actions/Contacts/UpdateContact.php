@@ -75,7 +75,12 @@ class UpdateContact
 
     public function authorize(ActionRequest $request): bool
     {
-        $contactFor = $request->route('contact')->contactFor;
+        $contact = $request->route('contact');
+        if (!$contact instanceof Contact) {
+            $contact = Contact::find($contact);
+        }
+        
+        $contactFor = $contact->contactFor;
 
         if (!$contactFor) {
             return false;

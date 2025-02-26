@@ -237,6 +237,20 @@ class CreateNote
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Note $note)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Note $note)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Note $note)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Note $note)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Note $note)
+ * @method static dispatchSync(\App\Models\Note $note)
+ * @method static dispatchNow(\App\Models\Note $note)
+ * @method static dispatchAfterResponse(\App\Models\Note $note)
+ * @method static \App\Models\Note run(\App\Models\Note $note)
+ */
+class DeleteNote
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $notableType, int $notableId)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $notableType, int $notableId)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $notableType, int $notableId)

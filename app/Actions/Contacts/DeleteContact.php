@@ -37,7 +37,15 @@ class DeleteContact
 
     public function authorize(ActionRequest $request): bool
     {
-        $contactFor = $request->route('contact')->contactFor;
+        // Get the contact from the route parameter
+        $contact = $request->route('contact');
+        
+        // Ensure we have a Contact model instance
+        if (!$contact instanceof Contact) {
+            $contact = Contact::find($contact);
+        }
+        
+        $contactFor = $contact->contactFor;
 
         if (!$contactFor) {
             return false;
