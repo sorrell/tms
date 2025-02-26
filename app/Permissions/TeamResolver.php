@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Providers;
+namespace App\Permissions;
 
-class PermissionRegistrar extends \Spatie\Permission\PermissionRegistrar
+use Spatie\Permission\Contracts\PermissionsTeamResolver;
+
+class TeamResolver implements PermissionsTeamResolver
 {
     /**
      * Set the team id for teams/groups support, this id is used when querying permissions/roles
@@ -18,7 +20,7 @@ class PermissionRegistrar extends \Spatie\Permission\PermissionRegistrar
     /**
      * @return int|string|null
      */
-    public function getPermissionsTeamId()
+    public function getPermissionsTeamId() : int|string|null
     {
         return current_organization_id();
     }
