@@ -44,4 +44,9 @@ class UpdateShipmentCarrierDetails
             'carrier_id' => ['required', 'exists:carriers,id'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::SHIPMENT_EDIT);
+    }
 }

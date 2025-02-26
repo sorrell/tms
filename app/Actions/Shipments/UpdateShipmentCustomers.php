@@ -36,5 +36,10 @@ class UpdateShipmentCustomers
             'customer_ids' => ['required', 'array'],
             'customer_ids.*' => ['required', 'exists:customers,id'],
         ];
+    }   
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::SHIPMENT_EDIT);
     }
 }

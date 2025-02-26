@@ -50,4 +50,9 @@ class CreateCustomerFacility
             'facility_id' => ['required', 'exists:facilities,id'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::CUSTOMER_EDIT);
+    }
 }

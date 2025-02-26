@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\Carriers\Carrier;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -21,7 +22,7 @@ class CarrierPolicy
      */
     public function view(User $user, Carrier $carrier): bool
     {
-        return false;
+        return $user->can(Permission::CARRIER_VIEW);
     }
 
     /**
@@ -29,7 +30,7 @@ class CarrierPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can(Permission::CARRIER_EDIT);
     }
 
     /**
@@ -37,7 +38,7 @@ class CarrierPolicy
      */
     public function update(User $user, Carrier $carrier): bool
     {
-        return false;
+        return $user->can(Permission::CARRIER_EDIT);
     }
 
     /**
@@ -45,7 +46,7 @@ class CarrierPolicy
      */
     public function delete(User $user, Carrier $carrier): bool
     {
-        return false;
+        return $user->can(Permission::CARRIER_EDIT);
     }
 
     /**

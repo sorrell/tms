@@ -2,6 +2,7 @@
 
 namespace App\Policies\Shipments;
 
+use App\Enums\Permission;
 use App\Models\Shipments\ShipmentStop;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -29,7 +30,7 @@ class ShipmentStopPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can(Permission::SHIPMENT_EDIT);
     }
 
     /**
@@ -37,7 +38,7 @@ class ShipmentStopPolicy
      */
     public function update(User $user, ShipmentStop $shipmentStop): bool
     {
-        return false;
+        return $user->can(Permission::SHIPMENT_EDIT);
     }
 
     /**
@@ -45,7 +46,7 @@ class ShipmentStopPolicy
      */
     public function delete(User $user, ShipmentStop $shipmentStop): bool
     {
-        return false;
+        return $user->can(Permission::SHIPMENT_EDIT);
     }
 
     /**

@@ -43,4 +43,9 @@ class CreateCarrier
             'name' => ['required', 'string', 'min:3', 'max:255'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::CARRIER_EDIT);
+    }
 }

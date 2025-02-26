@@ -118,4 +118,9 @@ class CreateShipment
             'stops.*.stop_number' => ['required', 'integer'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::SHIPMENT_EDIT);
+    }
 }

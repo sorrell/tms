@@ -58,4 +58,9 @@ class UpdateShipmentStops
             'stops.*.left_at' => ['date', 'nullable'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::SHIPMENT_EDIT);
+    }
 }

@@ -44,4 +44,9 @@ class CreateFacility
             'location_id' => ['required', 'exists:locations,id'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::FACILITY_EDIT);
+    }
 }
