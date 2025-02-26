@@ -363,7 +363,7 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                             <ShipmentList
                                 requiredFilters={[
                                     {
-                                        name: 'facility_id',
+                                        name: 'stops.facility_id',
                                         value: facility.id.toString() || '',
                                     },
                                 ]}
