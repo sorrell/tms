@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { Button, ButtonProps, buttonVariants } from './button';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { cn } from '@/lib/utils';
+import * as React from 'react';
+import { Button, ButtonProps } from './button';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 export interface ConfirmButtonProps extends ButtonProps {
     confirmText?: string;
@@ -13,19 +13,22 @@ export interface ConfirmButtonProps extends ButtonProps {
 }
 
 const ConfirmButton = React.forwardRef<HTMLButtonElement, ConfirmButtonProps>(
-    ({
-        children,
-        className,
-        variant = 'default',
-        size,
-        confirmText = 'Confirm',
-        cancelText = 'Cancel',
-        onConfirm,
-        popoverClassName,
-        popoverContentClassName,
-        align = 'center',
-        ...props
-    }, ref) => {
+    (
+        {
+            children,
+            className,
+            variant = 'default',
+            size,
+            confirmText = 'Confirm',
+            cancelText = 'Cancel',
+            onConfirm,
+            popoverClassName,
+            popoverContentClassName,
+            align = 'center',
+            ...props
+        },
+        ref,
+    ) => {
         const [open, setOpen] = React.useState(false);
 
         const handleConfirm = (e: React.MouseEvent) => {
@@ -48,11 +51,16 @@ const ConfirmButton = React.forwardRef<HTMLButtonElement, ConfirmButtonProps>(
                         {children}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent 
-                    className={cn("w-auto p-0", popoverContentClassName)} 
+                <PopoverContent
+                    className={cn('w-auto p-0', popoverContentClassName)}
                     align={align}
                 >
-                    <div className={cn("flex flex-col gap-1 p-2", popoverClassName)}>
+                    <div
+                        className={cn(
+                            'flex flex-col gap-1 p-2',
+                            popoverClassName,
+                        )}
+                    >
                         <Button
                             size="sm"
                             onClick={handleConfirm}
@@ -71,7 +79,7 @@ const ConfirmButton = React.forwardRef<HTMLButtonElement, ConfirmButtonProps>(
                 </PopoverContent>
             </Popover>
         );
-    }
+    },
 );
 
 ConfirmButton.displayName = 'ConfirmButton';

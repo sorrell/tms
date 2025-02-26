@@ -1,29 +1,18 @@
 import FacilityList from '@/Components/Facilities/FacilityList/FacilityList';
-import { buttonVariants } from '@/Components/ui/button';
+import { Button } from '@/Components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Facility } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import FacilityDetails from './Partials/FacilityDetails';
+import { useState } from 'react';
+import FacilityCreateDialog from './Partials/FacilityCreateDialog';
 
 export default function Index() {
-    const { facility } = usePage().props;
-    const [selectedFacility, setSelectedFacility] = useState<
-        Facility | undefined
-    >(facility as Facility);
+    const [isOpen, setIsOpen] = useState(false);
 
-    useEffect(() => {
-        if (selectedFacility) {
-            const url = new URL(window.location.href);
-            url.searchParams.set('facility_id', selectedFacility.id.toString());
-            window.history.pushState({}, '', url.toString());
-        } else {
-            const url = new URL(window.location.href);
-            url.searchParams.delete('facility_id');
-            window.history.pushState({}, '', url.toString());
-        }
-    }, [selectedFacility]);
+    const setSelectedFacility = (facility: Facility) => {
+        router.visit(route('facilities.show', { facility }));
+    };
 
     return (
         <AuthenticatedLayout
@@ -34,20 +23,22 @@ export default function Index() {
             ]}
         >
             <Head title="Facilities" />
-            <div className="mx-auto flex max-w-screen-2xl justify-end px-8">
-                <Link
-                    href="#"
-                    className={buttonVariants({ variant: 'default' })}
-                    disabled={true}
-                >
-                    <Plus />
-                    Create Facility
-                </Link>
+            <div className="mx-auto max-w-screen-2xl">
+                <div className="flex justify-end px-8">
+                    <Button
+                        type="button"
+                        onClick={() => {
+                            setIsOpen(true);
+                        }}
+                    >
+                        <Plus /> Create Facility
+                    </Button>
+                </div>
+                <div className="mx-auto flex max-w-screen-2xl flex-col gap-4">
+                    <FacilityList onSelect={setSelectedFacility} />
+                </div>
             </div>
-            <div className="mx-auto flex max-w-screen-2xl flex-col gap-4">
-                <FacilityList onSelect={setSelectedFacility} />
-                <FacilityDetails facility={selectedFacility} />
-            </div>
+            <FacilityCreateDialog isOpen={isOpen} setIsOpen={setIsOpen} />
         </AuthenticatedLayout>
     );
 }

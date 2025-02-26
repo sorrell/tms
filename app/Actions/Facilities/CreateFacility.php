@@ -29,7 +29,7 @@ class CreateFacility
 
     public function htmlResponse(Facility $facility)
     {
-        return redirect()->back()->with('success', 'Facility added successfully');
+        return redirect()->route('facilities.show', $facility);
     }
 
     public function jsonResponse(Facility $facility) : FacilityResource

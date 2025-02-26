@@ -85,8 +85,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     });
 
     Route::get('facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
+    Route::resource('facilities', FacilityController::class, [
+        'except' => ['store', 'update'],
+    ]);
     Route::post('facilities', CreateFacility::class)->name('facilities.store');
-    Route::get('facilities', [FacilityController::class, 'index'])->name('facilities.index');
+    Route::put('facilities/{facility}', \App\Actions\Facilities\UpdateFacility::class)->name('facilities.update');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
     Route::resource('carriers', CarrierController::class, [
