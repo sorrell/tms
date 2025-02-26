@@ -10,6 +10,16 @@ enum Permission: string
     case ORGANIZATION_MANAGE_USERS = 'organization-manage-users';
     case ORGANIZATION_MANAGER = 'organization-manager';
 
+    case CUSTOMER_EDIT = 'customer-edit';
+    case CUSTOMER_VIEW = 'customer-view';
+
+    case FACILITY_EDIT = 'facility-edit';
+    case FACILITY_VIEW = 'facility-view';
+
+    case CARRIER_EDIT = 'carrier-edit';
+    case CARRIER_VIEW = 'carrier-view';
+
+    case SHIPMENT_EDIT = 'shipment-edit';
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
     public function label(): string
@@ -17,6 +27,13 @@ enum Permission: string
         return match ($this) {
             self::ORGANIZATION_MANAGE_USERS => 'Manage Organization Users & Permissions',
             self::ORGANIZATION_MANAGER => 'View & Edit Organization Details',
+            self::CUSTOMER_EDIT => 'Edit Customer Details',
+            self::CUSTOMER_VIEW => 'View Customer Details',
+            self::FACILITY_EDIT => 'Edit Facility Details',
+            self::FACILITY_VIEW => 'View Facility Details',
+            self::CARRIER_EDIT => 'Edit Carrier Details',
+            self::CARRIER_VIEW => 'View Carrier Details',
+            self::SHIPMENT_EDIT => 'Edit Shipment Details',
         };
     }
 
