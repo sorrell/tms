@@ -7,6 +7,7 @@ use App\Http\Resources\CustomerResource;
 use App\Http\Resources\FacilityResource;
 use App\Models\Customers\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class CustomerController extends ResourceSearchController
@@ -19,6 +20,7 @@ class CustomerController extends ResourceSearchController
      */
     public function index(Request $request)
     {
+        Gate::authorize(\App\Enums\Permission::CUSTOMER_VIEW);
         $request->validate([
             'customer_id' => 'nullable|exists:customers,id',
         ]);
@@ -54,6 +56,7 @@ class CustomerController extends ResourceSearchController
      */
     public function show(Customer $customer)
     {
+        Gate::authorize(\App\Enums\Permission::CUSTOMER_VIEW);
         return Inertia::render('Customers/Show', [
             'customer' => CustomerResource::make($customer),
         ]);

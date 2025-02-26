@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Carriers\CarrierResource;
 use App\Models\Carriers\Carrier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class CarrierController extends ResourceSearchController
@@ -16,7 +17,7 @@ class CarrierController extends ResourceSearchController
      */
     public function index(Request $request)
     {
-
+        Gate::authorize(\App\Enums\Permission::CARRIER_VIEW);
         return Inertia::render('Carriers/Index',
             [
                 'allowFmcsaSearch' => config('fmcsa.api_key') ? true : false,
@@ -37,6 +38,7 @@ class CarrierController extends ResourceSearchController
      */
     public function show(Carrier $carrier)
     {
+        Gate::authorize(\App\Enums\Permission::CARRIER_VIEW);
         return Inertia::render('Carriers/Show', [
             'carrier' => CarrierResource::make($carrier->load('physical_location', 'billing_location', 'safer_report')),
         ]);
