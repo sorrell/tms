@@ -57,4 +57,9 @@ class CreateCarrierFromSaferReport
         return [
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::CARRIER_EDIT);
+    }
 }

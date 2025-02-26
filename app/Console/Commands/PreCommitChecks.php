@@ -35,7 +35,7 @@ class PreCommitChecks extends Command
         'npm-lint' => 'npm run lint',
         'typescript' => 'npm exec tsc',
         'npm-build' => 'npm run build',
-        'tests:php' => 'php ./vendor/bin/pest',
+        'tests:php' => 'php ./vendor/bin/pest --parallel',
     ];
 
     /**

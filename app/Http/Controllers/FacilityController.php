@@ -9,6 +9,7 @@ use App\Http\Resources\FacilityResource;
 use App\Models\Facility;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class FacilityController extends ResourceSearchController
@@ -18,6 +19,7 @@ class FacilityController extends ResourceSearchController
 
     public function index(Request $request)
     {
+        Gate::authorize(\App\Enums\Permission::FACILITY_VIEW);
         return Inertia::render('Facilities/Index');
     }
 
@@ -26,6 +28,7 @@ class FacilityController extends ResourceSearchController
      */
     public function show(Facility $facility)
     {
+        Gate::authorize(\App\Enums\Permission::FACILITY_VIEW);
         return Inertia::render('Facilities/Show', [
             'facility' => FacilityResource::make($facility->load('location')),
         ]);

@@ -18,7 +18,7 @@
         "loadpartner/fmcsa-safer-api": "^1.0",
         "lorisleiva/laravel-actions": "^2.8",
         "propaganistas/laravel-phone": "^5.3",
-        "spatie/laravel-permission": "^6.10",
+        "spatie/laravel-permission": "^6",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

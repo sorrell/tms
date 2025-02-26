@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\Facility;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -21,7 +22,7 @@ class FacilityPolicy
      */
     public function view(User $user, Facility $facility): bool
     {
-        return false;
+        return $user->can(Permission::FACILITY_VIEW);
     }
 
     /**
@@ -29,7 +30,7 @@ class FacilityPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can(Permission::FACILITY_EDIT);
     }
 
     /**
@@ -37,7 +38,7 @@ class FacilityPolicy
      */
     public function update(User $user, Facility $facility): bool
     {
-        return false;
+        return $user->can(Permission::FACILITY_EDIT);
     }
 
     /**
@@ -45,7 +46,7 @@ class FacilityPolicy
      */
     public function delete(User $user, Facility $facility): bool
     {
-        return false;
+        return $user->can(Permission::FACILITY_EDIT);
     }
 
     /**

@@ -67,4 +67,9 @@ class UpdateShipmentGeneral
             'trip_distance' => ['nullable', 'numeric'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::SHIPMENT_EDIT);
+    }
 }

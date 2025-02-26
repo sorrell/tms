@@ -40,8 +40,7 @@ class OrganizationInvitePolicy
     public function update(User $user, OrganizationInvite $organizationInvite): bool
     {
         return strtolower($user->email) === strtolower($organizationInvite->email)
-            || $organizationInvite->organization->owner_id === $user->id
-            || $user->can(Permission::ORGANIZATION_MANAGE_USERS);;
+            || $user->can(Permission::ORGANIZATION_MANAGE_USERS);
     }
 
     /**
@@ -49,7 +48,7 @@ class OrganizationInvitePolicy
      */
     public function delete(User $user, OrganizationInvite $organizationInvite): bool
     {
-        return $organizationInvite->organization->owner_id === $user->id || $user->can(Permission::ORGANIZATION_MANAGE_USERS);
+        return $user->can(Permission::ORGANIZATION_MANAGE_USERS);
     }
 
     /**

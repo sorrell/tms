@@ -16,9 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->beforeResolving(\Spatie\Permission\PermissionRegistrar::class, function () {
-            $this->app->singleton(\Spatie\Permission\PermissionRegistrar::class, PermissionRegistrar::class);
-        });
+        
     }
 
     /**

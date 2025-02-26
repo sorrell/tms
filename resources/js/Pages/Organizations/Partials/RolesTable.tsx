@@ -253,6 +253,7 @@ function RoleForm({
                                         setData('name', e.target.value)
                                     }
                                     tabIndex={1}
+                                    autoComplete="off"
                                 />
                                 <InputError
                                     message={errors.name}

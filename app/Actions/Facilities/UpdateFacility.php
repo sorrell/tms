@@ -53,4 +53,9 @@ class UpdateFacility
             'location_id' => ['nullable', 'integer', 'exists:locations,id'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::FACILITY_EDIT);
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\Shipments\UpdateShipmentNumberRequest;
 use App\Models\Shipments\Shipment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Nette\NotImplementedException;
 
@@ -31,5 +32,10 @@ class UpdateShipmentNumber
         $shipment = $this->handle($shipment, $request->shipment_number);
 
         return redirect()->back()->with('success', 'Shipment number updated successfully');
+    }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::SHIPMENT_EDIT);
     }
 }

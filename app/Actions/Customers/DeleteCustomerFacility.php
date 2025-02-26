@@ -43,4 +43,9 @@ class DeleteCustomerFacility
     {
         return [];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::CUSTOMER_EDIT);
+    }
 }

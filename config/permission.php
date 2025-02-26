@@ -186,4 +186,6 @@ return [
 
         'store' => 'default',
     ],
+
+    'team_resolver' => \App\Permissions\TeamResolver::class,
 ];
