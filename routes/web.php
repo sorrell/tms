@@ -15,6 +15,7 @@ use App\Actions\Customers\UpdateCustomer;
 use App\Actions\Facilities\CreateFacility;
 use App\Actions\Locations\CreateLocation;
 use App\Actions\Notes\CreateNote;
+use App\Actions\Notes\DeleteNote;
 use App\Actions\Notes\GetNotes;
 use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
@@ -26,7 +27,6 @@ use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\LocationController;
-use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationInviteController;
 use App\Http\Controllers\PermissionController;
@@ -123,7 +123,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/customers', UpdateShipmentCustomers::class)->name('shipments.updateCustomers');
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
 
-    Route::delete('notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
+    Route::delete('notes/{note}', DeleteNote::class)->name('notes.destroy');
     Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');
     Route::post('notes/{notableType}/{notableId}', CreateNote::class)->name('notes.store');
 

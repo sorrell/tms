@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Customers;
 
 use App\Enums\Permission;
 use App\Models\Customers\Customer;

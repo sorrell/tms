@@ -6,6 +6,7 @@ use App\Enums\Contactable;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Database\Eloquent\Model;
+
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -78,5 +79,20 @@ class CreateContact
             'contact_for_id' => ['required'],
             'contact_for_type' => ['required', 'string'],
         ];
+    }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        $contactForClass = Contactable::from(
+            $request->input('contact_for_type')
+        )->getClassName();
+
+        $contactFor = $contactForClass::find($request->input('contact_for_id'));
+
+        if (!$contactFor) {
+            return false;
+        }
+
+        return $request->user()->can('update', $contactFor);
     }
 }

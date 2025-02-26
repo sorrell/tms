@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Carriers;
 
 use App\Enums\Permission;
 use App\Models\Carriers\Carrier;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class CarrierPolicy
 {

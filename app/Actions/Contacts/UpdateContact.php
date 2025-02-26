@@ -5,6 +5,7 @@ namespace App\Actions\Contacts;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -70,5 +71,16 @@ class UpdateContact
             'office_phone' => ['nullable', 'string', 'max:255', 'phone'],
             'office_phone_extension' => ['nullable', 'string', 'max:255'],
         ];
+    }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        $contactFor = $request->route('contact')->contactFor;
+
+        if (!$contactFor) {
+            return false;
+        }
+
+        return $request->user()->can('update', $contactFor);
     }
 }

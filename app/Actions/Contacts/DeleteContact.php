@@ -34,4 +34,15 @@ class DeleteContact
     {
         return redirect()->back()->with('success', 'Contact deleted successfully');
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        $contactFor = $request->route('contact')->contactFor;
+
+        if (!$contactFor) {
+            return false;
+        }
+
+        return $request->user()->can('update', $contactFor);
+    }
 }
