@@ -17,7 +17,10 @@ abstract class ResourceSearchController extends Controller
                 // this allows for customers.id to be correctly queried
                 if (str_contains($filter['name'], '.')) {
                     $relation = explode('.', $filter['name'])[0];
-                    $query = $query->whereHas($relation, fn ($b) => $b->where($filter['name'], $filter['value']));
+                    $relationField = explode('.', $filter['name'])[1];
+                    $query = $query->whereHas($relation, 
+                        fn ($b) => $b->where($b->getModel()->getTable() . '.' . $relationField, $filter['value'])
+                    );
                 } else {
                     $query = $query->where($filter['name'], $filter['value']);
                 }
