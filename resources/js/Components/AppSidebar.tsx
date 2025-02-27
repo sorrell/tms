@@ -42,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const userData = {
         name: user.name,
         email: user.email,
-        avatar: user.profile_photo_url,
+        avatar: user.profile_photo_url || '',
     };
 
     return (
