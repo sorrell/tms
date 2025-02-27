@@ -1,10 +1,12 @@
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -17,16 +19,45 @@ export default function UpdateProfileInformation({
 }) {
     const user = usePage().props.auth.user;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
+    const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
             email: user.email,
+            photo: null as File | null,
         });
+
+    const [photoPreview, setPhotoPreview] = useState<string | null>(
+        user.profile_photo_url || null,
+    );
+
+    const onDrop = useCallback(
+        (acceptedFiles: File[]) => {
+            const file = acceptedFiles[0];
+            if (file) {
+                setData('photo', file);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setPhotoPreview(e.target?.result as string);
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        [setData],
+    );
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: {
+            'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
+        },
+        maxFiles: 1,
+        maxSize: 2097152, // 2MB
+    });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        post(route('profile.update'), {});
     };
 
     return (
@@ -42,6 +73,61 @@ export default function UpdateProfileInformation({
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
+                <div>
+                    <Label htmlFor="photo">Picture</Label>
+
+                    <div className="mt-2 flex items-center gap-6">
+                        {photoPreview ? (
+                            <Avatar className="h-20 w-20">
+                                <AvatarImage
+                                    src={photoPreview}
+                                    alt={user.name}
+                                />
+                                <AvatarFallback>
+                                    {user.name
+                                        .split(' ')
+                                        .map((n) => n[0])
+                                        .join('')
+                                        .toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
+                        ) : (
+                            <Avatar className="h-20 w-20">
+                                <AvatarFallback>
+                                    {user.name
+                                        .split(' ')
+                                        .map((n) => n[0])
+                                        .join('')
+                                        .toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
+                        )}
+
+                        <div
+                            {...getRootProps()}
+                            className={`flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed p-6 ${
+                                isDragActive
+                                    ? 'border-primary bg-primary/10'
+                                    : 'border-gray-300 dark:border-gray-700'
+                            }`}
+                        >
+                            <input {...getInputProps()} id="photo" />
+                            <div className="text-center">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {isDragActive
+                                        ? 'Drop the file here'
+                                        : 'Drag & drop a profile picture, or click to select'}
+                                </p>
+                                <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
+                                    PNG, JPG, GIF up to 2MB
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <InputError className="mt-2" message={errors.photo} />
+                </div>
+
                 <div>
                     <Label htmlFor="name">Name</Label>
 

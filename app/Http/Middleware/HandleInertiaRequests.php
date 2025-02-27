@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\Permission;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -33,7 +34,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user()?->load('organizations'),
+                'user' => UserResource::make($request->user()?->load('organizations')),
                 'permissions' => Permission::getPermissionsForUser($request->user()),
             ],
             'app' => [
