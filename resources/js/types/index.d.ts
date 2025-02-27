@@ -5,6 +5,7 @@ export interface User {
     email_verified_at?: string;
     current_organization_id: number;
     organizations: Organization[];
+    profile_photo_url?: string;
 }
 
 export type PageProps<
