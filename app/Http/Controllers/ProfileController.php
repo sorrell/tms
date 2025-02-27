@@ -47,6 +47,11 @@ class ProfileController extends Controller
             );
 
             $validated['profile_photo_path'] = $photoPath;
+        } else if ($request->removePhoto) {
+            if ($user->profile_photo_path) {
+                Storage::disk('public')->delete($user->profile_photo_path);
+                $validated['profile_photo_path'] = null;
+            }
         }
 
         $user->fill($validated);

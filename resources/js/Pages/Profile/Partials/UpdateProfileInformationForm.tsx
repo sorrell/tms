@@ -1,6 +1,7 @@
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
+import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Transition } from '@headlessui/react';
@@ -24,6 +25,7 @@ export default function UpdateProfileInformation({
             name: user.name,
             email: user.email,
             photo: null as File | null,
+            removePhoto: false,
         });
 
     const [photoPreview, setPhotoPreview] = useState<string | null>(
@@ -34,6 +36,7 @@ export default function UpdateProfileInformation({
         (acceptedFiles: File[]) => {
             const file = acceptedFiles[0];
             if (file) {
+                setData('removePhoto', false);
                 setData('photo', file);
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -53,6 +56,12 @@ export default function UpdateProfileInformation({
         maxFiles: 1,
         maxSize: 2097152, // 2MB
     });
+
+    const removePhoto = () => {
+        setData('removePhoto', true);
+        setData('photo', null);
+        setPhotoPreview(null);
+    };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -78,19 +87,29 @@ export default function UpdateProfileInformation({
 
                     <div className="mt-2 flex items-center gap-6">
                         {photoPreview ? (
-                            <Avatar className="h-20 w-20">
-                                <AvatarImage
-                                    src={photoPreview}
-                                    alt={user.name}
-                                />
-                                <AvatarFallback>
-                                    {user.name
-                                        .split(' ')
-                                        .map((n) => n[0])
-                                        .join('')
-                                        .toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
+                            <div className="flex flex-col items-center gap-2">
+                                <Avatar className="h-20 w-20">
+                                    <AvatarImage
+                                        src={photoPreview}
+                                        alt={user.name}
+                                    />
+                                    <AvatarFallback>
+                                        {user.name
+                                            .split(' ')
+                                            .map((n) => n[0])
+                                            .join('')
+                                            .toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={removePhoto}
+                                >
+                                    Remove Photo
+                                </Button>
+                            </div>
                         ) : (
                             <Avatar className="h-20 w-20">
                                 <AvatarFallback>
