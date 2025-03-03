@@ -2,7 +2,7 @@
 
 namespace App\Actions\Shipments;
 
-use App\Events\Shipments\ShipmentCarrierChanged;
+use App\Events\Shipments\ShipmentCarrierUpdated;
 use App\Models\Shipments\Shipment;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -20,7 +20,7 @@ class UpdateShipmentCarrierDetails
             'carrier_id' => $carrierId,
         ]);
 
-        event(new ShipmentCarrierChanged($shipment));
+        event(new ShipmentCarrierUpdated($shipment));
 
         return $shipment;
     }
