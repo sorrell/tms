@@ -2,15 +2,10 @@
 
 namespace App\Actions\Shipments;
 
-use App\Enums\TemperatureUnit;
-use App\Http\Requests\Shipments\UpdateShipmentGeneralRequest;
-use App\Http\Requests\Shipments\UpdateShipmentNumberRequest;
+use App\Events\Shipments\ShipmentCarrierChanged;
 use App\Models\Shipments\Shipment;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Nette\NotImplementedException;
 
 class UpdateShipmentCarrierDetails
 {
@@ -24,6 +19,8 @@ class UpdateShipmentCarrierDetails
         $shipment->update([
             'carrier_id' => $carrierId,
         ]);
+
+        event(new ShipmentCarrierChanged($shipment));
 
         return $shipment;
     }
