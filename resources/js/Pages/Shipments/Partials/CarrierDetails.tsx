@@ -14,7 +14,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
     const { toast } = useToast();
 
     const { patch, setData, data } = useForm({
-        carrier_id: shipment.carrier.id,
+        carrier_id: shipment.carrier?.id,
     });
 
     const updateShipment = () => {
@@ -63,7 +63,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                                     onClick={() => {
                                         setEditMode(false);
                                         setData({
-                                            carrier_id: shipment.carrier.id,
+                                            carrier_id: shipment.carrier?.id,
                                         });
                                     }}
                                 >
@@ -96,7 +96,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                             allowUnselect={false}
                         />
                     ) : (
-                        <p>{shipment.carrier.name}</p>
+                        <p>{shipment.carrier?.name ?? '-'}</p>
                     )}
                 </div>
                 <div className="flex flex-col gap-2">

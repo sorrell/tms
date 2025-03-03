@@ -30,6 +30,13 @@ export const columns: ColumnDef<Shipment>[] = [
         },
     },
     {
+        accessorKey: 'state',
+        header: 'State',
+        cell: ({ row }) => {
+            return <Badge variant="outline">{row.original.state_label}</Badge>;
+        },
+    },
+    {
         accessorKey: 'customers',
         header: 'Customers',
         cell: ({ row }) => {
@@ -57,7 +64,7 @@ export const columns: ColumnDef<Shipment>[] = [
 
             return (
                 <div className="flex flex-col space-y-2">
-                    <span>{carrier.name}</span>
+                    <span>{carrier?.name ?? '-'}</span>
                     <span className="text-muted-foreground">
                         {row.original.trailer_size?.name}{' '}
                         {row.original.trailer_type?.name}

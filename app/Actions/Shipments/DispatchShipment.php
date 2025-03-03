@@ -2,25 +2,26 @@
 
 namespace App\Actions\Shipments;
 
-use App\Events\Shipments\ShipmentCarrierUpdated;
+use App\Enums\TemperatureUnit;
+use App\Http\Requests\Shipments\UpdateShipmentGeneralRequest;
+use App\Http\Requests\Shipments\UpdateShipmentNumberRequest;
 use App\Models\Shipments\Shipment;
+use App\States\Shipments\Dispatched;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Nette\NotImplementedException;
 
-class UpdateShipmentCarrierDetails
+class DispatchShipment
 {
     use AsAction;
 
     public function handle(
         Shipment $shipment,
-        int $carrierId,
     ): Shipment {
 
-        $shipment->update([
-            'carrier_id' => $carrierId,
-        ]);
-
-        event(new ShipmentCarrierUpdated($shipment));
+        $shipment->state->transitionTo(Dispatched::class);
 
         return $shipment;
     }
@@ -29,16 +30,14 @@ class UpdateShipmentCarrierDetails
     {
         $this->handle(
             $shipment,
-            $request->carrier_id,
         );
 
-        return redirect()->back()->with('success', 'Shipment carrier details updated successfully');
+        return redirect()->back()->with('success', 'Shipment dispatched successfully');
     }
 
     public function rules(): array
     {
         return [
-            'carrier_id' => ['required', 'exists:carriers,id'],
         ];
     }
 

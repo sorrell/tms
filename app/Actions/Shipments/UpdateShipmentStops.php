@@ -3,6 +3,7 @@
 namespace App\Actions\Shipments;
 
 use App\Enums\StopType;
+use App\Events\Shipments\ShipmentStopsUpdated;
 use App\Models\Shipments\Shipment;
 use App\Models\Shipments\ShipmentStop;
 use Illuminate\Validation\Rule;
@@ -25,6 +26,8 @@ class UpdateShipmentStops
         foreach ($stops as $stop) {
             $shipment->stops()->updateOrCreate(['id' => $stop['id']], $stop);
         }
+
+        event(new ShipmentStopsUpdated($shipment));
 
         return $shipment;
     }

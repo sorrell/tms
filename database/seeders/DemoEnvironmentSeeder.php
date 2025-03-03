@@ -25,6 +25,7 @@ class DemoEnvironmentSeeder extends Seeder
         Carrier::factory(10)->create();
         Customer::factory(10)->create();
         Location::factory(10)->create();
-        Shipment::factory(10)->withCustomersAndStops(2)->create();
+        Shipment::factory(7)->withCarrier()->withCustomersAndStops(2)->create();
+        Shipment::factory(3)->withCustomersAndStops(2)->create();
     }
 }

@@ -12,6 +12,9 @@ use App\Models\Facility;
 use App\Models\Shipments\ShipmentStop;
 use App\Models\Shipments\TrailerSize;
 use App\Models\Customers\Customer;
+use App\States\Shipments\Booked;
+use App\States\Shipments\Pending;
+use App\States\Shipments\ShipmentState;
 use Carbon\Carbon;
 
 /**
@@ -28,7 +31,6 @@ class ShipmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'carrier_id' => Carrier::factory(),
             'weight' => fake()->randomFloat(2, 1000, 45000), // typical truck load weights in lbs
             'trip_distance' => fake()->randomFloat(2, 10, 3000), // distance in miles
             'trailer_type_id' => TrailerType::inRandomOrder()->first()->id,
@@ -37,7 +39,16 @@ class ShipmentFactory extends Factory
             'trailer_temperature' => fake()->randomFloat(1, -10, 70), // temperature in fahrenheit
             'trailer_temperature_maximum' => fake()->randomFloat(1, -10, 70),
             'shipment_number' => fake()->unique()->numerify('######'),
+            'state' => Pending::class,
         ];
+    }
+
+    public function withCarrier(): static
+    {
+        return $this->state([
+            'carrier_id' => Carrier::factory(),
+            'state' => Booked::class,
+        ]);
     }
 
     /**

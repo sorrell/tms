@@ -2,25 +2,20 @@
 
 namespace App\Actions\Shipments;
 
-use App\Events\Shipments\ShipmentCarrierUpdated;
 use App\Models\Shipments\Shipment;
+use App\States\Shipments\Canceled;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class UpdateShipmentCarrierDetails
+class CancelShipment
 {
     use AsAction;
 
     public function handle(
         Shipment $shipment,
-        int $carrierId,
     ): Shipment {
 
-        $shipment->update([
-            'carrier_id' => $carrierId,
-        ]);
-
-        event(new ShipmentCarrierUpdated($shipment));
+        $shipment->state->transitionTo(Canceled::class);
 
         return $shipment;
     }
@@ -29,16 +24,14 @@ class UpdateShipmentCarrierDetails
     {
         $this->handle(
             $shipment,
-            $request->carrier_id,
         );
 
-        return redirect()->back()->with('success', 'Shipment carrier details updated successfully');
+        return redirect()->back()->with('success', 'Shipment canceled successfully');
     }
 
     public function rules(): array
     {
         return [
-            'carrier_id' => ['required', 'exists:carriers,id'],
         ];
     }
 
