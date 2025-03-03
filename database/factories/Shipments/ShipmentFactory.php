@@ -12,6 +12,8 @@ use App\Models\Facility;
 use App\Models\Shipments\ShipmentStop;
 use App\Models\Shipments\TrailerSize;
 use App\Models\Customers\Customer;
+use App\States\Shipments\Booked;
+use App\States\Shipments\ShipmentState;
 use Carbon\Carbon;
 
 /**
@@ -37,6 +39,7 @@ class ShipmentFactory extends Factory
             'trailer_temperature' => fake()->randomFloat(1, -10, 70), // temperature in fahrenheit
             'trailer_temperature_maximum' => fake()->randomFloat(1, -10, 70),
             'shipment_number' => fake()->unique()->numerify('######'),
+            'state' => Booked::class,
         ];
     }
 

@@ -21,3 +21,15 @@ export enum Contactable {
     Carrier = 'carrier',
     Facility = 'facility',
 }
+
+
+export enum ShipmentState {
+    Pending = 'pending',
+    InTransit = 'in_transit',
+    Delivered = 'delivered',
+    Canceled = 'canceled',
+    Booked = 'booked',
+    AtPickup = 'at_pickup',
+    AtDelivery = 'at_delivery',
+    Dispatched = 'dispatched',
+}

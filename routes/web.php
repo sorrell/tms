@@ -18,6 +18,7 @@ use App\Actions\Notes\CreateNote;
 use App\Actions\Notes\DeleteNote;
 use App\Actions\Notes\GetNotes;
 use App\Actions\Shipments\CreateShipment;
+use App\Actions\Shipments\DispatchShipment;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
@@ -122,6 +123,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/carrier-details', UpdateShipmentCarrierDetails::class)->name('shipments.updateCarrierDetails');
     Route::patch('shipments/{shipment}/customers', UpdateShipmentCustomers::class)->name('shipments.updateCustomers');
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
+    Route::patch('shipments/{shipment}/dispatch', DispatchShipment::class)->name('shipments.dispatch');
 
     Route::delete('notes/{note}', DeleteNote::class)->name('notes.destroy');
     Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');

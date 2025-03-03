@@ -34,7 +34,8 @@ class ShipmentResource extends JsonResource
             'stops' => ShipmentStopResource::collection($this->whenLoaded('stops')),
             'lane' => $this->whenLoaded('stops', $this->lane()),
             'next_stop' => $this->whenLoaded('stops', new ShipmentStopResource($this->nextStop)),
-            'state' => $this->state->label(),
+            'state_label' => $this->state->label(),
+            'state' => $this->state,
         ];
     }
 }
