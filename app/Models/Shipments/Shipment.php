@@ -118,7 +118,7 @@ class Shipment extends Model implements HasStatesContract
         return sprintf(
             "%s - %s",
             $this->stops()->first()?->facility->location->state_shorthand,
-            $this->stops()->latest()->first()?->facility->location->state_shorthand
+            $this->stops()->latest('stop_number')->first()?->facility->location->state_shorthand
         );
     }
 }

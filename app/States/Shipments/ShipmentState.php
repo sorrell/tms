@@ -22,13 +22,18 @@ abstract class ShipmentState extends State
                     [InTransit::class, AtDelivery::class],
                     [AtDelivery::class, Delivered::class],
 
-                    [Pending::class, Canceled::class],
-                    [Booked::class, Canceled::class],
-                    [Dispatched::class, Canceled::class],
-                    [AtPickup::class, Canceled::class],
-                    [InTransit::class, Canceled::class],
-                    [AtDelivery::class, Canceled::class],
-                    [Delivered::class, Canceled::class],
+                    [
+                        [
+                            Pending::class,
+                            Booked::class,
+                            Dispatched::class,
+                            AtPickup::class,
+                            InTransit::class,
+                            AtDelivery::class,
+                            Delivered::class,
+                        ], 
+                        Canceled::class
+                    ],
                 ]
             )
         ;

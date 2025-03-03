@@ -83,7 +83,7 @@ class UpdateShipmentState
     private function calculateStopState(Shipment $shipment) : string
     {
         
-        if ($shipment->stops()->latest()->first()->loaded_unloaded_at) {
+        if ($shipment->stops()->latest('stop_number')->first()->loaded_unloaded_at) {
             return Delivered::class;
         }
 
@@ -129,9 +129,20 @@ class UpdateShipmentState
         $currentStateIndex = array_search($currentState, $stateOrder);
         $finalStateIndex = array_search($finalState, $stateOrder);
 
-        while($currentStateIndex < $finalStateIndex) {
-            $shipment->state->transitionTo($stateOrder[$currentStateIndex+1]);
-            $currentStateIndex++;
+        // If state is going back to a previous state 
+        // then we force transition and skip events by updating 
+        // the shipment directly
+        // else we transition through the states one by one
+        // to reach the final state
+        if ($currentStateIndex > $finalStateIndex) {
+            $shipment->update([
+                'state' => ShipmentState::resolveStateClass($stateOrder[$finalStateIndex])
+            ]);
+        } elseif ($currentStateIndex < $finalStateIndex) {
+            while($currentStateIndex < $finalStateIndex) {
+                $shipment->state->transitionTo($stateOrder[$currentStateIndex+1]);
+                $currentStateIndex++;
+            }
         }
 
         return $shipment;
