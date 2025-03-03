@@ -1,10 +1,13 @@
 import { Button } from '@/Components/ui/button';
+import { ConfirmButton } from '@/Components/ui/confirm-button';
+import { ConfirmDropdownMenuItem } from '@/Components/ui/confirm-dropdown-menu-item';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu';
 import { Input } from '@/Components/ui/input';
 import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
 import { ShipmentState } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
-import { ArrowRight, Check, CheckCircle2, FileText, Pencil, Truck, X } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle2, FileText, MoreHorizontal, Pencil, Truck, Undo2, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
@@ -19,6 +22,12 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
     const dispatchShipment = () => {
         patch(
             route('shipments.dispatch', { shipment: shipment.id }),
+        );
+    };
+
+    const cancelShipment = () => {
+        patch(
+            route('shipments.cancel', { shipment: shipment.id }),
         );
     };
 
@@ -123,6 +132,40 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     <FileText className="mr-2 h-4 w-4" />
                     Generate Ratecon
                 </Button>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            className="h-8 w-8 p-0"
+                        >
+                            <span className="sr-only">
+                                Open menu
+                            </span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        {shipment.state !== ShipmentState.Canceled && (
+                            <ConfirmDropdownMenuItem
+                                onConfirm={() => {
+                                    cancelShipment();
+                                }}
+                            >
+                                <X className="mr-2 h-4 w-4" />
+                                Cancel Shipment
+                            </ConfirmDropdownMenuItem>
+                        )}
+                        {shipment.state === ShipmentState.Canceled && (
+                            <DropdownMenuItem disabled={true}>
+                                <Undo2 className="mr-2 h-4 w-4" />
+                                Un-Cancel Shipment
+                            </DropdownMenuItem>
+                        )}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+
             </div>
         </div>
     );
