@@ -98,7 +98,7 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                         </Button>
                     )}
                 </div>
-                <p className="text-muted-foreground">Status: Active</p>
+                <p className="text-muted-foreground">{shipment.state}</p>
             </div>
             <div className="flex gap-2">
                 <Button disabled={true}>

@@ -5,6 +5,7 @@ namespace App\Models\Shipments;
 use App\Http\Resources\ShipmentResource;
 use App\Models\Carriers\Carrier;
 use App\Models\Customers\Customer;
+use App\States\Shipments\ShipmentState;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
 use App\Traits\HasNotes;
@@ -14,10 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use Spatie\ModelStates\HasStates;
+use Spatie\ModelStates\HasStatesContract;
 
-class Shipment extends Model
+class Shipment extends Model implements HasStatesContract
 {
-    use HasOrganization, Searchable, HasFactory, HasNotes;
+    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates;
 
     protected $fillable = [
         'organization_id',
@@ -30,10 +33,12 @@ class Shipment extends Model
         'trailer_temperature',
         'trailer_temperature_maximum',
         'shipment_number',
+        'state',
     ];
 
     protected $casts = [
         'trailer_temperature_range' => 'boolean',
+        'state' => ShipmentState::class,
     ];
 
     protected $appends = ['selectable_label'];

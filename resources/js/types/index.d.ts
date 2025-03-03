@@ -155,6 +155,7 @@ export interface Shipment {
     next_stop?: ShipmentStop;
     trailer_type?: TrailerType;
     trailer_size?: TrailerSize;
+    state: string;
 }
 
 export interface Note {
