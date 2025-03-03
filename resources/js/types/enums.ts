@@ -22,7 +22,6 @@ export enum Contactable {
     Facility = 'facility',
 }
 
-
 export enum ShipmentState {
     Pending = 'pending',
     InTransit = 'in_transit',
