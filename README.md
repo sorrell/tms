@@ -1,16 +1,22 @@
-# LoadPartner TMS
+![lptms](https://github.com/user-attachments/assets/7cff521c-d128-495b-b7bd-5e555af98c0b)
+
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/loadpartner/tms/tree/main)
 
-Open source and extensible freight brokerage TMS (tms.loadpartner.io)
+Open source and extensible freight brokerage Transportation Management System
 
 #### 🌐 [tms.loadpartner.io](https://tms.loadpartner.io)
 
 ## Get involved
-🗨️ [Chat with the team on Discord](https://tms.loadpartner.io/links/discord) 
+🗨️ [Discord Community](https://tms.loadpartner.io/links/discord) 
 
 📰 [Subscribe to the newsletter](https://tms.loadpartner.io/links/newsletter)
 
+## Tech Stack
+[Laravel](http://laravel.com/) + [Inertia.js](https://inertiajs.com/) + [React](https://react.dev/)
+
 ## Development
+A local environment can be setup quickly using [Laravel Sail](https://laravel.com/docs/master/sail) and our docker configurations.
+
 Standing up the development environment after cloning the repository should follow these steps:
 
 #### Setup [Laravel Sail](https://laravel.com/docs/11.x/sail)
