@@ -3,6 +3,20 @@
 namespace App\Actions\Carriers;
 
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ * @method static \App\Models\Carriers\CarrierBounce run(\App\Models\Shipments\Shipment $shipment, \App\Enums\Carriers\BounceType|string $bounceType, ?string $reason = null)
+ */
+class BounceCarrier
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $name)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $name)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $name)

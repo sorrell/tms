@@ -3,6 +3,7 @@
 namespace App\Listeners\Shipments;
 
 use App\Enums\StopType;
+use App\Events\Shipments\ShipmentCarrierBounced;
 use App\Events\Shipments\ShipmentCarrierUpdated;
 use App\Events\Shipments\ShipmentStopsUpdated;
 use App\Models\Shipments\Shipment;
@@ -28,7 +29,7 @@ class UpdateShipmentState
     /**
      * Handle the event.
      */
-    public function handle(ShipmentCarrierUpdated|ShipmentStopsUpdated $event): void
+    public function handle(ShipmentCarrierUpdated|ShipmentStopsUpdated|ShipmentCarrierBounced $event): void
     {
         switch (get_class($event)) {
             case ShipmentCarrierUpdated::class:
@@ -36,6 +37,9 @@ class UpdateShipmentState
                 break;
             case ShipmentStopsUpdated::class:
                 $this->handleStopsChanged($event);
+                break;
+            case ShipmentCarrierBounced::class:
+                $this->handleCarrierBounced($event);
                 break;
         }
     }
@@ -76,13 +80,36 @@ class UpdateShipmentState
         $shipment = $this->transitionThroughStopStates($shipment, $finalState);
     }
 
+    protected function handleCarrierBounced(ShipmentCarrierBounced $event): void
+    {
+        if (
+            in_array(
+                $event->shipment->state::class,
+                [
+                    Booked::class,
+                    Dispatched::class,
+                    AtPickup::class
+                ]
+            )
+        ) {
+            // The shipment has likely not been loaded, so we can move it 
+            // back to pending so the user can rebook it
+            $event->shipment->state->transitionTo(Pending::class);
+        }
+    }
+
+
+
+
+
+
     /**
      * Calculates the state of the shipment based on the current state of the stops
      * This assumes that the shipment is in a state where stops are still active
      */
-    private function calculateStopState(Shipment $shipment) : string
+    private function calculateStopState(Shipment $shipment): string
     {
-        
+
         if ($shipment->stops()->latest('stop_number')->first()->loaded_unloaded_at) {
             return Delivered::class;
         }
@@ -107,7 +134,7 @@ class UpdateShipmentState
      * based on the correct order
      * This supports multiple stop updates at once while still emitting required events
      */
-    private function transitionThroughStopStates(Shipment $shipment, string $finalState) : Shipment
+    private function transitionThroughStopStates(Shipment $shipment, string $finalState): Shipment
     {
 
         // TODO - There will be a bug in the case of multi picks
@@ -139,8 +166,8 @@ class UpdateShipmentState
                 'state' => ShipmentState::resolveStateClass($stateOrder[$finalStateIndex])
             ]);
         } elseif ($currentStateIndex < $finalStateIndex) {
-            while($currentStateIndex < $finalStateIndex) {
-                $shipment->state->transitionTo($stateOrder[$currentStateIndex+1]);
+            while ($currentStateIndex < $finalStateIndex) {
+                $shipment->state->transitionTo($stateOrder[$currentStateIndex + 1]);
                 $currentStateIndex++;
             }
         }

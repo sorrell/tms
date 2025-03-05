@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Carriers\BounceCarrier;
 use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
 use App\Actions\Carriers\FmcsaDOTLookup;
@@ -126,6 +127,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
     Route::patch('shipments/{shipment}/dispatch', DispatchShipment::class)->name('shipments.dispatch');
     Route::patch('shipments/{shipment}/cancel', CancelShipment::class)->name('shipments.cancel');
+    Route::post('shipments/{shipment}/bounce', BounceCarrier::class)->name('shipments.bounce');
 
     Route::delete('notes/{note}', DeleteNote::class)->name('notes.destroy');
     Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');
