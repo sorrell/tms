@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\Models\Carriers\Carrier
+ * @mixin \App\Models\Carriers\CarrierBounce
  */
 class CarrierBounceResource extends JsonResource
 {

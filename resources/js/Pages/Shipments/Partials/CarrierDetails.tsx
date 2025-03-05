@@ -2,16 +2,25 @@ import InputError from '@/Components/InputError';
 import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { ConfirmButton } from '@/Components/ui/confirm-button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader } from '@/Components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
-import { Skeleton } from '@/Components/ui/skeleton';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+} from '@/Components/ui/dialog';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import { Textarea } from '@/Components/ui/textarea';
 import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
-import { router, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { Check, CheckCircle2, Ghost, Pencil, Truck, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
     const [editMode, setEditMode] = useState(false);
@@ -106,7 +115,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                         <p>{shipment.carrier?.name ?? '-'}</p>
                     )}
                 </div>
-                <div className="flex ">
+                <div className="flex">
                     {editMode && shipment.carrier?.id && (
                         <Button
                             variant="destructive"
@@ -133,10 +142,17 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
     );
 }
 
-
-function BounceCarrierModal({ shipment, open, onOpenChange, onBounce }
-    : { shipment: Shipment, open: boolean, onOpenChange: (open: boolean) => void, onBounce: () => void }) {
-
+function BounceCarrierModal({
+    shipment,
+    open,
+    onOpenChange,
+    onBounce,
+}: {
+    shipment: Shipment;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onBounce: () => void;
+}) {
     const { toast } = useToast();
 
     const [bounceReasons, setBounceReasons] = useState<string[]>([]);
@@ -157,58 +173,83 @@ function BounceCarrierModal({ shipment, open, onOpenChange, onBounce }
     useEffect(() => {
         reset();
         clearErrors();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent>
+                <DialogHeader>Bounce Carrier</DialogHeader>
 
-    return <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
-            <DialogHeader>Bounce Carrier</DialogHeader>
-
-            <div className="space-y-2">
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium">Bounce Type</label>
-                    <Select
-                        value={data.bounce_type}
-                        onValueChange={(value) => setData('bounce_type', value)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a bounce type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {bounceReasons.length > 0 && bounceReasons.map((reason) => (
-                                <SelectItem key={reason} value={reason}>{reason}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <InputError message={errors.bounce_type} />
+                <div className="space-y-2">
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm font-medium">
+                            Bounce Type
+                        </label>
+                        <Select
+                            value={data.bounce_type}
+                            onValueChange={(value) =>
+                                setData('bounce_type', value)
+                            }
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a bounce type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {bounceReasons.length > 0 &&
+                                    bounceReasons.map((reason) => (
+                                        <SelectItem key={reason} value={reason}>
+                                            {reason}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.bounce_type} />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm font-medium">Reason</label>
+                        <Textarea
+                            value={data.reason}
+                            onChange={(e) => setData('reason', e.target.value)}
+                        />
+                        <InputError message={errors.reason} />
+                    </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium">Reason</label>
-                    <Textarea
-                        value={data.reason}
-                        onChange={(e) => setData('reason', e.target.value)}
-                    />
-                    <InputError message={errors.reason} />
-                </div>
 
-            </div>
-
-            <DialogFooter>
-                <Button variant="outline" onClick={() => {
-                    onOpenChange(false);
-                }}>Cancel</Button>
-                <Button variant="destructive" onClick={() => {
-                    post(route('shipments.bounce', { shipment: shipment.id }), {
-                        onSuccess: () => {
+                <DialogFooter>
+                    <Button
+                        variant="outline"
+                        onClick={() => {
                             onOpenChange(false);
-                            toast({
-                                description: 'Carrier bounced successfully',
-                            });
-                            onBounce();
-                        },
-                    });
-                }}>Bounce</Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>;
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        onClick={() => {
+                            post(
+                                route('shipments.bounce', {
+                                    shipment: shipment.id,
+                                }),
+                                {
+                                    onSuccess: () => {
+                                        onOpenChange(false);
+                                        toast({
+                                            description:
+                                                'Carrier bounced successfully',
+                                        });
+                                        onBounce();
+                                    },
+                                },
+                            );
+                        }}
+                    >
+                        Bounce
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
 }

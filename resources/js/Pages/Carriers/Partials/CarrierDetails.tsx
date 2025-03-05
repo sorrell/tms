@@ -10,17 +10,31 @@ import {
     SelectValue,
 } from '@/Components/ui/select';
 import { Skeleton } from '@/Components/ui/skeleton';
+import { Switch } from '@/Components/ui/switch';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { cn } from '@/lib/utils';
 import { Carrier, CarrierBounce } from '@/types';
 import { Contactable } from '@/types/enums';
 import { Link, router } from '@inertiajs/react';
-import { Check, CheckCircle2, ExternalLink, Pencil, X, XCircle } from 'lucide-react';
+import {
+    Check,
+    CheckCircle2,
+    ExternalLink,
+    Pencil,
+    X,
+    XCircle,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
-import { Switch } from '@/Components/ui/switch';
-import { cn } from '@/lib/utils';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 
 export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -210,13 +224,13 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                             </div>
                                             {carrier.billing_location
                                                 .address_line_2 && (
-                                                    <div>
-                                                        {
-                                                            carrier.billing_location
-                                                                .address_line_2
-                                                        }
-                                                    </div>
-                                                )}
+                                                <div>
+                                                    {
+                                                        carrier.billing_location
+                                                            .address_line_2
+                                                    }
+                                                </div>
+                                            )}
                                             <div>
                                                 {
                                                     carrier.billing_location
@@ -332,15 +346,15 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                         <div>
                                             {carrier?.safer_report?.created_at
                                                 ? new Date(
-                                                    carrier.safer_report.created_at,
-                                                ).toLocaleDateString(
-                                                    'en-US',
-                                                    {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric',
-                                                    },
-                                                )
+                                                      carrier.safer_report.created_at,
+                                                  ).toLocaleDateString(
+                                                      'en-US',
+                                                      {
+                                                          year: 'numeric',
+                                                          month: 'long',
+                                                          day: 'numeric',
+                                                      },
+                                                  )
                                                 : '-'}
                                         </div>
                                     </div>
@@ -527,16 +541,22 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                 <TabsContent value="shipments">
                     <Card>
                         <CardContent className="pt-6">
-
-                            <div className="flex w-full justify-end items-center gap-2">
+                            <div className="flex w-full items-center justify-end gap-2">
                                 <Switch
                                     checked={showBounces}
-                                    onCheckedChange={() => setShowBounces(!showBounces)}
+                                    onCheckedChange={() =>
+                                        setShowBounces(!showBounces)
+                                    }
                                 />
-                                <label htmlFor="showBounces" className={cn(
-                                    !showBounces && 'text-muted-foreground',
-                                    'text-sm'
-                                )}>Bounced Loads</label>
+                                <label
+                                    htmlFor="showBounces"
+                                    className={cn(
+                                        !showBounces && 'text-muted-foreground',
+                                        'text-sm',
+                                    )}
+                                >
+                                    Bounced Loads
+                                </label>
                             </div>
                             {showBounces ? (
                                 <BouncedLoadsList carrier={carrier} />
@@ -545,7 +565,8 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                     requiredFilters={[
                                         {
                                             name: 'carrier_id',
-                                            value: carrier?.id?.toString() || '',
+                                            value:
+                                                carrier?.id?.toString() || '',
                                         },
                                     ]}
                                 />
@@ -558,9 +579,7 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
     );
 }
 
-
 function BouncedLoadsList({ carrier }: { carrier?: Carrier }) {
-
     const [bouncedLoads, setBouncedLoads] = useState<CarrierBounce[]>([]);
 
     useEffect(() => {
@@ -570,8 +589,6 @@ function BouncedLoadsList({ carrier }: { carrier?: Carrier }) {
             });
         });
     }, [carrier?.id]);
-
-
 
     return (
         <div className="mt-1 md:mt-4">
@@ -589,20 +606,31 @@ function BouncedLoadsList({ carrier }: { carrier?: Carrier }) {
                     {bouncedLoads.map((bounce) => (
                         <TableRow key={bounce.id}>
                             <TableCell>
-                                {new Date(bounce.created_at).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })}
+                                {new Date(bounce.created_at).toLocaleDateString(
+                                    'en-US',
+                                    {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    },
+                                )}
                             </TableCell>
                             <TableCell>
-                                <Link href={route('shipments.show', bounce.shipment?.id)}>
-                                    {bounce.shipment?.shipment_number} <ExternalLink className="inline w-4 h-4" />
+                                <Link
+                                    href={route(
+                                        'shipments.show',
+                                        bounce.shipment?.id,
+                                    )}
+                                >
+                                    {bounce.shipment?.shipment_number}{' '}
+                                    <ExternalLink className="inline h-4 w-4" />
                                 </Link>
                             </TableCell>
                             <TableCell>{bounce.bounce_type}</TableCell>
                             <TableCell>{bounce.reason}</TableCell>
-                            <TableCell>{bounce.bounced_by_user?.name}</TableCell>
+                            <TableCell>
+                                {bounce.bounced_by_user?.name}
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

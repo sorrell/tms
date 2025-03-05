@@ -66,7 +66,7 @@ class CarrierController extends ResourceSearchController
 
     public function bouncedLoads(Carrier $carrier)
     {
-        return response(
+        return response()->json(
             CarrierBounceResource::collection(
                 $carrier->bounces
                     ->sortByDesc('created_at')

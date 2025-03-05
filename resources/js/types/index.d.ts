@@ -187,7 +187,6 @@ export interface CarrierBounce {
     created_at: string;
     bounced_by: number;
 
-    
     bounced_by_user?: User;
     shipment?: Shipment;
     carrier?: Carrier;
