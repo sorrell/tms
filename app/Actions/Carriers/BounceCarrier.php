@@ -25,6 +25,7 @@ class BounceCarrier
             'carrier_id' => $shipment->carrier_id,
             'bounce_type' => $bounceType,
             'reason' => $reason,
+            'bounced_by' => auth()->user()->id,
         ]);
 
         $shipment->update([

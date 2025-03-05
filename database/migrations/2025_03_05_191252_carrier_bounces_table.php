@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('shipment_id')->constrained('shipments');
             $table->string('bounce_type');
             $table->string('reason');
+            $table->foreignId('bounced_by')->constrained('users');
             $table->timestampsTz();
         });
     }
