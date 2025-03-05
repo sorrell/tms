@@ -129,6 +129,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/cancel', CancelShipment::class)->name('shipments.cancel');
     Route::post('shipments/{shipment}/bounce', BounceCarrier::class)->name('shipments.bounce');
 
+    Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
+
     Route::delete('notes/{note}', DeleteNote::class)->name('notes.destroy');
     Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');
     Route::post('notes/{notableType}/{notableId}', CreateNote::class)->name('notes.store');
