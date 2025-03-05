@@ -17,6 +17,8 @@ Open source and extensible freight brokerage Transportation Management System
 ## Development
 A local environment can be setup quickly using [Laravel Sail](https://laravel.com/docs/master/sail) and our docker configurations.
 
+
+### Fresh Setup
 Standing up the development environment after cloning the repository should follow these steps:
 
 #### Setup [Laravel Sail](https://laravel.com/docs/11.x/sail)
@@ -64,13 +66,12 @@ sail artisan key:generate
 sail npm run dev
 ```
 
-#### Running PHPStan
+#### [OPTIONAL] Setup Test Data
 ``` bash
-sail php ./vendor/bin/phpstan analyse
+sail artisan dev:refresh
 ```
 
-#### Running pre-commit & other dev environment checks
-This will run PHPStan and generate IDE completions for any actions.
-``` bash
-sail artisan dev:check
-```
+### More Development Questions?
+Checkout our [DEVELOPMENT.md](./DEVELOPMENT.md) file for some frequently ask questions.
+
+If you still have questions, please join our discord for help!
