@@ -72,6 +72,6 @@ sail artisan dev:refresh
 ```
 
 ### More Development Questions?
-Checkout our [DEVELOPMENT.md](./DEVELOPMENT.md) file for some frequently ask questions.
+Checkout [DEVELOPMENT.md](./DEVELOPMENT.md) for some frequently ask questions.
 
 If you still have questions, please join our discord for help!
