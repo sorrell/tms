@@ -41,6 +41,6 @@ class CarrierBounce extends Model
      */
     public function bouncedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'bounced_by', 'id');
     }
 }

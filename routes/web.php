@@ -101,6 +101,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::put('carriers/{carrier}', UpdateCarrierGeneral::class)->name('carriers.update');
     Route::post('carriers', CreateCarrier::class)->name('carriers.store');
 
+    Route::get('carriers/{carrier}/bounced-loads', [CarrierController::class, 'bouncedLoads'])->name('carriers.bounced-loads');
+
     Route::get('carriers/fmcsa/name', FmcsaNameLookup::class)->name('carriers.fmcsa.lookup.name');
     Route::post('carriers/fmcsa/{carrierSaferReport}/create', CreateCarrierFromSaferReport::class)->name('carriers.fmcsa.store');
     Route::get('carriers/fmcsa/dot', FmcsaDOTLookup::class)->name('carriers.fmcsa.lookup.dot');
