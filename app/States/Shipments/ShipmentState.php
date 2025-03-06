@@ -15,6 +15,7 @@ abstract class ShipmentState extends State
             ->default(Pending::class)
             ->allowTransitions(
                 [
+                    // Support for normal happy path
                     [Pending::class, Booked::class],
                     [Booked::class, Dispatched::class],
                     [Dispatched::class, AtPickup::class],
@@ -22,6 +23,17 @@ abstract class ShipmentState extends State
                     [InTransit::class, AtDelivery::class],
                     [AtDelivery::class, Delivered::class],
 
+                    // Support for bounced carrier transitions
+                    [
+                        [
+                            Booked::class,
+                            Dispatched::class,
+                            AtPickup::class,
+                        ],
+                        Pending::class
+                    ],
+
+                    // Support for canceled transitions
                     [
                         [
                             Pending::class,
@@ -31,7 +43,7 @@ abstract class ShipmentState extends State
                             InTransit::class,
                             AtDelivery::class,
                             Delivered::class,
-                        ], 
+                        ],
                         Canceled::class
                     ],
                 ]

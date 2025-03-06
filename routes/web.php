@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Carriers\BounceCarrier;
 use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
 use App\Actions\Carriers\FmcsaDOTLookup;
@@ -100,6 +101,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::put('carriers/{carrier}', UpdateCarrierGeneral::class)->name('carriers.update');
     Route::post('carriers', CreateCarrier::class)->name('carriers.store');
 
+    Route::get('carriers/{carrier}/bounced-loads', [CarrierController::class, 'bouncedLoads'])->name('carriers.bounced-loads');
+
     Route::get('carriers/fmcsa/name', FmcsaNameLookup::class)->name('carriers.fmcsa.lookup.name');
     Route::post('carriers/fmcsa/{carrierSaferReport}/create', CreateCarrierFromSaferReport::class)->name('carriers.fmcsa.store');
     Route::get('carriers/fmcsa/dot', FmcsaDOTLookup::class)->name('carriers.fmcsa.lookup.dot');
@@ -126,6 +129,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
     Route::patch('shipments/{shipment}/dispatch', DispatchShipment::class)->name('shipments.dispatch');
     Route::patch('shipments/{shipment}/cancel', CancelShipment::class)->name('shipments.cancel');
+    Route::post('shipments/{shipment}/bounce', BounceCarrier::class)->name('shipments.bounce');
+
+    Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
 
     Route::delete('notes/{note}', DeleteNote::class)->name('notes.destroy');
     Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');

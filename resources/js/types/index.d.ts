@@ -177,3 +177,17 @@ export interface TrailerSize {
     id: number;
     name: string;
 }
+
+export interface CarrierBounce {
+    id: number;
+    carrier_id: number;
+    shipment_id: number;
+    bounce_type: string;
+    reason: string;
+    created_at: string;
+    bounced_by: number;
+
+    bounced_by_user?: User;
+    shipment?: Shipment;
+    carrier?: Carrier;
+}

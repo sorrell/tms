@@ -10,18 +10,37 @@ import {
     SelectValue,
 } from '@/Components/ui/select';
 import { Skeleton } from '@/Components/ui/skeleton';
+import { Switch } from '@/Components/ui/switch';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { Carrier } from '@/types';
+import { cn } from '@/lib/utils';
+import { Carrier, CarrierBounce } from '@/types';
 import { Contactable } from '@/types/enums';
-import { router } from '@inertiajs/react';
-import { Check, CheckCircle2, Pencil, X, XCircle } from 'lucide-react';
-import { useState } from 'react';
+import { Link, router } from '@inertiajs/react';
+import {
+    Check,
+    CheckCircle2,
+    ExternalLink,
+    Pencil,
+    X,
+    XCircle,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
 
 export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(carrier?.name || '');
+
+    const [showBounces, setShowBounces] = useState(false);
 
     // Get initial tab from URL or default to 'overview'
     const [tab, setTab] = useState(() => {
@@ -522,18 +541,100 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                 <TabsContent value="shipments">
                     <Card>
                         <CardContent className="pt-6">
-                            <ShipmentList
-                                requiredFilters={[
-                                    {
-                                        name: 'carrier_id',
-                                        value: carrier?.id?.toString() || '',
-                                    },
-                                ]}
-                            />
+                            <div className="flex w-full items-center justify-end gap-2">
+                                <Switch
+                                    checked={showBounces}
+                                    onCheckedChange={() =>
+                                        setShowBounces(!showBounces)
+                                    }
+                                />
+                                <label
+                                    htmlFor="showBounces"
+                                    className={cn(
+                                        !showBounces && 'text-muted-foreground',
+                                        'text-sm',
+                                    )}
+                                >
+                                    Bounced Shipments
+                                </label>
+                            </div>
+                            {showBounces ? (
+                                <BouncedLoadsList carrier={carrier} />
+                            ) : (
+                                <ShipmentList
+                                    requiredFilters={[
+                                        {
+                                            name: 'carrier_id',
+                                            value:
+                                                carrier?.id?.toString() || '',
+                                        },
+                                    ]}
+                                />
+                            )}
                         </CardContent>
                     </Card>
                 </TabsContent>
             </Tabs>
+        </div>
+    );
+}
+
+function BouncedLoadsList({ carrier }: { carrier?: Carrier }) {
+    const [bouncedLoads, setBouncedLoads] = useState<CarrierBounce[]>([]);
+
+    useEffect(() => {
+        fetch(route('carriers.bounced-loads', carrier?.id)).then((response) => {
+            response.json().then((data) => {
+                setBouncedLoads(data);
+            });
+        });
+    }, [carrier?.id]);
+
+    return (
+        <div className="mt-1 md:mt-4">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Bounce Date</TableHead>
+                        <TableHead>Shipment</TableHead>
+                        <TableHead>Bounce Type</TableHead>
+                        <TableHead>Reason</TableHead>
+                        <TableHead>Bounced By</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {bouncedLoads.map((bounce) => (
+                        <TableRow key={bounce.id}>
+                            <TableCell>
+                                {new Date(bounce.created_at).toLocaleDateString(
+                                    'en-US',
+                                    {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    },
+                                )}
+                            </TableCell>
+                            <TableCell>
+                                <Link
+                                    href={route(
+                                        'shipments.show',
+                                        bounce.shipment?.id,
+                                    )}
+                                >
+                                    {bounce.shipment?.shipment_number}{' '}
+                                    <ExternalLink className="inline h-4 w-4" />
+                                </Link>
+                            </TableCell>
+                            <TableCell>{bounce.bounce_type}</TableCell>
+                            <TableCell>{bounce.reason}</TableCell>
+                            <TableCell>
+                                {bounce.bounced_by_user?.name}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </div>
     );
 }

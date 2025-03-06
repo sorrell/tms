@@ -76,6 +76,14 @@ class Carrier extends Model
         return $this->hasOne(CarrierSaferReport::class, 'dot_number', 'dot_number')->latest();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<CarrierBounce, $this>
+     */
+    public function bounces() : HasMany
+    {
+        return $this->hasMany(CarrierBounce::class);
+    }
+
 
 
 }

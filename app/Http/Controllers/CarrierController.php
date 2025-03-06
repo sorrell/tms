@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Carriers\BounceType;
+use App\Http\Resources\Carriers\CarrierBounceResource;
 use App\Http\Resources\Carriers\CarrierResource;
 use App\Models\Carriers\Carrier;
 use Illuminate\Http\Request;
@@ -18,7 +20,8 @@ class CarrierController extends ResourceSearchController
     public function index(Request $request)
     {
         Gate::authorize(\App\Enums\Permission::CARRIER_VIEW);
-        return Inertia::render('Carriers/Index',
+        return Inertia::render(
+            'Carriers/Index',
             [
                 'allowFmcsaSearch' => config('fmcsa.api_key') ? true : false,
             ]
@@ -59,5 +62,27 @@ class CarrierController extends ResourceSearchController
     public function destroy(Carrier $carrier)
     {
         //
+    }
+
+    public function bouncedLoads(Carrier $carrier)
+    {
+        return response()->json(
+            CarrierBounceResource::collection(
+                $carrier->bounces
+                    ->sortByDesc('created_at')
+                    ->load('shipment')
+                    ->load('bouncedBy')
+            )
+        );
+    }
+
+    public function bounceReasons()
+    {
+        $cases = BounceType::cases();
+        $cases = array_map(function ($case) {
+            return $case->value;
+        }, $cases);
+        sort($cases);
+        return response($cases);
     }
 }

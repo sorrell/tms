@@ -4,6 +4,7 @@ namespace App\Models\Shipments;
 
 use App\Http\Resources\ShipmentResource;
 use App\Models\Carriers\Carrier;
+use App\Models\Carriers\CarrierBounce;
 use App\Models\Customers\Customer;
 use App\States\Shipments\ShipmentState;
 use Illuminate\Database\Eloquent\Model;
@@ -80,6 +81,14 @@ class Shipment extends Model implements HasStatesContract
     public function carrier(): BelongsTo
     {
         return $this->belongsTo(Carrier::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<CarrierBounce, $this>
+     */
+    public function bounces() : HasMany
+    {
+        return $this->hasMany(CarrierBounce::class);
     }
 
     /**
