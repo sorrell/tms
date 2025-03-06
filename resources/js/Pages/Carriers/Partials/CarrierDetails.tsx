@@ -555,7 +555,7 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                         'text-sm',
                                     )}
                                 >
-                                    Bounced Loads
+                                    Bounced Shipments
                                 </label>
                             </div>
                             {showBounces ? (
