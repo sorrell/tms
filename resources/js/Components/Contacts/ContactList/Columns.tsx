@@ -12,6 +12,13 @@ export const columns: ColumnDef<
     }
 >[] = [
     {
+        accessorKey: 'contact_type',
+        header: 'Type',
+        cell: ({ row }) => {
+            return <div>{row.original.contact_type}</div>;
+        },
+    },
+    {
         accessorKey: 'name',
         header: 'Name',
         cell: ({ row }) => {
@@ -39,7 +46,7 @@ export const columns: ColumnDef<
                         <button
                             onClick={() =>
                                 navigator.clipboard.writeText(
-                                    row.original.email,
+                                    row.original.email ?? '',
                                 )
                             }
                             className="text-left transition-colors hover:text-blue-600"
@@ -65,7 +72,7 @@ export const columns: ColumnDef<
                         <button
                             onClick={() =>
                                 navigator.clipboard.writeText(
-                                    row.original.mobile_phone,
+                                    row.original.mobile_phone ?? '',
                                 )
                             }
                             className="text-left transition-colors hover:text-blue-600"
@@ -95,7 +102,7 @@ export const columns: ColumnDef<
                         <button
                             onClick={() =>
                                 navigator.clipboard.writeText(
-                                    phoneWithExtension,
+                                    phoneWithExtension ?? '',
                                 )
                             }
                             className="text-left transition-colors hover:text-blue-600"

@@ -16,6 +16,7 @@ class CreateContact
 
     public function handle(
         string $name,
+        string $contact_type,
         ?string $title,
         ?string $email,
         ?string $mobile_phone,
@@ -25,6 +26,7 @@ class CreateContact
     ): Contact
     {
         return Contact::create([
+            'contact_type' => $contact_type,
             'title' => $title,
             'name' => $name,
             'email' => $email,
@@ -46,6 +48,7 @@ class CreateContact
 
         $contact = $this->handle(
             name: $request->validated('name'),
+            contact_type: $request->validated('contact_type'),
             title: $request->validated('title'),
             email: $request->validated('email'),
             mobile_phone: $request->validated('mobile_phone'),
@@ -70,6 +73,7 @@ class CreateContact
     public function rules(): array
     {
         return [
+            'contact_type' => ['required', 'string'],
             'title' => ['nullable', 'string', 'min:3', 'max:255'],
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],

@@ -47,6 +47,7 @@ export function ResourceSearchSelect({
     allowUnselect = true,
     autoLoadOptions = true,
     className,
+    requiredFilters,
 }: {
     searchRoute: string;
     onValueChange?: (value: string | string[]) => void;
@@ -57,6 +58,10 @@ export function ResourceSearchSelect({
     allowUnselect?: boolean;
     autoLoadOptions?: boolean;
     className?: string;
+    requiredFilters?: {
+        name: string;
+        value: string;
+    }[];
 }) {
     const [newFormOpen, setNewFormOpen] = React.useState(false);
     const newFormRef = useRef<HTMLFormElement>(null);
@@ -75,10 +80,12 @@ export function ResourceSearchSelect({
             onValueChange?.(
                 allowMultiple
                     ? newSelected.map((v: SelectOption) => v.value)
-                    : newSelected[0].value,
+                    : (newSelected[0]?.value ?? ''),
             );
 
-            onValueObjectChange?.(allowMultiple ? newSelected : newSelected[0]);
+            onValueObjectChange?.(
+                allowMultiple ? newSelected : (newSelected[0] ?? null),
+            );
 
             // If not multiple, close the popup since the user
             // selected an item
@@ -97,6 +104,7 @@ export function ResourceSearchSelect({
                     params: {
                         query: searchInput,
                         ids: searchIds ?? null,
+                        filters: requiredFilters,
                     },
                 })
                 .then((response) => {
@@ -124,7 +132,7 @@ export function ResourceSearchSelect({
                     setLoading(false);
                 });
         },
-        [searchRoute, valuesChangedHandler],
+        [searchRoute, valuesChangedHandler, requiredFilters],
     );
 
     React.useEffect(() => {
@@ -146,10 +154,22 @@ export function ResourceSearchSelect({
             if (hasChanges) {
                 searchData('', items as string[]);
             }
+        } else if (
+            defaultSelectedItems === null ||
+            defaultSelectedItems === undefined
+        ) {
+            // Clear selection when defaultSelectedItems becomes null or undefined
+            // Only clear if there are actually items selected to avoid infinite loops
+            if (selectedItems.length > 0) {
+                setSelectedItems([]);
+                valuesChangedHandler([]);
+            }
+            searchData('');
         } else if (autoLoadOptions) {
             searchData('');
         }
-    }, [defaultSelectedItems, autoLoadOptions, searchData, selectedItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaultSelectedItems, autoLoadOptions, searchData, requiredFilters]);
 
     const debouncedSearch = (searchInput: string) => {
         setSearch(searchInput);

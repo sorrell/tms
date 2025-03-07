@@ -9,6 +9,13 @@ import {
 } from '@/Components/ui/dialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { useToast } from '@/hooks/UseToast';
 import { Contact } from '@/types';
@@ -33,8 +40,15 @@ export default function ContactList({
     const inputRef = useRef<HTMLInputElement>(null);
     const [isAddContactDialogOpen, setIsAddContactDialogOpen] = useState(false);
     const [editContact, setEditContact] = useState<Contact | null>(null);
+    const [contactTypes, setContactTypes] = useState<string[]>([]);
 
     const { toast } = useToast();
+
+    useEffect(() => {
+        fetch(route('contacts.types', contactForType))
+            .then((response) => response.json())
+            .then((data) => setContactTypes(data));
+    }, [contactForType, setContactTypes]);
 
     const {
         data: contactFormData,
@@ -44,6 +58,7 @@ export default function ContactList({
         errors: contactFormErrors,
         put: putContactForm,
     } = useForm<{
+        contact_type: string;
         title?: string;
         name: string;
         email?: string;
@@ -53,6 +68,7 @@ export default function ContactList({
         contact_for_id: number;
         contact_for_type: string;
     }>({
+        contact_type: '',
         title: '',
         name: '',
         email: '',
@@ -83,6 +99,7 @@ export default function ContactList({
             const openEditContactDialog = (contact: Contact) => {
                 setEditContact(contact);
                 setContactFormData({
+                    contact_type: contact.contact_type ?? '',
                     title: contact.title ?? '',
                     name: contact.name,
                     email: contact.email ?? '',
@@ -202,7 +219,39 @@ export default function ContactList({
                             {editContact ? 'Edit Contact' : 'Add Contact'}
                         </DialogTitle>
                     </DialogHeader>
+
                     <div className="grid gap-4 py-4">
+                        <div>
+                            <Label htmlFor="contact_type">
+                                Type{' '}
+                                <span className="text-xs text-gray-500">
+                                    (required)
+                                </span>
+                            </Label>
+                            <Select
+                                value={contactFormData.contact_type}
+                                onValueChange={(value) =>
+                                    setContactFormData('contact_type', value)
+                                }
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {contactTypes.map((type) => (
+                                        <SelectItem key={type} value={type}>
+                                            {type[0].toUpperCase() +
+                                                type.slice(1)}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {contactFormErrors.contact_type && (
+                                <InputError
+                                    message={contactFormErrors.contact_type}
+                                />
+                            )}
+                        </div>
                         <div>
                             <Label htmlFor="name">
                                 Name{' '}

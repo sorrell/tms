@@ -5,6 +5,7 @@ namespace App\Models\Shipments;
 use App\Http\Resources\ShipmentResource;
 use App\Models\Carriers\Carrier;
 use App\Models\Carriers\CarrierBounce;
+use App\Models\Contact;
 use App\Models\Customers\Customer;
 use App\States\Shipments\ShipmentState;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,7 @@ class Shipment extends Model implements HasStatesContract
     protected $fillable = [
         'organization_id',
         'carrier_id',
+        'driver_id',
         'weight',
         'trip_distance',
         'trailer_type_id',
@@ -81,6 +83,14 @@ class Shipment extends Model implements HasStatesContract
     public function carrier(): BelongsTo
     {
         return $this->belongsTo(Carrier::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Contact, $this>
+     */
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(Contact::class, 'driver_id');
     }
 
     /**
