@@ -154,10 +154,22 @@ export function ResourceSearchSelect({
             if (hasChanges) {
                 searchData('', items as string[]);
             }
+        } else if (
+            defaultSelectedItems === null ||
+            defaultSelectedItems === undefined
+        ) {
+            // Clear selection when defaultSelectedItems becomes null or undefined
+            // Only clear if there are actually items selected to avoid infinite loops
+            if (selectedItems.length > 0) {
+                setSelectedItems([]);
+                valuesChangedHandler([]);
+            }
+            searchData('');
         } else if (autoLoadOptions) {
             searchData('');
         }
-    }, [defaultSelectedItems, autoLoadOptions, searchData, selectedItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaultSelectedItems, autoLoadOptions, searchData, requiredFilters]);
 
     const debouncedSearch = (searchInput: string) => {
         setSearch(searchInput);
