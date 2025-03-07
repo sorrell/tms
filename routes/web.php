@@ -8,6 +8,7 @@ use App\Actions\Carriers\FmcsaNameLookup;
 use App\Actions\Carriers\UpdateCarrierGeneral;
 use App\Actions\Contacts\CreateContact;
 use App\Actions\Contacts\DeleteContact;
+use App\Actions\Contacts\GetContactTypes;
 use App\Actions\Contacts\UpdateContact;
 use App\Actions\Customers\CreateCustomer;
 use App\Actions\Customers\CreateCustomerFacility;
@@ -144,6 +145,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::post('contacts', CreateContact::class)->name('contacts.store');
     Route::put('contacts/{contact}', UpdateContact::class)->name('contacts.update');
     Route::delete('contacts/{contact}', DeleteContact::class)->name('contacts.destroy');
+
+    Route::get('contacts/types/{contactable}', GetContactTypes::class)->name('contacts.types');
 });
 
 require __DIR__ . '/auth.php';

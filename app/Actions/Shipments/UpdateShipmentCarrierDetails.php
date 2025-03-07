@@ -3,6 +3,8 @@
 namespace App\Actions\Shipments;
 
 use App\Events\Shipments\ShipmentCarrierUpdated;
+use App\Models\Carriers\Carrier;
+use App\Models\Contact;
 use App\Models\Shipments\Shipment;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -14,11 +16,18 @@ class UpdateShipmentCarrierDetails
     public function handle(
         Shipment $shipment,
         int $carrierId,
+        ?int $driverId,
     ): Shipment {
 
-        $shipment->update([
-            'carrier_id' => $carrierId,
-        ]);
+        if($driverId && Carrier::find($carrierId)->contacts()->where('id', $driverId)->count() === 0) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'driver_id' => ['Selected driver is not associated with this carrier'],
+            ]);
+        }
+
+        $shipment->carrier_id = $carrierId;
+        $shipment->driver_id = $driverId;
+        $shipment->save();
 
         event(new ShipmentCarrierUpdated($shipment));
 
@@ -30,6 +39,7 @@ class UpdateShipmentCarrierDetails
         $this->handle(
             $shipment,
             $request->carrier_id,
+            $request->driver_id,
         );
 
         return redirect()->back()->with('success', 'Shipment carrier details updated successfully');
@@ -39,6 +49,7 @@ class UpdateShipmentCarrierDetails
     {
         return [
             'carrier_id' => ['required', 'exists:carriers,id'],
+            'driver_id' => ['nullable', 'exists:contacts,id'],
         ];
     }
 

@@ -30,6 +30,7 @@ class BounceCarrier
 
         $shipment->update([
             'carrier_id' => null,
+            'driver_id' => null,
         ]);
 
         event(new ShipmentCarrierBounced($shipment));

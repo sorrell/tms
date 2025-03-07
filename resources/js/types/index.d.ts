@@ -35,12 +35,13 @@ export interface Location {
 
 export interface Contact {
     id: number;
-    title: string;
+    contact_type?: string;
+    title?: string;
     name: string;
-    email: string;
-    mobile_phone: string;
-    office_phone: string;
-    office_phone_extension: string;
+    email?: string;
+    mobile_phone?: string;
+    office_phone?: string;
+    office_phone_extension?: string;
     contact_for_id: number;
     contact_for_type: string;
     contact_for?: {
@@ -143,6 +144,7 @@ export interface Shipment {
     shipment_number: string;
     customers: Customer[];
     carrier: Carrier;
+    driver?: Contact;
     stops: ShipmentStop[];
     weight: number;
     trip_distance: number;

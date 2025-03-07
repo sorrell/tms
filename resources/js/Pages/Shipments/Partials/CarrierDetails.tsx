@@ -29,8 +29,9 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
 
     const [bounceModalOpen, setBounceModalOpen] = useState(false);
 
-    const { patch, setData, data } = useForm({
+    const { patch, setData, data, errors } = useForm({
         carrier_id: shipment.carrier?.id,
+        driver_id: shipment.driver?.id,
     });
 
     const updateShipment = () => {
@@ -80,6 +81,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                                         setEditMode(false);
                                         setData({
                                             carrier_id: shipment.carrier?.id,
+                                            driver_id: shipment.driver?.id,
                                         });
                                     }}
                                 >
@@ -104,9 +106,10 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                         <ResourceSearchSelect
                             className="w-full"
                             searchRoute={route('carriers.search')}
-                            onValueChange={(value) =>
-                                setData({ carrier_id: Number(value) })
-                            }
+                            onValueChange={(value) => {
+                                setData('carrier_id', Number(value));
+                                setData('driver_id', undefined);
+                            }}
                             allowMultiple={false}
                             defaultSelectedItems={data.carrier_id}
                             allowUnselect={false}
@@ -115,8 +118,36 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                         <p>{shipment.carrier?.name ?? '-'}</p>
                     )}
                 </div>
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium">Driver</label>
+                    {editMode ? (
+                        <ResourceSearchSelect
+                            className="w-full"
+                            searchRoute={route('contacts.search')}
+                            onValueChange={(value) =>
+                                setData('driver_id', value ? Number(value) : undefined)
+                            }
+                            allowMultiple={false}
+                            defaultSelectedItems={data.driver_id}
+                            allowUnselect={true}
+                            requiredFilters={[
+                                {
+                                    name: 'contact_for_type',
+                                    value: 'carrier',
+                                },
+                                {
+                                    name: 'contact_for_id',
+                                    value: data.carrier_id?.toString() ?? '',
+                                },
+                            ]}
+                            autoLoadOptions={true}
+                        />
+                    ) : (
+                        <p>{shipment.driver?.name ?? '-'}</p>
+                    )}
+                </div>
                 <div className="flex">
-                    {editMode && shipment.carrier?.id && (
+                    {!editMode && shipment.carrier?.id && (
                         <Button
                             variant="destructive"
                             onClick={() => {
@@ -133,7 +164,8 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                         onOpenChange={setBounceModalOpen}
                         onBounce={() => {
                             setEditMode(false);
-                            setData({ carrier_id: 0 });
+                            setData('carrier_id', 0);
+                            setData('driver_id', 0);
                         }}
                     />
                 </div>

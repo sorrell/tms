@@ -23,4 +23,19 @@ enum Contactable: string
             self::FACILITY => Facility::class,
         };
     }
+
+    public function getContactTypes(): array {
+        return match ($this) {
+            self::SHIPMENT => [ContactType::GENERAL],
+            self::CUSTOMER => [ContactType::GENERAL],
+            self::CARRIER => [
+                ContactType::GENERAL,
+                ContactType::DRIVER,
+                ContactType::DISPATCHER,
+            ],
+            self::FACILITY => [
+                ContactType::GENERAL
+            ],
+        };
+    }
 }

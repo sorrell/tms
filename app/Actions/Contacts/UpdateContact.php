@@ -16,6 +16,7 @@ class UpdateContact
     public function handle(
         Contact $contact,
         string $name,
+        string $contact_type,
         ?string $title,
         ?string $email,
         ?string $mobile_phone,
@@ -30,6 +31,7 @@ class UpdateContact
             'mobile_phone' => $mobile_phone,
             'office_phone' => $office_phone,
             'office_phone_extension' => $office_phone_extension,
+            'contact_type' => $contact_type,
         ]);
 
         return $contact;
@@ -41,6 +43,7 @@ class UpdateContact
         $contact = $this->handle(
             contact: $contact,
             name: $request->validated('name'),
+            contact_type: $request->validated('contact_type'),
             title: $request->validated('title'),
             email: $request->validated('email'),
             mobile_phone: $request->validated('mobile_phone'),
@@ -70,6 +73,7 @@ class UpdateContact
             'mobile_phone' => ['nullable', 'string', 'max:255', 'phone'],
             'office_phone' => ['nullable', 'string', 'max:255', 'phone'],
             'office_phone_extension' => ['nullable', 'string', 'max:255'],
+            'contact_type' => ['required', 'string'],
         ];
     }
 

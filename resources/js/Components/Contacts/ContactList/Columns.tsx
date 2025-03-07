@@ -12,6 +12,13 @@ export const columns: ColumnDef<
     }
 >[] = [
     {
+        accessorKey: 'contact_type',
+        header: 'Type',
+        cell: ({ row }) => {
+            return <div>{row.original.contact_type}</div>;
+        },
+    },
+    {
         accessorKey: 'name',
         header: 'Name',
         cell: ({ row }) => {

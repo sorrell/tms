@@ -47,6 +47,7 @@ export function ResourceSearchSelect({
     allowUnselect = true,
     autoLoadOptions = true,
     className,
+    requiredFilters,
 }: {
     searchRoute: string;
     onValueChange?: (value: string | string[]) => void;
@@ -57,6 +58,10 @@ export function ResourceSearchSelect({
     allowUnselect?: boolean;
     autoLoadOptions?: boolean;
     className?: string;
+    requiredFilters?: {
+        name: string;
+        value: string;
+    }[];
 }) {
     const [newFormOpen, setNewFormOpen] = React.useState(false);
     const newFormRef = useRef<HTMLFormElement>(null);
@@ -75,10 +80,10 @@ export function ResourceSearchSelect({
             onValueChange?.(
                 allowMultiple
                     ? newSelected.map((v: SelectOption) => v.value)
-                    : newSelected[0].value,
+                    : (newSelected[0]?.value ?? ''),
             );
 
-            onValueObjectChange?.(allowMultiple ? newSelected : newSelected[0]);
+            onValueObjectChange?.(allowMultiple ? newSelected : (newSelected[0] ?? null));
 
             // If not multiple, close the popup since the user
             // selected an item
@@ -97,6 +102,7 @@ export function ResourceSearchSelect({
                     params: {
                         query: searchInput,
                         ids: searchIds ?? null,
+                        filters: requiredFilters,
                     },
                 })
                 .then((response) => {
