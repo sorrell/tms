@@ -16,7 +16,7 @@ class UpdateShipmentCarrierDetails
     public function handle(
         Shipment $shipment,
         int $carrierId,
-        ?int $driverId,
+        ?int $driverId = null,
     ): Shipment {
 
         if($driverId && Carrier::find($carrierId)->contacts()->where('id', $driverId)->count() === 0) {

@@ -89,15 +89,15 @@ class UpdateCarrierGeneral
 namespace App\Actions\Contacts;
 
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static dispatchSync(string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static dispatchNow(string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static dispatchAfterResponse(string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
- * @method static \App\Models\Contact run(string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static dispatchSync(string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static dispatchNow(string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static dispatchAfterResponse(string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
+ * @method static \App\Models\Contact run(string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension, \Illuminate\Database\Eloquent\Model $contactFor)
  */
 class CreateContact
 {
@@ -117,15 +117,29 @@ class DeleteContact
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static dispatchSync(\App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static dispatchNow(\App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static dispatchAfterResponse(\App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
- * @method static \App\Models\Contact run(\App\Models\Contact $contact, string $name, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Enums\Contactable $contactable)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Enums\Contactable $contactable)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Enums\Contactable $contactable)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Enums\Contactable $contactable)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Enums\Contactable $contactable)
+ * @method static dispatchSync(\App\Enums\Contactable $contactable)
+ * @method static dispatchNow(\App\Enums\Contactable $contactable)
+ * @method static dispatchAfterResponse(\App\Enums\Contactable $contactable)
+ * @method static array run(\App\Enums\Contactable $contactable)
+ */
+class GetContactTypes
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static dispatchSync(\App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static dispatchNow(\App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static dispatchAfterResponse(\App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
+ * @method static \App\Models\Contact run(\App\Models\Contact $contact, string $name, string $contact_type, ?string $title, ?string $email, ?string $mobile_phone, ?string $office_phone, ?string $office_phone_extension)
  */
 class UpdateContact
 {
@@ -339,15 +353,15 @@ class DispatchShipment
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, int $carrierId)
- * @method static \App\Models\Shipments\Shipment run(\App\Models\Shipments\Shipment $shipment, int $carrierId)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
+ * @method static \App\Models\Shipments\Shipment run(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
  */
 class UpdateShipmentCarrierDetails
 {

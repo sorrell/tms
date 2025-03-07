@@ -29,7 +29,7 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
 
     const [bounceModalOpen, setBounceModalOpen] = useState(false);
 
-    const { patch, setData, data, errors } = useForm({
+    const { patch, setData, data } = useForm({
         carrier_id: shipment.carrier?.id,
         driver_id: shipment.driver?.id,
     });
@@ -125,7 +125,10 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                             className="w-full"
                             searchRoute={route('contacts.search')}
                             onValueChange={(value) =>
-                                setData('driver_id', value ? Number(value) : undefined)
+                                setData(
+                                    'driver_id',
+                                    value ? Number(value) : undefined,
+                                )
                             }
                             allowMultiple={false}
                             defaultSelectedItems={data.driver_id}

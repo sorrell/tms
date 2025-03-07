@@ -83,7 +83,9 @@ export function ResourceSearchSelect({
                     : (newSelected[0]?.value ?? ''),
             );
 
-            onValueObjectChange?.(allowMultiple ? newSelected : (newSelected[0] ?? null));
+            onValueObjectChange?.(
+                allowMultiple ? newSelected : (newSelected[0] ?? null),
+            );
 
             // If not multiple, close the popup since the user
             // selected an item
@@ -130,7 +132,7 @@ export function ResourceSearchSelect({
                     setLoading(false);
                 });
         },
-        [searchRoute, valuesChangedHandler],
+        [searchRoute, valuesChangedHandler, requiredFilters],
     );
 
     React.useEffect(() => {

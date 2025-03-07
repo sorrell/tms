@@ -9,6 +9,13 @@ import {
 } from '@/Components/ui/dialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { useToast } from '@/hooks/UseToast';
 import { Contact } from '@/types';
@@ -19,11 +26,10 @@ import { Plus, Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 
 export default function ContactList({
     contactForId,
-    contactForType
+    contactForType,
 }: {
     contactForId: number;
     contactForType: Contactable;
@@ -234,13 +240,16 @@ export default function ContactList({
                                 <SelectContent>
                                     {contactTypes.map((type) => (
                                         <SelectItem key={type} value={type}>
-                                            {type[0].toUpperCase() + type.slice(1)}
+                                            {type[0].toUpperCase() +
+                                                type.slice(1)}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                             {contactFormErrors.contact_type && (
-                                <InputError message={contactFormErrors.contact_type} />
+                                <InputError
+                                    message={contactFormErrors.contact_type}
+                                />
                             )}
                         </div>
                         <div>
