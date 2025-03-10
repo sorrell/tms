@@ -1,3 +1,4 @@
+import { DateTimePicker } from '@/Components/DatetimePicker';
 import InputError from '@/Components/InputError';
 import {
     ResourceSearchSelect,
@@ -6,7 +7,6 @@ import {
 import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Input } from '@/Components/ui/input';
 import {
     Select,
     SelectContent,
@@ -464,13 +464,17 @@ export default function ShipmentStopsList({
                                         </label>
                                         {editMode ? (
                                             <>
-                                                <Input
-                                                    type="datetime-local"
+                                                <DateTimePicker
                                                     value={
-                                                        stop.appointment_at ||
-                                                        ''
+                                                        stop.appointment_at
+                                                            ? new Date(
+                                                                  stop.appointment_at,
+                                                              )
+                                                            : undefined
                                                     }
-                                                    onChange={(e) => {
+                                                    onChange={(
+                                                        e: Date | undefined,
+                                                    ) => {
                                                         const updatedStops = [
                                                             ...data.stops,
                                                         ];
@@ -479,7 +483,8 @@ export default function ShipmentStopsList({
                                                                 index
                                                             ],
                                                             appointment_at:
-                                                                e.target.value,
+                                                                e?.toISOString() ||
+                                                                '',
                                                         };
                                                         setData(
                                                             'stops',
@@ -487,6 +492,7 @@ export default function ShipmentStopsList({
                                                         );
                                                     }}
                                                 />
+
                                                 {formErrors[
                                                     `stops.${index}.appointment_at`
                                                 ] && (
@@ -518,10 +524,19 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
-                                                            value={stop.eta}
-                                                            onChange={(e) => {
+                                                        <DateTimePicker
+                                                            value={
+                                                                stop.eta
+                                                                    ? new Date(
+                                                                          stop.eta,
+                                                                      )
+                                                                    : undefined
+                                                            }
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -532,9 +547,9 @@ export default function ShipmentStopsList({
                                                                     ...updatedStops[
                                                                         index
                                                                     ],
-                                                                    eta: e
-                                                                        .target
-                                                                        .value,
+                                                                    eta:
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
@@ -571,12 +586,19 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
+                                                        <DateTimePicker
                                                             value={
                                                                 stop.arrived_at
+                                                                    ? new Date(
+                                                                          stop.arrived_at,
+                                                                      )
+                                                                    : undefined
                                                             }
-                                                            onChange={(e) => {
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -588,8 +610,8 @@ export default function ShipmentStopsList({
                                                                         index
                                                                     ],
                                                                     arrived_at:
-                                                                        e.target
-                                                                            .value,
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
@@ -628,12 +650,19 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
+                                                        <DateTimePicker
                                                             value={
                                                                 stop.loaded_unloaded_at
+                                                                    ? new Date(
+                                                                          stop.loaded_unloaded_at,
+                                                                      )
+                                                                    : undefined
                                                             }
-                                                            onChange={(e) => {
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -645,8 +674,8 @@ export default function ShipmentStopsList({
                                                                         index
                                                                     ],
                                                                     loaded_unloaded_at:
-                                                                        e.target
-                                                                            .value,
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
@@ -683,10 +712,19 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
-                                                            value={stop.left_at}
-                                                            onChange={(e) => {
+                                                        <DateTimePicker
+                                                            value={
+                                                                stop.left_at
+                                                                    ? new Date(
+                                                                          stop.left_at,
+                                                                      )
+                                                                    : undefined
+                                                            }
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -698,8 +736,8 @@ export default function ShipmentStopsList({
                                                                         index
                                                                     ],
                                                                     left_at:
-                                                                        e.target
-                                                                            .value,
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
