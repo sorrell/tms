@@ -224,7 +224,7 @@ export default function ShipmentGeneral({
                         {editMode ? (
                             <div className="flex flex-row items-center gap-2">
                                 <Select
-                                    value={data.trailer_size_id.toString()}
+                                    value={data?.trailer_size_id?.toString() ?? ''}
                                     onValueChange={(value) =>
                                         setData(
                                             'trailer_size_id',
@@ -253,7 +253,7 @@ export default function ShipmentGeneral({
                                     />
                                 )}
                                 <Select
-                                    value={data.trailer_type_id.toString()}
+                                    value={data?.trailer_type_id?.toString() ?? ''}
                                     onValueChange={(value) =>
                                         setData(
                                             'trailer_type_id',
