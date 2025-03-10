@@ -184,6 +184,7 @@ export interface CarrierBounce {
     id: number;
     carrier_id: number;
     shipment_id: number;
+    driver_id: number;
     bounce_type: string;
     reason: string;
     created_at: string;
@@ -192,4 +193,5 @@ export interface CarrierBounce {
     bounced_by_user?: User;
     shipment?: Shipment;
     carrier?: Carrier;
+    driver?: Contact;
 }

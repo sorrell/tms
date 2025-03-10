@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\Carriers;
 
+use App\Http\Resources\ContactResource;
 use App\Http\Resources\ShipmentResource;
 use App\Http\Resources\UserResource;
 use App\Models\Carriers\Carrier;
+use App\Models\Contact;
 use App\Models\Shipments\Shipment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,6 +28,7 @@ class CarrierBounceResource extends JsonResource
             'id' => $this->id,
             'shipment_id' => $this->shipment_id,
             'carrier_id' => $this->carrier_id,
+            'driver_id' => $this->driver_id,
             'bounce_type' => $this->bounce_type,
             'bounced_by' => $this->bounced_by,
             'reason' => $this->reason,
@@ -35,6 +38,7 @@ class CarrierBounceResource extends JsonResource
             'bounced_by_user' => $this->whenLoaded('bouncedBy', fn (User $user) => new UserResource($user)),
             'shipment' => $this->whenLoaded('shipment', fn (Shipment $shipment) => new ShipmentResource($shipment)),
             'carrier' => $this->whenLoaded('carrier', fn (Carrier $carrier) => new CarrierResource($carrier)),
+            'driver' => $this->whenLoaded('driver', fn (Contact $driver) => new ContactResource($driver)),
         ];
     }
 }

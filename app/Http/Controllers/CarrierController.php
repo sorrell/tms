@@ -72,6 +72,7 @@ class CarrierController extends ResourceSearchController
                     ->sortByDesc('created_at')
                     ->load('shipment')
                     ->load('bouncedBy')
+                    ->load('driver')
             )
         );
     }

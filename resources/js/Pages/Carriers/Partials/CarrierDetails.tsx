@@ -559,7 +559,7 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                                 </label>
                             </div>
                             {showBounces ? (
-                                <BouncedLoadsList carrier={carrier} />
+                                <BouncedShipmentsList carrier={carrier} />
                             ) : (
                                 <ShipmentList
                                     requiredFilters={[
@@ -579,13 +579,13 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
     );
 }
 
-function BouncedLoadsList({ carrier }: { carrier?: Carrier }) {
-    const [bouncedLoads, setBouncedLoads] = useState<CarrierBounce[]>([]);
+function BouncedShipmentsList({ carrier }: { carrier?: Carrier }) {
+    const [bouncedShipments, setBouncedShipments] = useState<CarrierBounce[]>([]);
 
     useEffect(() => {
         fetch(route('carriers.bounced-loads', carrier?.id)).then((response) => {
             response.json().then((data) => {
-                setBouncedLoads(data);
+                setBouncedShipments(data);
             });
         });
     }, [carrier?.id]);
@@ -597,13 +597,14 @@ function BouncedLoadsList({ carrier }: { carrier?: Carrier }) {
                     <TableRow>
                         <TableHead>Bounce Date</TableHead>
                         <TableHead>Shipment</TableHead>
+                        <TableHead>Driver</TableHead>
                         <TableHead>Bounce Type</TableHead>
                         <TableHead>Reason</TableHead>
                         <TableHead>Bounced By</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {bouncedLoads.map((bounce) => (
+                    {bouncedShipments.map((bounce) => (
                         <TableRow key={bounce.id}>
                             <TableCell>
                                 {new Date(bounce.created_at).toLocaleDateString(
@@ -625,6 +626,9 @@ function BouncedLoadsList({ carrier }: { carrier?: Carrier }) {
                                     {bounce.shipment?.shipment_number}{' '}
                                     <ExternalLink className="inline h-4 w-4" />
                                 </Link>
+                            </TableCell>
+                            <TableCell>
+                                {bounce.driver?.name}
                             </TableCell>
                             <TableCell>{bounce.bounce_type}</TableCell>
                             <TableCell>{bounce.reason}</TableCell>
