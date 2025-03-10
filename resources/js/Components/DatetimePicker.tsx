@@ -3,6 +3,13 @@
  * Check out the live demo at https://shadcn-datetime-picker-pro.vercel.app/
  * Find the latest source code at https://github.com/huybuidac/shadcn-datetime-picker
  */
+/**
+ * This is a component pulled in off the internet. For us to make es lint happy we need to do a lot of
+ * work around the deps array for use effects and more
+ * I attempted this once, but it led to infinite loops on renders. For now we are only getting warnings,
+ * so we are going to disable linter in this file specifically until future notice (probably forever)
+ */
+/* eslint-disable */
 'use client';
 
 import {
@@ -166,6 +173,7 @@ export function DateTimePicker({
         () => new TZDate(value || new Date(), timezone),
         [value, timezone],
     );
+    console.log('rerender');
 
     const [month, setMonth] = useState<Date>(initDate);
     const [date, setDate] = useState<Date>(initDate);
@@ -193,7 +201,7 @@ export function DateTimePicker({
             }
             setDate(d);
         },
-        [setDate, min, max, date],
+        [setDate, setMonth],
     );
     const onSubmit = useCallback(() => {
         onChange(new Date(date));
@@ -229,7 +237,7 @@ export function DateTimePicker({
     const displayValue = useMemo(() => {
         if (!open && !value) return value;
         return open ? date : initDate;
-    }, [date, value, open, initDate]);
+    }, [date, value, open]);
 
     const dislayFormat = useMemo(() => {
         if (!displayValue) return 'Pick a date';
@@ -474,7 +482,7 @@ function MonthYearPicker({
             years.push({ value: i, label: i.toString(), disabled });
         }
         return years;
-    }, [value, minDate, maxDate]);
+    }, [value]);
     const months = useMemo(() => {
         const months: TimeOption[] = [];
         for (let i = 0; i < 12; i++) {
@@ -490,7 +498,7 @@ function MonthYearPicker({
             });
         }
         return months;
-    }, [value, minDate, maxDate]);
+    }, [value]);
 
     const onYearChange = useCallback(
         (v: TimeOption) => {
@@ -625,23 +633,14 @@ function TimePicker({
                 ampm,
             }),
         );
-    }, [
-        hour,
-        minute,
-        second,
-        ampm,
-        formatStr,
-        use12HourFormat,
-        onChange,
-        value,
-    ]);
+    }, [hour, minute, second, ampm, formatStr, use12HourFormat]);
 
     const _hourIn24h = useMemo(() => {
         // if (use12HourFormat) {
         //   return (hour % 12) + ampm * 12;
         // }
         return use12HourFormat ? (hour % 12) + ampm * 12 : hour;
-    }, [use12HourFormat, ampm, hour]);
+    }, [value, use12HourFormat, ampm]);
 
     const hours: TimeOption[] = useMemo(
         () =>
@@ -767,17 +766,7 @@ function TimePicker({
             }
             setHour(v.value);
         },
-        [
-            setHour,
-            use12HourFormat,
-            value,
-            formatStr,
-            minute,
-            second,
-            ampm,
-            min,
-            max,
-        ],
+        [setHour, use12HourFormat, value, formatStr, minute, second, ampm],
     );
 
     const onMinuteChange = useCallback(
@@ -812,17 +801,7 @@ function TimePicker({
             }
             setMinute(v.value);
         },
-        [
-            setMinute,
-            use12HourFormat,
-            value,
-            formatStr,
-            second,
-            ampm,
-            min,
-            max,
-            minute,
-        ],
+        [setMinute, use12HourFormat, value, formatStr, hour, second, ampm],
     );
 
     const onAmpmChange = useCallback(
