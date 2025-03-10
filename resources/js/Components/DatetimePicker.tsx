@@ -193,7 +193,7 @@ export function DateTimePicker({
             }
             setDate(d);
         },
-        [setDate, setMonth],
+        [setDate, min, max, date],
     );
     const onSubmit = useCallback(() => {
         onChange(new Date(date));
@@ -229,7 +229,7 @@ export function DateTimePicker({
     const displayValue = useMemo(() => {
         if (!open && !value) return value;
         return open ? date : initDate;
-    }, [date, value, open]);
+    }, [date, value, open, initDate]);
 
     const dislayFormat = useMemo(() => {
         if (!displayValue) return 'Pick a date';
@@ -474,7 +474,7 @@ function MonthYearPicker({
             years.push({ value: i, label: i.toString(), disabled });
         }
         return years;
-    }, [value]);
+    }, [value, minDate, maxDate]);
     const months = useMemo(() => {
         const months: TimeOption[] = [];
         for (let i = 0; i < 12; i++) {
@@ -490,7 +490,7 @@ function MonthYearPicker({
             });
         }
         return months;
-    }, [value]);
+    }, [value, minDate, maxDate]);
 
     const onYearChange = useCallback(
         (v: TimeOption) => {
@@ -625,14 +625,23 @@ function TimePicker({
                 ampm,
             }),
         );
-    }, [hour, minute, second, ampm, formatStr, use12HourFormat]);
+    }, [
+        hour,
+        minute,
+        second,
+        ampm,
+        formatStr,
+        use12HourFormat,
+        onChange,
+        value,
+    ]);
 
     const _hourIn24h = useMemo(() => {
         // if (use12HourFormat) {
         //   return (hour % 12) + ampm * 12;
         // }
         return use12HourFormat ? (hour % 12) + ampm * 12 : hour;
-    }, [value, use12HourFormat, ampm]);
+    }, [use12HourFormat, ampm, hour]);
 
     const hours: TimeOption[] = useMemo(
         () =>
@@ -758,7 +767,17 @@ function TimePicker({
             }
             setHour(v.value);
         },
-        [setHour, use12HourFormat, value, formatStr, minute, second, ampm],
+        [
+            setHour,
+            use12HourFormat,
+            value,
+            formatStr,
+            minute,
+            second,
+            ampm,
+            min,
+            max,
+        ],
     );
 
     const onMinuteChange = useCallback(
@@ -793,7 +812,17 @@ function TimePicker({
             }
             setMinute(v.value);
         },
-        [setMinute, use12HourFormat, value, formatStr, hour, second, ampm],
+        [
+            setMinute,
+            use12HourFormat,
+            value,
+            formatStr,
+            second,
+            ampm,
+            min,
+            max,
+            minute,
+        ],
     );
 
     const onAmpmChange = useCallback(
