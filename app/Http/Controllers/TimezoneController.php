@@ -12,4 +12,5 @@ class TimezoneController extends ResourceSearchController
 
     protected $model = Timezone::class;
     protected $modelResource = TimezoneResource::class;
+    protected $modelSearchLimit = null;
 }
