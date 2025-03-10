@@ -4,9 +4,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
+import { Timezone } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler, useCallback, useState } from 'react';
+import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export default function UpdateProfileInformation({
@@ -20,17 +28,35 @@ export default function UpdateProfileInformation({
 }) {
     const user = usePage().props.auth.user;
 
+    const [timezones, setTimezones] = useState<Timezone[]>(
+        user?.timezone ? [{ id: 0, name: user?.timezone, offset: 0 }] : [],
+    );
+
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
             email: user.email,
             photo: null as File | null,
             removePhoto: false,
+            timezone: user.timezone,
         });
 
     const [photoPreview, setPhotoPreview] = useState<string | null>(
         user.profile_photo_url || null,
     );
+
+    useEffect(() => {
+        fetch(route('timezones.search'), {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+            },
+        })
+            .then((res) => res.json())
+            .then((data: Timezone[]) => {
+                setTimezones(data);
+            });
+    }, [setTimezones]);
 
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
@@ -177,6 +203,28 @@ export default function UpdateProfileInformation({
                     />
 
                     <InputError className="mt-2" message={errors.email} />
+                </div>
+
+                <div>
+                    <Label htmlFor="timezone">Timezone</Label>
+                    <Select
+                        defaultValue={user.timezone}
+                        onValueChange={(value) => setData('timezone', value)}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a timezone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {timezones.map((timezone) => (
+                                <SelectItem
+                                    key={timezone.name}
+                                    value={timezone.name}
+                                >
+                                    {timezone.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (

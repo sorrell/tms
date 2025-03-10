@@ -37,6 +37,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Shipments\ShipmentController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\TimezoneController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -69,6 +70,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('timezones/search', [TimezoneController::class, 'search'])->name('timezones.search');
 
     Route::resource('organizations.invites', OrganizationInviteController::class)->scoped([
         'invite' => 'code',

@@ -8,6 +8,7 @@ use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationInvite;
 use App\Models\Organizations\OrganizationUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'password',
         'current_organization_id',
         'profile_photo_path',
+        'timezone',
     ];
 
     /**
@@ -113,5 +115,13 @@ class User extends Authenticatable
     public function organizationInvites() : HasMany
     {
         return $this->hasMany(OrganizationInvite::class, 'email', 'email');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Timezone, $this>
+     */
+    public function timezoneDetails() : BelongsTo
+    {
+        return $this->belongsTo(Timezone::class, 'timezone', 'name');
     }
 }
