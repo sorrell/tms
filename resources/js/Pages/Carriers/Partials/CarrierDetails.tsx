@@ -580,7 +580,9 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
 }
 
 function BouncedShipmentsList({ carrier }: { carrier?: Carrier }) {
-    const [bouncedShipments, setBouncedShipments] = useState<CarrierBounce[]>([]);
+    const [bouncedShipments, setBouncedShipments] = useState<CarrierBounce[]>(
+        [],
+    );
 
     useEffect(() => {
         fetch(route('carriers.bounced-loads', carrier?.id)).then((response) => {
@@ -627,9 +629,7 @@ function BouncedShipmentsList({ carrier }: { carrier?: Carrier }) {
                                     <ExternalLink className="inline h-4 w-4" />
                                 </Link>
                             </TableCell>
-                            <TableCell>
-                                {bounce.driver?.name}
-                            </TableCell>
+                            <TableCell>{bounce.driver?.name}</TableCell>
                             <TableCell>{bounce.bounce_type}</TableCell>
                             <TableCell>{bounce.reason}</TableCell>
                             <TableCell>
