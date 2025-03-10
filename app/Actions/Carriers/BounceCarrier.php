@@ -23,6 +23,7 @@ class BounceCarrier
         $bounce = CarrierBounce::create([
             'shipment_id' => $shipment->id,
             'carrier_id' => $shipment->carrier_id,
+            'driver_id' => $shipment->driver_id,
             'bounce_type' => $bounceType,
             'reason' => $reason,
             'bounced_by' => auth()->user()->id,

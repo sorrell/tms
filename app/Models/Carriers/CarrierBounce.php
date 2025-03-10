@@ -4,6 +4,7 @@ namespace App\Models\Carriers;
 
 use App\Enums\Carriers\BounceType;
 use App\Models\Carriers\Carrier;
+use App\Models\Contact;
 use App\Models\Shipments\Shipment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ class CarrierBounce extends Model
     protected $fillable = [
         'carrier_id',
         'shipment_id',
+        'driver_id',
         'bounce_type',
         'reason',
         'bounced_by',
@@ -26,6 +28,11 @@ class CarrierBounce extends Model
     public function carrier(): BelongsTo
     {
         return $this->belongsTo(Carrier::class);
+    }
+
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(Contact::class, 'driver_id', 'id');
     }
 
     /**
