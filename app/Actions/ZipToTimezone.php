@@ -31,7 +31,7 @@ class ZipToTimezone
 
                 $timezone = DB::connection('zip3_to_timezone')->table('zip3_to_timezone')->where('zip3', $zip3)->first();
                 if (!$timezone) {
-                    return 'local';
+                    return null;
                 }
 
                 // if daylight savings then timezone_2 else timezone_1
