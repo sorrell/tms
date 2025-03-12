@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('path');
             $table->string('folder_name')->nullable();
             $table->morphs('documentable');
-            $table->array('metadata')->nullable();
+            $table->json('metadata')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
         });
