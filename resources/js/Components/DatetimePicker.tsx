@@ -205,11 +205,19 @@ export function DateTimePicker({
     const onSubmit = useCallback(() => {
         
         // i.e. PST
-        const timezoneShorthand = new Date(date.toISOString()).toLocaleTimeString('en-us', {timeZoneName: 'short', timeZone: timezone}).split(' ')[2];
+        // Getting the timezone shorthand for the given date
+        // based on the timezone region we want. i.e. America/New_york can be EST or EDT
+        // so this gives us the right one.
+        const timezoneShorthand = new Date(date.toISOString())
+            .toLocaleTimeString('en-us', {timeZoneName: 'short', timeZone: timezone})
+            .split(' ')[2];
 
+        // Now we form a new date string with the timezone we need
         let newDateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}, ${date.getHours() % 12}:${date.getMinutes()}:${date.getSeconds()} ${date.getHours() < 12 ? 'AM' : 'PM'} ${timezoneShorthand}`;
         
-        // the exact time we see in the input is what we get here
+        // Now when we create a date, it will the correct time in the timezone we need
+        // NOTE - The date you'll see here is CASTED to your local timezone,
+        // buf if you convert it back to the timezone you want, it will be the correct time
         let newDate = new Date(
             newDateString
         );
