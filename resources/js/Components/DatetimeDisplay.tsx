@@ -14,7 +14,7 @@ export default function DatetimeDisplay({
             formattedDatetime = formattedDatetime + 'Z';
         }
 
-        formattedDatetime = new Date(formattedDatetime).toLocaleString('en-US', { timeZone: timezone });
+        formattedDatetime = new Date(formattedDatetime).toLocaleString('en-US', { timeZone: timezone, timeZoneName: 'short' });
     }
 
     return (

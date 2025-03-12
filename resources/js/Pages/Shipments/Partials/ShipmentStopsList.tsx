@@ -519,9 +519,6 @@ export default function ShipmentStopsList({
                                                     onChange={(
                                                         e: Date | undefined,
                                                     ) => {
-                                                        console.log("onChange", {
-                                                            date: e?.toISOString(),
-                                                        });
                                                         const updatedStops = [
                                                             ...data.stops,
                                                         ];
