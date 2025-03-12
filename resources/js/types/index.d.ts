@@ -200,5 +200,4 @@ export interface CarrierBounce {
 export interface Timezone {
     id: number;
     name: string;
-    offset: number;
 }

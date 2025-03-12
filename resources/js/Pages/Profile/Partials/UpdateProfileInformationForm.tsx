@@ -29,7 +29,7 @@ export default function UpdateProfileInformation({
     const user = usePage().props.auth.user;
 
     const [timezones, setTimezones] = useState<Timezone[]>(
-        user?.timezone ? [{ id: 0, name: user?.timezone, offset: 0 }] : [],
+        user?.timezone ? [{ id: 0, name: user?.timezone }] : [],
     );
 
     const { data, setData, post, errors, processing, recentlySuccessful } =

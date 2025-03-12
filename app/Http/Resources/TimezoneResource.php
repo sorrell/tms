@@ -19,8 +19,7 @@ class TimezoneResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'offset' => $this->offset,
+            'name' => $this->name
         ];
     }
 }
