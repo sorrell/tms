@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import InputError from '@/Components/InputError';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, forwardRef, useImperativeHandle } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface FilePreview {
@@ -27,7 +27,11 @@ interface FileUploadProps {
   fallbackText?: string;
 }
 
-export default function FileUpload({
+export interface FileUploadRef {
+  reset: () => void;
+}
+
+export default forwardRef<FileUploadRef, FileUploadProps>(function FileUpload({
   initialPreview = null,
   onFileChange,
   onRemove,
@@ -41,10 +45,21 @@ export default function FileUpload({
   className = '',
   avatarClassName = 'h-20 w-20',
   fallbackText = '',
-}: FileUploadProps) {
+}, ref) {
   const [filePreview, setFilePreview] = useState<FilePreview | null>(
     initialPreview ? { url: initialPreview, isImage: true, fileName: '', fileType: '' } : null
   );
+
+  // Expose reset method via ref
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setFilePreview(null);
+      onFileChange(null);
+      if (onRemove) {
+        onRemove();
+      }
+    }
+  }));
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -170,4 +185,4 @@ export default function FileUpload({
       {error && <InputError className="mt-2" message={error} />}
     </div>
   );
-} 
+}); 

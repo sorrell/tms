@@ -160,6 +160,7 @@ export interface Shipment {
     trailer_size?: TrailerSize;
     state_label: string;
     state: ShipmentState;
+    documents?: Document[];
 }
 
 export interface Note {
@@ -200,4 +201,16 @@ export interface CarrierBounce {
 export interface Timezone {
     id: number;
     name: string;
+}
+
+export interface Document {
+    id: number;
+    name: string;
+    path: string;
+    folder_name?: string;
+    documentable_type: string;
+    documentable_id: number;
+    uploaded_by?: User;
+    temporary_url?: string;
+    metadata?: Record<string, unknown>;
 }

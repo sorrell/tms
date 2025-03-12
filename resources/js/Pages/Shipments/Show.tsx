@@ -12,6 +12,7 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
+import DocumentsList from '@/Components/Documents/DocumentsList';
 
 export default function Show({
     shipment,
@@ -119,14 +120,11 @@ export default function Show({
                             <TabsContent value="documents">
                                 <Card>
                                     <CardContent className="pt-6">
-                                        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                                            {[1, 2, 3, 4].map((doc) => (
-                                                <Skeleton
-                                                    key={doc}
-                                                    className="h-40 w-full"
-                                                />
-                                            ))}
-                                        </div>
+                                        <DocumentsList
+                                            documents={shipment.documents ?? []}
+                                            documentableType="shipment"
+                                            documentableId={shipment.id}
+                                        />
                                     </CardContent>
                                 </Card>
                             </TabsContent>

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\Carriers\CarrierResource;
+use App\Http\Resources\Documents\DocumentResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -39,6 +40,7 @@ class ShipmentResource extends JsonResource
             'next_stop' => $this->whenLoaded('stops', new ShipmentStopResource($this->nextStop)),
             'state_label' => $this->state->label(),
             'state' => $this->state,
+            'documents' => $this->whenLoaded('documents', DocumentResource::collection($this->documents)),
         ];
     }
 }

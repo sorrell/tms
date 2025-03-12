@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Documents;
 
-use App\Enums\Documentable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,6 +21,7 @@ class DocumentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'path' => $this->path,
+            'metadata' => $this->metadata,
             'folder_name' => $this->folder_name,
             'documentable_type' => $this->documentable_type,
             'documentable_id' => $this->documentable_id,

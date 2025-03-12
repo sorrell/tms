@@ -8,6 +8,7 @@ use App\Models\Carriers\CarrierBounce;
 use App\Models\Contact;
 use App\Models\Customers\Customer;
 use App\States\Shipments\ShipmentState;
+use App\Traits\HasDocuments;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
 use App\Traits\HasNotes;
@@ -22,7 +23,7 @@ use Spatie\ModelStates\HasStatesContract;
 
 class Shipment extends Model implements HasStatesContract
 {
-    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates;
+    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates, HasDocuments;
 
     protected $fillable = [
         'organization_id',
