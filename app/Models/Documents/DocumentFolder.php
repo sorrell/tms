@@ -5,10 +5,10 @@ namespace App\Models\Documents;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class DocumentFolder extends Model
 {
-    use HasOrganization;
+    use HasOrganization, SoftDeletes;
 
     protected $fillable = [
         'organization_id',

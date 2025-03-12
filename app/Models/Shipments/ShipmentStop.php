@@ -7,6 +7,7 @@ use App\Models\Facility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\HasOrganization;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShipmentStop extends Model

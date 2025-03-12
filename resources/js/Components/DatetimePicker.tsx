@@ -170,7 +170,9 @@ export function DateTimePicker({
         'month' | 'year' | false
     >(false);
     const initDate = useMemo(
-        () => new TZDate(value || new Date(), timezone),
+        () => {
+            return new TZDate(value || new Date(), timezone)
+        },
         [value, timezone],
     );
 
@@ -191,16 +193,25 @@ export function DateTimePicker({
 
     const onDayChanged = useCallback(
         (d: Date) => {
-            d.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
-            if (min && d < min) {
-                d.setHours(min.getHours(), min.getMinutes(), min.getSeconds());
-            }
-            if (max && d > max) {
-                d.setHours(max.getHours(), max.getMinutes(), max.getSeconds());
-            }
-            setDate(d);
+            // This was causing a timezone conversion bug before
+            // so it is commented out for now, but left as reference for max date pick 
+            // if we need it back later
+            //
+            // d.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
+            // if (min && d < min) {
+            //     d.setHours(min.getHours(), min.getMinutes(), min.getSeconds());
+            // }
+            // if (max && d > max) {
+            //     d.setHours(max.getHours(), max.getMinutes(), max.getSeconds());
+            // }
+            // setDate(d);
+
+
+            // Now we form a new date string with the timezone we need
+            let newDateString = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}, ${date.getHours() % 12}:${date.getMinutes()}:${date.getSeconds()} ${date.getHours() < 12 ? 'AM' : 'PM'}`;
+            setDate(new Date(newDateString));
         },
-        [setDate, setMonth],
+        [setDate, setMonth, date, timezone],
     );
     const onSubmit = useCallback(() => {
         
@@ -246,11 +257,12 @@ export function DateTimePicker({
 
     useEffect(() => {
         if (open) {
+
             setDate(initDate);
             setMonth(initDate);
             setMonthYearPicker(false);
         }
-    }, [open, initDate]);
+    }, [open, initDate]); 
 
     const displayValue = useMemo(() => {
         if (!open && !value) return value;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\Resources\HasDates;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -10,6 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class ShipmentStopResource extends JsonResource
 {
+    use HasDates;
     /**
      * Transform the resource into an array.
      *
@@ -24,13 +26,13 @@ class ShipmentStopResource extends JsonResource
             'stop_number' => $this->stop_number,
             'special_instructions' => $this->special_instructions,
             'reference_numbers' => $this->reference_numbers,
-            'eta' => $this->eta,
-            'arrived_at' => $this->arrived_at,
-            'loaded_unloaded_at' => $this->loaded_unloaded_at,
-            'left_at' => $this->left_at,
+            'eta' => $this->asDate($this->eta),
+            'arrived_at' => $this->asDate($this->arrived_at),
+            'loaded_unloaded_at' => $this->asDate($this->loaded_unloaded_at),
+            'left_at' => $this->asDate($this->left_at),
 
-            'appointment_at' => $this->appointment_at,
-            'appointment_end_at' => $this->appointment_end_at,
+            'appointment_at' => $this->asDate($this->appointment_at),
+            'appointment_end_at' => $this->asDate($this->appointment_end_at),
             'appointment_type' => $this->appointment_type,
         ];
     }

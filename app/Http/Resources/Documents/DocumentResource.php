@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Documents;
 
+use App\Http\Resources\UserResource;
+use App\Traits\Resources\HasDates;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -10,6 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class DocumentResource extends JsonResource
 {
+    use HasDates;
     /**
      * Transform the resource into an array.
      *
@@ -21,6 +24,9 @@ class DocumentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'path' => $this->path,
+            'created_at' => $this->asDate($this->created_at),
+            'updated_at' => $this->asDate($this->updated_at),
+            'deleted_at' => $this->when($this->deleted_at !== null, $this->asDate($this->deleted_at)),
             'metadata' => $this->metadata,
             'folder_name' => $this->folder_name,
             'documentable_type' => $this->documentable_type,
