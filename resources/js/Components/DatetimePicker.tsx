@@ -203,7 +203,18 @@ export function DateTimePicker({
         [setDate, setMonth],
     );
     const onSubmit = useCallback(() => {
-        onChange(new Date(date));
+        
+        // i.e. PST
+        const timezoneShorthand = new Date().toLocaleTimeString('en-us', {timeZoneName: 'short', timeZone: timezone}).split(' ')[2];
+
+        let newDateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}, ${date.getHours() % 12}:${date.getMinutes()}:${date.getSeconds()} ${date.getHours() < 12 ? 'AM' : 'PM'} ${timezoneShorthand}`;
+        
+        // the exact time we see in the input is what we get here
+        let newDate = new Date(
+            newDateString
+        );
+        
+        onChange(newDate);
         setOpen(false);
     }, [date, onChange]);
 
