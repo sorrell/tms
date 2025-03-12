@@ -9,6 +9,7 @@ abstract class ResourceSearchController extends Controller
 {
     protected $model;
     protected $modelResource;
+    protected $modelSearchLimit = 10;
 
     public function searchQuery(Builder $query, array $filters = [])
     {
@@ -45,7 +46,11 @@ abstract class ResourceSearchController extends Controller
             );
         } 
 
-        $results = $query->get()->take(10);
+        if ($this->modelSearchLimit) {
+            $results = $query->get()->take($this->modelSearchLimit);
+        } else {
+            $results = $query->get();
+        }
 
         // If relationships are requested to be loaded
         if ($request->has('with') && is_array($request->input('with'))) {

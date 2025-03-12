@@ -1,3 +1,5 @@
+import DatetimeDisplay from '@/Components/DatetimeDisplay';
+import { DateTimePicker } from '@/Components/DatetimePicker';
 import InputError from '@/Components/InputError';
 import {
     ResourceSearchSelect,
@@ -6,7 +8,6 @@ import {
 import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Input } from '@/Components/ui/input';
 import {
     Select,
     SelectContent,
@@ -29,7 +30,7 @@ import {
     Trash,
     X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type FormErrors = {
     [key: `stops.${number}.${string}`]: string;
@@ -44,6 +45,23 @@ export default function ShipmentStopsList({
 }) {
     const [editMode, setEditMode] = useState(false);
     const { toast } = useToast();
+    const [timezones, setTimezones] = useState<
+        Record<string, { identifier: string; dst_tz: string; std_tz: string }>
+    >({});
+
+    useEffect(() => {
+        const zipcodes = stops
+            .map((stop) => stop.facility?.location?.address_zipcode ?? '')
+            .filter(Boolean);
+
+        fetch(route('timezones.zipcode', { zipcodes }), {
+            method: 'GET',
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setTimezones(data);
+            });
+    }, [stops, setTimezones]);
 
     const updateStops = () => {
         patch(
@@ -70,7 +88,7 @@ export default function ShipmentStopsList({
     };
 
     const getSavedStops = () => {
-        return stops.map((stop) => ({
+        const mappedStops = stops.map((stop) => ({
             ...stop,
             eta: stop.eta ? new Date(stop.eta).toISOString().slice(0, 16) : '',
             facility_id: stop.facility?.id,
@@ -91,6 +109,32 @@ export default function ShipmentStopsList({
                 ? new Date(stop.left_at).toISOString().slice(0, 16)
                 : '',
         }));
+
+        return mappedStops;
+    };
+
+    const convertForTimezone = (stop: ShipmentStop, date: string) => {
+        if (date.substring(date.length - 1) !== 'Z') {
+            date = date + 'Z';
+        }
+        const dateObj = new Date(date);
+        const stopTimezone = getTimezone(stop);
+        if (stopTimezone) {
+            return dateObj.toLocaleString('en-US', { timeZone: stopTimezone });
+        }
+        return dateObj.toLocaleString('en-US');
+    };
+
+    const getTimezone = (stop: ShipmentStop): string | undefined => {
+        if (!stop.facility?.location?.address_zipcode) {
+            return;
+        }
+
+        const stopTimezone =
+            timezones[stop.facility?.location?.address_zipcode]?.identifier;
+        if (stopTimezone) {
+            return stopTimezone;
+        }
     };
 
     const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>(
@@ -464,13 +508,22 @@ export default function ShipmentStopsList({
                                         </label>
                                         {editMode ? (
                                             <>
-                                                <Input
-                                                    type="datetime-local"
+                                                <DateTimePicker
+                                                    clearable={true}
                                                     value={
-                                                        stop.appointment_at ||
-                                                        ''
+                                                        stop.appointment_at
+                                                            ? new Date(
+                                                                  convertForTimezone(
+                                                                      stop,
+                                                                      stop.appointment_at,
+                                                                  ),
+                                                              )
+                                                            : undefined
                                                     }
-                                                    onChange={(e) => {
+                                                    timezone={getTimezone(stop)}
+                                                    onChange={(
+                                                        e: Date | undefined,
+                                                    ) => {
                                                         const updatedStops = [
                                                             ...data.stops,
                                                         ];
@@ -479,7 +532,8 @@ export default function ShipmentStopsList({
                                                                 index
                                                             ],
                                                             appointment_at:
-                                                                e.target.value,
+                                                                e?.toISOString() ||
+                                                                '',
                                                         };
                                                         setData(
                                                             'stops',
@@ -487,6 +541,7 @@ export default function ShipmentStopsList({
                                                         );
                                                     }}
                                                 />
+
                                                 {formErrors[
                                                     `stops.${index}.appointment_at`
                                                 ] && (
@@ -501,13 +556,10 @@ export default function ShipmentStopsList({
                                                 )}
                                             </>
                                         ) : (
-                                            <p>
-                                                {stop.appointment_at
-                                                    ? new Date(
-                                                          stop.appointment_at,
-                                                      ).toLocaleString()
-                                                    : 'Not set'}
-                                            </p>
+                                            <DatetimeDisplay
+                                                timezone={getTimezone(stop)}
+                                                datetime={stop.appointment_at}
+                                            />
                                         )}
                                     </div>
                                     {!shouldHideFields && (
@@ -518,10 +570,26 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
-                                                            value={stop.eta}
-                                                            onChange={(e) => {
+                                                        <DateTimePicker
+                                                            clearable={true}
+                                                            value={
+                                                                stop.eta
+                                                                    ? new Date(
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.eta,
+                                                                          ),
+                                                                      )
+                                                                    : undefined
+                                                            }
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -532,9 +600,9 @@ export default function ShipmentStopsList({
                                                                     ...updatedStops[
                                                                         index
                                                                     ],
-                                                                    eta: e
-                                                                        .target
-                                                                        .value,
+                                                                    eta:
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
@@ -556,13 +624,12 @@ export default function ShipmentStopsList({
                                                         )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.eta
-                                                            ? new Date(
-                                                                  stop.eta,
-                                                              ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
+                                                        datetime={stop.eta}
+                                                    />
                                                 )}
                                             </div>
                                             <div>
@@ -571,12 +638,26 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
+                                                        <DateTimePicker
+                                                            clearable={true}
                                                             value={
                                                                 stop.arrived_at
+                                                                    ? new Date(
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.arrived_at,
+                                                                          ),
+                                                                      )
+                                                                    : undefined
                                                             }
-                                                            onChange={(e) => {
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -588,8 +669,8 @@ export default function ShipmentStopsList({
                                                                         index
                                                                     ],
                                                                     arrived_at:
-                                                                        e.target
-                                                                            .value,
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
@@ -611,13 +692,14 @@ export default function ShipmentStopsList({
                                                         )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.arrived_at
-                                                            ? new Date(
-                                                                  stop.arrived_at,
-                                                              ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
+                                                        datetime={
+                                                            stop.arrived_at
+                                                        }
+                                                    />
                                                 )}
                                             </div>
                                             <div>
@@ -628,12 +710,26 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
+                                                        <DateTimePicker
+                                                            clearable={true}
                                                             value={
                                                                 stop.loaded_unloaded_at
+                                                                    ? new Date(
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.loaded_unloaded_at,
+                                                                          ),
+                                                                      )
+                                                                    : undefined
                                                             }
-                                                            onChange={(e) => {
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -645,8 +741,8 @@ export default function ShipmentStopsList({
                                                                         index
                                                                     ],
                                                                     loaded_unloaded_at:
-                                                                        e.target
-                                                                            .value,
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
@@ -668,13 +764,14 @@ export default function ShipmentStopsList({
                                                         )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.loaded_unloaded_at
-                                                            ? new Date(
-                                                                  stop.loaded_unloaded_at,
-                                                              ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
+                                                        datetime={
+                                                            stop.loaded_unloaded_at
+                                                        }
+                                                    />
                                                 )}
                                             </div>
                                             <div>
@@ -683,10 +780,26 @@ export default function ShipmentStopsList({
                                                 </label>
                                                 {editMode ? (
                                                     <>
-                                                        <Input
-                                                            type="datetime-local"
-                                                            value={stop.left_at}
-                                                            onChange={(e) => {
+                                                        <DateTimePicker
+                                                            clearable={true}
+                                                            value={
+                                                                stop.left_at
+                                                                    ? new Date(
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.left_at,
+                                                                          ),
+                                                                      )
+                                                                    : undefined
+                                                            }
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
+                                                            onChange={(
+                                                                e:
+                                                                    | Date
+                                                                    | undefined,
+                                                            ) => {
                                                                 const updatedStops =
                                                                     [
                                                                         ...data.stops,
@@ -698,8 +811,8 @@ export default function ShipmentStopsList({
                                                                         index
                                                                     ],
                                                                     left_at:
-                                                                        e.target
-                                                                            .value,
+                                                                        e?.toISOString() ||
+                                                                        '',
                                                                 };
                                                                 setData(
                                                                     'stops',
@@ -721,13 +834,12 @@ export default function ShipmentStopsList({
                                                         )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.left_at
-                                                            ? new Date(
-                                                                  stop.left_at,
-                                                              ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
+                                                        datetime={stop.left_at}
+                                                    />
                                                 )}
                                             </div>
                                         </>

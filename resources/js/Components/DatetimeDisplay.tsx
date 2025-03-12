@@ -2,18 +2,26 @@ import { HTMLAttributes } from 'react';
 
 export default function DatetimeDisplay({
     datetime,
+    timezone,
     className = '',
     ...props
-}: HTMLAttributes<HTMLDivElement> & { datetime?: string }) {
+}: HTMLAttributes<HTMLDivElement> & { datetime?: string; timezone?: string }) {
     let formattedDatetime = datetime;
 
-    if (datetime) {
-        formattedDatetime = new Date(datetime).toLocaleString();
+    if (formattedDatetime) {
+        if (formattedDatetime.substring(formattedDatetime.length - 1) !== 'Z') {
+            formattedDatetime = formattedDatetime + 'Z';
+        }
+
+        formattedDatetime = new Date(formattedDatetime).toLocaleString(
+            'en-US',
+            { timeZone: timezone, timeZoneName: 'short' },
+        );
     }
 
     return (
         <div {...props} className={className}>
-            {formattedDatetime}
+            {formattedDatetime !== '' ? formattedDatetime : 'Not set'}
         </div>
     );
 }

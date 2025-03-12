@@ -6,6 +6,7 @@ export interface User {
     current_organization_id: number;
     organizations: Organization[];
     profile_photo_url?: string;
+    timezone?: string;
 }
 
 export type PageProps<
@@ -194,4 +195,9 @@ export interface CarrierBounce {
     shipment?: Shipment;
     carrier?: Carrier;
     driver?: Contact;
+}
+
+export interface Timezone {
+    id: number;
+    name: string;
 }

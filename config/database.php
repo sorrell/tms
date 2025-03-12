@@ -42,6 +42,12 @@ return [
             'synchronous' => null,
         ],
 
+        // connector for doing zip 3 to timezone lookups
+        'zip3_to_timezone' => [
+            'driver' => 'sqlite',
+            'database' => env('ZIP3_TO_TIMEZONE_OVERRIDE_DB_DATABASE', database_path('zip3_to_timezone.sqlite')),
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
