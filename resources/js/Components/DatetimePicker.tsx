@@ -174,7 +174,6 @@ export function DateTimePicker({
         [value, timezone],
     );
 
-
     const [month, setMonth] = useState<Date>(initDate);
     const [date, setDate] = useState<Date>(initDate);
 
@@ -241,11 +240,16 @@ export function DateTimePicker({
 
     const dislayFormat = useMemo(() => {
         if (!displayValue) return 'Pick a date';
+
+        let tzShorthandIso = new Intl.DateTimeFormat('en-US', { timeZone: timezone, timeZoneName: 'short' }).format(displayValue)
+        
+        let tzShorthand = tzShorthandIso.substring(tzShorthandIso.length - 3);
+
         return format(
             displayValue,
             `${!hideTime ? 'MMM' : 'MMMM'} d, yyyy${!hideTime ? (use12HourFormat ? ' hh:mm:ss a' : ' HH:mm:ss') : ''}`,
-        );
-    }, [displayValue, hideTime, use12HourFormat]);
+        ) + ' ' + tzShorthand;
+    }, [displayValue, hideTime, use12HourFormat, timezone]);
 
     return (
         <Popover open={open} onOpenChange={setOpen} modal={modal}>
