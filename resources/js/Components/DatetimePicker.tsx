@@ -207,9 +207,14 @@ export function DateTimePicker({
             // setDate(d);
 
 
-            // Now we form a new date string with the timezone we need
-            let newDateString = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}, ${date.getHours() % 12}:${date.getMinutes()}:${date.getSeconds()} ${date.getHours() < 12 ? 'AM' : 'PM'}`;
-            setDate(new Date(newDateString));
+
+            // We are going to alter the existing date instead,
+            // keeping our conversion correct
+            // then setting that as new date to trigger a re-render
+            date.setDate(d.getDate());
+            date.setMonth(d.getMonth());
+            date.setFullYear(d.getFullYear());
+            setDate(new Date(date));
         },
         [setDate, setMonth, date, timezone],
     );
