@@ -27,6 +27,7 @@ use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
+use App\Actions\ZipToTimezone;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FacilityController;
@@ -72,6 +73,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     })->name('dashboard');
 
     Route::get('timezones/search', [TimezoneController::class, 'search'])->name('timezones.search');
+    Route::get('timezones/zipcode', ZipToTimezone::class)->name('timezones.zipcode');
 
     Route::resource('organizations.invites', OrganizationInviteController::class)->scoped([
         'invite' => 'code',
@@ -150,6 +152,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::delete('contacts/{contact}', DeleteContact::class)->name('contacts.destroy');
 
     Route::get('contacts/types/{contactable}', GetContactTypes::class)->name('contacts.types');
+
+    
 });
 
 require __DIR__ . '/auth.php';

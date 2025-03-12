@@ -36,3 +36,6 @@ Ensure you have storage linked by running
 ``` bash
 sail artisan storage:link
 ```
+
+### Zip to timezone lookups
+We are using a backup sqlite database of US zip3s to timezone esimates. If you are trying to override the lookup you can define your own db connection under `config/database.php` or with the `ZIP3_TO_TIMEZONE_OVERRIDE_DB_DATABASE` env naming.
