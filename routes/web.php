@@ -125,7 +125,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::delete('customers/{customer}/facilities/{facility}', DeleteCustomerFacility::class)->name('customers.facilities.destroy');
 
 
-    Route::name('documents')->prefix('documents/{documentableType}/{documentableId}')->group(function () {
+    Route::name('documents.')->prefix('documents/{documentableType}/{documentableId}')->group(function () {
         Route::post('/', CreateDocument::class)->name('store');
     });
 
