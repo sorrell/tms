@@ -29,7 +29,7 @@ import {
     Trash,
     X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type FormErrors = {
     [key: `stops.${number}.${string}`]: string;
@@ -44,6 +44,21 @@ export default function ShipmentStopsList({
 }) {
     const [editMode, setEditMode] = useState(false);
     const { toast } = useToast();
+
+    const timezones = useMemo(async () => {
+        const zipcodes = stops
+            .map((stop) => stop.facility?.location?.address_zipcode ?? '')
+            .filter(Boolean)
+
+
+        return await fetch(route('timezones.zipcode', { zipcodes }), {
+            method: 'GET',
+        }).then(res => res.json()).then(data => {
+            console.log(data);
+            return data;
+        });
+        
+    }, [stops]);
 
     const updateStops = () => {
         patch(
