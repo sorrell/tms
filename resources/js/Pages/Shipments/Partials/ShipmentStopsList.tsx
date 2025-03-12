@@ -1,3 +1,4 @@
+import DatetimeDisplay from '@/Components/DatetimeDisplay';
 import { DateTimePicker } from '@/Components/DatetimePicker';
 import InputError from '@/Components/InputError';
 import {
@@ -29,7 +30,7 @@ import {
     Trash,
     X,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TZDate } from 'react-day-picker';
 
 type FormErrors = {
@@ -45,20 +46,21 @@ export default function ShipmentStopsList({
 }) {
     const [editMode, setEditMode] = useState(false);
     const { toast } = useToast();
+    const [timezones, setTimezones] = useState<Record<string, { identifier: string, dst_tz: string, std_tz: string }>>({});
 
-    const timezones = useMemo(async () => {
+    useEffect(() => {
         const zipcodes = stops
             .map((stop) => stop.facility?.location?.address_zipcode ?? '')
             .filter(Boolean)
 
 
-        return await fetch(route('timezones.zipcode', { zipcodes }), {
+        fetch(route('timezones.zipcode', { zipcodes }), {
             method: 'GET',
         }).then(res => res.json()).then(data => {
-            return data;
+            setTimezones(data);
         });
 
-    }, [stops]);
+    }, [stops, setTimezones]);
 
     const updateStops = () => {
         patch(
@@ -111,27 +113,26 @@ export default function ShipmentStopsList({
     };
 
     let convertForTimezone = (stop: ShipmentStop, date: string) => {
+        if (date.substring(date.length - 1) !== 'Z') {
+            date = date + 'Z';
+        }
         let dateObj = new Date(date);
         let stopTimezone = getTimezone(stop);
-        if (stopTimezone && stopTimezone !== 'local') {
+        if (stopTimezone) {
             return dateObj.toLocaleString('en-US', { timeZone: stopTimezone });
         }
         return dateObj.toLocaleString('en-US');
     }
-    let getTimezone = (stop: ShipmentStop) => {
+
+    let getTimezone = (stop: ShipmentStop): string | undefined => {
         if (!stop.facility?.location?.address_zipcode) {
-            return null;
+            return;
         }
 
-        let stopTimezone = timezones[stop.facility?.location?.address_zipcode];
-        console.log("Found timezone", {
-            stopTimezone,
-            stop_zipcode: stop.facility?.location?.address_zipcode,
-        });
+        let stopTimezone = timezones[stop.facility?.location?.address_zipcode]?.identifier;
         if (stopTimezone) {
             return stopTimezone;
         }
-        return null;
     }
 
     const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>(
@@ -518,6 +519,9 @@ export default function ShipmentStopsList({
                                                     onChange={(
                                                         e: Date | undefined,
                                                     ) => {
+                                                        console.log("onChange", {
+                                                            date: e?.toISOString(),
+                                                        });
                                                         const updatedStops = [
                                                             ...data.stops,
                                                         ];
@@ -550,13 +554,10 @@ export default function ShipmentStopsList({
                                                     )}
                                             </>
                                         ) : (
-                                            <p>
-                                                {stop.appointment_at
-                                                    ? new Date(
-                                                        stop.appointment_at,
-                                                    ).toLocaleString()
-                                                    : 'Not set'}
-                                            </p>
+                                            <DatetimeDisplay
+                                                timezone={getTimezone(stop)}
+                                                datetime={stop.appointment_at}
+                                            />
                                         )}
                                     </div>
                                     {!shouldHideFields && (
@@ -616,13 +617,10 @@ export default function ShipmentStopsList({
                                                             )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.eta
-                                                            ? new Date(
-                                                                stop.eta,
-                                                            ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(stop)}
+                                                        datetime={stop.eta}
+                                                    />
                                                 )}
                                             </div>
                                             <div>
@@ -680,13 +678,10 @@ export default function ShipmentStopsList({
                                                             )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.arrived_at
-                                                            ? new Date(
-                                                                stop.arrived_at,
-                                                            ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(stop)}
+                                                        datetime={stop.arrived_at}
+                                                    />
                                                 )}
                                             </div>
                                             <div>
@@ -746,13 +741,10 @@ export default function ShipmentStopsList({
                                                             )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.loaded_unloaded_at
-                                                            ? new Date(
-                                                                stop.loaded_unloaded_at,
-                                                            ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(stop)}
+                                                        datetime={stop.loaded_unloaded_at}
+                                                    />
                                                 )}
                                             </div>
                                             <div>
@@ -810,13 +802,10 @@ export default function ShipmentStopsList({
                                                             )}
                                                     </>
                                                 ) : (
-                                                    <p>
-                                                        {stop.left_at
-                                                            ? new Date(
-                                                                stop.left_at,
-                                                            ).toLocaleString()
-                                                            : 'Not set'}
-                                                    </p>
+                                                    <DatetimeDisplay
+                                                        timezone={getTimezone(stop)}
+                                                        datetime={stop.left_at}
+                                                    />
                                                 )}
                                             </div>
                                         </>

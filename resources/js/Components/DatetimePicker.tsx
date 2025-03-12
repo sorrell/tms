@@ -173,7 +173,7 @@ export function DateTimePicker({
         () => new TZDate(value || new Date(), timezone),
         [value, timezone],
     );
-    console.log('rerender');
+
 
     const [month, setMonth] = useState<Date>(initDate);
     const [date, setDate] = useState<Date>(initDate);
