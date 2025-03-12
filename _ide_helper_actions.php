@@ -422,6 +422,22 @@ class UpdateShipmentNumber
 class UpdateShipmentStops
 {
 }
+namespace App\Actions;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string|array $zipcodes)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string|array $zipcodes)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string|array $zipcodes)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string|array $zipcodes)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string|array $zipcodes)
+ * @method static dispatchSync(string|array $zipcodes)
+ * @method static dispatchNow(string|array $zipcodes)
+ * @method static dispatchAfterResponse(string|array $zipcodes)
+ * @method static array run(string|array $zipcodes)
+ */
+class ZipToTimezone
+{
+}
 namespace Lorisleiva\Actions\Concerns;
 
 /**

@@ -40,6 +40,9 @@ class ZipToTimezone
                     'identifier' => $timezone->identifier,
                     'dst_tz' => $timezone->timezone_2,
                     'std_tz' => $timezone->timezone_1,
+                    'is_dst' => $this->isDST(),
+                    'dst_tz_offset' => $timezone->timezone_2_offset,
+                    'std_tz_offset' => $timezone->timezone_1_offset,
                 ];
             });
         }
@@ -74,6 +77,6 @@ class ZipToTimezone
         // reset server timezone
         date_default_timezone_set($server_timezone);
 
-        return $is_dst;
+        return $is_dst ? true : false;
     }
 }

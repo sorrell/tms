@@ -30,8 +30,7 @@ import {
     Trash,
     X,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import { TZDate } from 'react-day-picker';
+import { useEffect, useState } from 'react';
 
 type FormErrors = {
     [key: `stops.${number}.${string}`]: string;
@@ -46,20 +45,22 @@ export default function ShipmentStopsList({
 }) {
     const [editMode, setEditMode] = useState(false);
     const { toast } = useToast();
-    const [timezones, setTimezones] = useState<Record<string, { identifier: string, dst_tz: string, std_tz: string }>>({});
+    const [timezones, setTimezones] = useState<
+        Record<string, { identifier: string; dst_tz: string; std_tz: string }>
+    >({});
 
     useEffect(() => {
         const zipcodes = stops
             .map((stop) => stop.facility?.location?.address_zipcode ?? '')
-            .filter(Boolean)
-
+            .filter(Boolean);
 
         fetch(route('timezones.zipcode', { zipcodes }), {
             method: 'GET',
-        }).then(res => res.json()).then(data => {
-            setTimezones(data);
-        });
-
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setTimezones(data);
+            });
     }, [stops, setTimezones]);
 
     const updateStops = () => {
@@ -87,7 +88,7 @@ export default function ShipmentStopsList({
     };
 
     const getSavedStops = () => {
-        let mappedStops = stops.map((stop) => ({
+        const mappedStops = stops.map((stop) => ({
             ...stop,
             eta: stop.eta ? new Date(stop.eta).toISOString().slice(0, 16) : '',
             facility_id: stop.facility?.id,
@@ -112,28 +113,29 @@ export default function ShipmentStopsList({
         return mappedStops;
     };
 
-    let convertForTimezone = (stop: ShipmentStop, date: string) => {
+    const convertForTimezone = (stop: ShipmentStop, date: string) => {
         if (date.substring(date.length - 1) !== 'Z') {
             date = date + 'Z';
         }
-        let dateObj = new Date(date);
-        let stopTimezone = getTimezone(stop);
+        const dateObj = new Date(date);
+        const stopTimezone = getTimezone(stop);
         if (stopTimezone) {
             return dateObj.toLocaleString('en-US', { timeZone: stopTimezone });
         }
         return dateObj.toLocaleString('en-US');
-    }
+    };
 
-    let getTimezone = (stop: ShipmentStop): string | undefined => {
+    const getTimezone = (stop: ShipmentStop): string | undefined => {
         if (!stop.facility?.location?.address_zipcode) {
             return;
         }
 
-        let stopTimezone = timezones[stop.facility?.location?.address_zipcode]?.identifier;
+        const stopTimezone =
+            timezones[stop.facility?.location?.address_zipcode]?.identifier;
         if (stopTimezone) {
             return stopTimezone;
         }
-    }
+    };
 
     const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>(
         {
@@ -279,7 +281,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             stop_type: value,
                                                         };
@@ -312,21 +314,21 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.type`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.type`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <Avatar>
                                                 <AvatarFallback className="bg-primary p-1 text-white">
                                                     {stop.stop_type ===
-                                                        StopType.Delivery ? (
+                                                    StopType.Delivery ? (
                                                         <ArrowDown className="inline h-4 w-4" />
                                                     ) : (
                                                         <ArrowUp className="inline h-4 w-4" />
@@ -389,7 +391,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             facility_id: Number(
                                                                 selected?.value,
@@ -418,15 +420,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.facility.name`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.facility.name`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <p>{stop.facility?.name}</p>
@@ -450,7 +452,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             appointment_type:
                                                                 value,
@@ -483,15 +485,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.appointment_type`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.appointment_type`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <p className="capitalize">
@@ -511,8 +513,11 @@ export default function ShipmentStopsList({
                                                     value={
                                                         stop.appointment_at
                                                             ? new Date(
-                                                                convertForTimezone(stop, stop.appointment_at)
-                                                            )
+                                                                  convertForTimezone(
+                                                                      stop,
+                                                                      stop.appointment_at,
+                                                                  ),
+                                                              )
                                                             : undefined
                                                     }
                                                     timezone={getTimezone(stop)}
@@ -524,7 +529,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             appointment_at:
                                                                 e?.toISOString() ||
@@ -540,15 +545,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.appointment_at`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.appointment_at`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <DatetimeDisplay
@@ -570,11 +575,16 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.eta
                                                                     ? new Date(
-                                                                        convertForTimezone(stop, stop.eta)
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.eta,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
-                                                            timezone={getTimezone(stop)}
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
                                                             onChange={(
                                                                 e:
                                                                     | Date
@@ -588,7 +598,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     eta:
                                                                         e?.toISOString() ||
@@ -603,19 +613,21 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.eta`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.eta`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
-                                                        timezone={getTimezone(stop)}
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
                                                         datetime={stop.eta}
                                                     />
                                                 )}
@@ -631,11 +643,16 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.arrived_at
                                                                     ? new Date(
-                                                                        convertForTimezone(stop, stop.arrived_at)
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.arrived_at,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
-                                                            timezone={getTimezone(stop)}
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
                                                             onChange={(
                                                                 e:
                                                                     | Date
@@ -649,7 +666,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     arrived_at:
                                                                         e?.toISOString() ||
@@ -664,20 +681,24 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.arrived_at`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.arrived_at`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
-                                                        timezone={getTimezone(stop)}
-                                                        datetime={stop.arrived_at}
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
+                                                        datetime={
+                                                            stop.arrived_at
+                                                        }
                                                     />
                                                 )}
                                             </div>
@@ -694,11 +715,16 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.loaded_unloaded_at
                                                                     ? new Date(
-                                                                        convertForTimezone(stop, stop.loaded_unloaded_at)
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.loaded_unloaded_at,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
-                                                            timezone={getTimezone(stop)}
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
                                                             onChange={(
                                                                 e:
                                                                     | Date
@@ -712,7 +738,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     loaded_unloaded_at:
                                                                         e?.toISOString() ||
@@ -727,20 +753,24 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.loaded_unloaded_at`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.loaded_unloaded_at`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
-                                                        timezone={getTimezone(stop)}
-                                                        datetime={stop.loaded_unloaded_at}
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
+                                                        datetime={
+                                                            stop.loaded_unloaded_at
+                                                        }
                                                     />
                                                 )}
                                             </div>
@@ -755,11 +785,16 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.left_at
                                                                     ? new Date(
-                                                                        convertForTimezone(stop, stop.left_at)
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.left_at,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
-                                                            timezone={getTimezone(stop)}
+                                                            timezone={getTimezone(
+                                                                stop,
+                                                            )}
                                                             onChange={(
                                                                 e:
                                                                     | Date
@@ -773,7 +808,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     left_at:
                                                                         e?.toISOString() ||
@@ -788,19 +823,21 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.left_at`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.left_at`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
-                                                        timezone={getTimezone(stop)}
+                                                        timezone={getTimezone(
+                                                            stop,
+                                                        )}
                                                         datetime={stop.left_at}
                                                     />
                                                 )}
@@ -825,7 +862,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             special_instructions:
                                                                 e.target.value,
@@ -839,15 +876,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.special_instructions`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.special_instructions`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <p>
