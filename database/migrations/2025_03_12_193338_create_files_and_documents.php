@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('folder_name')->nullable();
             $table->morphs('documentable');
             $table->json('metadata')->nullable();
+            $table->foreignId('uploaded_by')->constrained('users');
             $table->timestampsTz();
             $table->softDeletesTz();
         });

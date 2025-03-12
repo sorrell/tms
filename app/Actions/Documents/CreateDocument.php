@@ -3,9 +3,11 @@
 namespace App\Actions\Documents;
 
 use App\Enums\Documentable;
+use App\Http\Resources\DocumentResource;
 use App\Models\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -37,9 +39,20 @@ class CreateDocument
             'documentable_id' => $documentable->id,
             'documentable_type' => $documentable->getMorphClass(),
             'path' => $path,
+            'uploaded_by' => Auth::user()?->id,
         ]);
 
         return $document;
+    }
+
+    public function htmlResponse(Document $document)
+    {
+        return redirect()->back()->with('success', 'Document created successfully');
+    }
+
+    public function jsonResponse(Document $document)
+    {
+        return response()->json(DocumentResource::make($document));
     }
 
     public function asController(ActionRequest $request, string $documentableType, int $documentableId)
