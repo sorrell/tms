@@ -1,3 +1,4 @@
+import DocumentsList from '@/Components/Documents/DocumentsList';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
@@ -12,7 +13,6 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
-import DocumentsList from '@/Components/Documents/DocumentsList';
 
 export default function Show({
     shipment,

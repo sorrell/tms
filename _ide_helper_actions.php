@@ -202,6 +202,22 @@ class DeleteCustomerFacility
 class UpdateCustomer
 {
 }
+namespace App\Actions\Documents;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static dispatchSync(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static dispatchNow(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static dispatchAfterResponse(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static mixed run(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ */
+class CreateDocument
+{
+}
 namespace App\Actions\Facilities;
 
 /**

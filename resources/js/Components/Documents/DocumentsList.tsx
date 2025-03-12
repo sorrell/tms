@@ -1,20 +1,20 @@
-import { Document } from "@/types";
-import { TreeView } from "@/Components/tree-view";
-import { useForm } from "@inertiajs/react";
-import FileUpload, { FileUploadRef } from "@/Components/FileUpload";
-import { Button } from "@/Components/ui/button";
-import { useRef } from "react";
+import FileUpload, { FileUploadRef } from '@/Components/FileUpload';
+import { TreeView } from '@/Components/tree-view';
+import { Button } from '@/Components/ui/button';
+import { Document } from '@/types';
+import { useForm } from '@inertiajs/react';
 import {
     File,
-    FileText,
-    FileImage,
-    FileVideo,
+    FileArchive,
     FileAudio,
     FileCode,
+    FileImage,
+    FileJson,
     FileSpreadsheet,
-    FileArchive,
-    FileJson
-} from "lucide-react";
+    FileText,
+    FileVideo,
+} from 'lucide-react';
+import { useRef } from 'react';
 
 interface DocumentsListProps {
     documents: Document[];
@@ -36,11 +36,15 @@ export default function DocumentsList({
         return {
             id: doc.id.toString(),
             name: doc.name,
-            icon: icon
+            icon: icon,
         };
     });
 
-    const { data: fileUploadData, setData: setFileUploadData, post } = useForm<{
+    const {
+        data: fileUploadData,
+        setData: setFileUploadData,
+        post,
+    } = useForm<{
         file: File | null;
         folder_name: string | null;
     }>({
@@ -65,19 +69,26 @@ export default function DocumentsList({
             <div>
                 <TreeView data={documentData} />
             </div>
-            <form onSubmit={handleFileUpload} className="flex flex-col gap-2 w-fit mx-auto">
+            <form
+                onSubmit={handleFileUpload}
+                className="mx-auto flex w-fit flex-col gap-2"
+            >
                 <FileUpload
                     ref={fileUploadRef}
                     onFileChange={(file) => setFileUploadData('file', file)}
                     initialPreview={fileUploadData.file?.name}
                 />
-                <Button disabled={!fileUploadData.file} className="w-fit mx-auto" type="submit">Upload</Button>
+                <Button
+                    disabled={!fileUploadData.file}
+                    className="mx-auto w-fit"
+                    type="submit"
+                >
+                    Upload
+                </Button>
             </form>
-
         </div>
     );
 }
-
 
 function getDocumentIcon(extension: string) {
     switch (extension) {
