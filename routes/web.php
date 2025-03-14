@@ -130,7 +130,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::name('documents.')->prefix('documents')->group(function () {
         Route::post('/', CreateDocument::class)->name('store');
-        Route::put('/{document', UpdateDocument::class)->name('update');
+        Route::put('/{document}', UpdateDocument::class)->name('update');
         Route::delete('/{document}', DeleteDocument::class)->name('destroy');
         Route::get('/{document}', GetDocument::class)->name('show');
     });

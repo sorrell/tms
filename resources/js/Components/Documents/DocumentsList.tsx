@@ -38,10 +38,12 @@ export default function DocumentsList({
     const documentData: TreeDataItem[] =
         folders?.map((folder) => {
             const data = {
-                id: folder.id ?? folder.name,
+                id: `folder-${folder.id ?? folder.name}`,
                 name: folder.name,
                 icon: Folder,
                 openIcon: FolderOpen,
+                draggable: folder.id ? true : false,
+                droppable: true
             } as TreeDataItem;
 
             const folderDocs = remainingDocuments.filter(
@@ -92,10 +94,57 @@ export default function DocumentsList({
             },
         });
     };
+
+    const handleDragAndDrop = (
+        sourceItem: TreeDataItem,
+        targetItem: TreeDataItem
+    ) => {
+        console.log(sourceItem, targetItem);
+
+        let targetType = targetItem.id.startsWith('document-') ? 'document' : 'folder';
+        let targetId = targetItem.id.replace(/^(document|folder)-/, '');
+
+        let targetFolder = '';
+        switch(targetType){
+            case 'document':
+                targetFolder = documents.find(doc => doc.id.toString() == targetId)?.folder_name ?? '';
+                break;
+            case 'folder':
+                // TODO - this might break in the future if the name
+                // gets changed for front end showing or something
+                targetFolder = targetItem.name;
+                break;
+            default:
+                console.error("Failed to find a folder");
+        }
+
+        let sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
+        fetch(route('documents.update', sourceId), {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                folder_name: targetFolder
+            })
+        }).then(response => {
+            if (response.ok) {
+                // Refresh documents or handle success
+                console.log('Document moved successfully');
+                
+            } else {
+                console.error('Failed to move document');
+            }
+        }).catch(error => {
+            console.error('Error moving document:', error);
+        });
+
+    };
+
     return (
         <div>
             <div>
-                <TreeView data={documentData} />
+                <TreeView data={documentData} onDocumentDrag={handleDragAndDrop} />
             </div>
             <form
                 onSubmit={handleFileUpload}
@@ -192,10 +241,12 @@ function documentToTreeDataItem(doc: Document) {
     const icon = getDocumentIcon(extension);
 
     return {
-        id: doc.id.toString(),
+        id: `document-${doc.id}`,
         name: doc.name,
         icon: icon,
         actions: undefined,
         selectedIcon: undefined,
+        draggable: true,
+        droppable: false,
     } as TreeDataItem;
 }

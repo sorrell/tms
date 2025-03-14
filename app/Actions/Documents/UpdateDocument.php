@@ -43,7 +43,7 @@ class UpdateDocument
 
         return $this->handle(
             document: $document,
-            fileName: $request->file('file')->getClientOriginalName(),
+            fileName: $request->file('file_name'),
             folderName: $request->input('folder_name'),
         );
     }
@@ -51,7 +51,7 @@ class UpdateDocument
     public function rules()
     {
         return [
-            'file' => 'required|file',
+            'file_name' => 'nullable|string|max:255',
             'folder_name' => 'nullable|string|max:255',
         ];
     }
