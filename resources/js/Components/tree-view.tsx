@@ -43,6 +43,7 @@ type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
     defaultNodeIcon?: any;
     defaultLeafIcon?: any;
     onDocumentDrag?: (sourceItem: TreeDataItem, targetItem: TreeDataItem) => void;
+    onDocumentDragStart?: (sourceItem: TreeDataItem | undefined) => void;
 };
 
 const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
@@ -56,6 +57,7 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
             defaultNodeIcon,
             className,
             onDocumentDrag,
+            onDocumentDragStart,
             ...props
         },
         ref,
@@ -78,6 +80,7 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
 
         const handleDragStart = React.useCallback((item: TreeDataItem) => {
             setDraggedItem(item);
+            onDocumentDragStart?.(item);
         }, []);
 
         const handleDrop = React.useCallback((targetItem: TreeDataItem) => {
@@ -85,6 +88,7 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
                 onDocumentDrag(draggedItem, targetItem);
             }
             setDraggedItem(null);
+            onDocumentDragStart?.(undefined);
         }, [draggedItem, onDocumentDrag]);
 
         const expandedItemIds = React.useMemo(() => {

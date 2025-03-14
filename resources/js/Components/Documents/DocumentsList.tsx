@@ -68,16 +68,6 @@ export default function DocumentsList({
 
     documentData?.push(...remainingDocuments.map(documentToTreeDataItem));
 
-    documentData.push({
-        id: 'trash',
-        name: 'trashcan',
-        icon: Trash2,
-        droppable: true,
-        draggable: false,
-        className: "border-dashed border-2 w-fit rounded text-muted-foreground"
-
-    } as TreeDataItem);
-
     const {
         data: fileUploadData,
         setData: setFileUploadData,
@@ -183,13 +173,26 @@ export default function DocumentsList({
         });
     };
 
+    const [activeDragItem, setActiveDragItem] = useState<TreeDataItem>()
+    const handleDragAndDropStart = (sourceItem : TreeDataItem | undefined) => {
+        setActiveDragItem(sourceItem);
+    }
+
     return (
         <div>
             <div>
                 <TreeView
                     data={documentData}
                     onDocumentDrag={handleDragAndDrop}
+                    onDocumentDragStart={handleDragAndDropStart}
                 />
+                <div 
+                    className='p-2 text-sm flex gap-1 border-dashed border-2 w-fit text-muted-foreground'
+                    onDrop={(e) => { activeDragItem && handleDragAndDrop(activeDragItem, { id: 'trash', name: 'trash'})}}
+                    >
+                    <Trash2 className='w-4 h-4 inline'/>
+                    <span className=''>trashcan</span>
+                </div>
             </div>
             <form
                 onSubmit={handleFileUpload}
