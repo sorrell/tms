@@ -43,7 +43,7 @@ export default function DocumentsList({
                 icon: Folder,
                 openIcon: FolderOpen,
                 draggable: folder.id ? true : false,
-                droppable: true
+                droppable: true,
             } as TreeDataItem;
 
             const folderDocs = remainingDocuments.filter(
@@ -97,16 +97,19 @@ export default function DocumentsList({
 
     const handleDragAndDrop = (
         sourceItem: TreeDataItem,
-        targetItem: TreeDataItem
+        targetItem: TreeDataItem,
     ) => {
-
-        let targetType = targetItem.id.startsWith('document-') ? 'document' : 'folder';
-        let targetId = targetItem.id.replace(/^(document|folder)-/, '');
+        const targetType = targetItem.id.startsWith('document-')
+            ? 'document'
+            : 'folder';
+        const targetId = targetItem.id.replace(/^(document|folder)-/, '');
 
         let targetFolder = '';
         switch (targetType) {
             case 'document':
-                targetFolder = documents.find(doc => doc.id.toString() == targetId)?.folder_name ?? '';
+                targetFolder =
+                    documents.find((doc) => doc.id.toString() == targetId)
+                        ?.folder_name ?? '';
                 break;
             case 'folder':
                 // TODO - this might break in the future if the name
@@ -114,9 +117,9 @@ export default function DocumentsList({
                 targetFolder = targetId;
                 break;
             default:
-                console.error("Failed to find a folder");
+                console.error('Failed to find a folder');
         }
-        let sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
+        const sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
 
         // Make sure data is properly set before sending the request
         const dataToSend = {
@@ -124,21 +127,20 @@ export default function DocumentsList({
         };
 
         router.put(route('documents.update', sourceId), dataToSend, {
-            onSuccess: (e) => {
-            },
             onError: (e) => {
-                console.error("Error", e);
+                console.error('Error', e);
             },
             preserveScroll: true,
         });
-
-
     };
 
     return (
         <div>
             <div>
-                <TreeView data={documentData} onDocumentDrag={handleDragAndDrop} />
+                <TreeView
+                    data={documentData}
+                    onDocumentDrag={handleDragAndDrop}
+                />
             </div>
             <form
                 onSubmit={handleFileUpload}

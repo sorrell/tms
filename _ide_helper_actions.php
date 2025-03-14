@@ -247,15 +247,15 @@ class GetDocument
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static dispatchSync(\App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static dispatchNow(\App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static dispatchAfterResponse(\App\Models\Documents\Document $document, string $fileName, string $folderName)
- * @method static mixed run(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static dispatchSync(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static dispatchNow(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static dispatchAfterResponse(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
+ * @method static mixed run(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
  */
 class UpdateDocument
 {
