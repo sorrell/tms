@@ -189,6 +189,7 @@ export default function DocumentsList({
                 <div 
                     className='p-2 text-sm flex gap-1 border-dashed border-2 w-fit text-muted-foreground'
                     onDrop={(e) => { activeDragItem && handleDragAndDrop(activeDragItem, { id: 'trash', name: 'trash'})}}
+                    data-tree-item-id={'trash'}
                     >
                     <Trash2 className='w-4 h-4 inline'/>
                     <span className=''>trashcan</span>

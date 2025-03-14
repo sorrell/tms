@@ -5,6 +5,7 @@
 
 import { cn } from '@/lib/utils';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
+import { createDropdownMenuScope } from '@radix-ui/react-dropdown-menu';
 import { cva } from 'class-variance-authority';
 import { ChevronRight } from 'lucide-react';
 import React from 'react';
@@ -67,6 +68,9 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
         >(initialSelectedItemId);
         
         const [draggedItem, setDraggedItem] = React.useState<TreeDataItem | null>(null);
+        const [touchDragActive, setTouchDragActive] = React.useState(false);
+        const [touchDragPosition, setTouchDragPosition] = React.useState({ x: 0, y: 0 });
+        const touchTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
         const handleSelectChange = React.useCallback(
             (item: TreeDataItem | undefined) => {
@@ -88,8 +92,173 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
                 onDocumentDrag(draggedItem, targetItem);
             }
             setDraggedItem(null);
+            setTouchDragActive(false);
             onDocumentDragStart?.(undefined);
         }, [draggedItem, onDocumentDrag]);
+
+        const handleTouchMove = React.useCallback((e: TouchEvent) => {
+            if (touchDragActive && draggedItem) {
+                e.preventDefault();
+                setTouchDragPosition({
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                });
+            }
+        }, [touchDragActive, draggedItem]);
+
+        // Add function to find the element under the touch position
+        const findItemUnderTouch = React.useCallback((x: number, y: number): TreeDataItem | null => {
+            // Get all tree nodes and leaves (items that could be drop targets)
+            const elements = document.querySelectorAll('[data-tree-item-id]');
+
+            // Find element under the point
+            for (let i = 0; i < elements.length; i++) {
+                const rect = elements[i].getBoundingClientRect();
+                if (
+                    x >= rect.left && 
+                    x <= rect.right && 
+                    y >= rect.top && 
+                    y <= rect.bottom
+                ) {
+
+                    // Get the item id from data attribute
+                    const itemId = elements[i].getAttribute('data-tree-item-id');
+
+                    if (itemId) {
+                        // Find the item in our data
+                        const findItemById = (items: TreeDataItem[] | TreeDataItem): TreeDataItem | null => {
+                            if (items instanceof Array) {
+                                for (const item of items) {
+                                    if (item.id === itemId) return item;
+                                    if (item.children) {
+                                        const found = findItemById(item.children);
+                                        if (found) return found;
+                                    }
+                                }
+                            } else {
+                                if (items.id === itemId) return items;
+                                if (items.children) {
+                                    return findItemById(items.children);
+                                }
+                            }
+                            return { id: itemId, name: itemId };
+                        };
+                        
+                        return findItemById(data);
+                    }
+                    break;
+                }
+            }
+            
+            // If no tree item found, return the root container
+            return { id: '', name: 'root' };
+        }, [data]);
+
+        React.useEffect(() => {
+            if (touchDragActive) {
+                document.addEventListener('touchmove', handleTouchMove, { passive: false });
+                
+                // Add handler for touchcancel as well
+                const handleTouchCancel = () => {
+                    setTouchDragActive(false);
+                    setDraggedItem(null);
+                    if (touchTimeoutRef.current) {
+                        clearTimeout(touchTimeoutRef.current);
+                        touchTimeoutRef.current = null;
+                    }
+                    onDocumentDragStart?.(undefined);
+                };
+                
+                document.addEventListener('touchcancel', handleTouchCancel);
+                
+                const dragIndicator = document.createElement('div');
+                dragIndicator.id = 'touch-drag-indicator';
+                dragIndicator.innerText = draggedItem?.name || '';
+                dragIndicator.style.position = 'fixed';
+                dragIndicator.style.left = `${touchDragPosition.x}px`;
+                dragIndicator.style.top = `${touchDragPosition.y}px`;
+                dragIndicator.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                dragIndicator.style.color = 'white';
+                dragIndicator.style.padding = '8px';
+                dragIndicator.style.borderRadius = '4px';
+                dragIndicator.style.pointerEvents = 'none';
+                dragIndicator.style.zIndex = '9999';
+                dragIndicator.style.transform = 'translate(-50%, -50%)';
+                document.body.appendChild(dragIndicator);
+                
+                return () => {
+                    document.removeEventListener('touchmove', handleTouchMove);
+                    document.removeEventListener('touchcancel', handleTouchCancel);
+                    const indicator = document.getElementById('touch-drag-indicator');
+                    if (indicator) {
+                        document.body.removeChild(indicator);
+                    }
+                    if (touchTimeoutRef.current) {
+                        clearTimeout(touchTimeoutRef.current);
+                    }
+                };
+            }
+        }, [touchDragActive, handleTouchMove, draggedItem, touchDragPosition, onDocumentDragStart]);
+
+        const handleTouchStart = React.useCallback((item: TreeDataItem, e: React.TouchEvent) => {
+            if (item.draggable) {
+                if (touchTimeoutRef.current) {
+                    clearTimeout(touchTimeoutRef.current);
+                }
+                
+                // Add a touch move handler that clears the timer to prevent accidental drag during scrolling
+                const touchStartY = e.touches[0].clientY;
+                const clearTouchTimerOnScroll = (moveEvent: TouchEvent) => {
+                    const touchMoveY = moveEvent.touches[0].clientY;
+                    // If scrolled more than 10px, cancel the potential drag
+                    if (Math.abs(touchMoveY - touchStartY) > 10) {
+                        if (touchTimeoutRef.current) {
+                            clearTimeout(touchTimeoutRef.current);
+                            touchTimeoutRef.current = null;
+                        }
+                        document.removeEventListener('touchmove', clearTouchTimerOnScroll);
+                    }
+                };
+                
+                document.addEventListener('touchmove', clearTouchTimerOnScroll, { passive: true });
+                
+                // Set a timeout to detect long press (500ms)
+                touchTimeoutRef.current = setTimeout(() => {
+                    setDraggedItem(item);
+                    setTouchDragActive(true);
+                    setTouchDragPosition({
+                        x: e.touches[0].clientX,
+                        y: e.touches[0].clientY
+                    });
+                    document.removeEventListener('touchmove', clearTouchTimerOnScroll);
+                    onDocumentDragStart?.(item);
+                }, 500);
+            }
+        }, [onDocumentDragStart]);
+
+        const handleTouchEnd = React.useCallback((e: React.TouchEvent, originalItem: TreeDataItem) => {
+            // Clear the timeout to prevent drag activation after touch end
+            if (touchTimeoutRef.current) {
+                clearTimeout(touchTimeoutRef.current);
+                touchTimeoutRef.current = null;
+            }
+            
+            // If we're in drag mode, find the item under the touch position
+            if (touchDragActive && draggedItem) {
+                // Get the touch coordinates
+                const x = e.changedTouches[0].clientX;
+                const y = e.changedTouches[0].clientY;
+                
+                // Find the item under the touch
+                const targetItem = findItemUnderTouch(x, y);
+                
+                if (targetItem) {
+                    handleDrop(targetItem);
+                } else {
+                    handleDrop({id: '', name: 'root'});
+                }
+            }
+        }, [touchDragActive, draggedItem, handleDrop, findItemUnderTouch]);
 
         const expandedItemIds = React.useMemo(() => {
             if (!initialSelectedItemId) {
@@ -136,11 +305,29 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
                     handleDragStart={handleDragStart}
                     handleDrop={handleDrop}
                     draggedItem={draggedItem}
+                    handleTouchStart={handleTouchStart}
+                    handleTouchEnd={handleTouchEnd}
+                    touchDragActive={touchDragActive}
                     {...props}
                 />
                 <div
                     className='w-full h-[48px]'
-                    onDrop={(e) => { handleDrop({id: '', name: 'parent_div'})}}>
+                    data-tree-item-id="root_bottom"
+                    onDrop={(e) => { handleDrop({id: '', name: 'parent_div'})}}
+                    onTouchEnd={(e) => {
+                        if (touchDragActive && draggedItem) {
+                            // Use the findItemUnderTouch to get the actual target
+                            const x = e.changedTouches[0].clientX;
+                            const y = e.changedTouches[0].clientY;
+                            const targetItem = findItemUnderTouch(x, y);
+                            
+                            if (targetItem) {
+                                handleDrop(targetItem);
+                            } else {
+                                handleDrop({id: '', name: 'root_bottom'});
+                            }
+                        }
+                    }}>
 
                 </div>
             </div>
@@ -158,6 +345,9 @@ type TreeItemProps = TreeProps & {
     handleDragStart?: (item: TreeDataItem) => void;
     handleDrop?: (item: TreeDataItem) => void;
     draggedItem: TreeDataItem | null;
+    handleTouchStart?: (item: TreeDataItem, e: React.TouchEvent) => void;
+    handleTouchEnd?: (e: React.TouchEvent, item: TreeDataItem) => void;
+    touchDragActive?: boolean;
 };
 
 const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
@@ -173,6 +363,9 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
             handleDragStart,
             handleDrop,
             draggedItem,
+            handleTouchStart,
+            handleTouchEnd,
+            touchDragActive,
             ...props
         },
         ref,
@@ -196,6 +389,9 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                                     handleDragStart={handleDragStart}
                                     handleDrop={handleDrop}
                                     draggedItem={draggedItem}
+                                    handleTouchStart={handleTouchStart}
+                                    handleTouchEnd={handleTouchEnd}
+                                    touchDragActive={touchDragActive}
                                 />
                             ) : (
                                 <TreeLeaf
@@ -206,6 +402,9 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                                     handleDragStart={handleDragStart}
                                     handleDrop={handleDrop}
                                     draggedItem={draggedItem}
+                                    handleTouchStart={handleTouchStart}
+                                    handleTouchEnd={handleTouchEnd}
+                                    touchDragActive={touchDragActive}
                                 />
                             )}
                         </li>
@@ -227,6 +426,9 @@ const TreeNode = ({
     handleDragStart,
     handleDrop,
     draggedItem,
+    handleTouchStart,
+    handleTouchEnd,
+    touchDragActive,
 }: {
     item: TreeDataItem;
     handleSelectChange: (item: TreeDataItem | undefined) => void;
@@ -237,6 +439,9 @@ const TreeNode = ({
     handleDragStart?: (item: TreeDataItem) => void;
     handleDrop?: (item: TreeDataItem) => void;
     draggedItem: TreeDataItem | null;
+    handleTouchStart?: (item: TreeDataItem, e: React.TouchEvent) => void;
+    handleTouchEnd?: (e: React.TouchEvent, item: TreeDataItem) => void;
+    touchDragActive?: boolean;
 }) => {
     const [value, setValue] = React.useState(
         expandedItemIds.includes(item.id) ? [item.id] : [],
@@ -269,6 +474,18 @@ const TreeNode = ({
         handleDrop?.(item);
     };
 
+    const onTouchStart = (e: React.TouchEvent) => {
+        handleTouchStart?.(item, e);
+    };
+
+    const onTouchEnd = (e: React.TouchEvent) => {
+        handleTouchEnd?.(e, item);
+        if (touchDragActive && draggedItem && draggedItem.id !== item.id && item.droppable !== false) {
+            setIsDragOver(true);
+            setTimeout(() => setIsDragOver(false), 200);
+        }
+    };
+
     return (
         <AccordionPrimitive.Root
             type="multiple"
@@ -283,6 +500,7 @@ const TreeNode = ({
                         isDragOver && dragOverVariants(),
                         item.className,
                     )}
+                    data-tree-item-id={item.id}
                     onClick={() => {
                         handleSelectChange(item);
                         item.onClick?.();
@@ -292,6 +510,8 @@ const TreeNode = ({
                     onDragOver={onDragOver}
                     onDragLeave={onDragLeave}
                     onDrop={onDrop}
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
                 >
                     <TreeIcon
                         item={item}
@@ -315,6 +535,9 @@ const TreeNode = ({
                         handleDragStart={handleDragStart}
                         handleDrop={handleDrop}
                         draggedItem={draggedItem}
+                        handleTouchStart={handleTouchStart}
+                        handleTouchEnd={handleTouchEnd}
+                        touchDragActive={touchDragActive}
                     />
                 </AccordionContent>
             </AccordionPrimitive.Item>
@@ -332,6 +555,9 @@ const TreeLeaf = React.forwardRef<
         handleDragStart?: (item: TreeDataItem) => void;
         handleDrop?: (item: TreeDataItem) => void;
         draggedItem: TreeDataItem | null;
+        handleTouchStart?: (item: TreeDataItem, e: React.TouchEvent) => void;
+        handleTouchEnd?: (e: React.TouchEvent, item: TreeDataItem) => void;
+        touchDragActive?: boolean;
     }
 >(
     (
@@ -344,6 +570,9 @@ const TreeLeaf = React.forwardRef<
             handleDragStart,
             handleDrop,
             draggedItem,
+            handleTouchStart,
+            handleTouchEnd,
+            touchDragActive,
             ...props
         },
         ref,
@@ -376,6 +605,18 @@ const TreeLeaf = React.forwardRef<
             handleDrop?.(item);
         };
 
+        const onTouchStart = (e: React.TouchEvent) => {
+            handleTouchStart?.(item, e);
+        };
+
+        const onTouchEnd = (e: React.TouchEvent) => {
+            handleTouchEnd?.(e, item);
+            if (touchDragActive && draggedItem && draggedItem.id !== item.id && item.droppable !== false) {
+                setIsDragOver(true);
+                setTimeout(() => setIsDragOver(false), 200);
+            }
+        };
+
         return (
             <div
                 ref={ref}
@@ -387,6 +628,7 @@ const TreeLeaf = React.forwardRef<
                     isDragOver && dragOverVariants(),
                     item.className,
                 )}
+                data-tree-item-id={item.id}
                 onClick={() => {
                     handleSelectChange(item);
                     item.onClick?.();
@@ -396,6 +638,8 @@ const TreeLeaf = React.forwardRef<
                 onDragOver={onDragOver}
                 onDragLeave={onDragLeave}
                 onDrop={onDrop}
+                onTouchStart={onTouchStart}
+                onTouchEnd={onTouchEnd}
                 {...props}
             >
                 <TreeIcon
