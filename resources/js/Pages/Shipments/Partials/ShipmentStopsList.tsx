@@ -54,14 +54,21 @@ export default function ShipmentStopsList({
             .map((stop) => stop.facility?.location?.address_zipcode ?? '')
             .filter(Boolean);
 
-        fetch(route('timezones.zipcode', { zipcodes }), {
-            method: 'GET',
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setTimezones(data);
-            });
-    }, [stops, setTimezones]);
+        // if any of the zipcodes are new, fetch the timezones
+        const newZipcodes = zipcodes.filter((zipcode) => !timezones[zipcode]);
+        if (newZipcodes.length > 0) {
+            fetch(route('timezones.zipcode', { zipcodes: newZipcodes }), {
+                method: 'GET',
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setTimezones((prev) => ({
+                        ...prev,
+                        ...data,
+                    }));
+                });
+        }
+    }, [stops, setTimezones, timezones]);
 
     const updateStops = () => {
         patch(

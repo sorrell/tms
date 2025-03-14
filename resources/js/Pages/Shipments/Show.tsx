@@ -1,3 +1,4 @@
+import DocumentsList from '@/Components/Documents/DocumentsList';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
@@ -119,14 +120,14 @@ export default function Show({
                             <TabsContent value="documents">
                                 <Card>
                                     <CardContent className="pt-6">
-                                        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                                            {[1, 2, 3, 4].map((doc) => (
-                                                <Skeleton
-                                                    key={doc}
-                                                    className="h-40 w-full"
-                                                />
-                                            ))}
-                                        </div>
+                                        <DocumentsList
+                                            documents={shipment.documents ?? []}
+                                            folders={
+                                                shipment.document_folders ?? []
+                                            }
+                                            documentableType="shipment"
+                                            documentableId={shipment.id}
+                                        />
                                     </CardContent>
                                 </Card>
                             </TabsContent>

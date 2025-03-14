@@ -170,7 +170,9 @@ export function DateTimePicker({
         'month' | 'year' | false
     >(false);
     const initDate = useMemo(
-        () => new TZDate(value || new Date(), timezone),
+        () => {
+            return new TZDate(value || new Date(), timezone)
+        },
         [value, timezone],
     );
 
@@ -191,29 +193,51 @@ export function DateTimePicker({
 
     const onDayChanged = useCallback(
         (d: Date) => {
-            d.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
-            if (min && d < min) {
-                d.setHours(min.getHours(), min.getMinutes(), min.getSeconds());
-            }
-            if (max && d > max) {
-                d.setHours(max.getHours(), max.getMinutes(), max.getSeconds());
-            }
-            setDate(d);
+            // This was causing a timezone conversion bug before
+            // so it is commented out for now, but left as reference for max date pick 
+            // if we need it back later
+            //
+            // d.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
+            // if (min && d < min) {
+            //     d.setHours(min.getHours(), min.getMinutes(), min.getSeconds());
+            // }
+            // if (max && d > max) {
+            //     d.setHours(max.getHours(), max.getMinutes(), max.getSeconds());
+            // }
+            // setDate(d);
+
+
+
+            // We are going to alter the existing date instead,
+            // keeping our conversion correct
+            // then setting that as new date to trigger a re-render
+            date.setDate(d.getDate());
+            date.setMonth(d.getMonth());
+            date.setFullYear(d.getFullYear());
+            setDate(new Date(date));
         },
-        [setDate, setMonth],
+        [setDate, setMonth, date, timezone],
     );
     const onSubmit = useCallback(() => {
         
         // i.e. PST
-        const timezoneShorthand = new Date().toLocaleTimeString('en-us', {timeZoneName: 'short', timeZone: timezone}).split(' ')[2];
+        // Getting the timezone shorthand for the given date
+        // based on the timezone region we want. i.e. America/New_york can be EST or EDT
+        // so this gives us the right one.
+        const timezoneShorthand = new Date(date.toISOString())
+            .toLocaleTimeString('en-us', {timeZoneName: 'short', timeZone: timezone})
+            .split(' ')[2];
 
+        // Now we form a new date string with the timezone we need
         let newDateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}, ${date.getHours() % 12}:${date.getMinutes()}:${date.getSeconds()} ${date.getHours() < 12 ? 'AM' : 'PM'} ${timezoneShorthand}`;
         
-        // the exact time we see in the input is what we get here
+        // Now when we create a date, it will the correct time in the timezone we need
+        // NOTE - The date you'll see here is CASTED to your local timezone,
+        // buf if you convert it back to the timezone you want, it will be the correct time
         let newDate = new Date(
             newDateString
         );
-        
+
         onChange(newDate);
         setOpen(false);
     }, [date, onChange]);
@@ -238,11 +262,12 @@ export function DateTimePicker({
 
     useEffect(() => {
         if (open) {
+
             setDate(initDate);
             setMonth(initDate);
             setMonthYearPicker(false);
         }
-    }, [open, initDate]);
+    }, [open, initDate]); 
 
     const displayValue = useMemo(() => {
         if (!open && !value) return value;

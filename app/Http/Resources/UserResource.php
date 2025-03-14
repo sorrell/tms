@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\Resources\HasDates;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class UserResource extends JsonResource
 {
+    use HasDates;
     /**
      * Transform the resource into an array.
      *
@@ -22,8 +24,8 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->asDate($this->created_at),
+            'updated_at' => $this->asDate($this->updated_at),
             'profile_photo_url' => $this->profile_photo_url,
             'organizations' => $this->whenLoaded('organizations', function () {
                 return $this->organizations;
