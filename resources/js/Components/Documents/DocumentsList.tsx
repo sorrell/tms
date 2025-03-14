@@ -15,6 +15,7 @@ import {
     FileVideo,
     Folder,
     FolderOpen,
+    PencilIcon,
     Trash2,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -173,6 +174,20 @@ export default function DocumentsList({
         });
     };
 
+    const updateDocumentName = (sourceItem: TreeDataItem, name: string) => {
+        const sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
+        router.put(route('documents.update', sourceId), 
+        {
+            file_name: name
+        }, 
+        {
+            onError: (e) => {
+                console.error('Error', e);
+            },
+            preserveScroll: true,
+        });
+    };
+
     const [activeDragItem, setActiveDragItem] = useState<TreeDataItem>()
     const handleDragAndDropStart = (sourceItem : TreeDataItem | undefined) => {
         setActiveDragItem(sourceItem);
@@ -185,6 +200,7 @@ export default function DocumentsList({
                     data={documentData}
                     onDocumentDrag={handleDragAndDrop}
                     onDocumentDragStart={handleDragAndDropStart}
+                    onEditName={updateDocumentName}
                 />
                 <div 
                     className='p-2 text-sm flex gap-1 border-dashed border-2 w-fit text-muted-foreground'
@@ -307,7 +323,7 @@ function documentToTreeDataItem(doc: Document) {
         id: `document-${doc.id}`,
         name: doc.name,
         icon: icon,
-        actions: undefined,
+        canEditName: true,
         selectedIcon: undefined,
         draggable: true,
         droppable: false,

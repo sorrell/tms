@@ -7,8 +7,10 @@ import { cn } from '@/lib/utils';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { createDropdownMenuScope } from '@radix-ui/react-dropdown-menu';
 import { cva } from 'class-variance-authority';
-import { ChevronRight } from 'lucide-react';
-import React from 'react';
+import { Check, ChevronRight, PencilIcon, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 const treeVariants = cva(
     'group hover:before:opacity-100 before:absolute before:rounded-lg before:left-0 px-2 before:w-full before:opacity-0 before:bg-accent/70 before:h-[2rem] before:-z-10',
@@ -34,6 +36,7 @@ interface TreeDataItem {
     draggable?: boolean;
     droppable?: boolean;
     className?: string;
+    canEditName?: boolean;
 }
 
 type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -45,7 +48,10 @@ type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
     defaultLeafIcon?: any;
     onDocumentDrag?: (sourceItem: TreeDataItem, targetItem: TreeDataItem) => void;
     onDocumentDragStart?: (sourceItem: TreeDataItem | undefined) => void;
+    onEditName?: EditNameProps;
 };
+
+type EditNameProps = (sourceItem: TreeDataItem, name: string) => void;
 
 const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
     (
@@ -348,6 +354,7 @@ type TreeItemProps = TreeProps & {
     handleTouchStart?: (item: TreeDataItem, e: React.TouchEvent) => void;
     handleTouchEnd?: (e: React.TouchEvent, item: TreeDataItem) => void;
     touchDragActive?: boolean;
+    onEditName?: EditNameProps;
 };
 
 const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
@@ -366,6 +373,8 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
             handleTouchStart,
             handleTouchEnd,
             touchDragActive,
+            onEditName,
+            
             ...props
         },
         ref,
@@ -392,6 +401,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                                     handleTouchStart={handleTouchStart}
                                     handleTouchEnd={handleTouchEnd}
                                     touchDragActive={touchDragActive}
+                                    onEditName={onEditName}
                                 />
                             ) : (
                                 <TreeLeaf
@@ -405,6 +415,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                                     handleTouchStart={handleTouchStart}
                                     handleTouchEnd={handleTouchEnd}
                                     touchDragActive={touchDragActive}
+                                    onEditName={onEditName}
                                 />
                             )}
                         </li>
@@ -429,6 +440,7 @@ const TreeNode = ({
     handleTouchStart,
     handleTouchEnd,
     touchDragActive,
+    onEditName,
 }: {
     item: TreeDataItem;
     handleSelectChange: (item: TreeDataItem | undefined) => void;
@@ -442,6 +454,7 @@ const TreeNode = ({
     handleTouchStart?: (item: TreeDataItem, e: React.TouchEvent) => void;
     handleTouchEnd?: (e: React.TouchEvent, item: TreeDataItem) => void;
     touchDragActive?: boolean;
+    onEditName?: EditNameProps;
 }) => {
     const [value, setValue] = React.useState(
         expandedItemIds.includes(item.id) ? [item.id] : [],
@@ -519,7 +532,7 @@ const TreeNode = ({
                         isOpen={value.includes(item.id)}
                         default={defaultNodeIcon}
                     />
-                    <span className="truncate text-sm">{item.name}</span>
+                    <ItemNameDisplay item={item} onEditName={onEditName} />
                     <TreeActions isSelected={selectedItemId === item.id}>
                         {item.actions}
                     </TreeActions>
@@ -538,10 +551,54 @@ const TreeNode = ({
                         handleTouchStart={handleTouchStart}
                         handleTouchEnd={handleTouchEnd}
                         touchDragActive={touchDragActive}
+                        onEditName={onEditName}
                     />
                 </AccordionContent>
             </AccordionPrimitive.Item>
         </AccordionPrimitive.Root>
+    );
+};
+const ItemNameDisplay: React.FC<{ 
+    item: TreeDataItem,
+    onEditName?: EditNameProps
+}> = ({ item, onEditName }) => {
+    
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [itemName, setItemName] = useState(item.name);
+
+    if (!item.canEditName) {
+        return <span className="truncate text-sm">{item.name}</span>;
+    }
+
+    if (isEditing) {
+        return (
+            <span className="truncate text-sm flex gap-x-1">
+                <Input 
+                    className="w-fit inline"
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)} 
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            onEditName?.(item, itemName);
+                            setIsEditing(false);
+                        }
+                    }}
+                    />
+                <span className='flex flex-row gap-x-2'>
+                    <Button variant={"ghost"} className='inline text-accent-foreground' onClick={() => { onEditName?.(item, itemName); setIsEditing(false); }}><Check className='w-4 h-4'/></Button>
+                    <Button variant={"ghost"} className='inline text-destructive' onClick={() => { setIsEditing(false); setItemName(item.name); }}><X className='w-4 h-4'/></Button>
+                </span>    
+            </span>    
+        );
+    }
+
+    return (
+        <span className="truncate text-sm">
+            <span className="">{item.name}</span>
+            <Button variant="ghost" className='inline text-muted-foreground h-4 py-1' onClick={() => setIsEditing(true)}>
+                <PencilIcon className='w-2 h-2 m-auto p-0' />
+            </Button>
+        </span>
     );
 };
 
@@ -558,6 +615,7 @@ const TreeLeaf = React.forwardRef<
         handleTouchStart?: (item: TreeDataItem, e: React.TouchEvent) => void;
         handleTouchEnd?: (e: React.TouchEvent, item: TreeDataItem) => void;
         touchDragActive?: boolean;
+        onEditName?: EditNameProps;
     }
 >(
     (
@@ -573,6 +631,7 @@ const TreeLeaf = React.forwardRef<
             handleTouchStart,
             handleTouchEnd,
             touchDragActive,
+            onEditName,
             ...props
         },
         ref,
@@ -647,7 +706,7 @@ const TreeLeaf = React.forwardRef<
                     isSelected={selectedItemId === item.id}
                     default={defaultLeafIcon}
                 />
-                <span className="flex-grow truncate text-sm">{item.name}</span>
+                <ItemNameDisplay item={item} onEditName={onEditName} />
                 <TreeActions isSelected={selectedItemId === item.id}>
                     {item.actions}
                 </TreeActions>
