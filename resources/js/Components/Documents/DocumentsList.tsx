@@ -15,8 +15,10 @@ import {
     FileVideo,
     Folder,
     FolderOpen,
+    Trash2,
 } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 
 interface DocumentsListProps {
     documents: Document[];
@@ -66,6 +68,14 @@ export default function DocumentsList({
 
     documentData?.push(...remainingDocuments.map(documentToTreeDataItem));
 
+    documentData.push({
+        id: 'trash',
+        name: 'Trashcan',
+        icon: Trash2,
+        droppable: true,
+        draggable: false
+    } as TreeDataItem);
+
     const {
         data: fileUploadData,
         setData: setFileUploadData,
@@ -92,13 +102,50 @@ export default function DocumentsList({
                     fileUploadRef.current.reset();
                 }
             },
+            preserveScroll: true,
         });
+    };
+
+    const [deleteDocument, setDeleteDocument] = useState<Document | undefined>();
+    const [showDeleteFileDialog, setshowDeleteFileDialog] = useState<boolean>(false);
+
+    const confirmDeleteFile = (sourceItem: TreeDataItem) => {
+
+        const sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
+        const sourceDocument = documents.find(doc => doc.id.toString() == sourceId);
+
+        if (!sourceDocument) {
+            console.error("failed to find document for source item", sourceItem);
+            return;
+        }
+
+        setDeleteDocument(sourceDocument);
+        setshowDeleteFileDialog(true);
+
+    };
+
+    const submitDeleteFile = () => {
+        router.delete(
+            route('documents.destroy', deleteDocument?.id),
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setshowDeleteFileDialog(false);
+                }
+            }
+        );
     };
 
     const handleDragAndDrop = (
         sourceItem: TreeDataItem,
         targetItem: TreeDataItem,
     ) => {
+
+        if (targetItem.id == 'trash') {
+            confirmDeleteFile(sourceItem);
+            return;
+        }
+
         const targetType = targetItem.id.startsWith('document-')
             ? 'document'
             : 'folder';
@@ -159,6 +206,20 @@ export default function DocumentsList({
                     Upload
                 </Button>
             </form>
+            <Dialog open={showDeleteFileDialog}>
+            <DialogContent>
+                <DialogTitle>
+                    Delete Document?
+                </DialogTitle>
+                <div>
+                    <span className="font-bold underline">{deleteDocument?.name}</span> will be permanently deleted
+                </div>
+                <DialogFooter>
+                    <Button variant={'ghost'} onClick={() => {setshowDeleteFileDialog(false)}} >Cancel</Button>
+                    <Button variant={'destructive'} onClick={submitDeleteFile}>Delete</Button>
+                </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
