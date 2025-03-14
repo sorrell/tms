@@ -6,6 +6,7 @@ use App\Models\Carriers\Carrier;
 use App\Models\Customers\Customer;
 use App\Models\Facility;
 use App\Models\Shipments\Shipment;
+use Exception;
 
 enum Documentable: string
 {
@@ -31,6 +32,7 @@ enum Documentable: string
             Customer::class => self::CUSTOMER,
             Carrier::class => self::CARRIER,
             Facility::class => self::FACILITY,
+            default => throw new Exception('Not found from class name ' . $className)
         };
     }
 

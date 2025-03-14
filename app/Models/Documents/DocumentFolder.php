@@ -11,6 +11,7 @@ class DocumentFolder extends Model
     use HasOrganization, SoftDeletes;
 
     protected $fillable = [
+        'id',
         'organization_id',
         'name',
         'documentable_id',

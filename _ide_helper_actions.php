@@ -205,17 +205,59 @@ class UpdateCustomer
 namespace App\Actions\Documents;
 
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static dispatchSync(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static dispatchNow(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static dispatchAfterResponse(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
- * @method static mixed run(string $documentableType, int $documentableId, string $fileName, ?string $folderName = null, \Illuminate\Http\UploadedFile $file)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static dispatchSync(string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static dispatchNow(string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static dispatchAfterResponse(string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
+ * @method static mixed run(string $documentableType, int $documentableId, string $fileName, \Illuminate\Http\UploadedFile $file, ?string $folderName = null)
  */
 class CreateDocument
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Documents\Document $document)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Documents\Document $document)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Documents\Document $document)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Documents\Document $document)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Documents\Document $document)
+ * @method static dispatchSync(\App\Models\Documents\Document $document)
+ * @method static dispatchNow(\App\Models\Documents\Document $document)
+ * @method static dispatchAfterResponse(\App\Models\Documents\Document $document)
+ * @method static mixed run(\App\Models\Documents\Document $document)
+ */
+class DeleteDocument
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Documents\Document $document)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Documents\Document $document)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Documents\Document $document)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Documents\Document $document)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Documents\Document $document)
+ * @method static dispatchSync(\App\Models\Documents\Document $document)
+ * @method static dispatchNow(\App\Models\Documents\Document $document)
+ * @method static dispatchAfterResponse(\App\Models\Documents\Document $document)
+ * @method static mixed run(\App\Models\Documents\Document $document)
+ */
+class GetDocument
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static dispatchSync(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static dispatchNow(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static dispatchAfterResponse(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ * @method static mixed run(\App\Models\Documents\Document $document, string $fileName, string $folderName)
+ */
+class UpdateDocument
 {
 }
 namespace App\Actions\Facilities;

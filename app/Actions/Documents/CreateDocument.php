@@ -19,8 +19,8 @@ class CreateDocument
         string $documentableType,
         int $documentableId,
         string $fileName,
-        ?string $folderName = null,
         UploadedFile $file,
+        ?string $folderName = null,
     )
     {
 

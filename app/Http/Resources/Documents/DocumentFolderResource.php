@@ -21,16 +21,20 @@ class DocumentFolderResource extends JsonResource
     {
         // If it's a model instance
         if ($this->resource instanceof \App\Models\Documents\DocumentFolder) {
+            /** @var \App\Models\Documents\DocumentFolder $model */
+            $model = $this->resource;
             return [
-                'id' => $this->id,
-                'name' => $this->name,
+                'id' => $model->id,
+                'name' => $model->name,
             ];
         } 
 
         // If it's an enum value
         if ($this->resource instanceof \App\Enums\Documents\DocumentFolder) {
+            /** @var \App\Enums\Documents\DocumentFolder $enum */
+            $enum = $this->resource;
             return [
-                'name' => $this->resource->value
+                'name' => $enum->value
             ];
         }
 

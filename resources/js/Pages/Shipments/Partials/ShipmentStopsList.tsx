@@ -288,7 +288,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             stop_type: value,
                                                         };
@@ -321,21 +321,21 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.type`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.type`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <Avatar>
                                                 <AvatarFallback className="bg-primary p-1 text-white">
                                                     {stop.stop_type ===
-                                                        StopType.Delivery ? (
+                                                    StopType.Delivery ? (
                                                         <ArrowDown className="inline h-4 w-4" />
                                                     ) : (
                                                         <ArrowUp className="inline h-4 w-4" />
@@ -398,7 +398,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             facility_id: Number(
                                                                 selected?.value,
@@ -427,15 +427,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.facility.name`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.facility.name`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <p>{stop.facility?.name}</p>
@@ -459,7 +459,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             appointment_type:
                                                                 value,
@@ -492,15 +492,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.appointment_type`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.appointment_type`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <p className="capitalize">
@@ -520,11 +520,11 @@ export default function ShipmentStopsList({
                                                     value={
                                                         stop.appointment_at
                                                             ? new Date(
-                                                                convertForTimezone(
-                                                                    stop,
-                                                                    stop.appointment_at,
-                                                                ),
-                                                            )
+                                                                  convertForTimezone(
+                                                                      stop,
+                                                                      stop.appointment_at,
+                                                                  ),
+                                                              )
                                                             : undefined
                                                     }
                                                     timezone={getTimezone(stop)}
@@ -536,7 +536,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             appointment_at:
                                                                 e?.toISOString() ||
@@ -552,15 +552,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.appointment_at`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.appointment_at`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <DatetimeDisplay
@@ -582,11 +582,11 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.eta
                                                                     ? new Date(
-                                                                        convertForTimezone(
-                                                                            stop,
-                                                                            stop.eta,
-                                                                        ),
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.eta,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
                                                             timezone={getTimezone(
@@ -605,7 +605,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     eta:
                                                                         e?.toISOString() ||
@@ -620,15 +620,15 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.eta`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.eta`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
@@ -650,11 +650,11 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.arrived_at
                                                                     ? new Date(
-                                                                        convertForTimezone(
-                                                                            stop,
-                                                                            stop.arrived_at,
-                                                                        ),
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.arrived_at,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
                                                             timezone={getTimezone(
@@ -673,7 +673,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     arrived_at:
                                                                         e?.toISOString() ||
@@ -688,15 +688,15 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.arrived_at`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.arrived_at`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
@@ -722,11 +722,11 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.loaded_unloaded_at
                                                                     ? new Date(
-                                                                        convertForTimezone(
-                                                                            stop,
-                                                                            stop.loaded_unloaded_at,
-                                                                        ),
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.loaded_unloaded_at,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
                                                             timezone={getTimezone(
@@ -745,7 +745,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     loaded_unloaded_at:
                                                                         e?.toISOString() ||
@@ -760,15 +760,15 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.loaded_unloaded_at`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.loaded_unloaded_at`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
@@ -792,11 +792,11 @@ export default function ShipmentStopsList({
                                                             value={
                                                                 stop.left_at
                                                                     ? new Date(
-                                                                        convertForTimezone(
-                                                                            stop,
-                                                                            stop.left_at,
-                                                                        ),
-                                                                    )
+                                                                          convertForTimezone(
+                                                                              stop,
+                                                                              stop.left_at,
+                                                                          ),
+                                                                      )
                                                                     : undefined
                                                             }
                                                             timezone={getTimezone(
@@ -815,7 +815,7 @@ export default function ShipmentStopsList({
                                                                     index
                                                                 ] = {
                                                                     ...updatedStops[
-                                                                    index
+                                                                        index
                                                                     ],
                                                                     left_at:
                                                                         e?.toISOString() ||
@@ -830,15 +830,15 @@ export default function ShipmentStopsList({
                                                         {formErrors[
                                                             `stops.${index}.left_at`
                                                         ] && (
-                                                                <InputError
-                                                                    message={
-                                                                        formErrors[
+                                                            <InputError
+                                                                message={
+                                                                    formErrors[
                                                                         `stops.${index}.left_at`
-                                                                        ]
-                                                                    }
-                                                                    className="mt-2"
-                                                                />
-                                                            )}
+                                                                    ]
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <DatetimeDisplay
@@ -869,7 +869,7 @@ export default function ShipmentStopsList({
                                                         ];
                                                         updatedStops[index] = {
                                                             ...updatedStops[
-                                                            index
+                                                                index
                                                             ],
                                                             special_instructions:
                                                                 e.target.value,
@@ -883,15 +883,15 @@ export default function ShipmentStopsList({
                                                 {formErrors[
                                                     `stops.${index}.special_instructions`
                                                 ] && (
-                                                        <InputError
-                                                            message={
-                                                                formErrors[
+                                                    <InputError
+                                                        message={
+                                                            formErrors[
                                                                 `stops.${index}.special_instructions`
-                                                                ]
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    )}
+                                                            ]
+                                                        }
+                                                        className="mt-2"
+                                                    />
+                                                )}
                                             </>
                                         ) : (
                                             <p>

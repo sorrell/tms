@@ -4,7 +4,6 @@ import { Button } from '@/Components/ui/button';
 import { Document, DocumentFolder } from '@/types';
 import { useForm } from '@inertiajs/react';
 import {
-    CheckSquareIcon,
     File,
     FileArchive,
     FileAudio,
@@ -19,8 +18,6 @@ import {
 } from 'lucide-react';
 import { useRef } from 'react';
 
-
-
 interface DocumentsListProps {
     documents: Document[];
     documentableType: string;
@@ -28,43 +25,45 @@ interface DocumentsListProps {
     folders?: DocumentFolder[];
 }
 
-
 export default function DocumentsList({
     documents,
     documentableType,
     documentableId,
     folders,
 }: DocumentsListProps) {
-
     const fileUploadRef = useRef<FileUploadRef>(null);
-    
+
     let remainingDocuments = documents;
 
-    const documentData : TreeDataItem[] = folders?.map((folder) => {
-        let data = {
-            id: folder.id ?? folder.name,
-            name: folder.name,
-            icon: Folder,
-            openIcon: FolderOpen,
-        } as TreeDataItem;
+    const documentData: TreeDataItem[] =
+        folders?.map((folder) => {
+            const data = {
+                id: folder.id ?? folder.name,
+                name: folder.name,
+                icon: Folder,
+                openIcon: FolderOpen,
+            } as TreeDataItem;
 
-        let folderDocs = remainingDocuments.filter(doc => doc.folder_name == folder.name);
-        data.children = folderDocs.map(documentToTreeDataItem);
+            const folderDocs = remainingDocuments.filter(
+                (doc) => doc.folder_name == folder.name,
+            );
+            data.children = folderDocs.map(documentToTreeDataItem);
 
-        // remove the docs we just put in the folder
-        remainingDocuments = remainingDocuments.filter(doc => doc.folder_name != folder.name);
+            // remove the docs we just put in the folder
+            remainingDocuments = remainingDocuments.filter(
+                (doc) => doc.folder_name != folder.name,
+            );
 
-        if (data.children.length == 0) {
-            data.icon = FolderOpen;
-            data.children = undefined;
-        }
+            if (data.children.length == 0) {
+                data.icon = FolderOpen;
+                data.children = undefined;
+            }
 
-        return data;
+            return data;
+        }) ?? [];
 
-    }) ?? [];
+    documentData?.push(...remainingDocuments.map(documentToTreeDataItem));
 
-    documentData?.push(...(remainingDocuments.map(documentToTreeDataItem)));
-    
     const {
         data: fileUploadData,
         setData: setFileUploadData,
@@ -118,8 +117,6 @@ export default function DocumentsList({
         </div>
     );
 }
-
-
 
 function getDocumentIcon(extension: string) {
     switch (extension) {
@@ -190,7 +187,7 @@ function getDocumentIcon(extension: string) {
     }
 }
 
-function documentToTreeDataItem(doc : Document) {
+function documentToTreeDataItem(doc: Document) {
     const extension = doc.name.split('.').pop()?.toLowerCase() || '';
     const icon = getDocumentIcon(extension);
 
