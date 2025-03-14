@@ -70,10 +70,12 @@ export default function DocumentsList({
 
     documentData.push({
         id: 'trash',
-        name: 'Trashcan',
+        name: 'trashcan',
         icon: Trash2,
         droppable: true,
-        draggable: false
+        draggable: false,
+        className: "border-dashed border-2 w-fit rounded text-muted-foreground"
+
     } as TreeDataItem);
 
     const {
@@ -206,13 +208,13 @@ export default function DocumentsList({
                     Upload
                 </Button>
             </form>
-            <Dialog open={showDeleteFileDialog}>
+            <Dialog open={showDeleteFileDialog} onOpenChange={setshowDeleteFileDialog}>
             <DialogContent>
                 <DialogTitle>
                     Delete Document?
                 </DialogTitle>
                 <div>
-                    <span className="font-bold underline">{deleteDocument?.name}</span> will be permanently deleted
+                    <span className="p-1 font-bold">{deleteDocument?.name}</span> will be permanently deleted
                 </div>
                 <DialogFooter>
                     <Button variant={'ghost'} onClick={() => {setshowDeleteFileDialog(false)}} >Cancel</Button>

@@ -32,6 +32,7 @@ interface TreeDataItem {
     onClick?: () => void;
     draggable?: boolean;
     droppable?: boolean;
+    className?: string;
 }
 
 type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -276,6 +277,7 @@ const TreeNode = ({
                         treeVariants(),
                         selectedItemId === item.id && selectedTreeVariants(),
                         isDragOver && dragOverVariants(),
+                        item.className,
                     )}
                     onClick={() => {
                         handleSelectChange(item);
@@ -379,6 +381,7 @@ const TreeLeaf = React.forwardRef<
                     className,
                     selectedItemId === item.id && selectedTreeVariants(),
                     isDragOver && dragOverVariants(),
+                    item.className,
                 )}
                 onClick={() => {
                     handleSelectChange(item);
