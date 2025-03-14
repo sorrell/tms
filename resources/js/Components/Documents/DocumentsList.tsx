@@ -15,11 +15,10 @@ import {
     FileVideo,
     Folder,
     FolderOpen,
-    PencilIcon,
     Trash2,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
 
 interface DocumentsListProps {
     documents: Document[];
@@ -99,41 +98,43 @@ export default function DocumentsList({
         });
     };
 
-    const [deleteDocument, setDeleteDocument] = useState<Document | undefined>();
-    const [showDeleteFileDialog, setshowDeleteFileDialog] = useState<boolean>(false);
+    const [deleteDocument, setDeleteDocument] = useState<
+        Document | undefined
+    >();
+    const [showDeleteFileDialog, setshowDeleteFileDialog] =
+        useState<boolean>(false);
 
     const confirmDeleteFile = (sourceItem: TreeDataItem) => {
-
         const sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
-        const sourceDocument = documents.find(doc => doc.id.toString() == sourceId);
+        const sourceDocument = documents.find(
+            (doc) => doc.id.toString() == sourceId,
+        );
 
         if (!sourceDocument) {
-            console.error("failed to find document for source item", sourceItem);
+            console.error(
+                'failed to find document for source item',
+                sourceItem,
+            );
             return;
         }
 
         setDeleteDocument(sourceDocument);
         setshowDeleteFileDialog(true);
-
     };
 
     const submitDeleteFile = () => {
-        router.delete(
-            route('documents.destroy', deleteDocument?.id),
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    setshowDeleteFileDialog(false);
-                }
-            }
-        );
+        router.delete(route('documents.destroy', deleteDocument?.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setshowDeleteFileDialog(false);
+            },
+        });
     };
 
     const handleDragAndDrop = (
         sourceItem: TreeDataItem,
         targetItem: TreeDataItem,
     ) => {
-
         if (targetItem.id == 'trash') {
             confirmDeleteFile(sourceItem);
             return;
@@ -176,22 +177,24 @@ export default function DocumentsList({
 
     const updateDocumentName = (sourceItem: TreeDataItem, name: string) => {
         const sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
-        router.put(route('documents.update', sourceId), 
-        {
-            file_name: name
-        }, 
-        {
-            onError: (e) => {
-                console.error('Error', e);
+        router.put(
+            route('documents.update', sourceId),
+            {
+                file_name: name,
             },
-            preserveScroll: true,
-        });
+            {
+                onError: (e) => {
+                    console.error('Error', e);
+                },
+                preserveScroll: true,
+            },
+        );
     };
 
-    const [activeDragItem, setActiveDragItem] = useState<TreeDataItem>()
-    const handleDragAndDropStart = (sourceItem : TreeDataItem | undefined) => {
+    const [activeDragItem, setActiveDragItem] = useState<TreeDataItem>();
+    const handleDragAndDropStart = (sourceItem: TreeDataItem | undefined) => {
         setActiveDragItem(sourceItem);
-    }
+    };
 
     return (
         <div>
@@ -202,13 +205,19 @@ export default function DocumentsList({
                     onDocumentDragStart={handleDragAndDropStart}
                     onEditName={updateDocumentName}
                 />
-                <div 
-                    className='p-2 text-sm flex gap-1 border-dashed border-2 w-fit text-muted-foreground'
-                    onDrop={(e) => { activeDragItem && handleDragAndDrop(activeDragItem, { id: 'trash', name: 'trash'})}}
+                <div
+                    className="flex w-fit gap-1 border-2 border-dashed p-2 text-sm text-muted-foreground"
+                    onDrop={() => {
+                        activeDragItem &&
+                            handleDragAndDrop(activeDragItem, {
+                                id: 'trash',
+                                name: 'trash',
+                            });
+                    }}
                     data-tree-item-id={'trash'}
-                    >
-                    <Trash2 className='w-4 h-4 inline'/>
-                    <span className=''>trashcan</span>
+                >
+                    <Trash2 className="inline h-4 w-4" />
+                    <span className="">trashcan</span>
                 </div>
             </div>
             <form
@@ -228,18 +237,34 @@ export default function DocumentsList({
                     Upload
                 </Button>
             </form>
-            <Dialog open={showDeleteFileDialog} onOpenChange={setshowDeleteFileDialog}>
-            <DialogContent>
-                <DialogTitle>
-                    Delete Document?
-                </DialogTitle>
-                <div>
-                    <span className="p-1 font-bold">{deleteDocument?.name}</span> will be permanently deleted
-                </div>
-                <DialogFooter>
-                    <Button variant={'ghost'} onClick={() => {setshowDeleteFileDialog(false)}} >Cancel</Button>
-                    <Button variant={'destructive'} onClick={submitDeleteFile}>Delete</Button>
-                </DialogFooter>
+            <Dialog
+                open={showDeleteFileDialog}
+                onOpenChange={setshowDeleteFileDialog}
+            >
+                <DialogContent>
+                    <DialogTitle>Delete Document?</DialogTitle>
+                    <div>
+                        <span className="p-1 font-bold">
+                            {deleteDocument?.name}
+                        </span>{' '}
+                        will be permanently deleted
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            variant={'ghost'}
+                            onClick={() => {
+                                setshowDeleteFileDialog(false);
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant={'destructive'}
+                            onClick={submitDeleteFile}
+                        >
+                            Delete
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </div>

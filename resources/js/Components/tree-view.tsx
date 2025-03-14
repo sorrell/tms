@@ -572,7 +572,9 @@ const ItemNameDisplay: React.FC<{
 
     if (isEditing) {
         return (
-            <span className="truncate text-sm flex gap-x-1 flex-wrap md:flex-nowrap">
+            <span 
+                className="truncate text-sm flex gap-x-1 flex-wrap md:flex-nowrap"
+                >
                 <Input 
                     className="w-fit"
                     value={itemName}
@@ -593,10 +595,16 @@ const ItemNameDisplay: React.FC<{
     }
 
     return (
-        <span className="truncate text-sm">
-            <span className="">{item.name}</span>
-            <Button variant="ghost" className='inline text-muted-foreground h-4 py-1' onClick={() => setIsEditing(true)}>
-                <PencilIcon className='w-2 h-2 m-auto p-0' />
+        <span className="truncate text-sm relative group">
+            <span 
+                className=""
+                onClick={() => setIsEditing(true)}
+                >{item.name}</span>
+            <Button 
+                variant="ghost" 
+                className='p-0 m-0 ml-2 inline text-muted-foreground h-4 w-8 transition-opacity duration-200 opacity-100 group-hover:opacity-100 sm:opacity-0'
+                onClick={() => setIsEditing(true)}>
+                <PencilIcon className='w-2 h-2 inline p-0 m-0' />
             </Button>
         </span>
     );
