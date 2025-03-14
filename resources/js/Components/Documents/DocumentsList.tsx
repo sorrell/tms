@@ -47,14 +47,18 @@ export default function DocumentsList({
     } = useForm<{
         file: File | null;
         folder_name: string | null;
+        documentable_type: string;
+        documentable_id: number;
     }>({
         file: null,
         folder_name: null,
+        documentable_type: documentableType,
+        documentable_id: documentableId,
     });
 
     const handleFileUpload = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post(route('documents.store', { documentableType, documentableId }), {
+        post(route('documents.store'), {
             onSuccess: () => {
                 setFileUploadData('file', null);
                 // Reset the file upload component using the ref

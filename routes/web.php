@@ -15,6 +15,9 @@ use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Customers\UpdateCustomer;
 use App\Actions\Documents\CreateDocument;
+use App\Actions\Documents\DeleteDocument;
+use App\Actions\Documents\GetDocument;
+use App\Actions\Documents\UpdateDocument;
 use App\Actions\Facilities\CreateFacility;
 use App\Actions\Locations\CreateLocation;
 use App\Actions\Notes\CreateNote;
@@ -125,8 +128,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::delete('customers/{customer}/facilities/{facility}', DeleteCustomerFacility::class)->name('customers.facilities.destroy');
 
 
-    Route::name('documents.')->prefix('documents/{documentableType}/{documentableId}')->group(function () {
+    Route::name('documents.')->prefix('documents')->group(function () {
         Route::post('/', CreateDocument::class)->name('store');
+        Route::put('/{document', UpdateDocument::class)->name('update');
+        Route::delete('/{document}', DeleteDocument::class)->name('destroy');
+        Route::get('/{document}', GetDocument::class)->name('show');
     });
 
 

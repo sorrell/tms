@@ -3,9 +3,8 @@
 namespace App\Actions\Documents;
 
 use App\Enums\Documentable;
-use App\Http\Resources\DocumentResource;
+use App\Http\Resources\Documents\DocumentResource;
 use App\Models\Documents\Document;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -55,12 +54,12 @@ class CreateDocument
         return response()->json(DocumentResource::make($document));
     }
 
-    public function asController(ActionRequest $request, string $documentableType, int $documentableId)
+    public function asController(ActionRequest $request)
     {
 
         return $this->handle(
-            documentableType: $documentableType,
-            documentableId: $documentableId,
+            documentableType: $request->input('documentable_type'),
+            documentableId: $request->input('documentable_id'),
             fileName: $request->file('file')->getClientOriginalName(),
             folderName: $request->input('folder_name'),
             file: $request->file('file'),
@@ -72,6 +71,8 @@ class CreateDocument
         return [
             'file' => 'required|file',
             'folder_name' => 'nullable|string|max:255',
+            'documentable_type' => 'required|string',
+            'documentable_id' => 'required|string'
         ];
     }
 }
