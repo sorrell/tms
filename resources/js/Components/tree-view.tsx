@@ -572,9 +572,9 @@ const ItemNameDisplay: React.FC<{
 
     if (isEditing) {
         return (
-            <span className="truncate text-sm flex gap-x-1">
+            <span className="truncate text-sm flex gap-x-1 flex-wrap md:flex-nowrap">
                 <Input 
-                    className="w-fit inline"
+                    className="w-fit"
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)} 
                     onKeyDown={(e) => {
