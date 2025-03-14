@@ -2,7 +2,7 @@ import FileUpload, { FileUploadRef } from '@/Components/FileUpload';
 import { TreeDataItem, TreeView } from '@/Components/tree-view';
 import { Button } from '@/Components/ui/button';
 import { Document, DocumentFolder } from '@/types';
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import {
     File,
     FileArchive,
@@ -99,45 +99,39 @@ export default function DocumentsList({
         sourceItem: TreeDataItem,
         targetItem: TreeDataItem
     ) => {
-        console.log(sourceItem, targetItem);
 
         let targetType = targetItem.id.startsWith('document-') ? 'document' : 'folder';
         let targetId = targetItem.id.replace(/^(document|folder)-/, '');
 
         let targetFolder = '';
-        switch(targetType){
+        switch (targetType) {
             case 'document':
                 targetFolder = documents.find(doc => doc.id.toString() == targetId)?.folder_name ?? '';
                 break;
             case 'folder':
                 // TODO - this might break in the future if the name
                 // gets changed for front end showing or something
-                targetFolder = targetItem.name;
+                targetFolder = targetId;
                 break;
             default:
                 console.error("Failed to find a folder");
         }
-
         let sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
-        fetch(route('documents.update', sourceId), {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
+
+        // Make sure data is properly set before sending the request
+        const dataToSend = {
+            folder_name: targetFolder,
+        };
+
+        router.put(route('documents.update', sourceId), dataToSend, {
+            onSuccess: (e) => {
             },
-            body: JSON.stringify({
-                folder_name: targetFolder
-            })
-        }).then(response => {
-            if (response.ok) {
-                // Refresh documents or handle success
-                console.log('Document moved successfully');
-                
-            } else {
-                console.error('Failed to move document');
-            }
-        }).catch(error => {
-            console.error('Error moving document:', error);
+            onError: (e) => {
+                console.error("Error", e);
+            },
+            preserveScroll: true,
         });
+
 
     };
 

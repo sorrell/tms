@@ -117,7 +117,9 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
         }, [data, expandAll, initialSelectedItemId]);
 
         return (
-            <div className={cn('relative overflow-hidden p-2', className)}>
+            <div 
+                className={cn('relative overflow-hidden p-2', className)}
+                >
                 <TreeItem
                     data={data}
                     ref={ref}
@@ -131,6 +133,11 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
                     draggedItem={draggedItem}
                     {...props}
                 />
+                <div
+                    className='w-full h-[48px]'
+                    onDrop={(e) => { handleDrop({id: '', name: 'parent_div'})}}>
+
+                </div>
             </div>
         );
     },
@@ -169,7 +176,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
             data = [data];
         }
         return (
-            <div ref={ref} role="tree" className={className} {...props}>
+            <div ref={ref} role="tree" className={className} {...props} >
                 <ul>
                     {data.map((item) => (
                         <li key={item.id}>
@@ -269,7 +276,6 @@ const TreeNode = ({
                         treeVariants(),
                         selectedItemId === item.id && selectedTreeVariants(),
                         isDragOver && dragOverVariants(),
-                        item.draggable && 'cursor-move',
                     )}
                     onClick={() => {
                         handleSelectChange(item);
@@ -292,7 +298,7 @@ const TreeNode = ({
                         {item.actions}
                     </TreeActions>
                 </AccordionTrigger>
-                <AccordionContent className="ml-4 border-l pl-1">
+                <AccordionContent className="ml-4 border-l pl-1" >
                     <TreeItem
                         data={item.children ? item.children : item}
                         selectedItemId={selectedItemId}
@@ -373,7 +379,6 @@ const TreeLeaf = React.forwardRef<
                     className,
                     selectedItemId === item.id && selectedTreeVariants(),
                     isDragOver && dragOverVariants(),
-                    item.draggable && 'cursor-move',
                 )}
                 onClick={() => {
                     handleSelectChange(item);

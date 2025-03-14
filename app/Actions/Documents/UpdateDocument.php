@@ -16,13 +16,18 @@ class UpdateDocument
 
     public function handle(
         Document $document,
-        string $fileName,
-        string $folderName
+        ?string $fileName,
+        ?string $folderName
     )
     {
+        if ($fileName !== null) {
+            $document->name = $fileName;
+        }
 
-        $document->name = $fileName;
-        $document->folder_name = $folderName;
+        if ($folderName !== null) {
+            $document->folder_name = $folderName;
+        }
+        
         $document->save();
 
         return $document;
@@ -40,11 +45,14 @@ class UpdateDocument
 
     public function asController(ActionRequest $request, Document $document)
     {
+        $inputs = $request->all();
+        $fileName = key_exists('file_name', $inputs) ? strval($inputs['file_name']) : null;
+        $folderName = key_exists('folder_name', $inputs) ? strval($inputs['folder_name']) : null;
 
         return $this->handle(
             document: $document,
-            fileName: $request->file('file_name'),
-            folderName: $request->input('folder_name'),
+            fileName: $fileName,
+            folderName: $folderName
         );
     }
 
