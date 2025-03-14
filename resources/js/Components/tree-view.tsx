@@ -4,6 +4,11 @@ import { cva } from 'class-variance-authority';
 import { ChevronRight } from 'lucide-react';
 import React from 'react';
 
+/**
+ * from https://github.com/MrLightful/shadcn-tree-view
+ */
+
+
 const treeVariants = cva(
     'group hover:before:opacity-100 before:absolute before:rounded-lg before:left-0 px-2 before:w-full before:opacity-0 before:bg-accent/70 before:h-[2rem] before:-z-10',
 );

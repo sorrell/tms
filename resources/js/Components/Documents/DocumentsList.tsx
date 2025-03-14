@@ -1,9 +1,10 @@
 import FileUpload, { FileUploadRef } from '@/Components/FileUpload';
-import { TreeView } from '@/Components/tree-view';
+import { TreeDataItem, TreeView } from '@/Components/tree-view';
 import { Button } from '@/Components/ui/button';
-import { Document } from '@/types';
+import { Document, DocumentFolder } from '@/types';
 import { useForm } from '@inertiajs/react';
 import {
+    CheckSquareIcon,
     File,
     FileArchive,
     FileAudio,
@@ -13,33 +14,52 @@ import {
     FileSpreadsheet,
     FileText,
     FileVideo,
+    Folder,
+    FolderOpen,
 } from 'lucide-react';
 import { useRef } from 'react';
+
+
 
 interface DocumentsListProps {
     documents: Document[];
     documentableType: string;
     documentableId: number;
+    folders?: DocumentFolder[];
 }
+
 
 export default function DocumentsList({
     documents,
     documentableType,
     documentableId,
+    folders,
 }: DocumentsListProps) {
+
     const fileUploadRef = useRef<FileUploadRef>(null);
+    
+    let remainingDocuments = documents;
 
-    const documentData = documents.map((doc) => {
-        const extension = doc.name.split('.').pop()?.toLowerCase() || '';
-        const icon = getDocumentIcon(extension);
+    const documentData : TreeDataItem[] = folders?.map((folder) => {
+        let data = {
+            id: folder.id ?? folder.name,
+            name: folder.name,
+            icon: Folder,
+            openIcon: FolderOpen,
+        } as TreeDataItem;
 
-        return {
-            id: doc.id.toString(),
-            name: doc.name,
-            icon: icon,
-        };
-    });
+        let folderDocs = remainingDocuments.filter(doc => doc.folder_name == folder.name);
+        data.children = folderDocs.map(documentToTreeDataItem);
 
+        // remove the docs we just put in the folder
+        remainingDocuments = remainingDocuments.filter(doc => doc.folder_name != folder.name);
+
+        return data;
+
+    }) ?? [];
+
+    documentData?.push(...(remainingDocuments.map(documentToTreeDataItem)));
+    
     const {
         data: fileUploadData,
         setData: setFileUploadData,
@@ -93,6 +113,8 @@ export default function DocumentsList({
         </div>
     );
 }
+
+
 
 function getDocumentIcon(extension: string) {
     switch (extension) {
@@ -161,4 +183,17 @@ function getDocumentIcon(extension: string) {
         default:
             return File;
     }
+}
+
+function documentToTreeDataItem(doc : Document) {
+    const extension = doc.name.split('.').pop()?.toLowerCase() || '';
+    const icon = getDocumentIcon(extension);
+
+    return {
+        id: doc.id.toString(),
+        name: doc.name,
+        icon: icon,
+        actions: undefined,
+        selectedIcon: undefined,
+    } as TreeDataItem;
 }

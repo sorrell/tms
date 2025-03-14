@@ -2,7 +2,6 @@
 
 namespace App\Actions\Documents;
 
-use App\Enums\Documentable;
 use App\Http\Resources\Documents\DocumentResource;
 use App\Models\Documents\Document;
 use Illuminate\Http\UploadedFile;

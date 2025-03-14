@@ -122,6 +122,7 @@ export default function Show({
                                     <CardContent className="pt-6">
                                         <DocumentsList
                                             documents={shipment.documents ?? []}
+                                            folders={shipment.document_folders ?? []}
                                             documentableType="shipment"
                                             documentableId={shipment.id}
                                         />

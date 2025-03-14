@@ -161,6 +161,7 @@ export interface Shipment {
     state_label: string;
     state: ShipmentState;
     documents?: Document[];
+    document_folders?: DocumentFolder[];
 }
 
 export interface Note {
@@ -213,4 +214,9 @@ export interface Document {
     uploaded_by?: User;
     temporary_url?: string;
     metadata?: Record<string, unknown>;
+}
+
+export interface DocumentFolder {
+    id?: number;
+    name: string;
 }
