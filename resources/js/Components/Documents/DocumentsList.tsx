@@ -54,6 +54,11 @@ export default function DocumentsList({
         // remove the docs we just put in the folder
         remainingDocuments = remainingDocuments.filter(doc => doc.folder_name != folder.name);
 
+        if (data.children.length == 0) {
+            data.icon = FolderOpen;
+            data.children = undefined;
+        }
+
         return data;
 
     }) ?? [];
