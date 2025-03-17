@@ -66,6 +66,18 @@ class CreateDocument
         );
     }
 
+    public function authorize(ActionRequest $request) 
+    {
+        $documentableType = $request->input('documentable_type');
+        $documentableId = $request->input('documentable_id');
+
+        $documentable = Documentable::from($documentableType)
+            ->getClassName()
+            ::findOrFail($documentableId);
+
+        return $request->user()->can('update', $documentable);
+    }
+
     public function rules()
     {
         return [

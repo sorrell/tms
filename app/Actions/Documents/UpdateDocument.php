@@ -56,6 +56,11 @@ class UpdateDocument
         );
     }
 
+    public function authorize(ActionRequest $request, Document $document) 
+    {
+        return $request->user()->can('update', $document);
+    }
+
     public function rules()
     {
         return [

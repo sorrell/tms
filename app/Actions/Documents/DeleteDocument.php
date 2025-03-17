@@ -41,6 +41,11 @@ class DeleteDocument
         );
     }
 
+    public function authorize(ActionRequest $request, Document $document) 
+    {
+        return $request->user()->can('delete', $document);
+    }
+
     public function rules()
     {
         return [];

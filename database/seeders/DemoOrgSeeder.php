@@ -16,25 +16,39 @@ class DemoOrgSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        $user = User::factory()->create([
+        $adminUser = User::factory()->create([
+            'name' => 'Test Admin',
+            'email' => 'admin@test.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $regularUser = User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@test.com',
+            'email' => 'user@test.com',
             'password' => Hash::make('password'),
         ]);
 
         $org = Organization::create([
             'name' => 'Test Organization',
-            'owner_id' => $user->id,
+            'owner_id' => $adminUser->id,
         ]);
 
-        $orgMembership = OrganizationUser::create([
+        OrganizationUser::create([
             'organization_id' => $org->id,
-            'user_id' => $user->id,
+            'user_id' => $adminUser->id,
         ]);
 
-        $user->update([
+        OrganizationUser::create([
+            'organization_id' => $org->id,
+            'user_id' => $regularUser->id,
+        ]);
+
+        $adminUser->update([
+            'current_organization_id' => $org->id,
+        ]);
+
+        $regularUser->update([
             'current_organization_id' => $org->id,
         ]);
 
