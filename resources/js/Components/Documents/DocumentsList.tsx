@@ -2,6 +2,7 @@ import FileUpload, { FileUploadRef } from '@/Components/FileUpload';
 import { TreeDataItem, TreeView } from '@/Components/tree-view';
 import { Button } from '@/Components/ui/button';
 import { Document, DocumentFolder } from '@/types';
+import { Documentable } from '@/types/enums';
 import { router, useForm } from '@inertiajs/react';
 import {
     File,
@@ -19,7 +20,6 @@ import {
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
-import { Documentable } from '@/types/enums';
 
 interface DocumentsListProps {
     documents: Document[];

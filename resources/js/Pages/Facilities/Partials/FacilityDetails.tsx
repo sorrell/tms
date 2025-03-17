@@ -281,13 +281,13 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                                             />
                                             {locationForm.errors
                                                 .location_id && (
-                                                    <InputError
-                                                        message={
-                                                            locationForm.errors
-                                                                .location_id
-                                                        }
-                                                    />
-                                                )}
+                                                <InputError
+                                                    message={
+                                                        locationForm.errors
+                                                            .location_id
+                                                    }
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 ) : facility?.location ? (
@@ -352,9 +352,7 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                         <CardContent className="pt-6">
                             <DocumentsList
                                 documents={facility.documents ?? []}
-                                folders={
-                                    facility.document_folders ?? []
-                                }
+                                folders={facility.document_folders ?? []}
                                 documentableType={Documentable.Facility}
                                 documentableId={facility.id}
                             />

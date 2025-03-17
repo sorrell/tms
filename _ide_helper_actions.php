@@ -247,6 +247,20 @@ class GetDocument
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static dispatchSync(\App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static dispatchNow(\App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static dispatchAfterResponse(\App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ * @method static array run(\App\Enums\Documents\Documentable $documentableType, string $documentableId)
+ */
+class GetDocumentsWithFolders
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Documents\Document $document, ?string $fileName, ?string $folderName)

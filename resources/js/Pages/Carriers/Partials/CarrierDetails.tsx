@@ -1,4 +1,5 @@
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
+import DocumentsList from '@/Components/Documents/DocumentsList';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -35,7 +36,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
-import DocumentsList from '@/Components/Documents/DocumentsList';
 
 export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -275,9 +275,7 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                         <CardContent className="pt-6">
                             <DocumentsList
                                 documents={carrier.documents ?? []}
-                                folders={
-                                    carrier.document_folders ?? []
-                                }
+                                folders={carrier.document_folders ?? []}
                                 documentableType={Documentable.Carrier}
                                 documentableId={carrier.id}
                             />

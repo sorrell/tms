@@ -19,10 +19,17 @@ class GetDocumentsWithFolders
     ) : array
     {
 
+        
         $documentable = $documentableType->modelFind($documentableId);
 
         return [
+            /**
+             * Ignoring phpstan here, unsure how to tell it to use the trait on the model
+             * Tried a lot of things, unable to make it happy
+             */
+            // @phpstan-ignore-next-line
             'documents' => DocumentResource::collection($documentable->documents),
+            // @phpstan-ignore-next-line
             'folders' => DocumentFolderResource::collection($documentable->getAllDocumentFolders())
         ];
     }
@@ -49,7 +56,10 @@ class GetDocumentsWithFolders
 
     public function authorize(ActionRequest $request) 
     {
+
+        /** @var \App\Enums\Documents\Documentable $documentableType */
         $documentableType = $request->route('documentableType');
+        
         $documentableId = $request->route('documentableId');
 
         $documentable = $documentableType->modelFind($documentableId);

@@ -258,9 +258,7 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                         <CardContent className="pt-6">
                             <DocumentsList
                                 documents={customer.documents ?? []}
-                                folders={
-                                    customer.document_folders ?? []
-                                }
+                                folders={customer.document_folders ?? []}
                                 documentableType={Documentable.Customer}
                                 documentableId={customer.id}
                             />
