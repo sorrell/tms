@@ -8,7 +8,7 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { createDropdownMenuScope } from '@radix-ui/react-dropdown-menu';
 import { cva } from 'class-variance-authority';
 import { Check, ChevronRight, PencilIcon, X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
@@ -570,12 +570,25 @@ const ItemNameDisplay: React.FC<{
         return <span className="truncate text-sm">{item.name}</span>;
     }
 
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            const finalPeriod = itemName.lastIndexOf('.') !== -1 ? itemName.lastIndexOf('.') : itemName.length;
+            inputRef.current.select();
+            inputRef.current.setSelectionRange(0, finalPeriod);
+            
+        }
+      }, [isEditing]);
+
     if (isEditing) {
         return (
             <span 
                 className="truncate text-sm flex gap-x-1 flex-wrap md:flex-nowrap"
                 >
+
                 <Input 
+                    ref={inputRef}
                     className="w-fit"
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)} 
