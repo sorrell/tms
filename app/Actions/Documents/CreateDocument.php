@@ -75,7 +75,7 @@ class CreateDocument
             ->getClassName()
             ::findOrFail($documentableId);
 
-        return $request->user()->can('update', $documentable);
+        return $request->user()->can('create', [Document::class, $documentable]);
     }
 
     public function rules()
