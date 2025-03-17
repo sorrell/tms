@@ -17,6 +17,7 @@ use App\Actions\Customers\UpdateCustomer;
 use App\Actions\Documents\CreateDocument;
 use App\Actions\Documents\DeleteDocument;
 use App\Actions\Documents\GetDocument;
+use App\Actions\Documents\GetDocumentsWithFolders;
 use App\Actions\Documents\UpdateDocument;
 use App\Actions\Facilities\CreateFacility;
 use App\Actions\Locations\CreateLocation;
@@ -133,6 +134,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
         Route::put('/{document}', UpdateDocument::class)->name('update');
         Route::delete('/{document}', DeleteDocument::class)->name('destroy');
         Route::get('/{document}', GetDocument::class)->name('show');
+
+        Route::get('/{documentableType}/{documentableId}', GetDocumentsWithFolders::class)->name('index');
     });
 
 

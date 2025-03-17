@@ -7,6 +7,7 @@ use App\Models\Customers\Customer;
 use App\Models\Facility;
 use App\Models\Shipments\Shipment;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 enum Documentable: string
 {
@@ -23,6 +24,13 @@ enum Documentable: string
             self::CARRIER => Carrier::class,
             self::FACILITY => Facility::class,
         };
+    }
+
+    // Finds the model based on the enum type/class mapping
+    // and the provided id
+    public function modelFind(string $id) : Model
+    {
+        return $this->getClassName()::findOrFail($id);
     }
 
     public static function fromClassName(string $className): static

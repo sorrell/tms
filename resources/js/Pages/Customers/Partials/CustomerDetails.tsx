@@ -1,5 +1,6 @@
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
+import DocumentsList from '@/Components/Documents/DocumentsList';
 import Notes from '@/Components/Notes';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
@@ -15,12 +16,12 @@ import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Customer } from '@/types';
-import { Contactable, Notable } from '@/types/enums';
+import { Contactable, Documentable, Notable } from '@/types/enums';
 import { router } from '@inertiajs/react';
 import { Check, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
-export default function CustomerDetails({ customer }: { customer?: Customer }) {
+export default function CustomerDetails({ customer }: { customer: Customer }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(customer?.name || '');
 
@@ -255,9 +256,12 @@ export default function CustomerDetails({ customer }: { customer?: Customer }) {
                 <TabsContent value="documents">
                     <Card>
                         <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <Skeleton className="h-64 w-full" />
-                            </div>
+                            <DocumentsList
+                                documents={customer.documents ?? []}
+                                folders={customer.document_folders ?? []}
+                                documentableType={Documentable.Customer}
+                                documentableId={customer.id}
+                            />
                         </CardContent>
                     </Card>
                 </TabsContent>

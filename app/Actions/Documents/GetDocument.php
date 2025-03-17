@@ -39,6 +39,12 @@ class GetDocument
         );
     }
 
+    public function authorize(ActionRequest $request) 
+    {
+        $document = $request->route('document');
+        return $request->user()->can('view', $document);
+    }
+
     public function rules()
     {
         return [];

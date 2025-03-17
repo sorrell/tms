@@ -1,4 +1,5 @@
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
+import DocumentsList from '@/Components/Documents/DocumentsList';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -23,7 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { Carrier, CarrierBounce } from '@/types';
-import { Contactable } from '@/types/enums';
+import { Contactable, Documentable } from '@/types/enums';
 import { Link, router } from '@inertiajs/react';
 import {
     Check,
@@ -36,7 +37,7 @@ import {
 import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
 
-export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
+export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(carrier?.name || '');
 
@@ -272,9 +273,12 @@ export default function CarrierDetails({ carrier }: { carrier?: Carrier }) {
                 <TabsContent value="documents">
                     <Card>
                         <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <Skeleton className="h-64 w-full" />
-                            </div>
+                            <DocumentsList
+                                documents={carrier.documents ?? []}
+                                folders={carrier.document_folders ?? []}
+                                documentableType={Documentable.Carrier}
+                                documentableId={carrier.id}
+                            />
                         </CardContent>
                     </Card>
                 </TabsContent>

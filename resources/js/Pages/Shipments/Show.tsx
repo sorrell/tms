@@ -5,6 +5,7 @@ import { Skeleton } from '@/Components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
+import { Documentable } from '@/types/enums';
 import { Head } from '@inertiajs/react';
 import { FileText, MapPin, MessageSquare } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
@@ -125,7 +126,9 @@ export default function Show({
                                             folders={
                                                 shipment.document_folders ?? []
                                             }
-                                            documentableType="shipment"
+                                            documentableType={
+                                                Documentable.Shipment
+                                            }
                                             documentableId={shipment.id}
                                         />
                                     </CardContent>

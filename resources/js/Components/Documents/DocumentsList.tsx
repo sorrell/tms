@@ -2,6 +2,7 @@ import FileUpload, { FileUploadRef } from '@/Components/FileUpload';
 import { TreeDataItem, TreeView } from '@/Components/tree-view';
 import { Button } from '@/Components/ui/button';
 import { Document, DocumentFolder } from '@/types';
+import { Documentable } from '@/types/enums';
 import { router, useForm } from '@inertiajs/react';
 import {
     File,
@@ -22,7 +23,7 @@ import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
 
 interface DocumentsListProps {
     documents: Document[];
-    documentableType: string;
+    documentableType: Documentable;
     documentableId: number;
     folders?: DocumentFolder[];
 }
@@ -35,7 +36,7 @@ export default function DocumentsList({
 }: DocumentsListProps) {
     const fileUploadRef = useRef<FileUploadRef>(null);
 
-    let remainingDocuments = documents;
+    let remainingDocuments = [...documents];
 
     const documentData: TreeDataItem[] =
         folders?.map((folder) => {
