@@ -1,5 +1,6 @@
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import LocationForm from '@/Components/CreateForms/LocationForm';
+import DocumentsList from '@/Components/Documents/DocumentsList';
 import InputError from '@/Components/InputError';
 import Notes from '@/Components/Notes';
 import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
@@ -20,7 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useToast } from '@/hooks/UseToast';
 import { Facility } from '@/types';
-import { Contactable, Notable } from '@/types/enums';
+import { Contactable, Documentable, Notable } from '@/types/enums';
 import { router, useForm } from '@inertiajs/react';
 import { Check, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
@@ -280,13 +281,13 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                                             />
                                             {locationForm.errors
                                                 .location_id && (
-                                                <InputError
-                                                    message={
-                                                        locationForm.errors
-                                                            .location_id
-                                                    }
-                                                />
-                                            )}
+                                                    <InputError
+                                                        message={
+                                                            locationForm.errors
+                                                                .location_id
+                                                        }
+                                                    />
+                                                )}
                                         </div>
                                     </div>
                                 ) : facility?.location ? (
@@ -349,9 +350,14 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                 <TabsContent value="documents">
                     <Card>
                         <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <Skeleton className="h-64 w-full" />
-                            </div>
+                            <DocumentsList
+                                documents={facility.documents ?? []}
+                                folders={
+                                    facility.document_folders ?? []
+                                }
+                                documentableType={Documentable.Facility}
+                                documentableId={facility.id}
+                            />
                         </CardContent>
                     </Card>
                 </TabsContent>
