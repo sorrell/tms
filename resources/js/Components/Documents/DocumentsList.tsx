@@ -19,10 +19,11 @@ import {
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
+import { Documentable } from '@/types/enums';
 
 interface DocumentsListProps {
     documents: Document[];
-    documentableType: string;
+    documentableType: Documentable;
     documentableId: number;
     folders?: DocumentFolder[];
 }
@@ -35,7 +36,7 @@ export default function DocumentsList({
 }: DocumentsListProps) {
     const fileUploadRef = useRef<FileUploadRef>(null);
 
-    let remainingDocuments = documents;
+    let remainingDocuments = [...documents];
 
     const documentData: TreeDataItem[] =
         folders?.map((folder) => {

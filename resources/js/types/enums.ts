@@ -32,3 +32,10 @@ export enum ShipmentState {
     AtDelivery = 'at_delivery',
     Dispatched = 'dispatched',
 }
+
+export enum Documentable {
+    Shipment = 'shipment',
+    Customer = 'customer',
+    Carrier = 'carrier',
+    Facility = 'facility',
+}

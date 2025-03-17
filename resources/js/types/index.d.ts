@@ -55,6 +55,9 @@ export interface Facility {
     name: string;
     location?: Location;
     location_id?: number;
+
+    documents?: Document[];
+    document_folders?: DocumentFolder[];
 }
 
 export interface Carrier {
@@ -73,6 +76,9 @@ export interface Carrier {
     billing_location?: Location;
     physical_location?: Location;
     safer_report?: CarrierSaferReport;
+
+    documents?: Document[];
+    document_folders?: DocumentFolder[];
 }
 
 export interface CarrierSaferReport {
@@ -120,6 +126,9 @@ export interface CarrierSaferReport {
 export interface Customer {
     id: number;
     name: string;
+
+    documents?: Document[];
+    document_folders?: DocumentFolder[];
 }
 
 export interface ShipmentStop {

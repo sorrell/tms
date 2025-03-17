@@ -13,6 +13,8 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
+import { Documentable } from '@/types/enums';
+import AutoLoadedDocumentsList from '@/Components/Documents/AutoLoadedDocumentsList';
 
 export default function Show({
     shipment,
@@ -120,14 +122,18 @@ export default function Show({
                             <TabsContent value="documents">
                                 <Card>
                                     <CardContent className="pt-6">
-                                        <DocumentsList
+                                        {/* <DocumentsList
                                             documents={shipment.documents ?? []}
                                             folders={
                                                 shipment.document_folders ?? []
                                             }
-                                            documentableType="shipment"
+                                            documentableType={Documentable.Shipment}
                                             documentableId={shipment.id}
-                                        />
+                                        /> */}
+                                        <AutoLoadedDocumentsList
+                                            documentableType={Documentable.Shipment}
+                                            documentableId={shipment.id}
+                                            />
                                     </CardContent>
                                 </Card>
                             </TabsContent>

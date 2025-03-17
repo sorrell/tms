@@ -5,6 +5,7 @@ namespace App\Models\Carriers;
 use App\Http\Resources\Carriers\CarrierResource;
 use App\Models\Location;
 use App\Traits\HasContacts;
+use App\Traits\HasDocuments;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Laravel\Scout\Searchable;
 
 class Carrier extends Model
 {
-    use HasFactory, HasOrganization, Searchable, HasContacts;
+    use HasFactory, HasOrganization, Searchable, HasContacts, HasDocuments;
 
     protected $fillable = [
         'organization_id',
