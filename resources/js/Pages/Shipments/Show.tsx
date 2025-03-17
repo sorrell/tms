@@ -122,18 +122,14 @@ export default function Show({
                             <TabsContent value="documents">
                                 <Card>
                                     <CardContent className="pt-6">
-                                        {/* <DocumentsList
+                                        <DocumentsList
                                             documents={shipment.documents ?? []}
                                             folders={
                                                 shipment.document_folders ?? []
                                             }
                                             documentableType={Documentable.Shipment}
                                             documentableId={shipment.id}
-                                        /> */}
-                                        <AutoLoadedDocumentsList
-                                            documentableType={Documentable.Shipment}
-                                            documentableId={shipment.id}
-                                            />
+                                        />
                                     </CardContent>
                                 </Card>
                             </TabsContent>
