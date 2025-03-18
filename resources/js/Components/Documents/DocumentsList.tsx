@@ -192,6 +192,36 @@ export default function DocumentsList({
         );
     };
 
+    const downloadItemByNodeId = (nodeId?: string) => {
+        // If the nodeId is not a doc then return
+        if (!nodeId?.startsWith('document-')) {
+            return;
+        }
+        const sourceId = nodeId.replace(/^(document)-/, '');
+        // Find the document with the matching ID
+        const downloadDocument = documents.find(doc => doc.id.toString() === sourceId);
+        
+        if (downloadDocument) {
+            // Create a download link for the document
+            const downloadUrl = route('documents.show', sourceId);
+            
+            // Create an invisible anchor element
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.setAttribute('download', downloadDocument.name); // Set download attribute with filename
+            document.body.appendChild(link);
+            
+            // Trigger the download
+            link.click();
+            
+            // Clean up - remove the element
+            document.body.removeChild(link);
+        } else {
+            console.error('Document not found with ID:', sourceId);
+        }
+    }
+    
+
     const [activeDragItem, setActiveDragItem] = useState<TreeDataItem>();
     const handleDragAndDropStart = (sourceItem: TreeDataItem | undefined) => {
         setActiveDragItem(sourceItem);
@@ -205,6 +235,10 @@ export default function DocumentsList({
                     onDocumentDrag={handleDragAndDrop}
                     onDocumentDragStart={handleDragAndDropStart}
                     onEditName={updateDocumentName}
+                    onClick={(e) => {
+                        const nodeId = (e.target as HTMLElement)?.getAttribute('data-tree-item-id') || undefined;
+                        downloadItemByNodeId(nodeId);
+                    }}
                 />
                 <div
                     className="flex w-fit gap-1 border-2 border-dashed p-2 text-sm text-muted-foreground"

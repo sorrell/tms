@@ -610,8 +610,9 @@ const ItemNameDisplay: React.FC<{
     return (
         <span className="truncate text-sm relative group">
             <span 
+                data-tree-item-id={item.id}
                 className=""
-                onClick={() => setIsEditing(true)}
+                onDoubleClick={() => setIsEditing(true)}
                 >{item.name}</span>
             <Button 
                 variant="ghost" 
