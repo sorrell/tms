@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Currency;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,6 +18,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('symbol');
         });
+
+        Currency::create([
+            'name' => 'United States dollar',
+            'code' => 'USD',
+            'symbol' => '$'
+        ]);
 
         Schema::create('customer_rate_types', function(Blueprint $table) {
             $table->id();
