@@ -43,8 +43,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
-            $table->boolean('applies_to_customer');
-            $table->boolean('applies_to_carrier');
             $table->softDeletesTz();
         });
 
