@@ -20,6 +20,17 @@ class Organization extends Model
         'owner_id',
     ];
 
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::created(function (Organization $organization) {
+            // Set the current organization context for the defaults creation
+            \App\Actions\Defaults\CreateOrganizationDefaults::run($organization->id);
+        });
+    }
+
     public function owner() : BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');

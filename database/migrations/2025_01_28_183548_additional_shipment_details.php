@@ -16,23 +16,12 @@ return new class extends Migration
         // create table trailer_types
         Schema::create('trailer_types', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
             $table->timestampsTz();
             $table->softDeletesTz();
         });
 
-        TrailerType::create([
-            'name' => '53\' Dry Van'
-        ]);
-        TrailerType::create([
-            'name' => '53\' Reefer'
-        ]);
-        TrailerType::create([
-            'name' => '53\' Flatbed'
-        ]);
-        TrailerType::create([
-            'name' => '53\' Stepdeck'
-        ]);
 
         Schema::table('shipments', function (Blueprint $table) {
             $table->float('weight')->nullable();

@@ -12,9 +12,17 @@ php artisan dev:refresh
 ```
 
 
-The following test user will be created
+The following test users will be created
 
-Email:  `test@test.com`
+ADMIN:
+
+Email:  `admin@test.com`
+
+Pass:   `password`
+
+REGULAR:
+
+Email:  `user@test.com`
 
 Pass:   `password`
 
@@ -37,5 +45,12 @@ Ensure you have storage linked by running
 sail artisan storage:link
 ```
 
-### Zip to timezone lookups
+## Zip to timezone lookups
 We are using a backup sqlite database of US zip3s to timezone esimates. If you are trying to override the lookup you can define your own db connection under `config/database.php` or with the `ZIP3_TO_TIMEZONE_OVERRIDE_DB_DATABASE` env naming.
+
+## Organization Defaults
+The `CreateOrganizationDefaults` action is responsible for adding defaults to any new organizations upon creation. This actions is automatically run anytime an organization is created via the `created` hook on the model itself.
+
+If you need to alter the default values of existing organizations, a migration is required.
+If you want to just change defaults moving forward, you can modify the defaults action.
+** NOTE ** When making changes to defaults, it's recommended to consider both a migration AND an update to the defaults action, so that both existing and new organizations will be correctly updated!

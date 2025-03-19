@@ -202,6 +202,22 @@ class DeleteCustomerFacility
 class UpdateCustomer
 {
 }
+namespace App\Actions\Defaults;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $organizationId)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $organizationId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $organizationId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, int $organizationId)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, int $organizationId)
+ * @method static dispatchSync(int $organizationId)
+ * @method static dispatchNow(int $organizationId)
+ * @method static dispatchAfterResponse(int $organizationId)
+ * @method static mixed run(int $organizationId)
+ */
+class CreateOrganizationDefaults
+{
+}
 namespace App\Actions\Documents;
 
 /**

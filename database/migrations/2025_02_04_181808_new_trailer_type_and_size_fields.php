@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('trailer_sizes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('organization_id')->constrained('organizations');
             $table->timestampsTz();
             $table->softDeletesTz();
         });
@@ -25,30 +26,6 @@ return new class extends Migration
             $table->integer('trailer_size_id')->nullable();
             $table->foreign('trailer_size_id')->references('id')->on('trailer_sizes');
         });
-
-        TrailerSize::create([
-            'name' => '53\''
-        ]);
-
-        TrailerSize::create([
-            'name' => '48\''
-        ]);
-
-        TrailerType::where('name', '53\' Dry Van')->update([
-            'name' => 'Dry Van'
-        ]);
-
-        TrailerType::where('name', '53\' Reefer')->update([
-            'name' => 'Reefer'
-        ]);
-
-        TrailerType::where('name', '53\' Flatbed')->update([
-            'name' => 'Flatbed'
-        ]);
-
-        TrailerType::where('name', '53\' Stepdeck')->update([
-            'name' => 'Stepdeck'
-        ]);
     }
 
     /**

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
+            $table->timestampsTz();
             $table->softDeletesTz();
         }); 
 
@@ -36,6 +37,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
+            $table->timestampsTz();
             $table->softDeletesTz();
         });
 
@@ -43,6 +45,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
+            $table->timestampsTz();
             $table->softDeletesTz();
         });
 
