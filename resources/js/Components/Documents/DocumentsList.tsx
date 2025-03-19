@@ -21,7 +21,7 @@ import {
     PencilIcon,
     Trash2,
 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 
@@ -56,11 +56,13 @@ export default function DocumentsList({
             const folderDocs = remainingDocuments.filter(
                 (doc) => doc.folder_name == folder.name,
             );
-            data.children = folderDocs.map((doc) => documentToTreeDataItem(doc, {
-                onEdit: () => handleEditName(doc),
-                onDownload: () => downloadDocument(doc),
-                onPreview: () => openPreviewDialog(`document-${doc.id}`)
-            }));
+            data.children = folderDocs.map((doc) =>
+                documentToTreeDataItem(doc, {
+                    onEdit: () => handleEditName(doc),
+                    onDownload: () => downloadDocument(doc),
+                    onPreview: () => openPreviewDialog(`document-${doc.id}`),
+                }),
+            );
 
             // remove the docs we just put in the folder
             remainingDocuments = remainingDocuments.filter(
@@ -75,11 +77,15 @@ export default function DocumentsList({
             return data;
         }) ?? [];
 
-    documentData?.push(...remainingDocuments.map((doc) => documentToTreeDataItem(doc, {
-        onEdit: () => handleEditName(doc),
-        onDownload: () => downloadDocument(doc),
-        onPreview: () => openPreviewDialog(`document-${doc.id}`)
-    })));
+    documentData?.push(
+        ...remainingDocuments.map((doc) =>
+            documentToTreeDataItem(doc, {
+                onEdit: () => handleEditName(doc),
+                onDownload: () => downloadDocument(doc),
+                onPreview: () => openPreviewDialog(`document-${doc.id}`),
+            }),
+        ),
+    );
 
     const {
         data: fileUploadData,
@@ -118,38 +124,60 @@ export default function DocumentsList({
         useState<boolean>(false);
 
     // Preview dialog state
-    const [previewDocument, setPreviewDocument] = useState<Document | undefined>();
+    const [previewDocument, setPreviewDocument] = useState<
+        Document | undefined
+    >();
     const [showPreviewDialog, setShowPreviewDialog] = useState<boolean>(false);
-    
+
     // Document editing state
-    const [editingDocument, setEditingDocument] = useState<Document | undefined>();
+    const [editingDocument, setEditingDocument] = useState<
+        Document | undefined
+    >();
     const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
     const [newDocumentName, setNewDocumentName] = useState<string>('');
-    
+
+    const editNameRef = useRef<HTMLInputElement>(null);
+
     const handleEditName = (document: Document) => {
         setEditingDocument(document);
         setNewDocumentName(document.name);
         setShowEditDialog(true);
+        
+        const lastDotIndex = document.name.lastIndexOf('.');
+
+        // Bit hacky
+        // we are forcing this to run after this finishes with render so that 
+        // we properly highlight the right field
+        // we shouhld use an effect but i had bugs with that
+        // so here we are
+        setTimeout(() => {
+            if (lastDotIndex > 0) {
+                editNameRef?.current?.setSelectionRange(0, lastDotIndex);
+            } else {
+                editNameRef?.current?.select();
+            }
+        }, 0);
+        
     };
 
     const handleSaveDocumentName = () => {
         if (editingDocument && newDocumentName.trim()) {
             // Find the corresponding tree item
-            const treeItem = documentData.find(item => 
-                item.id === `document-${editingDocument.id}` || 
-                (item.children && item.children.some(child => child.id === `document-${editingDocument.id}`))
+            const treeItem = documentData.find(
+                (item) =>
+                    item.id === `document-${editingDocument.id}` ||
+                    (item.children &&
+                        item.children.some(
+                            (child) =>
+                                child.id === `document-${editingDocument.id}`,
+                        )),
             );
-            
+
             if (treeItem) {
                 // Call updateDocumentName with the treeItem and new name
-                updateDocumentName(
-                    treeItem.id === `document-${editingDocument.id}` 
-                        ? treeItem 
-                        : treeItem.children?.find(child => child.id === `document-${editingDocument.id}`)!,
-                    newDocumentName
-                );
+                updateDocumentName(editingDocument.id, newDocumentName);
             }
-            
+
             // Close the dialog
             setShowEditDialog(false);
         }
@@ -226,8 +254,7 @@ export default function DocumentsList({
         });
     };
 
-    const updateDocumentName = (sourceItem: TreeDataItem, name: string) => {
-        const sourceId = sourceItem.id.replace(/^(document|folder)-/, '');
+    const updateDocumentName = (sourceId: number, name: string) => {
         router.put(
             route('documents.update', sourceId),
             {
@@ -246,16 +273,16 @@ export default function DocumentsList({
         if (document) {
             // Create a download link for the document
             const downloadUrl = route('documents.show', document.id);
-            
+
             // Create an invisible anchor element
             const link = window.document.createElement('a');
             link.href = downloadUrl;
             link.setAttribute('download', document.name);
             window.document.body.appendChild(link);
-            
+
             // Trigger the download
             link.click();
-            
+
             // Clean up - remove the element
             window.document.body.removeChild(link);
         } else {
@@ -270,8 +297,10 @@ export default function DocumentsList({
         }
         const sourceId = nodeId.replace(/^(document)-/, '');
         // Find the document with the matching ID
-        const docToPreview = documents.find(doc => doc.id.toString() === sourceId);
-        
+        const docToPreview = documents.find(
+            (doc) => doc.id.toString() === sourceId,
+        );
+
         if (docToPreview) {
             setPreviewDocument(docToPreview);
             setShowPreviewDialog(true);
@@ -325,7 +354,7 @@ export default function DocumentsList({
                     Upload
                 </Button>
             </form>
-            
+
             {/* Delete Document Dialog */}
             <Dialog
                 open={showDeleteFileDialog}
@@ -357,18 +386,25 @@ export default function DocumentsList({
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            
+
             {/* Preview Document Dialog */}
             <Dialog
                 open={showPreviewDialog}
                 onOpenChange={setShowPreviewDialog}
             >
-                <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+                <DialogContent className="flex h-[80vh] max-w-4xl flex-col">
                     <DialogTitle>{previewDocument?.name}</DialogTitle>
                     <div className="flex-grow overflow-hidden">
-                        <iframe 
-                            src={previewDocument ? route('documents.show', previewDocument.id) : ''}
-                            className="w-full h-full border-0"
+                        <iframe
+                            src={
+                                previewDocument
+                                    ? route(
+                                          'documents.show',
+                                          previewDocument.id,
+                                      )
+                                    : ''
+                            }
+                            className="h-full w-full border-0"
                             title={`Preview of ${previewDocument?.name}`}
                         />
                     </div>
@@ -381,20 +417,20 @@ export default function DocumentsList({
                         </Button>
                         <Button
                             variant={'default'}
-                            onClick={() => previewDocument && downloadDocument(previewDocument)}
+                            onClick={() =>
+                                previewDocument &&
+                                downloadDocument(previewDocument)
+                            }
                         >
-                            <Download className="w-4 h-4 mr-2" />
+                            <Download className="mr-2 h-4 w-4" />
                             Download
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            
+
             {/* Edit Document Name Dialog */}
-            <Dialog
-                open={showEditDialog}
-                onOpenChange={setShowEditDialog}
-            >
+            <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
                 <DialogContent>
                     <DialogTitle>Edit Document Name</DialogTitle>
                     <div className="py-4">
@@ -408,17 +444,8 @@ export default function DocumentsList({
                                     handleSaveDocumentName();
                                 }
                             }}
-                            ref={(input) => {
-                                if (input) {
-                                    const lastDotIndex = newDocumentName.lastIndexOf('.');
-                                    if (lastDotIndex > 0) {
-                                        input.setSelectionRange(0, lastDotIndex);
-                                    } else {
-                                        input.select();
-                                    }
-                                }
-                            }}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            ref={editNameRef}
+                            className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                             autoFocus
                         />
                     </div>
@@ -518,16 +545,19 @@ interface DocumentActionHandlers {
     onPreview?: () => void;
 }
 
-function documentToTreeDataItem(doc: Document, handlers?: DocumentActionHandlers) {
+function documentToTreeDataItem(
+    doc: Document,
+    handlers?: DocumentActionHandlers,
+) {
     const extension = doc.name.split('.').pop()?.toLowerCase() || '';
     const icon = getDocumentIcon(extension);
 
     const actionButtons = (
-        <div className="flex space-x-1 items-center transition-all duration-300 transform translate-x-0">
-            <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-6 w-6" 
+        <div className="flex translate-x-0 transform items-center space-x-1 transition-all duration-300">
+            <Button
+                variant="outline"
+                size="icon"
+                className="h-6 w-6"
                 onClick={(e) => {
                     e.stopPropagation();
                     handlers?.onEdit?.();
@@ -535,10 +565,10 @@ function documentToTreeDataItem(doc: Document, handlers?: DocumentActionHandlers
             >
                 <PencilIcon className="h-4 w-4" />
             </Button>
-            <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-6 w-6" 
+            <Button
+                variant="outline"
+                size="icon"
+                className="h-6 w-6"
                 onClick={(e) => {
                     e.stopPropagation();
                     handlers?.onDownload?.();
@@ -546,10 +576,10 @@ function documentToTreeDataItem(doc: Document, handlers?: DocumentActionHandlers
             >
                 <Download className="h-4 w-4" />
             </Button>
-            <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-6 w-6" 
+            <Button
+                variant="outline"
+                size="icon"
+                className="h-6 w-6"
                 onClick={(e) => {
                     e.stopPropagation();
                     handlers?.onPreview?.();
