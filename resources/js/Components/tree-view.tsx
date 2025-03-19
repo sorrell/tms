@@ -13,11 +13,11 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 
 const treeVariants = cva(
-    'group hover:before:opacity-100 before:absolute before:rounded-lg before:left-0 px-2 before:w-full before:opacity-0 before:bg-accent/70 before:h-[2rem] before:-z-10',
+    'rounded group hover:before:opacity-100 before:absolute before:rounded-lg before:left-0 px-2 before:w-full before:opacity-0 before:bg-accent/70 before:h-[2rem] before:-z-10 hover:bg-primary/5',
 );
 
 const selectedTreeVariants = cva(
-    'before:opacity-100 before:bg-accent/70 text-accent-foreground',
+    'before:opacity-100 before:bg-accent/70 text-accent-foreground bg-primary/10',
 );
 
 const dragOverVariants = cva(
