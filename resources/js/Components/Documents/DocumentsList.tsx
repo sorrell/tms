@@ -21,7 +21,7 @@ import {
     PencilIcon,
     Trash2,
 } from 'lucide-react';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 
@@ -142,11 +142,11 @@ export default function DocumentsList({
         setEditingDocument(document);
         setNewDocumentName(document.name);
         setShowEditDialog(true);
-        
+
         const lastDotIndex = document.name.lastIndexOf('.');
 
         // Bit hacky
-        // we are forcing this to run after this finishes with render so that 
+        // we are forcing this to run after this finishes with render so that
         // we properly highlight the right field
         // we shouhld use an effect but i had bugs with that
         // so here we are
@@ -157,7 +157,6 @@ export default function DocumentsList({
                 editNameRef?.current?.select();
             }
         }, 0);
-        
     };
 
     const handleSaveDocumentName = () => {
