@@ -55,7 +55,9 @@ export default function ShipmentStopsList({
             .filter(Boolean);
 
         // if any of the zipcodes are new, fetch the timezones
-        const newZipcodes = zipcodes.filter((zipcode) => !timezones[zipcode]);
+        const newZipcodes = zipcodes.filter(
+            (zipcode) => !(zipcode in timezones),
+        );
         if (newZipcodes.length > 0) {
             fetch(route('timezones.zipcode', { zipcodes: newZipcodes }), {
                 method: 'GET',
@@ -387,6 +389,7 @@ export default function ShipmentStopsList({
                                                     searchRoute={route(
                                                         'facilities.search',
                                                     )}
+                                                    allowUnselect={false}
                                                     allowMultiple={false}
                                                     onValueObjectChange={(
                                                         selected,
