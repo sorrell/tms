@@ -57,4 +57,9 @@ class CreateShipmentCustomerRate {
             'rate_type' => ['required', 'exists:customer_rate_types,id'],
         ];
     }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can(\App\Enums\Permission::SHIPMENT_EDIT);
+    }
 }
