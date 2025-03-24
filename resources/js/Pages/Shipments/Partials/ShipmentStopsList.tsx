@@ -25,7 +25,6 @@ import {
     ArrowUp,
     Check,
     CheckCircle2,
-    MapPin,
     Pencil,
     Trash,
     Warehouse,
@@ -862,25 +861,45 @@ export default function ShipmentStopsList({
                                         {editMode ? (
                                             <>
                                                 <Textarea
-                                                    value={stop.reference_numbers || ''}
+                                                    value={
+                                                        stop.reference_numbers ||
+                                                        ''
+                                                    }
                                                     onChange={(e) => {
-                                                        const updatedStops = [...data.stops];
+                                                        const updatedStops = [
+                                                            ...data.stops,
+                                                        ];
                                                         updatedStops[index] = {
-                                                            ...updatedStops[index],
-                                                            reference_numbers: e.target.value,
+                                                            ...updatedStops[
+                                                                index
+                                                            ],
+                                                            reference_numbers:
+                                                                e.target.value,
                                                         };
-                                                        setData('stops', updatedStops);
+                                                        setData(
+                                                            'stops',
+                                                            updatedStops,
+                                                        );
                                                     }}
                                                 />
-                                                {formErrors[`stops.${index}.reference_numbers`] && (
+                                                {formErrors[
+                                                    `stops.${index}.reference_numbers`
+                                                ] && (
                                                     <InputError
-                                                        message={formErrors[`stops.${index}.reference_numbers`]}
+                                                        message={
+                                                            formErrors[
+                                                                `stops.${index}.reference_numbers`
+                                                            ]
+                                                        }
                                                         className="mt-2"
                                                     />
                                                 )}
                                             </>
                                         ) : (
-                                            <p>{stop.reference_numbers || 'None'}</p>
+                                            <p>
+                                                {stop.reference_numbers ||
+                                                    'None'}
+                                            </p>
                                         )}
                                     </div>
                                     <div className="col-span-2">

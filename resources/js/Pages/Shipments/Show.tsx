@@ -1,20 +1,18 @@
 import DocumentsList from '@/Components/Documents/DocumentsList';
-import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Documentable } from '@/types/enums';
 import { Head } from '@inertiajs/react';
-import { FileText, Folder, FolderOpen, MapPin, MessageSquare } from 'lucide-react';
+import { Folder, MapPin } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
 import CustomerDetails from './Partials/CustomerDetails';
+import ShipmentFinancialDetails from './Partials/ShipmentFinancialDetails';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
-import ShipmentFinancials from './Partials/ShipmentFinancials';
 
 export default function Show({
     shipment,
@@ -69,7 +67,7 @@ export default function Show({
 
                         {/* Financials */}
 
-                        <ShipmentFinancials shipmentId={shipment.id} />
+                        <ShipmentFinancialDetails shipmentId={shipment.id} />
 
                         {/* Notes */}
                         <ShipmentNotes shipmentId={shipment.id} />
@@ -102,17 +100,12 @@ export default function Show({
                             <CardContent className="">
                                 <DocumentsList
                                     documents={shipment.documents ?? []}
-                                    folders={
-                                        shipment.document_folders ?? []
-                                    }
-                                    documentableType={
-                                        Documentable.Shipment
-                                    }
+                                    folders={shipment.document_folders ?? []}
+                                    documentableType={Documentable.Shipment}
                                     documentableId={shipment.id}
                                 />
                             </CardContent>
                         </Card>
-
 
                         {/* Activity Feed */}
                         <Card>
@@ -120,8 +113,10 @@ export default function Show({
                                 <CardTitle>Recent Activity</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="flex items-center justify-center p-4 border border-dashed rounded-md">
-                                    <p className="text-muted-foreground text-sm">Activity feed coming soon</p>
+                                <div className="flex items-center justify-center rounded-md border border-dashed p-4">
+                                    <p className="text-sm text-muted-foreground">
+                                        Activity feed coming soon
+                                    </p>
                                 </div>
                             </CardContent>
                         </Card>

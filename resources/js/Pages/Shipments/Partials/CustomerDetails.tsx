@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { Box, Check, CheckCircle2, Pencil, Users, X } from 'lucide-react';
+import { Check, CheckCircle2, Pencil, Users, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function CustomerDetails({ shipment }: { shipment: Shipment }) {

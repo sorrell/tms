@@ -229,3 +229,46 @@ export interface DocumentFolder {
     id?: number;
     name: string;
 }
+
+export interface ShipmentCustomerRate {
+    organization_id: number;
+    shipment_id: number;
+    customer_id: number;
+    rate: number;
+    quantity: number;
+    total: number;
+    customer_rate_type_id: number;
+    currency_id: number;
+}
+
+export interface ShipmentCarrierRate {
+    organization_id: number;
+    shipment_id: number;
+    carrier_id: number;
+    rate: number;
+    quantity: number;
+    total: number;
+    carrier_rate_type_id: number;
+    currency_id: number;
+}
+
+export interface Accessorial {
+    organization_id: number;
+    shipment_id: number;
+    customer_id: number;
+    carrier_id: number;
+    invoice_customer: boolean;
+    pay_carrier: boolean;
+    rate: number;
+    quantity: number;
+    total: number;
+    accessorial_type_id: number;
+    currency_id: number;
+}
+
+export interface ShipmentFinancials {
+    id: number;
+    shipment_customer_rates: ShipmentCustomerRate[];
+    shipment_carrier_rates: ShipmentCarrierRate[];
+    accessorials: Accessorial[];
+}

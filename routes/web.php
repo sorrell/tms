@@ -27,6 +27,7 @@ use App\Actions\Notes\GetNotes;
 use App\Actions\Shipments\CancelShipment;
 use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\DispatchShipment;
+use App\Actions\Shipments\GetShipmentFinancials;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
@@ -139,6 +140,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     });
 
 
+    
     Route::get('shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
     Route::resource('shipments', ShipmentController::class, [
         'except' => ['store'],
@@ -152,6 +154,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/dispatch', DispatchShipment::class)->name('shipments.dispatch');
     Route::patch('shipments/{shipment}/cancel', CancelShipment::class)->name('shipments.cancel');
     Route::post('shipments/{shipment}/bounce', BounceCarrier::class)->name('shipments.bounce');
+    Route::get('shipments/{shipment}/financials', GetShipmentFinancials::class)->name('shipments.financials');
 
     Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
 
