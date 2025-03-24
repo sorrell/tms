@@ -1,7 +1,5 @@
-import Notes from '@/Components/Notes';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Notable } from '@/types/enums';
-import { BadgeDollarSign, DollarSign, FilePenIcon } from 'lucide-react';
+import { BadgeDollarSign } from 'lucide-react';
 
 export default function ShipmentFinancials({ shipmentId }: { shipmentId: number }) {
     return (
@@ -12,8 +10,19 @@ export default function ShipmentFinancials({ shipmentId }: { shipmentId: number 
                     Financials
                 </CardTitle>
             </CardHeader>
-            <CardContent className="">
-                
+            <CardContent className="grid columns-2">
+                <div>
+                    {/* customer rates */}
+                    customer rates
+                </div>
+                <div>
+                    {/* carrier rates */}
+                    carrier rates
+                </div>
+                <div className='col-span-2'>
+                    {/* accessorials */}
+                    accessorials
+                </div>
             </CardContent>
         </Card>
     );
