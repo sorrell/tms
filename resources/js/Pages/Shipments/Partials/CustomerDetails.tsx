@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { Box, Check, CheckCircle2, Pencil, X } from 'lucide-react';
+import { Box, Check, CheckCircle2, Pencil, Users, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function CustomerDetails({ shipment }: { shipment: Shipment }) {
@@ -46,7 +46,7 @@ export default function CustomerDetails({ shipment }: { shipment: Shipment }) {
             <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                        <Box className="h-5 w-5" />
+                        <Users className="h-5 w-5" />
                         Customers
                     </div>
                     {editMode ? (

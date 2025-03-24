@@ -28,6 +28,7 @@ import {
     MapPin,
     Pencil,
     Trash,
+    Warehouse,
     X,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -159,7 +160,7 @@ export default function ShipmentStopsList({
             <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                        <MapPin className="h-5 w-5" />
+                        <Warehouse className="h-5 w-5" />
                         Stops
                         {editMode && (
                             <Button
@@ -854,7 +855,34 @@ export default function ShipmentStopsList({
                                             </div>
                                         </>
                                     )}
-
+                                    <div className="col-span-2">
+                                        <label className="text-sm font-medium">
+                                            Reference Numbers
+                                        </label>
+                                        {editMode ? (
+                                            <>
+                                                <Textarea
+                                                    value={stop.reference_numbers || ''}
+                                                    onChange={(e) => {
+                                                        const updatedStops = [...data.stops];
+                                                        updatedStops[index] = {
+                                                            ...updatedStops[index],
+                                                            reference_numbers: e.target.value,
+                                                        };
+                                                        setData('stops', updatedStops);
+                                                    }}
+                                                />
+                                                {formErrors[`stops.${index}.reference_numbers`] && (
+                                                    <InputError
+                                                        message={formErrors[`stops.${index}.reference_numbers`]}
+                                                        className="mt-2"
+                                                    />
+                                                )}
+                                            </>
+                                        ) : (
+                                            <p>{stop.reference_numbers || 'None'}</p>
+                                        )}
+                                    </div>
                                     <div className="col-span-2">
                                         <label className="text-sm font-medium">
                                             Special Instructions

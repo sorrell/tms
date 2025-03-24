@@ -14,6 +14,7 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
+import ShipmentFinancials from './Partials/ShipmentFinancials';
 
 export default function Show({
     shipment,
@@ -66,7 +67,11 @@ export default function Show({
                             stops={stops}
                         />
 
-                        {/* Tabbed Content */}
+                        {/* Financials */}
+
+                        <ShipmentFinancials shipmentId={shipment.id} />
+
+                        {/* Notes */}
                         <ShipmentNotes shipmentId={shipment.id} />
                     </div>
 
