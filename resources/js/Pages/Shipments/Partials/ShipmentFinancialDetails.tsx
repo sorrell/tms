@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Skeleton } from '@/Components/ui/skeleton';
 import { ShipmentFinancials } from '@/types';
 import { BadgeDollarSign } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -11,6 +12,8 @@ export default function ShipmentFinancialDetails({
     const [shipmentFinancials, setShipmentFinancials] =
         useState<ShipmentFinancials>();
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         fetch(route('shipments.financials', { shipment: shipmentId }), {
             headers: {
@@ -22,7 +25,7 @@ export default function ShipmentFinancialDetails({
             .then((data) => setShipmentFinancials(data))
             .catch((error) =>
                 console.error('Error fetching shipment financials:', error),
-            );
+            ).finally(() => setIsLoading(false));
     }, [shipmentId, setShipmentFinancials]);
 
     return (
@@ -34,19 +37,24 @@ export default function ShipmentFinancialDetails({
                 </CardTitle>
             </CardHeader>
             <CardContent className="grid columns-2">
-                <div>
-                    {/* customer rates */}
-                    customer rates
-                </div>
-                <div>
-                    {/* carrier rates */}
-                    carrier rates
-                </div>
-                <div className="col-span-2">
-                    {/* accessorials */}
-                    accessorials
-                </div>
+                {isLoading ? (
+                    <>
+                        <Skeleton className='w-full h-[64px]' />
+                    </>
+                ) : (
+                    <>
+                        <div>
+                            customer rates
+                        </div>
+                        <div>
+                            carrier rates
+                        </div>
+                        <div className="col-span-2">
+                            accessorials
+                        </div>
+                    </>
+                )}
             </CardContent>
-        </Card>
+        </Card >
     );
 }
