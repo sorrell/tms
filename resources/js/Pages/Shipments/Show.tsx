@@ -142,13 +142,8 @@ export default function Show({
                             <TabsContent value="tracking">
                                 <Card>
                                     <CardContent className="pt-6">
-                                        <div className="space-y-4">
-                                            {[1, 2, 3, 4].map((update) => (
-                                                <Skeleton
-                                                    key={update}
-                                                    className="h-16 w-full"
-                                                />
-                                            ))}
+                                        <div className="flex items-center justify-center p-4 border border-dashed rounded-md">
+                                            <p className="text-muted-foreground text-sm">Tracking feed coming soon</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -171,29 +166,6 @@ export default function Show({
                         {/* Customers */}
                         <CustomerDetails shipment={shipment} />
 
-                        {/* Quick Actions */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Quick Actions</CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex flex-col gap-2">
-                                <Button
-                                    className="w-full justify-start"
-                                    disabled={true}
-                                >
-                                    <MessageSquare className="mr-2 h-4 w-4" />
-                                    Send Message
-                                </Button>
-                                <Button
-                                    className="w-full justify-start"
-                                    variant="outline"
-                                    disabled={true}
-                                >
-                                    <FileText className="mr-2 h-4 w-4" />
-                                    Upload Document
-                                </Button>
-                            </CardContent>
-                        </Card>
 
                         {/* Activity Feed */}
                         <Card>
@@ -201,12 +173,9 @@ export default function Show({
                                 <CardTitle>Recent Activity</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                {[1, 2, 3, 4].map((activity) => (
-                                    <Skeleton
-                                        key={activity}
-                                        className="h-12 w-full"
-                                    />
-                                ))}
+                                <div className="flex items-center justify-center p-4 border border-dashed rounded-md">
+                                    <p className="text-muted-foreground text-sm">Activity feed coming soon</p>
+                                </div>
                             </CardContent>
                         </Card>
                     </div>
