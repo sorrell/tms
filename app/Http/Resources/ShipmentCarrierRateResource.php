@@ -22,11 +22,24 @@ class ShipmentCarrierRateResource extends JsonResource
             'organization_id' => $this->organization_id,
             'shipment_id' => $this->shipment_id,
             'carrier_id' => $this->carrier_id,
+            'carrier' => [
+                'id' => $this->carrier->id,
+                'name' => $this->carrier->name,
+            ],
             'rate' => $this->rate,
             'quantity' => $this->quantity,
             'total' => $this->total,
             'carrier_rate_type_id' => $this->carrier_rate_type_id,
+            'carrier_rate_type' => [
+                'id' => $this->carrier_rate_type->id,
+                'name' => $this->carrier_rate_type->name,
+            ],
             'currency_id' => $this->currency_id,
+            'currency' => [
+                'id' => $this->currency->id,
+                'code' => $this->currency->code,
+                'symbol' => $this->currency->symbol,
+            ],
         ];
     }
 }

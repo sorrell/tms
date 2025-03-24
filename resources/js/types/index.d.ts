@@ -234,22 +234,48 @@ export interface ShipmentCustomerRate {
     organization_id: number;
     shipment_id: number;
     customer_id: number;
+    customer: {
+        id: number;
+        name: string;
+    };
     rate: number;
     quantity: number;
     total: number;
     customer_rate_type_id: number;
+    customer_rate_type: {
+        id: number;
+        name: string;
+    };
     currency_id: number;
+    currency: {
+        id: number;
+        code: string;
+        symbol: string;
+    };
 }
 
 export interface ShipmentCarrierRate {
     organization_id: number;
     shipment_id: number;
     carrier_id: number;
+    carrier: {
+        id: number;
+        name: string;
+    };
     rate: number;
     quantity: number;
     total: number;
     carrier_rate_type_id: number;
+    carrier_rate_type: {
+        id: number;
+        name: string;
+    };
     currency_id: number;
+    currency: {
+        id: number;
+        code: string;
+        symbol: string;
+    };
 }
 
 export interface Accessorial {
