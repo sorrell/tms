@@ -1,21 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { ShipmentFinancials } from '@/types';
+import { Shipment, ShipmentFinancials } from '@/types';
 import { BadgeDollarSign, Truck, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/Components/ui/table';
+import RatesTable from '@/Components/Shipments/RatesTable';
 
 export default function ShipmentFinancialDetails({
-    shipmentId,
+    shipment,
 }: {
-    shipmentId: number;
+    shipment: Shipment;
 }) {
     const [shipmentFinancials, setShipmentFinancials] =
         useState<ShipmentFinancials>();
@@ -23,7 +16,7 @@ export default function ShipmentFinancialDetails({
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch(route('shipments.financials', { shipment: shipmentId }), {
+        fetch(route('shipments.financials', { shipment: shipment.id }), {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -34,7 +27,7 @@ export default function ShipmentFinancialDetails({
             .catch((error) =>
                 console.error('Error fetching shipment financials:', error),
             ).finally(() => setIsLoading(false));
-    }, [shipmentId, setShipmentFinancials]);
+    }, [shipment.id, setShipmentFinancials]);
 
     // Group rates by customer
     const customerRates = shipmentFinancials?.shipment_customer_rates.reduce((acc, rate) => {
@@ -93,79 +86,37 @@ export default function ShipmentFinancialDetails({
                     <>
                         <div className="md:pr-4">
                             <h3 className="text-muted-foreground mb-2">
-                                <Users className='w-5 h-5 inline' />
+                                <Users className='w-5 h-5 inline mr-2' />
                                 Customer
                             </h3>
                             {customerRates && Object.values(customerRates).map((customerGroup) => (
-                                <div key={customerGroup.customer.id} className="mb-4">
-                                    <div className="flex justify-between items-center mb-2 bg-foreground/5 p-1 rounded">
-                                        <h4 className="font-medium">{customerGroup.customer.name}</h4>
-                                        <span className="text-sm text-muted-foreground">
-                                            Total: {customerGroup.currency.symbol}{customerGroup.total.toFixed(2)}
-                                        </span>
-                                    </div>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Type</TableHead>
-                                                <TableHead className="text-right">Rate</TableHead>
-                                                <TableHead className="text-right">Total</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {customerGroup.rates.map((rate) => (
-                                                <TableRow key={`${rate.customer_id}-${rate.customer_rate_type_id}`}>
-                                                    <TableCell>{rate.customer_rate_type.name}</TableCell>
-                                                    <TableCell className="text-right">
-                                                        {rate.currency.symbol}{rate.rate.toFixed(2)} x {rate.quantity}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        {rate.currency.symbol}{rate.total.toFixed(2)}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </div>
+                                <RatesTable
+                                    key={customerGroup.customer.id}
+                                    rates={customerGroup.rates}
+                                    title={customerGroup.customer.name}
+                                    total={customerGroup.total}
+                                    currency={customerGroup.currency}
+                                />
                             ))}
                         </div>
-                        <div className='md:border-l-2 border-l-accent-foreground md:pl-4'>
-                            <h3 className="text-muted-foreground mb-2"><Truck className='w-5 h-5 inline' /> Carrier</h3>
+                        <div className='md:border-l-2 border-l-accent-foreground/30 md:pl-4'>
+                            <h3 className="text-muted-foreground mb-2">
+                                <Truck className='w-5 h-5 inline mr-2' /> Carrier
+                            </h3>
                             {carrierRates && Object.values(carrierRates).map((carrierGroup) => (
-                                <div key={carrierGroup.carrier.id} className="mb-4">
-                                    <div className="flex justify-between items-center mb-2 bg-foreground/5 p-1 rounded">
-                                        <h4 className="font-medium">{carrierGroup.carrier.name}</h4>
-                                        <span className="text-sm text-muted-foreground">
-                                            Total: {carrierGroup.currency.symbol}{carrierGroup.total.toFixed(2)}
-                                        </span>
-                                    </div>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Type</TableHead>
-                                                <TableHead className="text-right">Rate</TableHead>
-                                                <TableHead className="text-right">Total</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {carrierGroup.rates.map((rate) => (
-                                                <TableRow key={`${rate.carrier_id}-${rate.carrier_rate_type_id}`}>
-                                                    <TableCell>{rate.carrier_rate_type.name}</TableCell>
-                                                    <TableCell className="text-right">
-                                                        {rate.currency.symbol}{rate.rate.toFixed(2)} x {rate.quantity}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        {rate.currency.symbol}{rate.total.toFixed(2)}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </div>
+                                <RatesTable
+                                    key={carrierGroup.carrier.id}
+                                    rates={carrierGroup.rates}
+                                    title={carrierGroup.carrier.name}
+                                    total={carrierGroup.total}
+                                    currency={carrierGroup.currency}
+                                />
                             ))}
                         </div>
                         <div className="col-span-1 md:col-span-2">
-                            accessorials
+                            <div className="mt-4 p-4 border border-dashed rounded-md flex items-center justify-center">
+                                <p className="text-muted-foreground">Accessorials - Coming Soon</p>
+                            </div>
                         </div>
                     </>
                 )}

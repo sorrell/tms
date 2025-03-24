@@ -67,7 +67,7 @@ export default function Show({
 
                         {/* Financials */}
 
-                        <ShipmentFinancialDetails shipmentId={shipment.id} />
+                        <ShipmentFinancialDetails shipment={shipment} />
 
                         {/* Notes */}
                         <ShipmentNotes shipmentId={shipment.id} />
