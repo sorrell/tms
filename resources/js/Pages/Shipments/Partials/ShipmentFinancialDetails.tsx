@@ -62,7 +62,7 @@ export default function ShipmentFinancialDetails({
             .catch((error) =>
                 console.error('Error fetching shipment financials:', error),
             ).finally(() => setIsLoading(false));
-    }, [shipment.id]);
+    }, [shipment]);
 
     return (
         <Card>
