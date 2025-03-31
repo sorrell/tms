@@ -231,6 +231,7 @@ export interface DocumentFolder {
 }
 
 export interface ShipmentCustomerRate {
+    id: number;
     organization_id: number;
     shipment_id: number;
     customer_id: number;
@@ -255,6 +256,7 @@ export interface ShipmentCustomerRate {
 }
 
 export interface ShipmentCarrierRate {
+    id: number;
     organization_id: number;
     shipment_id: number;
     carrier_id: number;

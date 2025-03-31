@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { CustomerRateType, Shipment, ShipmentFinancials } from '@/types';
-import { BadgeDollarSign, Truck, Users } from 'lucide-react';
+import { CarrierRateType, CustomerRateType, Shipment, ShipmentFinancials } from '@/types';
+import { BadgeDollarSign } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import RatesTable from '@/Components/Shipments/RatesTable';
+import CustomerRatesTable from '@/Components/Shipments/CustomerRatesTable';
+import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
 
 export default function ShipmentFinancialDetails({
     shipment,
@@ -16,9 +17,13 @@ export default function ShipmentFinancialDetails({
     const [customerRateTypes, setCustomerRateTypes] =
         useState<CustomerRateType[]>([]);
 
+    const [carrierRateTypes, setCarrierRateTypes] =
+        useState<CarrierRateType[]>([]);
+
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        // Fetch customer rate types
         fetch(route('accounting.customer-rate-types.index'), {
             headers: {
                 Accept: 'application/json',
@@ -30,7 +35,20 @@ export default function ShipmentFinancialDetails({
             .catch((error) =>
                 console.error('Error fetching customer rate types:', error),
             );
-    }, [setCustomerRateTypes]);
+
+        // Fetch carrier rate types
+        fetch(route('accounting.carrier-rate-types.index'), {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => setCarrierRateTypes(data))
+            .catch((error) =>
+                console.error('Error fetching carrier rate types:', error),
+            );
+    }, [setCustomerRateTypes, setCarrierRateTypes]);
 
     useEffect(() => {
         fetch(route('shipments.financials', { shipment: shipment.id }), {
@@ -44,47 +62,7 @@ export default function ShipmentFinancialDetails({
             .catch((error) =>
                 console.error('Error fetching shipment financials:', error),
             ).finally(() => setIsLoading(false));
-    }, [shipment.id, setShipmentFinancials]);
-
-    // Group rates by customer
-    const customerRates = shipmentFinancials?.shipment_customer_rates.reduce((acc, rate) => {
-        if (!acc[rate.customer.id]) {
-            acc[rate.customer.id] = {
-                customer: rate.customer,
-                rates: [],
-                total: 0,
-                currency: rate.currency,
-            };
-        }
-        acc[rate.customer.id].rates.push(rate);
-        acc[rate.customer.id].total += rate.total;
-        return acc;
-    }, {} as Record<number, {
-        customer: { id: number; name: string };
-        rates: typeof shipmentFinancials.shipment_customer_rates;
-        total: number;
-        currency: { id: number; code: string; symbol: string };
-    }>);
-
-    // Group rates by carrier
-    const carrierRates = shipmentFinancials?.shipment_carrier_rates.reduce((acc, rate) => {
-        if (!acc[rate.carrier_id]) {
-            acc[rate.carrier_id] = {
-                carrier: rate.carrier,
-                rates: [],
-                total: 0,
-                currency: rate.currency,
-            };
-        }
-        acc[rate.carrier_id].rates.push(rate);
-        acc[rate.carrier_id].total += rate.total;
-        return acc;
-    }, {} as Record<number, {
-        carrier: { id: number; name: string };
-        rates: typeof shipmentFinancials.shipment_carrier_rates;
-        total: number;
-        currency: { id: number; code: string; symbol: string };
-    }>);
+    }, [shipment.id]);
 
     return (
         <Card>
@@ -102,35 +80,16 @@ export default function ShipmentFinancialDetails({
                 ) : (
                     <>
                         <div className="md:pr-4">
-                            <h3 className="text-muted-foreground mb-2">
-                                <Users className='w-5 h-5 inline mr-2' />
-                                Customer
-                            </h3>
-                            {customerRates && Object.values(customerRates).map((customerGroup) => (
-                                <RatesTable
-                                    key={customerGroup.customer.id}
-                                    rates={customerGroup.rates}
-                                    title={customerGroup.customer.name}
-                                    total={customerGroup.total}
-                                    currency={customerGroup.currency}
-                                    rate_types={customerRateTypes}
-                                />
-                            ))}
+                            <CustomerRatesTable
+                                rate_types={customerRateTypes}
+                                rates={shipmentFinancials?.shipment_customer_rates ?? []}
+                            />
                         </div>
-                        <div className='md:border-l-2 border-l-accent-foreground/30 md:pl-4'>
-                            <h3 className="text-muted-foreground mb-2">
-                                <Truck className='w-5 h-5 inline mr-2' /> Carrier
-                            </h3>
-                            {carrierRates && Object.values(carrierRates).map((carrierGroup) => (
-                                <RatesTable
-                                    key={carrierGroup.carrier.id}
-                                    rates={carrierGroup.rates}
-                                    title={carrierGroup.carrier.name}
-                                    total={carrierGroup.total}
-                                    currency={carrierGroup.currency}
-                                    rate_types={[]}
-                                />
-                            ))}
+                        <div className='md:border-l-2 border-l-accent-foreground/30 md:pl-4 mt-8 md:mt-0'>
+                            <CarrierRatesTable
+                                rate_types={carrierRateTypes}
+                                rates={shipmentFinancials?.shipment_carrier_rates ?? []}
+                            />
                         </div>
                         <div className="col-span-1 md:col-span-2">
                             <div className="mt-4 p-4 border border-dashed rounded-md flex items-center justify-center">

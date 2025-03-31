@@ -2,6 +2,7 @@
 
 namespace App\Actions\Accounting;
 
+use App\Http\Resources\Accounting\CarrierRateTypeResource;
 use App\Models\Accounting\CarrierRateType;
 use Illuminate\Database\Eloquent\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -21,7 +22,7 @@ class GetCarrierRateTypes {
 
     public function jsonResponse(Collection $rateTypes)
     {
-        return response()->json(CarrierRateType::collection($rateTypes));
+        return response()->json(CarrierRateTypeResource::collection($rateTypes));
     }
 
 }
