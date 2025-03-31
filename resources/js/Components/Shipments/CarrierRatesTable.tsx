@@ -16,7 +16,6 @@ interface CarrierRateGroup {
     currency: { id: number; code: string; symbol: string };
 }
 
-
 export default function CarrierRatesTable({ rates, rate_types }: CarrierRatesTableProps) {
     let groupedRates = rates.reduce((acc, rate) => {
         if (!acc[rate.carrier.id]) {

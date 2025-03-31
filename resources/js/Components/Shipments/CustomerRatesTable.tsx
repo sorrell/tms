@@ -1,13 +1,26 @@
-import { CustomerRateType, ShipmentCustomerRate } from "@/types";
+import { CustomerRateType, Shipment, ShipmentCustomerRate } from "@/types";
 import { Table, TableBody, TableCell, TableRow } from "@/Components/ui/table";
-import { Pencil, Users } from "lucide-react";
+import { Check, Pencil, Users, X } from "lucide-react";
 import { Button } from "../ui/button";
+import { useState } from "react";
+import { useForm } from "@inertiajs/react";
 
 
 interface CustomerRatesTableProps {
     rates: ShipmentCustomerRate[];
     rate_types: CustomerRateType[];
+    shipment: Shipment;
+}
 
+/** Use for posting to the API */
+interface ShipmentCustomerRateData {
+    id?: number;
+    rate: number;
+    quantity: number;
+    total: number;
+    customer_id: number;
+    customer_rate_type_id: number;
+    currency_id: number;
 }
 
 interface CustomerRateGroup {
@@ -18,7 +31,10 @@ interface CustomerRateGroup {
 }
 
 
-export default function CustomerRatesTable({ rates, rate_types }: CustomerRatesTableProps) {
+export default function CustomerRatesTable({ rates, rate_types, shipment }: CustomerRatesTableProps) {
+
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
 
 
     let groupedRates = rates.reduce((acc, rate) => {
@@ -35,15 +51,6 @@ export default function CustomerRatesTable({ rates, rate_types }: CustomerRatesT
         return acc;
     }, {} as Record<number, CustomerRateGroup>);
 
-    let groups = Object.values(groupedRates).map(group => (
-        <CustomerRateGroup
-            key={group.customer.id}
-            customer={group.customer}
-            rates={group.rates}
-            total={group.total}
-            currency={group.currency}
-        />
-    ));
 
     return (
         <>
@@ -52,15 +59,86 @@ export default function CustomerRatesTable({ rates, rate_types }: CustomerRatesT
                     <Users className='w-5 h-5 inline mr-2' />
                     Customer Rates
                 </span>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="ml-2"
-                >
-                    <Pencil className="h-4 w-4" />
-                </Button>
+                <span>
+                    {isEditing ?
+                        <>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="ml-2"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                <Check className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="ml-2"
+                                onClick={() => setIsEditing(false)}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </> :
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="ml-2"
+                            onClick={() => setIsEditing(true)}
+                        >
+                            <Pencil className="h-4 w-4" />
+                        </Button>
+                    }
+                </span>
             </h3>
-            {groups}
+
+
+            {isEditing ?
+                <EditRows rates={rates} rate_types={rate_types} shipment={shipment}/> :
+                Object.values(groupedRates).map(group => (
+                    <CustomerRateGroup
+                        key={group.customer.id}
+                        customer={group.customer}
+                        rates={group.rates}
+                        total={group.total}
+                        currency={group.currency}
+                    />
+                ))}
+        </>
+    );
+}
+
+function EditRows({ rates, rate_types, shipment }: {
+    rates: ShipmentCustomerRate[];
+    rate_types: CustomerRateType[];
+    shipment: Shipment;
+}) {
+    const { data, setData, post } = useForm<ShipmentCustomerRateData[]>(
+        rates.map(rate => ({
+            id: rate.id,
+            rate: rate.rate,
+            quantity: rate.quantity,
+            total: rate.total,
+            customer_id: rate.customer.id,
+            customer_rate_type_id: rate.customer_rate_type.id,
+            currency_id: rate.currency.id
+        }))
+    );
+
+    const save = () => {
+        post(
+            route('shipments.customer-rates', {shipment: shipment.id}),
+            {
+                onSuccess: console.log,
+                onError: console.error
+            }
+        );
+    };
+
+    return (
+        <>
+            {data.map((rate: ShipmentCustomerRateData) => (
+                
+            ))}
         </>
     );
 }

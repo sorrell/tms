@@ -19,6 +19,7 @@ class ShipmentCustomerRateResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'organization_id' => $this->organization_id,
             'shipment_id' => $this->shipment_id,
             'customer_id' => $this->customer_id,

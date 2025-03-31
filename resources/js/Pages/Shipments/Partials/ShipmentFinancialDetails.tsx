@@ -83,6 +83,7 @@ export default function ShipmentFinancialDetails({
                             <CustomerRatesTable
                                 rate_types={customerRateTypes}
                                 rates={shipmentFinancials?.shipment_customer_rates ?? []}
+                                shipment={shipment}
                             />
                         </div>
                         <div className='md:border-l-2 border-l-accent-foreground/30 md:pl-4 mt-8 md:mt-0'>
