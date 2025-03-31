@@ -32,6 +32,7 @@ use App\Actions\Shipments\CreateShipmentCustomerRate;
 use App\Actions\Shipments\DeleteShipmentCustomerRate;
 use App\Actions\Shipments\DispatchShipment;
 use App\Actions\Shipments\GetShipmentFinancials;
+use App\Actions\Shipments\SaveShipmentCarrierRates;
 use App\Actions\Shipments\SaveShipmentCustomerRates;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentCustomerRate;
@@ -169,6 +170,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('shipments/{shipment}/financials', GetShipmentFinancials::class)->name('shipments.financials');
     Route::post('shipments/{shipment}/financials/customer-rates', SaveShipmentCustomerRates::class)->name('shipments.financials.customer-rates');
+    Route::post('shipments/{shipment}/financials/carrier-rates', SaveShipmentCarrierRates::class)->name('shipments.financials.carrier-rates');
 
     Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
 

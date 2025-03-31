@@ -90,6 +90,7 @@ export default function ShipmentFinancialDetails({
                             <CarrierRatesTable
                                 rate_types={carrierRateTypes}
                                 rates={shipmentFinancials?.shipment_carrier_rates ?? []}
+                                shipment={shipment}
                             />
                         </div>
                         <div className="col-span-1 md:col-span-2">
