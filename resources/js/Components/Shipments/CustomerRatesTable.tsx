@@ -1,9 +1,11 @@
 import { CustomerRateType, Shipment, ShipmentCustomerRate } from "@/types";
 import { Table, TableBody, TableCell, TableRow } from "@/Components/ui/table";
-import { Check, Pencil, Users, X } from "lucide-react";
+import { Check, Pencil, PlusCircle, Trash2, Users, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { useForm } from "@inertiajs/react";
+import { Input } from "../ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 
 interface CustomerRatesTableProps {
@@ -93,7 +95,7 @@ export default function CustomerRatesTable({ rates, rate_types, shipment }: Cust
 
 
             {isEditing ?
-                <EditRows rates={rates} rate_types={rate_types} shipment={shipment}/> :
+                <EditRows rates={rates} rate_types={rate_types} shipment={shipment} /> :
                 Object.values(groupedRates).map(group => (
                     <CustomerRateGroup
                         key={group.customer.id}
@@ -124,9 +126,51 @@ function EditRows({ rates, rate_types, shipment }: {
         }))
     );
 
+    const updateRow = (index: number, field: keyof ShipmentCustomerRateData, value: any) => {
+        const newData = [...data];
+        newData[index] = {
+            ...newData[index],
+            [field]: value
+        };
+
+        // Update total when rate or quantity changes
+        if (field === 'rate' || field === 'quantity') {
+            newData[index].total = newData[index].rate * newData[index].quantity;
+        }
+
+        setData(newData);
+    };
+
+    const addRow = () => {
+        // Get values from an existing row if available
+        const defaultValues = data.length > 0 ? data[0] : {
+            rate: 0,
+            quantity: 1,
+            total: 0,
+            customer_id: shipment.customers[0]?.id || 0,
+            customer_rate_type_id: rate_types[0]?.id || 0,
+            currency_id: data[0]?.currency_id || 0
+        };
+
+        setData([...data, {
+            rate: 0,
+            quantity: 1,
+            total: 0,
+            customer_id: defaultValues.customer_id,
+            customer_rate_type_id: defaultValues.customer_rate_type_id,
+            currency_id: defaultValues.currency_id
+        }]);
+    };
+
+    const deleteRow = (index: number) => {
+        const newData = [...data];
+        newData.splice(index, 1);
+        setData(newData);
+    };
+
     const save = () => {
         post(
-            route('shipments.customer-rates', {shipment: shipment.id}),
+            route('shipments.customer-rates', { shipment: shipment.id }),
             {
                 onSuccess: console.log,
                 onError: console.error
@@ -136,9 +180,71 @@ function EditRows({ rates, rate_types, shipment }: {
 
     return (
         <>
-            {data.map((rate: ShipmentCustomerRateData) => (
-                
-            ))}
+            <Table>
+                <TableBody>
+                    {data.map((rate, index) => (
+                        <TableRow key={index}>
+                            <TableCell>
+                                <Select
+                                    value={rate.customer_rate_type_id.toString()}
+                                    onValueChange={(val) => updateRow(index, 'customer_rate_type_id', parseInt(val))}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select rate type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {rate_types.map(type => (
+                                            <SelectItem key={type.id} value={type.id?.toString()}>
+                                                {type.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </TableCell>
+                            <TableCell>
+                                <Input
+                                    type="number"
+                                    value={rate.rate}
+                                    onChange={(e) => updateRow(index, 'rate', parseFloat(e.target.value))}
+                                    className="w-full p-1 border rounded"
+                                    step="0.01"
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Input
+                                    type="number"
+                                    value={rate.quantity}
+                                    onChange={(e) => updateRow(index, 'quantity', parseInt(e.target.value))}
+                                    className="w-full p-1 border rounded"
+                                />
+                            </TableCell>
+                            <TableCell className="text-right">
+                                {rate.total.toFixed(2)}
+                            </TableCell>
+                            <TableCell>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-destructive"
+                                    onClick={() => deleteRow(index)}
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+
+            <div className="flex justify-between mt-4">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={addRow}
+                >
+                    <PlusCircle className="h-4 w-4" /> Add
+                </Button>
+            </div>
         </>
     );
 }
