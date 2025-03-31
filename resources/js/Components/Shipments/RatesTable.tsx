@@ -6,6 +6,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import { CarrierRateType, CustomerRateType } from '@/types';
 
 interface Rate {
     rate: number;
@@ -29,9 +30,10 @@ interface RatesTableProps {
     currency: {
         symbol: string;
     };
+    rate_types: CarrierRateType[]|CustomerRateType[];
 }
 
-export default function RatesTable({ rates, title, total, currency }: RatesTableProps) {
+export default function RatesTable({ rates, title, total, currency, rate_types }: RatesTableProps) {
     return (
         <div className="mb-4">
             <div className="flex justify-between items-center mb-2 bg-foreground/5 p-1 rounded">

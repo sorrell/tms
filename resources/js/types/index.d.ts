@@ -298,3 +298,15 @@ export interface ShipmentFinancials {
     shipment_carrier_rates: ShipmentCarrierRate[];
     accessorials: Accessorial[];
 }
+
+export interface CustomerRateType {
+    id: number;
+    organization_id: number;
+    name: string;
+}
+
+export interface CarrierRateType {
+    id: number;
+    organization_id: number;
+    name: string;
+}

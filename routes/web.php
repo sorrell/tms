@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\Accounting\GetCarrierRateTypes;
+use App\Actions\Accounting\GetCustomerRateTypes;
 use App\Actions\Carriers\BounceCarrier;
 use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
@@ -77,6 +79,12 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function () {
+
+    Route::prefix('accounting')->name('accounting.')->group(function() {
+        Route::get('customer-rate-types', GetCustomerRateTypes::class)->name('customer-rate-types.index');
+        Route::get('carrier-rate-types', GetCarrierRateTypes::class)->name('carrier-rate-types.index');
+    });
+
     Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');

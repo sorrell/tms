@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Actions\Accounting\GetCarrierRateTypes;
+use App\Actions\Accounting\GetCustomerRateTypes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { Shipment, ShipmentFinancials } from '@/types';
+import { CustomerRateType, Shipment, ShipmentFinancials } from '@/types';
 import { BadgeDollarSign, Truck, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import RatesTable from '@/Components/Shipments/RatesTable';
@@ -13,7 +13,24 @@ export default function ShipmentFinancialDetails({
     const [shipmentFinancials, setShipmentFinancials] =
         useState<ShipmentFinancials>();
 
+    const [customerRateTypes, setCustomerRateTypes] =
+        useState<CustomerRateType[]>([]);
+
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(route('accounting.customer-rate-types.index'), {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => setCustomerRateTypes(data))
+            .catch((error) =>
+                console.error('Error fetching customer rate types:', error),
+            );
+    }, [setCustomerRateTypes]);
 
     useEffect(() => {
         fetch(route('shipments.financials', { shipment: shipment.id }), {
@@ -96,6 +113,7 @@ export default function ShipmentFinancialDetails({
                                     title={customerGroup.customer.name}
                                     total={customerGroup.total}
                                     currency={customerGroup.currency}
+                                    rate_types={customerRateTypes}
                                 />
                             ))}
                         </div>
@@ -110,6 +128,7 @@ export default function ShipmentFinancialDetails({
                                     title={carrierGroup.carrier.name}
                                     total={carrierGroup.total}
                                     currency={carrierGroup.currency}
+                                    rate_types={[]}
                                 />
                             ))}
                         </div>
