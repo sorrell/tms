@@ -32,6 +32,7 @@ use App\Actions\Shipments\CreateShipmentCustomerRate;
 use App\Actions\Shipments\DeleteShipmentCustomerRate;
 use App\Actions\Shipments\DispatchShipment;
 use App\Actions\Shipments\GetShipmentFinancials;
+use App\Actions\Shipments\SaveShipmentCustomerRates;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentCustomerRate;
 use App\Actions\Shipments\UpdateShipmentGeneral;
@@ -167,11 +168,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::post('shipments/{shipment}/bounce', BounceCarrier::class)->name('shipments.bounce');
 
     Route::get('shipments/{shipment}/financials', GetShipmentFinancials::class)->name('shipments.financials');
-
-    // shipment Customer rates
-    Route::post('shipments/{shipment}/financials/customer-rate', CreateShipmentCustomerRate::class)->name('shipments.financials.customer-rate');
-    Route::patch('shipments/{shipment}/financials/customer-rate/{shipmentCustomerRate}', UpdateShipmentCustomerRate::class)->name('shipments.financials.customer-rate.update');
-    Route::delete('shipments/{shipment}/financials/customer-rate/{shipmentCustomerRate}', DeleteShipmentCustomerRate::class)->name('shipments.financials.customer-rate.destroy');
+    Route::post('shipments/{shipment}/financials/customer-rates', SaveShipmentCustomerRates::class)->name('shipments.financials.customer-rates');
 
     Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
 

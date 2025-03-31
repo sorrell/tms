@@ -1,11 +1,12 @@
 import { CustomerRateType, Shipment, ShipmentCustomerRate } from "@/types";
 import { Table, TableBody, TableCell, TableRow } from "@/Components/ui/table";
-import { Check, Pencil, PlusCircle, Trash2, Users, X } from "lucide-react";
+import { Check, Pencil, PlusCircle, Save, Trash2, Users, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { forwardRef, useImperativeHandle } from "react";
 
 
 interface CustomerRatesTableProps {
@@ -36,8 +37,14 @@ interface CustomerRateGroup {
 export default function CustomerRatesTable({ rates, rate_types, shipment }: CustomerRatesTableProps) {
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const editRowsRef = useRef<{ save: () => void } | null>(null);
 
-
+    const handleSave = () => {
+        if (editRowsRef.current) {
+            editRowsRef.current.save();
+            setIsEditing(false);
+        }
+    };
 
     let groupedRates = rates.reduce((acc, rate) => {
         if (!acc[rate.customer.id]) {
@@ -68,7 +75,7 @@ export default function CustomerRatesTable({ rates, rate_types, shipment }: Cust
                                 variant="ghost"
                                 size="icon"
                                 className="ml-2"
-                                onClick={() => setIsEditing(true)}
+                                onClick={() => handleSave()}
                             >
                                 <Check className="h-4 w-4" />
                             </Button>
@@ -95,7 +102,7 @@ export default function CustomerRatesTable({ rates, rate_types, shipment }: Cust
 
 
             {isEditing ?
-                <EditRows rates={rates} rate_types={rate_types} shipment={shipment} /> :
+                <EditRows ref={editRowsRef} rates={rates} rate_types={rate_types} shipment={shipment} /> :
                 Object.values(groupedRates).map(group => (
                     <CustomerRateGroup
                         key={group.customer.id}
@@ -109,127 +116,175 @@ export default function CustomerRatesTable({ rates, rate_types, shipment }: Cust
     );
 }
 
-function EditRows({ rates, rate_types, shipment }: {
+const EditRows = forwardRef(({ rates, rate_types, shipment }: {
     rates: ShipmentCustomerRate[];
     rate_types: CustomerRateType[];
     shipment: Shipment;
-}) {
-    const { data, setData, post } = useForm<ShipmentCustomerRateData[]>(
-        rates.map(rate => ({
-            id: rate.id,
-            rate: rate.rate,
-            quantity: rate.quantity,
-            total: rate.total,
-            customer_id: rate.customer.id,
-            customer_rate_type_id: rate.customer_rate_type.id,
-            currency_id: rate.currency.id
-        }))
+}, ref) => {
+    const { data, setData, post } = useForm<{ rates: ShipmentCustomerRateData[] }>(
+        {
+            rates: rates.map(rate => ({
+                id: rate.id,
+                rate: rate.rate,
+                quantity: rate.quantity,
+                total: rate.total,
+                customer_id: rate.customer.id,
+                customer_rate_type_id: rate.customer_rate_type.id,
+                currency_id: rate.currency.id
+            }))
+        }
     );
 
     const updateRow = (index: number, field: keyof ShipmentCustomerRateData, value: any) => {
-        const newData = [...data];
-        newData[index] = {
-            ...newData[index],
+        const newRates = [...data.rates];
+        newRates[index] = {
+            ...newRates[index],
             [field]: value
         };
 
         // Update total when rate or quantity changes
         if (field === 'rate' || field === 'quantity') {
-            newData[index].total = newData[index].rate * newData[index].quantity;
+            newRates[index].total = newRates[index].rate * newRates[index].quantity;
         }
 
-        setData(newData);
+        setData({ rates: newRates });
     };
 
     const addRow = () => {
         // Get values from an existing row if available
-        const defaultValues = data.length > 0 ? data[0] : {
+        const defaultValues = data.rates.length > 0 ? data.rates[0] : {
             rate: 0,
             quantity: 1,
             total: 0,
             customer_id: shipment.customers[0]?.id || 0,
             customer_rate_type_id: rate_types[0]?.id || 0,
-            currency_id: data[0]?.currency_id || 0
+            currency_id: data.rates[0]?.currency_id || 0
         };
 
-        setData([...data, {
-            rate: 0,
-            quantity: 1,
-            total: 0,
-            customer_id: defaultValues.customer_id,
-            customer_rate_type_id: defaultValues.customer_rate_type_id,
-            currency_id: defaultValues.currency_id
-        }]);
+        setData({
+            rates: [
+                ...data.rates,
+                {
+                    rate: 0,
+                    quantity: 1, 
+                    total: 0,
+                    customer_id: defaultValues.customer_id,
+                    customer_rate_type_id: defaultValues.customer_rate_type_id,
+                    currency_id: defaultValues.currency_id
+                }
+            ]
+        });
     };
 
     const deleteRow = (index: number) => {
-        const newData = [...data];
-        newData.splice(index, 1);
-        setData(newData);
+        const newRates = [...data.rates];
+        newRates.splice(index, 1);
+        setData({ rates: newRates });
     };
 
     const save = () => {
         post(
-            route('shipments.customer-rates', { shipment: shipment.id }),
+            route('shipments.financials.customer-rates', { shipment: shipment.id }),
             {
+                preserveScroll: true,
                 onSuccess: console.log,
                 onError: console.error
             }
         );
     };
 
+    // Expose the save function to the parent component
+    useImperativeHandle(ref, () => ({
+        save
+    }));
+
     return (
         <>
-            <Table>
+            <Table className="w-full">
                 <TableBody>
-                    {data.map((rate, index) => (
-                        <TableRow key={index}>
-                            <TableCell>
-                                <Select
-                                    value={rate.customer_rate_type_id.toString()}
-                                    onValueChange={(val) => updateRow(index, 'customer_rate_type_id', parseInt(val))}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select rate type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {rate_types.map(type => (
-                                            <SelectItem key={type.id} value={type.id?.toString()}>
-                                                {type.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                    {data.rates.map((rate: ShipmentCustomerRateData, index: number) => (
+                        <TableRow key={index} className="grid grid-cols-2 gap-2 sm:table-row sm:gap-0">
+                            <TableCell className="w-full sm:w-auto sm:max-w-[150px]">
+                                <div className="flex flex-col">
+                                    <span className="text-xs text-muted-foreground mb-1 sm:hidden">Customer</span>
+                                    <Select
+                                        value={rate.customer_id.toString()}
+                                        onValueChange={(val) => updateRow(index, 'customer_id', parseInt(val))}
+                                    >
+                                        <SelectTrigger className="truncate w-full">
+                                            <SelectValue placeholder="Select customer" className="truncate" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {shipment.customers.map(customer => (
+                                                <SelectItem key={customer.id} value={customer.id.toString()} className="truncate">
+                                                    {customer.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </TableCell>
-                            <TableCell>
-                                <Input
-                                    type="number"
-                                    value={rate.rate}
-                                    onChange={(e) => updateRow(index, 'rate', parseFloat(e.target.value))}
-                                    className="w-full p-1 border rounded"
-                                    step="0.01"
-                                />
+                            <TableCell className="w-full sm:w-auto">
+                                <div className="flex flex-col">
+                                    <span className="text-xs text-muted-foreground mb-1 sm:hidden">Rate Type</span>
+                                    <Select
+                                        value={rate.customer_rate_type_id.toString()}
+                                        onValueChange={(val) => updateRow(index, 'customer_rate_type_id', parseInt(val))}
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Select rate type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {rate_types.map(type => (
+                                                <SelectItem key={type.id} value={type.id?.toString()}>
+                                                    {type.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </TableCell>
-                            <TableCell>
-                                <Input
-                                    type="number"
-                                    value={rate.quantity}
-                                    onChange={(e) => updateRow(index, 'quantity', parseInt(e.target.value))}
-                                    className="w-full p-1 border rounded"
-                                />
+                            <TableCell className="w-full sm:w-auto">
+                                <div className="flex flex-col">
+                                    <span className="text-xs text-muted-foreground mb-1 sm:hidden">Rate</span>
+                                    <Input
+                                        type="number"
+                                        value={rate.rate}
+                                        onChange={(e) => updateRow(index, 'rate', parseFloat(e.target.value))}
+                                        className="w-full p-1 border rounded"
+                                        step="0.01"
+                                    />
+                                </div>
                             </TableCell>
-                            <TableCell className="text-right">
-                                {rate.total.toFixed(2)}
+                            <TableCell className="w-full sm:w-auto">
+                                <div className="flex flex-col">
+                                    <span className="text-xs text-muted-foreground mb-1 sm:hidden">Quantity</span>
+                                    <Input
+                                        type="number"
+                                        value={rate.quantity}
+                                        onChange={(e) => updateRow(index, 'quantity', parseInt(e.target.value))}
+                                        className="w-full p-1 border rounded"
+                                    />
+                                </div>
                             </TableCell>
-                            <TableCell>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="text-destructive"
-                                    onClick={() => deleteRow(index)}
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
+                            <TableCell className="text-right w-full sm:w-auto">
+                                <div className="flex flex-col items-end">
+                                    <span className="text-xs text-muted-foreground mb-1 sm:hidden">Total</span>
+                                    {rate.total.toFixed(2)}
+                                </div>
+                            </TableCell>
+                            <TableCell className="w-full sm:w-auto">
+                                <div className="flex flex-col items-center">
+                                    <span className="text-xs text-muted-foreground mb-1 sm:hidden">Delete</span>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-destructive"
+                                        onClick={() => deleteRow(index)}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -247,7 +302,7 @@ function EditRows({ rates, rate_types, shipment }: {
             </div>
         </>
     );
-}
+});
 
 
 function CustomerRateGroup(rateGroup: CustomerRateGroup) {
