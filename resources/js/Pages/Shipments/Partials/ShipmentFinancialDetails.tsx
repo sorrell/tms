@@ -1,10 +1,15 @@
+import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
+import CustomerRatesTable from '@/Components/Shipments/CustomerRatesTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { CarrierRateType, CustomerRateType, Shipment, ShipmentFinancials } from '@/types';
+import {
+    CarrierRateType,
+    CustomerRateType,
+    Shipment,
+    ShipmentFinancials,
+} from '@/types';
 import { BadgeDollarSign } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import CustomerRatesTable from '@/Components/Shipments/CustomerRatesTable';
-import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
 
 export default function ShipmentFinancialDetails({
     shipment,
@@ -14,11 +19,13 @@ export default function ShipmentFinancialDetails({
     const [shipmentFinancials, setShipmentFinancials] =
         useState<ShipmentFinancials>();
 
-    const [customerRateTypes, setCustomerRateTypes] =
-        useState<CustomerRateType[]>([]);
+    const [customerRateTypes, setCustomerRateTypes] = useState<
+        CustomerRateType[]
+    >([]);
 
-    const [carrierRateTypes, setCarrierRateTypes] =
-        useState<CarrierRateType[]>([]);
+    const [carrierRateTypes, setCarrierRateTypes] = useState<CarrierRateType[]>(
+        [],
+    );
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -61,7 +68,8 @@ export default function ShipmentFinancialDetails({
             .then((data) => setShipmentFinancials(data))
             .catch((error) =>
                 console.error('Error fetching shipment financials:', error),
-            ).finally(() => setIsLoading(false));
+            )
+            .finally(() => setIsLoading(false));
     }, [shipment]);
 
     return (
@@ -75,27 +83,35 @@ export default function ShipmentFinancialDetails({
             <CardContent className="grid columns-1 md:columns-2">
                 {isLoading ? (
                     <>
-                        <Skeleton className='w-full h-[64px]' />
+                        <Skeleton className="h-[64px] w-full" />
                     </>
                 ) : (
                     <>
                         <div className="md:pr-4">
                             <CustomerRatesTable
                                 rate_types={customerRateTypes}
-                                rates={shipmentFinancials?.shipment_customer_rates ?? []}
+                                rates={
+                                    shipmentFinancials?.shipment_customer_rates ??
+                                    []
+                                }
                                 shipment={shipment}
                             />
                         </div>
-                        <div className='md:border-l-2 border-l-accent-foreground/30 md:pl-4 mt-8 md:mt-0'>
+                        <div className="mt-8 border-l-accent-foreground/30 md:mt-0 md:border-l-2 md:pl-4">
                             <CarrierRatesTable
                                 rate_types={carrierRateTypes}
-                                rates={shipmentFinancials?.shipment_carrier_rates ?? []}
+                                rates={
+                                    shipmentFinancials?.shipment_carrier_rates ??
+                                    []
+                                }
                                 shipment={shipment}
                             />
                         </div>
                         <div className="col-span-1 md:col-span-2">
-                            <div className="mt-4 p-4 border border-dashed rounded-md flex items-center justify-center">
-                                <p className="text-muted-foreground">Accessorials - Coming Soon</p>
+                            <div className="mt-4 flex items-center justify-center rounded-md border border-dashed p-4">
+                                <p className="text-muted-foreground">
+                                    Accessorials - Coming Soon
+                                </p>
                             </div>
                         </div>
                     </>

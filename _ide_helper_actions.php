@@ -1,5 +1,35 @@
 <?php
 
+namespace App\Actions\Accounting;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean)
+ * @method static dispatchSync()
+ * @method static dispatchNow()
+ * @method static dispatchAfterResponse()
+ * @method static \Illuminate\Database\Eloquent\Collection run()
+ */
+class GetCarrierRateTypes
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean)
+ * @method static dispatchSync()
+ * @method static dispatchNow()
+ * @method static dispatchAfterResponse()
+ * @method static \Illuminate\Database\Eloquent\Collection run()
+ */
+class GetCustomerRateTypes
+{
+}
 namespace App\Actions\Carriers;
 
 /**
@@ -452,6 +482,34 @@ class DispatchShipment
  * @method static \App\Models\Shipments\Shipment run(\App\Models\Shipments\Shipment $shipment)
  */
 class GetShipmentFinancials
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Support\Collection run(\App\Models\Shipments\Shipment $shipment, array $rates)
+ */
+class SaveShipmentCarrierRates
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, array $rates)
+ * @method static \Illuminate\Support\Collection run(\App\Models\Shipments\Shipment $shipment, array $rates)
+ */
+class SaveShipmentCustomerRates
 {
 }
 /**

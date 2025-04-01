@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Actions\Accounting\GetCarrierRateTypes;
-use App\Actions\Accounting\GetCustomerRateTypes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,8 +20,8 @@ class ShipmentFinancialsResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'shipment_customer_rates' => ShipmentCustomerRateResource::collection($this->shipment_customer_rates),
-            'shipment_carrier_rates' => ShipmentCarrierRateResource::collection($this->shipment_carrier_rates),
+            'shipment_customer_rates' => ShipmentCustomerRateResource::collection($this->shipment_customer_rates->load('customer', 'customer_rate_type', 'currency')),
+            'shipment_carrier_rates' => ShipmentCarrierRateResource::collection($this->shipment_carrier_rates->load('carrier', 'carrier_rate_type', 'currency')),
             'accessorials' => AccessorialResource::collection($this->accessorials),
         ];
     }
