@@ -229,3 +229,86 @@ export interface DocumentFolder {
     id?: number;
     name: string;
 }
+
+export interface ShipmentCustomerRate {
+    id: number;
+    organization_id: number;
+    shipment_id: number;
+    customer_id: number;
+    customer: {
+        id: number;
+        name: string;
+    };
+    rate: number;
+    quantity: number;
+    total: number;
+    customer_rate_type_id: number;
+    customer_rate_type: {
+        id: number;
+        name: string;
+    };
+    currency_id: number;
+    currency: {
+        id: number;
+        code: string;
+        symbol: string;
+    };
+}
+
+export interface ShipmentCarrierRate {
+    id: number;
+    organization_id: number;
+    shipment_id: number;
+    carrier_id: number;
+    carrier: {
+        id: number;
+        name: string;
+    };
+    rate: number;
+    quantity: number;
+    total: number;
+    carrier_rate_type_id: number;
+    carrier_rate_type: {
+        id: number;
+        name: string;
+    };
+    currency_id: number;
+    currency: {
+        id: number;
+        code: string;
+        symbol: string;
+    };
+}
+
+export interface Accessorial {
+    organization_id: number;
+    shipment_id: number;
+    customer_id: number;
+    carrier_id: number;
+    invoice_customer: boolean;
+    pay_carrier: boolean;
+    rate: number;
+    quantity: number;
+    total: number;
+    accessorial_type_id: number;
+    currency_id: number;
+}
+
+export interface ShipmentFinancials {
+    id: number;
+    shipment_customer_rates: ShipmentCustomerRate[];
+    shipment_carrier_rates: ShipmentCarrierRate[];
+    accessorials: Accessorial[];
+}
+
+export interface CustomerRateType {
+    id: number;
+    organization_id: number;
+    name: string;
+}
+
+export interface CarrierRateType {
+    id: number;
+    organization_id: number;
+    name: string;
+}

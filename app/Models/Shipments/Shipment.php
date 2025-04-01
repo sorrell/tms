@@ -118,6 +118,30 @@ class Shipment extends Model implements HasStatesContract
         return $this->hasMany(ShipmentStop::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ShipmentCustomerRate, $this>
+     */
+    public function shipment_customer_rates(): HasMany
+    {
+        return $this->hasMany(ShipmentCustomerRate::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ShipmentCarrierRate, $this>
+     */
+    public function shipment_carrier_rates(): HasMany
+    {
+        return $this->hasMany(ShipmentCarrierRate::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Accessorial, $this>
+     */
+    public function accessorials(): HasMany
+    {
+        return $this->hasMany(Accessorial::class);
+    }
+
     public function getNextStopAttribute(): ?ShipmentStop
     {
         return $this->stops()->whereNull('arrived_at')->first();

@@ -87,7 +87,7 @@ return new class extends Migration
 
         Schema::create('shipment_carrier_rates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('carrier_id')->constrained('carrier');
+            $table->foreignId('carrier_id')->constrained('carriers');
             $table->foreignId('shipment_id')->constrained('shipments');
             $table->foreignId('organization_id')->constrained('organizations');
 
@@ -108,7 +108,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('shipment_carrier_rates');
         Schema::dropIfExists('shipment_customer_rates');
-        Schema::dropIfExists('shipment_accessorials');
+        Schema::dropIfExists('accessorials');
         Schema::dropIfExists('accessorial_types');
         Schema::dropIfExists('carrier_rate_types');
         Schema::dropIfExists('customer_rate_types');
