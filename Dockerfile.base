@@ -53,21 +53,3 @@ COPY ${DOCKERFILE_PATH}/php.ini /etc/php/${PHP_VERSION}/fpm/conf.d/99-php.ini
 COPY ${DOCKERFILE_PATH}/php-fpm.conf /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 RUN chmod +x /usr/local/bin/start-container
 
-# Install dependencies normally first
-RUN cp .env.example .env \
-    && composer install \
-    && touch database/database.sqlite \
-    && npm install \
-    && php artisan key:generate \
-    && npm run build 
-
-# Create directory and move dependencies
-RUN mkdir -p /opt/loadpartner \
-    && mv vendor /opt/loadpartner/ \
-    && mv node_modules /opt/loadpartner/ \
-    && rm -rf /var/www/html/* \
-    && ln -s /opt/loadpartner/vendor vendor \
-    && ln -s /opt/loadpartner/node_modules node_modules
-
-# chown all files to www-data
-RUN chown -R www-data:www-data /var/www/html /opt/loadpartner
