@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from '@/Components/ui/table';
+import { toast } from '@/hooks/UseToast';
 import { CarrierRateType, Shipment, ShipmentCarrierRate } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, Pencil, PlusCircle, Trash2, Truck, X } from 'lucide-react';
@@ -12,7 +13,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select';
-import { toast } from '@/hooks/UseToast';
 
 interface CarrierRatesTableProps {
     rates: ShipmentCarrierRate[];
@@ -185,13 +185,13 @@ const EditRows = forwardRef(
                 data.rates.length > 0
                     ? data.rates[0]
                     : {
-                        rate: 0,
-                        quantity: 1,
-                        total: 0,
-                        carrier_id: shipment.carrier?.id || 0,
-                        carrier_rate_type_id: rate_types[0]?.id || 0,
-                        currency_id: data.rates[0]?.currency_id || 1,
-                    };
+                          rate: 0,
+                          quantity: 1,
+                          total: 0,
+                          carrier_id: shipment.carrier?.id || 0,
+                          carrier_rate_type_id: rate_types[0]?.id || 0,
+                          currency_id: data.rates[0]?.currency_id || 1,
+                      };
 
             setData({
                 rates: [
@@ -227,20 +227,25 @@ const EditRows = forwardRef(
                             description: 'Carrier rates saved!',
                         });
                     },
-                    onError: console.error,
                 },
             );
         };
 
-        const carrierOptions: { name: string; id: number; }[] = [];
+        const carrierOptions: { name: string; id: number }[] = [];
         // Add carriers from accessorials, filtering out undefined values
-        rates.forEach(a => {
-            if (a.carrier && !carrierOptions.find(v => v.id == a.carrier?.id)) {
+        rates.forEach((a) => {
+            if (
+                a.carrier &&
+                !carrierOptions.find((v) => v.id == a.carrier?.id)
+            ) {
                 carrierOptions.push(a.carrier);
             }
         });
         // Add shipment carrier if it exists
-        if (shipment.carrier && !carrierOptions.find(v => v.id == shipment.carrier.id)) {
+        if (
+            shipment.carrier &&
+            !carrierOptions.find((v) => v.id == shipment.carrier.id)
+        ) {
             carrierOptions.push(shipment.carrier);
         }
 
@@ -266,6 +271,7 @@ const EditRows = forwardRef(
                                             </span>
                                             <Select
                                                 value={rate.carrier_id.toString()}
+                                                required={true}
                                                 onValueChange={(val) =>
                                                     updateRow(
                                                         index,
@@ -281,17 +287,13 @@ const EditRows = forwardRef(
                                                     />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {carrierOptions.map(c => (
+                                                    {carrierOptions.map((c) => (
                                                         <SelectItem
-                                                            key={
-                                                                c.id
-                                                            }
+                                                            key={c.id}
                                                             value={c.id.toString()}
                                                             className="truncate"
                                                         >
-                                                            {
-                                                                c.name
-                                                            }
+                                                            {c.name}
                                                         </SelectItem>
                                                     ))}
                                                 </SelectContent>

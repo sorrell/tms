@@ -288,12 +288,12 @@ export interface Accessorial {
     customer?: {
         id: number;
         name: string;
-    }
+    };
     carrier_id: number;
     carrier?: {
         id: number;
         name: string;
-    }
+    };
     invoice_customer: boolean;
     pay_carrier: boolean;
     rate: number;
@@ -303,7 +303,7 @@ export interface Accessorial {
     accessorial_type?: {
         id: number;
         name: string;
-    }
+    };
     currency_id: number;
     currency?: {
         id: number;

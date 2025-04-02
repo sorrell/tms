@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from '@/Components/ui/table';
+import { toast } from '@/hooks/UseToast';
 import { CustomerRateType, Shipment, ShipmentCustomerRate } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, Pencil, PlusCircle, Trash2, Users, X } from 'lucide-react';
@@ -12,7 +13,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select';
-import { toast } from '@/hooks/UseToast';
 
 interface CustomerRatesTableProps {
     rates: ShipmentCustomerRate[];

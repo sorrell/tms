@@ -83,8 +83,8 @@ class SaveAccessorials
             'accessorials.*.rate' => 'required|numeric',
             'accessorials.*.quantity' => 'required|numeric',
             'accessorials.*.total' => 'required|numeric',
-            'accessorials.*.customer_id' => 'required|exists:customers,id',
-            'accessorials.*.carrier_id' => 'required|exists:carriers,id',
+            'accessorials.*.customer_id' => 'nullable|exists:customers,id',
+            'accessorials.*.carrier_id' => 'nullable|exists:carriers,id',
             'accessorials.*.accessorial_type_id' => 'required|exists:accessorial_types,id',
             'accessorials.*.currency_id' => 'required|exists:currencies,id'
         ];
