@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Accounting\GetAccessorialTypes;
 use App\Actions\Accounting\GetCarrierRateTypes;
 use App\Actions\Accounting\GetCustomerRateTypes;
 use App\Actions\Carriers\BounceCarrier;
@@ -32,6 +33,7 @@ use App\Actions\Shipments\CreateShipmentCustomerRate;
 use App\Actions\Shipments\DeleteShipmentCustomerRate;
 use App\Actions\Shipments\DispatchShipment;
 use App\Actions\Shipments\GetShipmentFinancials;
+use App\Actions\Shipments\SaveAccessorials;
 use App\Actions\Shipments\SaveShipmentCarrierRates;
 use App\Actions\Shipments\SaveShipmentCustomerRates;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
@@ -85,6 +87,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::prefix('accounting')->name('accounting.')->group(function() {
         Route::get('customer-rate-types', GetCustomerRateTypes::class)->name('customer-rate-types.index');
         Route::get('carrier-rate-types', GetCarrierRateTypes::class)->name('carrier-rate-types.index');
+        Route::get('accessorial-types', GetAccessorialTypes::class)->name('accessorial-types.index');
     });
 
     Route::get('dashboard', function () {
@@ -171,6 +174,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('shipments/{shipment}/financials', GetShipmentFinancials::class)->name('shipments.financials');
     Route::post('shipments/{shipment}/financials/customer-rates', SaveShipmentCustomerRates::class)->name('shipments.financials.customer-rates');
     Route::post('shipments/{shipment}/financials/carrier-rates', SaveShipmentCarrierRates::class)->name('shipments.financials.carrier-rates');
+    Route::post('shipments/{shipment}/financials/accessorials', SaveAccessorials::class)->name('shipments.financials.accessorials');
 
     Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
 

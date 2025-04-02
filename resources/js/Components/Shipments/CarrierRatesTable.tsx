@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from '@/Components/ui/table';
+import { toast } from '@/hooks/UseToast';
 import { CarrierRateType, Shipment, ShipmentCarrierRate } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, Pencil, PlusCircle, Trash2, Truck, X } from 'lucide-react';
@@ -189,7 +190,7 @@ const EditRows = forwardRef(
                           total: 0,
                           carrier_id: shipment.carrier?.id || 0,
                           carrier_rate_type_id: rate_types[0]?.id || 0,
-                          currency_id: data.rates[0]?.currency_id || 0,
+                          currency_id: data.rates[0]?.currency_id || 1,
                       };
 
             setData({
@@ -221,11 +222,32 @@ const EditRows = forwardRef(
                 }),
                 {
                     preserveScroll: true,
-                    onSuccess: console.log,
-                    onError: console.error,
+                    onSuccess: () => {
+                        toast({
+                            description: 'Carrier rates saved!',
+                        });
+                    },
                 },
             );
         };
+
+        const carrierOptions: { name: string; id: number }[] = [];
+        // Add carriers from accessorials, filtering out undefined values
+        rates.forEach((a) => {
+            if (
+                a.carrier &&
+                !carrierOptions.find((v) => v.id == a.carrier?.id)
+            ) {
+                carrierOptions.push(a.carrier);
+            }
+        });
+        // Add shipment carrier if it exists
+        if (
+            shipment.carrier &&
+            !carrierOptions.find((v) => v.id == shipment.carrier.id)
+        ) {
+            carrierOptions.push(shipment.carrier);
+        }
 
         // Expose the save function to the parent component
         useImperativeHandle(ref, () => ({
@@ -249,6 +271,7 @@ const EditRows = forwardRef(
                                             </span>
                                             <Select
                                                 value={rate.carrier_id.toString()}
+                                                required={true}
                                                 onValueChange={(val) =>
                                                     updateRow(
                                                         index,
@@ -264,21 +287,15 @@ const EditRows = forwardRef(
                                                     />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {shipment.carrier && (
+                                                    {carrierOptions.map((c) => (
                                                         <SelectItem
-                                                            key={
-                                                                shipment.carrier
-                                                                    .id
-                                                            }
-                                                            value={shipment.carrier.id.toString()}
+                                                            key={c.id}
+                                                            value={c.id.toString()}
                                                             className="truncate"
                                                         >
-                                                            {
-                                                                shipment.carrier
-                                                                    .name
-                                                            }
+                                                            {c.name}
                                                         </SelectItem>
-                                                    )}
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                         </div>

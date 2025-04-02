@@ -3,32 +3,33 @@
 namespace App\Actions\Shipments;
 
 use App\Http\Resources\ShipmentCarrierRateResource;
+use App\Models\Shipments\Accessorial;
 use App\Models\Shipments\Shipment;
 use App\Models\Shipments\ShipmentCarrierRate;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class SaveShipmentCarrierRates 
+class SaveAccessorials 
 {
     use AsAction;
 
-    public function handle(Shipment $shipment, array $rates) : Collection 
+    public function handle(Shipment $shipment, array $accessorials) : Collection 
     {
         // Extract IDs from the rates array
-        $rateIds = collect($rates)
+        $accessorialIds = collect($accessorials)
             ->pluck('id')
             ->filter()
             ->toArray();
-        $toDelete = $shipment->shipment_carrier_rates()->whereNotIn('id', $rateIds)->get();
+        $toDelete = $shipment->accessorials()->whereNotIn('id', $accessorialIds)->get();
         // Delete rates that are no longer in the request
-        foreach ($toDelete as $rate) {
-            $rate->delete();
+        foreach ($toDelete as $accessorial) {
+            $accessorial->delete();
         }
         
         // Create or update rates
         $updatedRates = collect();
-        foreach ($rates as $rateData) {
+        foreach ($accessorials as $rateData) {
 
             $calculatedTotal = $rateData['quantity'] * $rateData['rate'];   
             // If there's a discrepancy, adjust the rate to match the total
@@ -37,7 +38,7 @@ class SaveShipmentCarrierRates
             }
 
             if (isset($rateData['id'])) {
-                $rate = ShipmentCarrierRate::where('id', $rateData['id'])->where('shipment_id', $shipment->id)->first();
+                $rate = Accessorial::where('id', $rateData['id'])->where('shipment_id', $shipment->id)->first();
                 if ($rate) {
                     $rate->update($rateData);
                     $updatedRates->push($rate->fresh());
@@ -45,7 +46,7 @@ class SaveShipmentCarrierRates
                 }
             }
 
-            $rate = new ShipmentCarrierRate($rateData);
+            $rate = new Accessorial($rateData);
             $rate->shipment_id = $shipment->id;
             $rate->save();
             $updatedRates->push($rate);
@@ -59,7 +60,7 @@ class SaveShipmentCarrierRates
     {
         return $this->handle(
             $shipment,
-            $request->validated('rates', [])
+            $request->validated('accessorials', [])
         );
     }
 
@@ -76,13 +77,16 @@ class SaveShipmentCarrierRates
     public function rules() 
     {
         return [
-            'rates.*.id' => 'nullable',
-            'rates.*.rate' => 'required|numeric',
-            'rates.*.quantity' => 'required|numeric',
-            'rates.*.total' => 'required|numeric',
-            'rates.*.carrier_id' => 'required|exists:carriers,id',
-            'rates.*.carrier_rate_type_id' => 'required|exists:carrier_rate_types,id',
-            'rates.*.currency_id' => 'required|exists:currencies,id'
+            'accessorials.*.id' => 'nullable',
+            'accessorials.*.pay_carrier' => 'required|boolean',
+            'accessorials.*.invoice_customer' => 'required|boolean',
+            'accessorials.*.rate' => 'required|numeric',
+            'accessorials.*.quantity' => 'required|numeric',
+            'accessorials.*.total' => 'required|numeric',
+            'accessorials.*.customer_id' => 'nullable|exists:customers,id',
+            'accessorials.*.carrier_id' => 'nullable|exists:carriers,id',
+            'accessorials.*.accessorial_type_id' => 'required|exists:accessorial_types,id',
+            'accessorials.*.currency_id' => 'required|exists:currencies,id'
         ];
     }
 } 

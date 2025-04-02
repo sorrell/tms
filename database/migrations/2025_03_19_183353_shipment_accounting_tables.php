@@ -55,7 +55,7 @@ return new class extends Migration
             $table->foreignId('shipment_id')->constrained('shipments');
 
             $table->foreignId('customer_id')->nullable(true)->constrained('customers');
-            $table->foreignId('carrier_id')->nullable(true)->constrained('carrier');
+            $table->foreignId('carrier_id')->nullable(true)->constrained('carriers');
 
             $table->boolean('invoice_customer')->default(false);
             $table->boolean('pay_carrier')->default(false);

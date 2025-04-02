@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from '@/Components/ui/table';
+import { toast } from '@/hooks/UseToast';
 import { CustomerRateType, Shipment, ShipmentCustomerRate } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, Pencil, PlusCircle, Trash2, Users, X } from 'lucide-react';
@@ -189,7 +190,7 @@ const EditRows = forwardRef(
                           total: 0,
                           customer_id: shipment.customers[0]?.id || 0,
                           customer_rate_type_id: rate_types[0]?.id || 0,
-                          currency_id: data.rates[0]?.currency_id || 0,
+                          currency_id: data.rates[0]?.currency_id || 1,
                       };
 
             setData({
@@ -221,7 +222,11 @@ const EditRows = forwardRef(
                 }),
                 {
                     preserveScroll: true,
-                    onSuccess: console.log,
+                    onSuccess: () => {
+                        toast({
+                            description: 'Customer rates saved!',
+                        });
+                    },
                     onError: console.error,
                 },
             );

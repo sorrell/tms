@@ -1,8 +1,10 @@
+import AccessorialsTable from '@/Components/Shipments/AccessorialsTable';
 import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
 import CustomerRatesTable from '@/Components/Shipments/CustomerRatesTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
 import {
+    AccessorialType,
     CarrierRateType,
     CustomerRateType,
     Shipment,
@@ -24,6 +26,10 @@ export default function ShipmentFinancialDetails({
     >([]);
 
     const [carrierRateTypes, setCarrierRateTypes] = useState<CarrierRateType[]>(
+        [],
+    );
+
+    const [accessorialTypes, setAccessorialTypes] = useState<AccessorialType[]>(
         [],
     );
 
@@ -55,7 +61,20 @@ export default function ShipmentFinancialDetails({
             .catch((error) =>
                 console.error('Error fetching carrier rate types:', error),
             );
-    }, [setCustomerRateTypes, setCarrierRateTypes]);
+
+        // Fetch accessorial types
+        fetch(route('accounting.accessorial-types.index'), {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => setAccessorialTypes(data))
+            .catch((error) =>
+                console.error('Error fetching accessorial types:', error),
+            );
+    }, [setCustomerRateTypes, setCarrierRateTypes, setAccessorialTypes]);
 
     useEffect(() => {
         fetch(route('shipments.financials', { shipment: shipment.id }), {
@@ -87,7 +106,7 @@ export default function ShipmentFinancialDetails({
                     </>
                 ) : (
                     <>
-                        <div className="md:pr-4">
+                        <div className="pb-2 md:pr-4">
                             <CustomerRatesTable
                                 rate_types={customerRateTypes}
                                 rates={
@@ -97,7 +116,7 @@ export default function ShipmentFinancialDetails({
                                 shipment={shipment}
                             />
                         </div>
-                        <div className="mt-8 border-l-accent-foreground/30 md:mt-0 md:border-l-2 md:pl-4">
+                        <div className="mt-8 border-l-accent-foreground/30 pb-2 md:mt-0 md:border-l-2 md:pl-4">
                             <CarrierRatesTable
                                 rate_types={carrierRateTypes}
                                 rates={
@@ -107,12 +126,14 @@ export default function ShipmentFinancialDetails({
                                 shipment={shipment}
                             />
                         </div>
-                        <div className="col-span-1 md:col-span-2">
-                            <div className="mt-4 flex items-center justify-center rounded-md border border-dashed p-4">
-                                <p className="text-muted-foreground">
-                                    Accessorials - Coming Soon
-                                </p>
-                            </div>
+                        <div className="col-span-1 border-t-accent-foreground/30 pt-4 md:col-span-2 md:border-t-2">
+                            <AccessorialsTable
+                                accessorial_types={accessorialTypes}
+                                accessorials={
+                                    shipmentFinancials?.accessorials ?? []
+                                }
+                                shipment={shipment}
+                            />
                         </div>
                     </>
                 )}
