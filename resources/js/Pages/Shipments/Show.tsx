@@ -1,15 +1,14 @@
 import DocumentsList from '@/Components/Documents/DocumentsList';
-import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Documentable } from '@/types/enums';
 import { Head } from '@inertiajs/react';
-import { FileText, MapPin, MessageSquare } from 'lucide-react';
+import { Folder, MapPin } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
 import CustomerDetails from './Partials/CustomerDetails';
+import ShipmentFinancialDetails from './Partials/ShipmentFinancialDetails';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
@@ -66,94 +65,12 @@ export default function Show({
                             stops={stops}
                         />
 
-                        {/* Tabbed Content */}
-                        <Tabs defaultValue="financials">
-                            <TabsList className="w-full justify-start">
-                                <TabsTrigger value="financials">
-                                    Financials
-                                </TabsTrigger>
-                                <TabsTrigger value="documents">
-                                    Documents
-                                </TabsTrigger>
-                                <TabsTrigger value="notes">Notes</TabsTrigger>
-                                <TabsTrigger value="tracking">
-                                    Tracking
-                                </TabsTrigger>
-                            </TabsList>
+                        {/* Financials */}
 
-                            <TabsContent
-                                value="financials"
-                                className="space-y-4"
-                            >
-                                {/* Customer Billing */}
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Customer Billing</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <Skeleton className="h-40 w-full" />
-                                    </CardContent>
-                                </Card>
+                        <ShipmentFinancialDetails shipment={shipment} />
 
-                                {/* Carrier Pay */}
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Carrier Pay</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <Skeleton className="h-40 w-full" />
-                                    </CardContent>
-                                </Card>
-
-                                {/* Advances/Charges */}
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>
-                                            Advances & Additional Charges
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <Skeleton className="h-32 w-full" />
-                                    </CardContent>
-                                </Card>
-                            </TabsContent>
-
-                            <TabsContent value="documents">
-                                <Card>
-                                    <CardContent className="pt-6">
-                                        <DocumentsList
-                                            documents={shipment.documents ?? []}
-                                            folders={
-                                                shipment.document_folders ?? []
-                                            }
-                                            documentableType={
-                                                Documentable.Shipment
-                                            }
-                                            documentableId={shipment.id}
-                                        />
-                                    </CardContent>
-                                </Card>
-                            </TabsContent>
-
-                            <TabsContent value="notes">
-                                <ShipmentNotes shipmentId={shipment.id} />
-                            </TabsContent>
-
-                            <TabsContent value="tracking">
-                                <Card>
-                                    <CardContent className="pt-6">
-                                        <div className="space-y-4">
-                                            {[1, 2, 3, 4].map((update) => (
-                                                <Skeleton
-                                                    key={update}
-                                                    className="h-16 w-full"
-                                                />
-                                            ))}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </TabsContent>
-                        </Tabs>
+                        {/* Notes */}
+                        <ShipmentNotes shipmentId={shipment.id} />
                     </div>
 
                     {/* Sidebar - 1 column */}
@@ -171,27 +88,22 @@ export default function Show({
                         {/* Customers */}
                         <CustomerDetails shipment={shipment} />
 
-                        {/* Quick Actions */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Quick Actions</CardTitle>
+                                <CardTitle className="flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2">
+                                        <Folder className="h-5 w-5" />
+                                        Documents
+                                    </div>
+                                </CardTitle>
                             </CardHeader>
-                            <CardContent className="flex flex-col gap-2">
-                                <Button
-                                    className="w-full justify-start"
-                                    disabled={true}
-                                >
-                                    <MessageSquare className="mr-2 h-4 w-4" />
-                                    Send Message
-                                </Button>
-                                <Button
-                                    className="w-full justify-start"
-                                    variant="outline"
-                                    disabled={true}
-                                >
-                                    <FileText className="mr-2 h-4 w-4" />
-                                    Upload Document
-                                </Button>
+                            <CardContent className="">
+                                <DocumentsList
+                                    documents={shipment.documents ?? []}
+                                    folders={shipment.document_folders ?? []}
+                                    documentableType={Documentable.Shipment}
+                                    documentableId={shipment.id}
+                                />
                             </CardContent>
                         </Card>
 
@@ -201,12 +113,11 @@ export default function Show({
                                 <CardTitle>Recent Activity</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                {[1, 2, 3, 4].map((activity) => (
-                                    <Skeleton
-                                        key={activity}
-                                        className="h-12 w-full"
-                                    />
-                                ))}
+                                <div className="flex items-center justify-center rounded-md border border-dashed p-4">
+                                    <p className="text-sm text-muted-foreground">
+                                        Activity feed coming soon
+                                    </p>
+                                </div>
                             </CardContent>
                         </Card>
                     </div>
