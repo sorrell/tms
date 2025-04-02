@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select';
+import { toast } from '@/hooks/UseToast';
 
 interface CustomerRatesTableProps {
     rates: ShipmentCustomerRate[];
@@ -221,7 +222,11 @@ const EditRows = forwardRef(
                 }),
                 {
                     preserveScroll: true,
-                    onSuccess: console.log,
+                    onSuccess: () => {
+                        toast({
+                            description: 'Customer rates saved!',
+                        });
+                    },
                     onError: console.error,
                 },
             );

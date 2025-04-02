@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow, TableHead, TableHeader } from '@/Components/ui/table';
-import { Accessorial, AccessorialType, Shipment } from '@/types';
+import { Accessorial, AccessorialType, Carrier, Shipment } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, Pencil, PlusCircle, Trash2, Package, X } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
@@ -18,6 +18,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "../ui/popover";
+import { toast } from '@/hooks/UseToast';
 
 
 
@@ -113,7 +114,7 @@ export default function AccessorialsTable({
             ) : (
                 <Table className="w-full">
                     <TableHeader>
-                        <TableRow>
+                        <TableRow className="hidden sm:table-row">
                             <TableHead>Type</TableHead>
                             <TableHead>Customer</TableHead>
                             <TableHead>Carrier</TableHead>
@@ -125,47 +126,84 @@ export default function AccessorialsTable({
                     </TableHeader>
                     <TableBody>
                         {accessorials.map((accessorial, index) => (
-                            <TableRow key={index}>
-                                <TableCell>
-                                    {accessorial.accessorial_type?.name}
+                            <TableRow key={index} className="grid grid-cols-2 gap-2 sm:table-row sm:gap-0">
+                                <TableCell className="w-full sm:w-auto">
+                                    <div className="flex flex-col">
+                                        <span className="mb-1 text-xs text-muted-foreground sm:hidden">
+                                            Type
+                                        </span>
+                                        {accessorial.accessorial_type?.name}
+                                    </div>
                                 </TableCell>
-                                <TableCell>
-                                    <Popover>
-                                        <PopoverTrigger>
-                                            <span className="truncate inline-block max-w-[150px] cursor-pointer">
+                                <TableCell className="w-full sm:w-auto">
+                                    <div className="flex flex-col">
+                                        <span className="mb-1 text-xs text-muted-foreground sm:hidden">
+                                            Customer
+                                        </span>
+                                        <Popover>
+                                            <PopoverTrigger>
+                                                <span className="truncate inline-block max-w-[150px] cursor-pointer">
+                                                    {accessorial.customer?.name}
+                                                </span>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-2 border-foreground border-2 shadow">
                                                 {accessorial.customer?.name}
-                                            </span>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-2 border-foreground border-2 shadow">
-                                            {accessorial.customer?.name}
-                                        </PopoverContent>
-                                    </Popover>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
                                 </TableCell>
-                                <TableCell>
-                                    <Popover>
-                                        <PopoverTrigger>
-                                            <span className="truncate inline-block max-w-[150px] cursor-pointer">
+                                <TableCell className="w-full sm:w-auto">
+                                    <div className="flex flex-col">
+                                        <span className="mb-1 text-xs text-muted-foreground sm:hidden">
+                                            Carrier
+                                        </span>
+                                        <Popover>
+                                            <PopoverTrigger>
+                                                <span className="truncate inline-block max-w-[150px] cursor-pointer">
+                                                    {accessorial.carrier?.name}
+                                                </span>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-2 border-foreground border-2 shadow">
                                                 {accessorial.carrier?.name}
-                                            </span>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-2 border-foreground border-2 shadow">
-                                            {accessorial.carrier?.name}
-                                        </PopoverContent>
-                                    </Popover>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
                                 </TableCell>
-                                <TableCell className="text-muted-foreground">
-                                    {accessorial.currency?.symbol || "$"}
-                                    {accessorial.rate?.toFixed(2) || "0.00"} x {accessorial.quantity || 0}
+                                <TableCell className="w-full sm:w-auto">
+                                    <div className="flex flex-col">
+                                        <span className="mb-1 text-xs text-muted-foreground sm:hidden">
+                                            Rate & Quantity
+                                        </span>
+                                        <span className="text-muted-foreground">
+                                            {accessorial.currency?.symbol || "$"}
+                                            {accessorial.rate?.toFixed(2) || "0.00"} x {accessorial.quantity || 0}
+                                        </span>
+                                    </div>
                                 </TableCell>
-                                <TableCell>
-                                    {accessorial.invoice_customer ? "Yes" : "No"}
+                                <TableCell className="w-full sm:w-auto">
+                                    <div className="flex flex-col">
+                                        <span className="mb-1 text-xs text-muted-foreground sm:hidden">
+                                            Invoice Customer
+                                        </span>
+                                        {accessorial.invoice_customer ? "Yes" : "No"}
+                                    </div>
                                 </TableCell>
-                                <TableCell>
-                                    {accessorial.pay_carrier ? "Yes" : "No"}
+                                <TableCell className="w-full sm:w-auto">
+                                    <div className="flex flex-col">
+                                        <span className="mb-1 text-xs text-muted-foreground sm:hidden">
+                                            Pay Carrier
+                                        </span>
+                                        {accessorial.pay_carrier ? "Yes" : "No"}
+                                    </div>
                                 </TableCell>
-                                <TableCell className="text-right">
-                                    {accessorial.currency?.symbol || "$"}
-                                    {accessorial.total?.toFixed(2) || "0.00"}
+                                <TableCell className="w-full sm:w-auto text-right">
+                                    <div className="flex flex-col items-end">
+                                        <span className="mb-1 text-xs text-muted-foreground sm:hidden">
+                                            Total
+                                        </span>
+                                        {accessorial.currency?.symbol || "$"}
+                                        {accessorial.total?.toFixed(2) || "0.00"}
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -213,6 +251,19 @@ const EditRows = forwardRef<EditRowsRef, {
             })),
         });
 
+        const carrierOptions: { name: string; id: number; }[] = [];
+        // Add carriers from accessorials, filtering out undefined values
+        accessorials.forEach(a => {
+            if (a.carrier && !carrierOptions.find(v => v.id == a.carrier?.id)) {
+                carrierOptions.push(a.carrier);
+            }
+        });
+        // Add shipment carrier if it exists
+        if (shipment.carrier && !carrierOptions.find(v => v.id == shipment.carrier.id)) {
+            carrierOptions.push(shipment.carrier);
+        }
+
+
         const sortedAccessorialTypes = useMemo(() => {
             return accessorial_types.sort((a, b) => a.name.localeCompare(b.name));
         }, accessorial_types);
@@ -244,16 +295,16 @@ const EditRows = forwardRef<EditRowsRef, {
                 data.accessorials.length > 0
                     ? data.accessorials[0]
                     : {
-                          rate: 0,
-                          quantity: 1,
-                          total: 0,
-                          accessorial_type_id: accessorial_types[0]?.id || 0,
-                          currency_id: data.accessorials[0]?.currency_id || 1,
-                          customer_id: shipment.customers && shipment.customers.length > 0 ? shipment.customers[0].id : undefined,
-                          carrier_id: shipment.carrier?.id,
-                          invoice_customer: false,
-                          pay_carrier: false,
-                      };
+                        rate: 0,
+                        quantity: 1,
+                        total: 0,
+                        accessorial_type_id: accessorial_types[0]?.id || 0,
+                        currency_id: data.accessorials[0]?.currency_id || 1,
+                        customer_id: shipment.customers && shipment.customers.length > 0 ? shipment.customers[0].id : undefined,
+                        carrier_id: shipment.carrier?.id,
+                        invoice_customer: false,
+                        pay_carrier: false,
+                    };
 
             setData({
                 accessorials: [
@@ -286,7 +337,11 @@ const EditRows = forwardRef<EditRowsRef, {
                 }),
                 {
                     preserveScroll: true,
-                    onSuccess: console.log,
+                    onSuccess: () => {
+                        toast({
+                            description: 'Accessorials saved!',
+                        });
+                    },
                     onError: console.error,
                 },
             );
@@ -357,7 +412,7 @@ const EditRows = forwardRef<EditRowsRef, {
                                                 Customer
                                             </span>
                                             <Select
-                                                value={accessorial.customer_id?.toString() || ""}
+                                                value={accessorial.customer_id?.toString()}
                                                 onValueChange={(val) =>
                                                     updateRow(
                                                         index,
@@ -366,18 +421,17 @@ const EditRows = forwardRef<EditRowsRef, {
                                                     )
                                                 }
                                             >
-                                                <SelectTrigger className="w-full truncate max-w-[150px]">
+                                                <SelectTrigger className="w-full truncate max-w-[100px]">
                                                     <SelectValue placeholder="Select customer" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {/* Assuming we would have customers data. For now, just add the shipment customer */}
-                                                    {shipment.customers && shipment.customers.length > 0 && (
+                                                    {shipment.customers.map(c => (
                                                         <SelectItem
-                                                            value={(shipment.customers[0].id || "").toString()}
+                                                            value={c.id?.toString()}
                                                         >
-                                                            {shipment.customers[0].name || "Shipment Customer"}
+                                                            {c.name}
                                                         </SelectItem>
-                                                    )}
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -388,7 +442,7 @@ const EditRows = forwardRef<EditRowsRef, {
                                                 Carrier
                                             </span>
                                             <Select
-                                                value={accessorial.carrier_id?.toString() || ""}
+                                                value={accessorial.carrier_id?.toString()}
                                                 onValueChange={(val) =>
                                                     updateRow(
                                                         index,
@@ -397,16 +451,18 @@ const EditRows = forwardRef<EditRowsRef, {
                                                     )
                                                 }
                                             >
-                                                <SelectTrigger className="w-full truncate max-w-[150px]">
+                                                <SelectTrigger className="w-full truncate max-w-[100px]">
                                                     <SelectValue placeholder="Select carrier" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {/* Assuming we would have carriers data. For now, just add the shipment carrier */}
-                                                    <SelectItem
-                                                        value={(shipment.carrier?.id || "").toString()}
-                                                    >
-                                                        {shipment.carrier?.name || "Shipment Carrier"}
-                                                    </SelectItem>
+                                                    {carrierOptions.map(c => (
+                                                        <SelectItem
+                                                            value={c.id.toString()}
+                                                        >
+                                                            {c.name}
+                                                        </SelectItem>
+                                                    ))}
+
                                                 </SelectContent>
                                             </Select>
                                         </div>

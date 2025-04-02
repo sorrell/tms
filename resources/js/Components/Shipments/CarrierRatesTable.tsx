@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select';
+import { toast } from '@/hooks/UseToast';
 
 interface CarrierRatesTableProps {
     rates: ShipmentCarrierRate[];
@@ -184,13 +185,13 @@ const EditRows = forwardRef(
                 data.rates.length > 0
                     ? data.rates[0]
                     : {
-                          rate: 0,
-                          quantity: 1,
-                          total: 0,
-                          carrier_id: shipment.carrier?.id || 0,
-                          carrier_rate_type_id: rate_types[0]?.id || 0,
-                          currency_id: data.rates[0]?.currency_id || 1,
-                      };
+                        rate: 0,
+                        quantity: 1,
+                        total: 0,
+                        carrier_id: shipment.carrier?.id || 0,
+                        carrier_rate_type_id: rate_types[0]?.id || 0,
+                        currency_id: data.rates[0]?.currency_id || 1,
+                    };
 
             setData({
                 rates: [
@@ -221,11 +222,27 @@ const EditRows = forwardRef(
                 }),
                 {
                     preserveScroll: true,
-                    onSuccess: console.log,
+                    onSuccess: () => {
+                        toast({
+                            description: 'Carrier rates saved!',
+                        });
+                    },
                     onError: console.error,
                 },
             );
         };
+
+        const carrierOptions: { name: string; id: number; }[] = [];
+        // Add carriers from accessorials, filtering out undefined values
+        rates.forEach(a => {
+            if (a.carrier && !carrierOptions.find(v => v.id == a.carrier?.id)) {
+                carrierOptions.push(a.carrier);
+            }
+        });
+        // Add shipment carrier if it exists
+        if (shipment.carrier && !carrierOptions.find(v => v.id == shipment.carrier.id)) {
+            carrierOptions.push(shipment.carrier);
+        }
 
         // Expose the save function to the parent component
         useImperativeHandle(ref, () => ({
@@ -264,21 +281,19 @@ const EditRows = forwardRef(
                                                     />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {shipment.carrier && (
+                                                    {carrierOptions.map(c => (
                                                         <SelectItem
                                                             key={
-                                                                shipment.carrier
-                                                                    .id
+                                                                c.id
                                                             }
-                                                            value={shipment.carrier.id.toString()}
+                                                            value={c.id.toString()}
                                                             className="truncate"
                                                         >
                                                             {
-                                                                shipment.carrier
-                                                                    .name
+                                                                c.name
                                                             }
                                                         </SelectItem>
-                                                    )}
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                         </div>
