@@ -22,7 +22,7 @@ class ShipmentFinancialsResource extends JsonResource
             'id' => $this->id,
             'shipment_customer_rates' => ShipmentCustomerRateResource::collection($this->shipment_customer_rates->load('customer', 'customer_rate_type', 'currency')),
             'shipment_carrier_rates' => ShipmentCarrierRateResource::collection($this->shipment_carrier_rates->load('carrier', 'carrier_rate_type', 'currency')),
-            'accessorials' => AccessorialResource::collection($this->accessorials),
+            'accessorials' => AccessorialResource::collection($this->accessorials->load('carrier', 'customer', 'accessorial_type', 'currency')),
         ];
     }
 }
