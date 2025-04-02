@@ -59,7 +59,7 @@ class SaveShipmentCarrierRates
     {
         return $this->handle(
             $shipment,
-            $request->validated('rates')
+            $request->validated('rates', [])
         );
     }
 

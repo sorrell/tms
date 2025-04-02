@@ -189,7 +189,7 @@ const EditRows = forwardRef(
                           total: 0,
                           customer_id: shipment.customers[0]?.id || 0,
                           customer_rate_type_id: rate_types[0]?.id || 0,
-                          currency_id: data.rates[0]?.currency_id || 0,
+                          currency_id: data.rates[0]?.currency_id || 1,
                       };
 
             setData({
