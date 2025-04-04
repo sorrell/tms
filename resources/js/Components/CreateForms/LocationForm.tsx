@@ -6,6 +6,8 @@ import { useState } from 'react';
 import InputError from '../InputError';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import AddressSearch from '../AddressSearch';
+import { Location } from '@/types';
 export default function LocationForm({
     className,
     onCreate,
@@ -55,6 +57,14 @@ export default function LocationForm({
             });
     };
 
+    const fillFromAddressSearch = (searchResult: Location ) => {
+        setAddressLine1(searchResult.address_line_1 || '');
+        setAddressLine2(searchResult.address_line_2 || '');
+        setAddressCity(searchResult.address_city || '');
+        setAddressState(searchResult.address_state || '');
+        setAddressZipcode(searchResult.address_zipcode || '');
+    };
+
     return (
         <form
             ref={formRef}
@@ -73,6 +83,14 @@ export default function LocationForm({
                 />
                 {errors.name && <InputError message={errors.name} />}
             </div>
+
+            <div className="flex flex-col gap-2">
+                <Label htmlFor="name">Search</Label>
+                <AddressSearch
+                    onAddressSelect={fillFromAddressSearch}
+                />
+            </div>
+
             <div className="flex flex-col gap-2">
                 <Label htmlFor="address_line_1">Address Line 1</Label>
                 <Input
