@@ -26,6 +26,8 @@ class LocationResource extends JsonResource
             'address_state' => $this->address_state,
             'address_zipcode' => $this->address_zipcode,
             'selectable_label' => $this->selectable_label,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
         ];
     }
 }

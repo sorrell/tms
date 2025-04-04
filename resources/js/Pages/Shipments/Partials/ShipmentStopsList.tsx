@@ -119,7 +119,7 @@ export default function ShipmentStopsList({
                 : '',
         }));
 
-        return mappedStops;
+        return mappedStops as ShipmentStop[];
     };
 
     const convertForTimezone = (stop: ShipmentStop, date: string) => {
@@ -180,7 +180,7 @@ export default function ShipmentStopsList({
                                         left_at: '',
                                         special_instructions: '',
                                         reference_numbers: '',
-                                    });
+                                    } as ShipmentStop);
                                     setData('stops', updatedStops);
                                 }}
                             >
@@ -293,7 +293,7 @@ export default function ShipmentStopsList({
                                                                 index
                                                             ],
                                                             stop_type: value,
-                                                        };
+                                                        } as ShipmentStop;
                                                         setData(
                                                             'stops',
                                                             updatedStops,
@@ -415,7 +415,7 @@ export default function ShipmentStopsList({
                                                                 ),
                                                                 name: selected?.label,
                                                             },
-                                                        };
+                                                        } as ShipmentStop;
                                                         setData(
                                                             'stops',
                                                             updatedStops,
@@ -466,7 +466,7 @@ export default function ShipmentStopsList({
                                                             ],
                                                             appointment_type:
                                                                 value,
-                                                        };
+                                                        } as ShipmentStop;
                                                         setData(
                                                             'stops',
                                                             updatedStops,
@@ -544,7 +544,7 @@ export default function ShipmentStopsList({
                                                             appointment_at:
                                                                 e?.toISOString() ||
                                                                 '',
-                                                        };
+                                                        } as ShipmentStop;
                                                         setData(
                                                             'stops',
                                                             updatedStops,
@@ -613,7 +613,7 @@ export default function ShipmentStopsList({
                                                                     eta:
                                                                         e?.toISOString() ||
                                                                         '',
-                                                                };
+                                                                } as ShipmentStop;
                                                                 setData(
                                                                     'stops',
                                                                     updatedStops,
@@ -681,7 +681,7 @@ export default function ShipmentStopsList({
                                                                     arrived_at:
                                                                         e?.toISOString() ||
                                                                         '',
-                                                                };
+                                                                } as ShipmentStop;
                                                                 setData(
                                                                     'stops',
                                                                     updatedStops,
@@ -753,7 +753,7 @@ export default function ShipmentStopsList({
                                                                     loaded_unloaded_at:
                                                                         e?.toISOString() ||
                                                                         '',
-                                                                };
+                                                                } as ShipmentStop;
                                                                 setData(
                                                                     'stops',
                                                                     updatedStops,
@@ -823,7 +823,7 @@ export default function ShipmentStopsList({
                                                                     left_at:
                                                                         e?.toISOString() ||
                                                                         '',
-                                                                };
+                                                                } as ShipmentStop;
                                                                 setData(
                                                                     'stops',
                                                                     updatedStops,
@@ -875,7 +875,7 @@ export default function ShipmentStopsList({
                                                             ],
                                                             reference_numbers:
                                                                 e.target.value,
-                                                        };
+                                                        } as ShipmentStop;
                                                         setData(
                                                             'stops',
                                                             updatedStops,
@@ -923,7 +923,7 @@ export default function ShipmentStopsList({
                                                             ],
                                                             special_instructions:
                                                                 e.target.value,
-                                                        };
+                                                        } as ShipmentStop;
                                                         setData(
                                                             'stops',
                                                             updatedStops,

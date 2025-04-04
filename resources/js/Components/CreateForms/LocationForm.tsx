@@ -1,13 +1,13 @@
 import { useToast } from '@/hooks/UseToast';
 import { cn } from '@/lib/utils';
+import { Location } from '@/types';
 import { CreateFormResult } from '@/types/create-form';
 import axios from 'axios';
 import { useState } from 'react';
+import AddressSearch from '../AddressSearch';
 import InputError from '../InputError';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import AddressSearch from '../AddressSearch';
-import { Location } from '@/types';
 import { Switch } from '../ui/switch';
 export default function LocationForm({
     className,
@@ -24,8 +24,12 @@ export default function LocationForm({
     const [addressCity, setAddressCity] = useState('');
     const [addressState, setAddressState] = useState('');
     const [addressZipcode, setAddressZipcode] = useState('');
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
 
-    const hasGoogleMapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY && import.meta.env.VITE_GOOGLE_MAPS_API_KEY != "";
+    const hasGoogleMapsKey =
+        import.meta.env.VITE_GOOGLE_MAPS_API_KEY &&
+        import.meta.env.VITE_GOOGLE_MAPS_API_KEY != '';
 
     const [searchMode, setSearchMode] = useState(hasGoogleMapsKey);
 
@@ -44,6 +48,8 @@ export default function LocationForm({
             address_city: addressCity,
             address_state: addressState,
             address_zipcode: addressZipcode,
+            latitude: latitude,
+            longitude: longitude,
         };
 
         axios
@@ -68,7 +74,13 @@ export default function LocationForm({
         setAddressCity(searchResult.address_city || '');
         setAddressState(searchResult.address_state || '');
         setAddressZipcode(searchResult.address_zipcode || '');
-        if (searchResult.name && name == "") {
+        if (searchResult.latitude) {
+            setLatitude(searchResult.latitude);
+        }
+        if (searchResult.longitude) {
+            setLongitude(searchResult.longitude);
+        }
+        if (searchResult.name && name == '') {
             setName(searchResult.name);
         }
         setErrors({});
@@ -96,9 +108,7 @@ export default function LocationForm({
             {searchMode ? (
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="name">Search</Label>
-                    <AddressSearch
-                        onAddressSelect={fillFromAddressSearch}
-                    />
+                    <AddressSearch onAddressSelect={fillFromAddressSearch} />
                     {errors.address_line_1 && (
                         <InputError message={errors.address_line_1} />
                     )}
@@ -180,12 +190,20 @@ export default function LocationForm({
                 </>
             )}
             {hasGoogleMapsKey && (
-                <div className="flex items-center gap-2 text-muted-foreground mt-2">
-                    <Switch id="search_mode_toggle" onCheckedChange={(checked) => setSearchMode(!checked)} checked={!searchMode} />
-                    <Label htmlFor="search_mode_toggle" className='cursor-pointer'>Manual</Label>
+                <div className="mt-2 flex items-center gap-2 text-muted-foreground">
+                    <Switch
+                        id="search_mode_toggle"
+                        onCheckedChange={(checked) => setSearchMode(!checked)}
+                        checked={!searchMode}
+                    />
+                    <Label
+                        htmlFor="search_mode_toggle"
+                        className="cursor-pointer"
+                    >
+                        Manual
+                    </Label>
                 </div>
             )}
-
         </form>
     );
 }

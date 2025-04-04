@@ -29,6 +29,7 @@ interface ShipmentCarrierRateData {
     carrier_id: number;
     carrier_rate_type_id: number;
     currency_id: number;
+    [key: string]: string | number | boolean | undefined;
 }
 
 interface CarrierRateGroup {

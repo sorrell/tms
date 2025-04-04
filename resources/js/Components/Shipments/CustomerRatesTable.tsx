@@ -29,6 +29,7 @@ interface ShipmentCustomerRateData {
     customer_id: number;
     customer_rate_type_id: number;
     currency_id: number;
+    [key: string]: string | number | boolean | undefined;
 }
 
 interface CustomerRateGroup {

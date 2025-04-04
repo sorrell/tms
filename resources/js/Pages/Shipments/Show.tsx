@@ -1,6 +1,6 @@
 import DocumentsList from '@/Components/Documents/DocumentsList';
+import LocationMap from '@/Components/Shipments/LocationMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Skeleton } from '@/Components/ui/skeleton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Documentable } from '@/types/enums';
@@ -13,7 +13,6 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
-import LocationMap from '@/Components/Shipments/LocationMap';
 
 export default function Show({
     shipment,
