@@ -22,7 +22,7 @@ export default function CustomerFacilities({
     customer?: Customer;
 }) {
     const [facilityModalOpen, setFacilityModalOpen] = useState(false);
-    const { setData: setAttachFacilityData, post: attachFacilityPost } =
+    const { setData: setAttachFacilityData, post: attachFacilityPost, data: attachFacilityData } =
         useForm<{ facility_id: string | null }>({
             facility_id: null,
         });
@@ -157,6 +157,7 @@ export default function CustomerFacilities({
                                 });
                             }}
                             createForm={FacilityForm}
+                            defaultSelectedItems={attachFacilityData.facility_id}
                             allowMultiple={false}
                             className="w-full"
                         />
