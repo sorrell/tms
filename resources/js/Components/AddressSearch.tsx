@@ -34,7 +34,7 @@ export default function AddressSearch({onAddressSelect}: {onAddressSelect: (loca
                         }
                         
                         if (types.includes('administrative_area_level_1')) {
-                            state = component.short_name;
+                            state = component.long_name;
                         }
                         
                         if (types.includes('postal_code')) {
