@@ -16,10 +16,19 @@ export default function AddressSearch({onAddressSelect}: {onAddressSelect: (loca
                     let city = '';
                     let state = '';
                     let zipcode = '';
+                    let locationName = address;
                     
                     // Extract address components
                     addressComponents.forEach(component => {
                         const types = component.types;
+
+                        if (component.long_name) {
+                            locationName = locationName.replace(component.long_name, '');
+                        }
+                        if (component.short_name) {
+                            locationName = locationName.replace(component.short_name, '');
+                        }
+                        
                         
                         if (types.includes('street_number')) {
                             street_number = component.long_name;
@@ -41,11 +50,13 @@ export default function AddressSearch({onAddressSelect}: {onAddressSelect: (loca
                             zipcode = component.long_name;
                         }
                     });
-                    
+                
+                    locationName = address.split(',')[0].trim();
+
                     // Create Location object
                     const location: Location = {
                         id: -1,
-                        name: result.formatted_address,
+                        name: locationName,
                         address_line_1: street_number ? `${street_number} ${route}` : route,
                         address_line_2: '',
                         address_city: city,

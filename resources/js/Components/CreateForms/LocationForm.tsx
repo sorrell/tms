@@ -8,6 +8,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import AddressSearch from '../AddressSearch';
 import { Location } from '@/types';
+import { Switch } from '../ui/switch';
 export default function LocationForm({
     className,
     onCreate,
@@ -24,7 +25,7 @@ export default function LocationForm({
     const [addressState, setAddressState] = useState('');
     const [addressZipcode, setAddressZipcode] = useState('');
 
-    const hasGoogleMapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY != "";
+    const hasGoogleMapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY && import.meta.env.VITE_GOOGLE_MAPS_API_KEY != "";
 
     const [searchMode, setSearchMode] = useState(hasGoogleMapsKey);
 
@@ -67,6 +68,9 @@ export default function LocationForm({
         setAddressCity(searchResult.address_city || '');
         setAddressState(searchResult.address_state || '');
         setAddressZipcode(searchResult.address_zipcode || '');
+        if (searchResult.name && name == "") {
+            setName(searchResult.name);
+        }
         setErrors({});
     };
 
@@ -175,6 +179,13 @@ export default function LocationForm({
                     </div>
                 </>
             )}
+            {hasGoogleMapsKey && (
+                <div className="flex items-center gap-2 text-muted-foreground mt-2">
+                    <Switch id="search_mode_toggle" onCheckedChange={(checked) => setSearchMode(!checked)} checked={!searchMode} />
+                    <Label htmlFor="search_mode_toggle" className='cursor-pointer'>Manual</Label>
+                </div>
+            )}
+
         </form>
     );
 }

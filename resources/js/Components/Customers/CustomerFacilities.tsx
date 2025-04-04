@@ -109,9 +109,9 @@ export default function CustomerFacilities({
                                                 onClick={() => {
                                                     window.open(
                                                         route(
-                                                            'facilities.index',
+                                                            'facilities.show',
                                                             {
-                                                                facility_id:
+                                                                facility:
                                                                     facility.id,
                                                             },
                                                         ),
