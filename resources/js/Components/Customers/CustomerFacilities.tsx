@@ -22,10 +22,13 @@ export default function CustomerFacilities({
     customer?: Customer;
 }) {
     const [facilityModalOpen, setFacilityModalOpen] = useState(false);
-    const { setData: setAttachFacilityData, post: attachFacilityPost } =
-        useForm<{ facility_id: string | null }>({
-            facility_id: null,
-        });
+    const {
+        setData: setAttachFacilityData,
+        post: attachFacilityPost,
+        data: attachFacilityData,
+    } = useForm<{ facility_id: string | null }>({
+        facility_id: null,
+    });
 
     const [facilities, setFacilities] = useState<Facility[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -109,9 +112,9 @@ export default function CustomerFacilities({
                                                 onClick={() => {
                                                     window.open(
                                                         route(
-                                                            'facilities.index',
+                                                            'facilities.show',
                                                             {
-                                                                facility_id:
+                                                                facility:
                                                                     facility.id,
                                                             },
                                                         ),
@@ -157,6 +160,9 @@ export default function CustomerFacilities({
                                 });
                             }}
                             createForm={FacilityForm}
+                            defaultSelectedItems={
+                                attachFacilityData.facility_id
+                            }
                             allowMultiple={false}
                             className="w-full"
                         />

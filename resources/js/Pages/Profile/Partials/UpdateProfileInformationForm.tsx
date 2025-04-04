@@ -37,7 +37,7 @@ export default function UpdateProfileInformation({
             name: user.name,
             email: user.email,
             photo: null as File | null,
-            removePhoto: false,
+            removePhoto: false as boolean,
             timezone: user.timezone,
         });
 

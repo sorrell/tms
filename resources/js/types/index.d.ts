@@ -32,6 +32,8 @@ export interface Location {
     address_state: string;
     address_zipcode: string;
     selectable_label: string;
+    latitude?: number;
+    longitude?: number;
 }
 
 export interface Contact {
@@ -147,6 +149,7 @@ export interface ShipmentStop {
     appointment_at: string;
     appointment_end_at: string;
     appointment_type: string;
+    [key: string]: string | number | boolean | undefined;
 }
 
 export interface Shipment {

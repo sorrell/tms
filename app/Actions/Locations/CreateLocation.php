@@ -22,6 +22,8 @@ class CreateLocation
         string $address_zipcode,
         ?string $name = null,
         ?string $address_line_2 = null,
+        ?float $latitude = null,
+        ?float $longitude = null
     ): Location
     {
         return Location::create([
@@ -31,6 +33,8 @@ class CreateLocation
             'address_city' => $address_city,
             'address_state' => $address_state,
             'address_zipcode' => $address_zipcode,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
         ]);
         
     }
@@ -44,6 +48,8 @@ class CreateLocation
             address_city: $request->validated('address_city'),
             address_state: $request->validated('address_state'),
             address_zipcode: $request->validated('address_zipcode'),
+            latitude: $request->validated('latitude'),
+            longitude: $request->validated('longitude'),
         );
 
         return $location;
@@ -68,6 +74,8 @@ class CreateLocation
             'address_city' => ['required', 'string', 'min:3', 'max:255'],
             'address_state' => ['required', 'string', 'min:3', 'max:255'],
             'address_zipcode' => ['required', 'string', 'min:3', 'max:255'],
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric']
         ];
     }
 }

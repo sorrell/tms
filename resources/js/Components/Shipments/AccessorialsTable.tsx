@@ -49,6 +49,7 @@ interface ShipmentAccessorialData {
     total?: number;
     accessorial_type_id?: number;
     currency_id?: number;
+    [key: string]: string | number | boolean | undefined;
 }
 
 interface EditRowsRef {

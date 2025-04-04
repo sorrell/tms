@@ -1,6 +1,6 @@
 import DocumentsList from '@/Components/Documents/DocumentsList';
+import LocationMap from '@/Components/Shipments/LocationMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Skeleton } from '@/Components/ui/skeleton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Documentable } from '@/types/enums';
@@ -55,7 +55,7 @@ export default function Show({
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <Skeleton className="h-[300px] w-full" />
+                                <LocationMap shipment={shipment} />
                             </CardContent>
                         </Card>
 
