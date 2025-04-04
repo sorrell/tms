@@ -13,6 +13,7 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
+import LocationMap from '@/Components/Shipments/LocationMap';
 
 export default function Show({
     shipment,
@@ -55,7 +56,7 @@ export default function Show({
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <Skeleton className="h-[300px] w-full" />
+                                <LocationMap shipment={shipment} />
                             </CardContent>
                         </Card>
 
