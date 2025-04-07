@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { router } from '@inertiajs/react';
 import { useToast } from '@/hooks/UseToast';
+import { router } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export function useInertiaErrorHandler() {
     const { toast } = useToast();
@@ -10,8 +10,8 @@ export function useInertiaErrorHandler() {
             const responseBody = event.detail.response?.data;
             if (responseBody?.error_message) {
                 toast({
-                    variant: "destructive",
-                    title: "An error has occurred",
+                    variant: 'destructive',
+                    title: 'An error has occurred',
                     description: responseBody?.error_message,
                 });
                 event.preventDefault();
@@ -23,4 +23,4 @@ export function useInertiaErrorHandler() {
             removeEventListener();
         };
     }, [toast]); // Add toast as a dependency
-} 
+}

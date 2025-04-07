@@ -28,7 +28,7 @@ export default function Authenticated({
     breadcrumbs = [],
 }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
     useInertiaErrorHandler();
-    
+
     const sideBarOpen =
         document.cookie
             .split('; ')
