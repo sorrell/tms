@@ -17,6 +17,7 @@ use App\Actions\Customers\CreateCustomer;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Customers\UpdateCustomer;
+use App\Actions\Dashboard\RecentShipmentsCard;
 use App\Actions\Documents\CreateDocument;
 use App\Actions\Documents\DeleteDocument;
 use App\Actions\Documents\GetDocument;
@@ -90,10 +91,6 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
         Route::get('accessorial-types', GetAccessorialTypes::class)->name('accessorial-types.index');
     });
 
-    Route::get('dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
     Route::get('timezones/search', [TimezoneController::class, 'search'])->name('timezones.search');
     Route::get('timezones/zipcode', ZipToTimezone::class)->name('timezones.zipcode');
 
@@ -145,6 +142,13 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('customers/{customer}/facilities', [CustomerController::class, 'facilities'])->name('customers.facilities.index');
     Route::delete('customers/{customer}/facilities/{facility}', DeleteCustomerFacility::class)->name('customers.facilities.destroy');
 
+    Route::get('dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::name('dashboard.cards.')->prefix('dashboard/cards')->group(function() {
+        Route::get('/recent-shipments', RecentShipmentsCard::class)->name('recent-shipments');
+    });
 
     Route::name('documents.')->prefix('documents')->group(function () {
         Route::post('/', CreateDocument::class)->name('store');
