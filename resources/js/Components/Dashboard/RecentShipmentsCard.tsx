@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import DashboardCard from "./DashboardCard";
-import { Shipment } from "@/types";
-import { DataTable } from "../Shipments/ShipmentList/DataTable";
-import { columns } from "../Shipments/ShipmentList/Columns";
-import { Skeleton } from "../ui/skeleton";
+import { Shipment } from '@/types';
+import { useEffect, useState } from 'react';
+import { columns } from '../Shipments/ShipmentList/Columns';
+import { DataTable } from '../Shipments/ShipmentList/DataTable';
+import { Skeleton } from '../ui/skeleton';
+import DashboardCard from './DashboardCard';
 
-export default function RecentShipmentsCard
-    () {
+export default function RecentShipmentsCard() {
     const [shipments, setShipments] = useState<Shipment[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -17,16 +15,15 @@ export default function RecentShipmentsCard
                 setLoading(true);
                 fetch(route('dashboard.cards.recent-shipments'), {
                     headers: {
-                        'Accept': 'application/json',
+                        Accept: 'application/json',
                         'Content-Type': 'application/json',
                     },
-                })
-                    .then(async response => {
-                        setShipments(await response.json());
-                        setLoading(false);
-                    })
+                }).then(async (response) => {
+                    setShipments(await response.json());
+                    setLoading(false);
+                });
             } catch (error) {
-                console.error("Error fetching recent shipments:", error);
+                console.error('Error fetching recent shipments:', error);
             } finally {
                 setLoading(false);
             }
@@ -36,15 +33,16 @@ export default function RecentShipmentsCard
     }, [setShipments]);
 
     return (
-
-        <DashboardCard title="Recent Loads" cols={3} className="md:overflow-x-scroll">
-            { loading ? (
-                <Skeleton className="w-full h-[32px]" />
+        <DashboardCard
+            title="Recent Loads"
+            cols={3}
+            className="md:overflow-x-scroll"
+        >
+            {loading ? (
+                <Skeleton className="h-[32px] w-full" />
             ) : (
                 <DataTable columns={columns} data={shipments} />
-            )
-            }
-
-        </DashboardCard >
+            )}
+        </DashboardCard>
     );
 }
