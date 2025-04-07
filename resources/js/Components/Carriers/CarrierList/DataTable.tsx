@@ -19,7 +19,7 @@ import {
 interface DataTableProps<TData extends { id: number | string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    onSelect: (carrier: TData) => void;
+    onSelect?: (carrier: TData) => void;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -34,7 +34,6 @@ export function DataTable<TData extends { id: number | string }, TValue>({
     });
 
     return (
-        <div className="w-full rounded-md border">
             <Table className="w-full">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -62,7 +61,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                                 key={row.id}
                                 data-state={row.getIsSelected() && 'selected'}
                                 onClick={() => {
-                                    onSelect(row.original);
+                                    onSelect?.(row.original);
                                 }}
                                 className="cursor-pointer"
                             >
@@ -88,6 +87,5 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                     )}
                 </TableBody>
             </Table>
-        </div>
     );
 }

@@ -17,6 +17,7 @@ use App\Actions\Customers\CreateCustomer;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
 use App\Actions\Customers\UpdateCustomer;
+use App\Actions\Dashboard\RecentCarriersCard;
 use App\Actions\Dashboard\RecentShipmentsCard;
 use App\Actions\Documents\CreateDocument;
 use App\Actions\Documents\DeleteDocument;
@@ -148,6 +149,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::name('dashboard.cards.')->prefix('dashboard/cards')->group(function() {
         Route::get('/recent-shipments', RecentShipmentsCard::class)->name('recent-shipments');
+        Route::get('/recent-carriers', RecentCarriersCard::class)->name('recent-carriers');
     });
 
     Route::name('documents.')->prefix('documents')->group(function () {

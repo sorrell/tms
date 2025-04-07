@@ -1,47 +1,48 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import DashboardCard from "./DashboardCard";
-import { Shipment } from "@/types";
-import { DataTable } from "../Shipments/ShipmentList/DataTable";
-import { columns } from "../Shipments/ShipmentList/Columns";
+import { Carrier } from "@/types";
 import { Skeleton } from "../ui/skeleton";
+import { DataTable } from "../Carriers/CarrierList/DataTable";
+import { columns } from "../Carriers/CarrierList/Columns";
+import { router } from "@inertiajs/react";
 
-export default function RecentShipmentsCard
+export default function RecentCarriersCard
     () {
-    const [shipments, setShipments] = useState<Shipment[]>([]);
+    const [carriers, setCarriers] = useState<Carrier[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const fetchRecentShipments = async () => {
+        const fetchRecentCarriers = async () => {
             try {
                 setLoading(true);
-                fetch(route('dashboard.cards.recent-shipments'), {
+                fetch(route('dashboard.cards.recent-carriers'), {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
                 })
                     .then(async response => {
-                        setShipments(await response.json());
+                        setCarriers(await response.json());
                         setLoading(false);
                     })
             } catch (error) {
-                console.error("Error fetching recent shipments:", error);
+                console.error("Error fetching recent carriers:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchRecentShipments();
-    }, [setShipments]);
+        fetchRecentCarriers();
+    }, [setCarriers]);
 
     return (
 
-        <DashboardCard title="Recent Loads" cols={3} className="md:overflow-x-scroll">
+        <DashboardCard title="Recent Carriers" cols={3} className="md:overflow-x-scroll">
             { loading ? (
                 <Skeleton className="w-full h-[32px]" />
             ) : (
-                <DataTable columns={columns} data={shipments} />
+                <DataTable columns={columns} data={carriers} onSelect={(carrier) => router.visit(route('carriers.show', { carrier }))}/>
             )
             }
 

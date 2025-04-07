@@ -1,4 +1,5 @@
 import DashboardCard from '@/Components/Dashboard/DashboardCard';
+import RecentCarriersCard from '@/Components/Dashboard/RecentCarriersCard';
 import RecentShipmentsCard from '@/Components/Dashboard/RecentShipmentsCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Skeleton } from '@/Components/ui/skeleton';
@@ -28,7 +29,7 @@ export default function Dashboard() {
         >
             <Head title="Dashboard" />
 
-            <div className="py-12 mx-auto md:grid md:grid-cols-3 flex flex-wrap max-w-7xl gap-4 sm:px-6 lg:px-8">
+            <div className="py-12 mx-auto flex flex-wrap md:grid md:grid-cols-3  max-w-7xl gap-4 sm:px-6 lg:px-8">
                 <DashboardCard title="Last 7 days">
                     <Skeleton className='w-full h-[64px]' />
                 </DashboardCard>
@@ -40,6 +41,7 @@ export default function Dashboard() {
                 </DashboardCard>
                 
                 <RecentShipmentsCard />
+                <RecentCarriersCard />
                 
             </div>
         </AuthenticatedLayout>
