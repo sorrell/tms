@@ -182,7 +182,10 @@ function CarrierFmcsaCreateForm({
                                 <Card key={carrier.id} className="py-0">
                                     <CardHeader className="md:p-4">
                                         <CardTitle>
-                                            {carrier.report.general?.carrier?.legalName}
+                                            {
+                                                carrier.report.general?.carrier
+                                                    ?.legalName
+                                            }
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="flex justify-between px-4">
@@ -190,18 +193,25 @@ function CarrierFmcsaCreateForm({
                                             <div className="text-sm">
                                                 <p>
                                                     {
-                                                        carrier.report?.general?.carrier?.phyStreet
+                                                        carrier.report?.general
+                                                            ?.carrier?.phyStreet
                                                     }
                                                 </p>
                                                 <p>
                                                     {
-                                                        carrier.report?.general?.carrier?.phyCity
+                                                        carrier.report?.general
+                                                            ?.carrier?.phyCity
                                                     }
                                                     ,
                                                     {
-                                                        carrier.report?.general?.carrier?.phyState
+                                                        carrier.report?.general
+                                                            ?.carrier?.phyState
                                                     }{' '}
-                                                    {carrier.report?.general?.carrier?.phyZipcode}
+                                                    {
+                                                        carrier.report?.general
+                                                            ?.carrier
+                                                            ?.phyZipcode
+                                                    }
                                                 </p>
                                             </div>
                                             <p className="text-sm">
