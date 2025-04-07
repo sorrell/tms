@@ -118,6 +118,10 @@ export interface CarrierSaferReport {
                 vehicleOosInsp?: number;
                 vehicleOosRate?: number;
                 vehicleOosRateNationalAverage?: string;
+                phyStreet?: string;
+                phyCity?: string;
+                phyState?: string;
+                phyZipcode?: string;
             };
         };
     };

@@ -182,7 +182,7 @@ function CarrierFmcsaCreateForm({
                                 <Card key={carrier.id} className="py-0">
                                     <CardHeader className="md:p-4">
                                         <CardTitle>
-                                            {carrier.report.name}
+                                            {carrier.report.general?.carrier?.legalName}
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="flex justify-between px-4">
@@ -190,21 +190,18 @@ function CarrierFmcsaCreateForm({
                                             <div className="text-sm">
                                                 <p>
                                                     {
-                                                        carrier.report.address
-                                                            .street
+                                                        carrier.report?.general?.carrier?.phyStreet
                                                     }
                                                 </p>
                                                 <p>
                                                     {
-                                                        carrier.report.address
-                                                            .city
+                                                        carrier.report?.general?.carrier?.phyCity
                                                     }
                                                     ,
                                                     {
-                                                        carrier.report.address
-                                                            .state
+                                                        carrier.report?.general?.carrier?.phyState
                                                     }{' '}
-                                                    {carrier.report.address.zip}
+                                                    {carrier.report?.general?.carrier?.phyZipcode}
                                                 </p>
                                             </div>
                                             <p className="text-sm">
