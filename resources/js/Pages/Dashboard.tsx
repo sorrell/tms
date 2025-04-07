@@ -1,4 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import DashboardCard from '@/Components/Dashboard/DashboardCard';
+import RecentCarriersCard from '@/Components/Dashboard/RecentCarriersCard';
+import RecentShipmentsCard from '@/Components/Dashboard/RecentShipmentsCard';
 import { Skeleton } from '@/Components/ui/skeleton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -26,33 +28,22 @@ export default function Dashboard() {
         >
             <Head title="Dashboard" />
 
-            <div className="py-12">
-                <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:px-6 lg:px-8">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>{getGreeting()}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Skeleton className="h-48 w-full" />
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Recent Activity</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Skeleton className="h-48 w-full" />
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Upcoming Loads</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Skeleton className="h-48 w-full" />
-                        </CardContent>
-                    </Card>
-                </div>
+            <div className="mx-auto flex max-w-7xl flex-wrap gap-4 py-12 sm:px-6 md:grid md:grid-cols-3 lg:px-8">
+                <span className="bold col-span-3 px-2 text-lg">
+                    {getGreeting()}
+                </span>
+                <DashboardCard title="Last 7 days">
+                    <Skeleton className="h-[64px] w-full" />
+                </DashboardCard>
+                <DashboardCard title="Last 30 days">
+                    <Skeleton className="h-[64px] w-full" />
+                </DashboardCard>
+                <DashboardCard title="Year-to-date">
+                    <Skeleton className="h-[64px] w-full" />
+                </DashboardCard>
+
+                <RecentShipmentsCard />
+                <RecentCarriersCard />
             </div>
         </AuthenticatedLayout>
     );
