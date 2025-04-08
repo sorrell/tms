@@ -2,7 +2,6 @@ import DashboardCard from '@/Components/Dashboard/DashboardCard';
 import RecentCarriersCard from '@/Components/Dashboard/RecentCarriersCard';
 import RecentShipmentsCard from '@/Components/Dashboard/RecentShipmentsCard';
 import { ComingSoon } from '@/Components/ui/coming-soon';
-import { Skeleton } from '@/Components/ui/skeleton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 

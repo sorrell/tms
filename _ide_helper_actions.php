@@ -397,6 +397,20 @@ class UpdateFacility
 namespace App\Actions\Locations;
 
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $abbreviation)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $abbreviation)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $abbreviation)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $abbreviation)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $abbreviation)
+ * @method static dispatchSync(string $abbreviation)
+ * @method static dispatchNow(string $abbreviation)
+ * @method static dispatchAfterResponse(string $abbreviation)
+ * @method static string run(string $abbreviation)
+ */
+class AbbreviationToState
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null, ?float $latitude = null, ?float $longitude = null)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null, ?float $latitude = null, ?float $longitude = null)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null, ?float $latitude = null, ?float $longitude = null)

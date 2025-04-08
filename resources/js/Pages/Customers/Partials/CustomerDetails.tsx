@@ -171,7 +171,10 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                 <CardTitle>Account Information</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <ComingSoon variant="outline" className='mx-auto' />
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
                             </CardContent>
                         </Card>
 
@@ -181,7 +184,10 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                 <CardTitle>Billing Information</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <ComingSoon variant="outline" className='mx-auto' />
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
                             </CardContent>
                         </Card>
 

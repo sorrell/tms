@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Clock, Construction } from 'lucide-react';
+import { Construction } from 'lucide-react';
 import { HTMLAttributes } from 'react';
 
 interface ComingSoonProps extends HTMLAttributes<HTMLDivElement> {
@@ -47,33 +47,35 @@ export function ComingSoon({
             )}
             {...props}
         >
-            <div className="rounded-full bg-background/60 p-2 border border-muted/20">
-                {icon || <Construction className={cn('text-muted-foreground', iconSize[size])} />}
+            <div className="rounded-full border border-muted/20 bg-background/60 p-2">
+                {icon || (
+                    <Construction
+                        className={cn('text-muted-foreground', iconSize[size])}
+                    />
+                )}
             </div>
-            
+
             <div className="space-y-1">
-                <h3 className={cn(
-                    'font-medium text-muted-foreground',
-                    {
+                <h3
+                    className={cn('font-medium text-muted-foreground', {
                         'text-xs': size === 'sm',
                         'text-sm': size === 'md',
                         'text-base': size === 'lg',
-                    }
-                )}>
+                    })}
+                >
                     {title}
                 </h3>
-                
-                <p className={cn(
-                    'text-muted-foreground/70',
-                    {
+
+                <p
+                    className={cn('text-muted-foreground/70', {
                         'text-[10px]': size === 'sm',
                         'text-xs': size === 'md',
                         'text-sm': size === 'lg',
-                    }
-                )}>
+                    })}
+                >
                     {message}
                 </p>
             </div>
         </div>
     );
-} 
+}

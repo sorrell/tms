@@ -2,8 +2,8 @@ import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import DocumentsList from '@/Components/Documents/DocumentsList';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { ComingSoon } from '@/Components/ui/coming-soon';
 import { Input } from '@/Components/ui/input';
-import { Loading } from '@/Components/ui/loading';
 import {
     Select,
     SelectContent,
@@ -36,7 +36,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
-import { ComingSoon } from '@/Components/ui/coming-soon';
 
 export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -252,7 +251,10 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                                     </div>
                                 </div>
                             ) : (
-                                <ComingSoon variant="outline" className='mx-auto' />
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
                             )}
                         </CardContent>
                     </Card>

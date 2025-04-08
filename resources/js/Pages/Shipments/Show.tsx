@@ -1,6 +1,7 @@
 import DocumentsList from '@/Components/Documents/DocumentsList';
 import LocationMap from '@/Components/Shipments/LocationMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { ComingSoon } from '@/Components/ui/coming-soon';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Documentable } from '@/types/enums';
@@ -13,7 +14,6 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
-import { ComingSoon } from '@/Components/ui/coming-soon';
 
 export default function Show({
     shipment,
@@ -114,7 +114,10 @@ export default function Show({
                                 <CardTitle>Recent Activity</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <ComingSoon variant="outline" className='mx-auto' />
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
                             </CardContent>
                         </Card>
                     </div>
