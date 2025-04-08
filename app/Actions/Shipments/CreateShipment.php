@@ -4,6 +4,7 @@ namespace App\Actions\Shipments;
 
 use App\Enums\StopType;
 use App\Enums\TemperatureUnit;
+use App\Events\Shipments\ShipmentCarrierUpdated;
 use App\Http\Resources\ShipmentResource;
 use App\Models\Shipments\Shipment;
 use Carbon\Carbon;
@@ -59,6 +60,8 @@ class CreateShipment
         }
 
         DB::commit();
+
+        event(new ShipmentCarrierUpdated($shipment));
 
         return $shipment;
     }
