@@ -69,17 +69,17 @@ class CreateShipment
     public function asController(ActionRequest $request) : Shipment 
     {
         return $this->handle(
-            customerIds: $request->customer_ids,
-            carrierId: $request->carrier_id,
-            stops: $request->stops,
-            weight: $request->weight,
-            tripDistance: $request->trip_distance,
-            trailerTypeId: $request->trailer_type_id,
-            trailerSizeId: $request->trailer_size_id,
-            trailerTemperatureRange: $request->trailer_temperature_range,
-            trailerTemperature: $request->trailer_temperature,
-            trailerTemperatureMaximum: $request->trailer_temperature_maximum,
-            shipmentNumber: $request->shipment_number,
+            customerIds: $request->validated('customer_ids'),
+            carrierId: $request->validated('carrier_id'),
+            stops: $request->validated('stops'),
+            weight: $request->validated('weight'),
+            tripDistance: $request->validated('trip_distance'),
+            trailerTypeId: $request->validated('trailer_type_id'),
+            trailerSizeId: $request->validated('trailer_size_id'),
+            trailerTemperatureRange: $request->validated('trailer_temperature_range'),
+            trailerTemperature: $request->validated('trailer_temperature'),
+            trailerTemperatureMaximum: $request->validated('trailer_temperature_maximum'),
+            shipmentNumber: $request->validated('shipment_number'),
         );
     }
 
