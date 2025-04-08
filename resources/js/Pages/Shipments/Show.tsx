@@ -13,6 +13,7 @@ import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
+import { ComingSoon } from '@/Components/ui/coming-soon';
 
 export default function Show({
     shipment,
@@ -113,11 +114,7 @@ export default function Show({
                                 <CardTitle>Recent Activity</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="flex items-center justify-center rounded-md border border-dashed p-4">
-                                    <p className="text-sm text-muted-foreground">
-                                        Activity feed coming soon
-                                    </p>
-                                </div>
+                                <ComingSoon variant="outline" className='mx-auto' />
                             </CardContent>
                         </Card>
                     </div>

@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
+import { ComingSoon } from '@/Components/ui/coming-soon';
 
 export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -251,10 +252,7 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                                     </div>
                                 </div>
                             ) : (
-                                <Loading
-                                    className="mx-auto h-[200px] w-full"
-                                    text="Loading..."
-                                />
+                                <ComingSoon variant="outline" className='mx-auto' />
                             )}
                         </CardContent>
                     </Card>

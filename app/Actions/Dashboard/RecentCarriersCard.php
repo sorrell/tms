@@ -17,10 +17,12 @@ class RecentCarriersCard
     public function handle() : Collection
     {
         $carriers = Shipment::whereState('state', Booked::class)
+            ->whereNotNull('carrier_id')
             ->latest()->limit(5)
             ->with('carrier')
             ->get()
             ->pluck('carrier');
+
         return $carriers;
     }
 

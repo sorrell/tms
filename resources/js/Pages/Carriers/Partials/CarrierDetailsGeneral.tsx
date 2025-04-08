@@ -331,10 +331,7 @@ export default function CarrierDetailsGeneral({
                             </div>
                         </div>
                     ) : (
-                        <Loading
-                            className="mx-auto h-[200px] w-full"
-                            text="Loading..."
-                        />
+                        <span>-</span>
                     )}
                 </CardContent>
             </Card>
