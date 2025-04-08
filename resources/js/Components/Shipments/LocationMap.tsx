@@ -59,25 +59,10 @@ export default function LocationMap({ shipment }: { shipment: Shipment }) {
                                 // Fallback to address-based calculation if coordinates aren't available
                                 // In a production environment, you would use a geocoding service here
                                 console.warn(
-                                    `Location ${location.id} missing latitude/longitude coordinates. Using fallback.`,
+                                    `Location ${location.id} missing latitude/longitude coordinates. skippin.`,
                                 );
-                                const lat =
-                                    defaultCenter.lat +
-                                    index *
-                                        0.5 *
-                                        (Math.random() > 0.5 ? 1 : -1);
-                                const lng =
-                                    defaultCenter.lng +
-                                    index *
-                                        0.5 *
-                                        (Math.random() > 0.5 ? 1 : -1);
 
-                                return {
-                                    lat,
-                                    lng,
-                                    label: `${index + 1}`,
-                                    stopType: stop.stop_type,
-                                };
+                                return null;
                             } catch (error) {
                                 console.error('Geocoding error:', error);
                                 return null;
