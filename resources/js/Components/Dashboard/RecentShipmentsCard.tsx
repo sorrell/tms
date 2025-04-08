@@ -2,7 +2,7 @@ import { Shipment } from '@/types';
 import { useEffect, useState } from 'react';
 import { columns } from '../Shipments/ShipmentList/Columns';
 import { DataTable } from '../Shipments/ShipmentList/DataTable';
-import { Skeleton } from '../ui/skeleton';
+import { Loading } from '../ui/loading';
 import DashboardCard from './DashboardCard';
 
 export default function RecentShipmentsCard() {
@@ -39,7 +39,10 @@ export default function RecentShipmentsCard() {
             className="md:overflow-x-scroll"
         >
             {loading ? (
-                <Skeleton className="h-[32px] w-full" />
+                <Loading
+                    className="mx-auto h-[200px] w-full"
+                    text="Loading..."
+                />
             ) : (
                 <DataTable columns={columns} data={shipments} />
             )}

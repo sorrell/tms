@@ -4,6 +4,7 @@ import DocumentsList from '@/Components/Documents/DocumentsList';
 import Notes from '@/Components/Notes';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { ComingSoon } from '@/Components/ui/coming-soon';
 import { Input } from '@/Components/ui/input';
 import {
     Select,
@@ -170,26 +171,10 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                 <CardTitle>Account Information</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <div className="text-sm text-gray-500">
-                                            Open AR
-                                        </div>
-                                        <Skeleton className="mt-1 h-6 w-24" />
-                                    </div>
-                                    <div>
-                                        <div className="text-sm text-gray-500">
-                                            Closed AR
-                                        </div>
-                                        <Skeleton className="mt-1 h-6 w-24" />
-                                    </div>
-                                    <div>
-                                        <div className="text-sm text-gray-500">
-                                            Credit Line
-                                        </div>
-                                        <Skeleton className="mt-1 h-6 w-24" />
-                                    </div>
-                                </div>
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
                             </CardContent>
                         </Card>
 
@@ -199,20 +184,10 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                 <CardTitle>Billing Information</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="space-y-4">
-                                    <div>
-                                        <div className="text-sm text-gray-500">
-                                            Invoice Preferences
-                                        </div>
-                                        <Skeleton className="mt-1 h-6 w-full" />
-                                    </div>
-                                    <div>
-                                        <div className="text-sm text-gray-500">
-                                            Billing Address
-                                        </div>
-                                        <Skeleton className="mt-1 h-20 w-full" />
-                                    </div>
-                                </div>
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
                             </CardContent>
                         </Card>
 

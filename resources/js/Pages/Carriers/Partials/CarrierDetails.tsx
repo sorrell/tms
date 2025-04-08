@@ -2,6 +2,7 @@ import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import DocumentsList from '@/Components/Documents/DocumentsList';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { ComingSoon } from '@/Components/ui/coming-soon';
 import { Input } from '@/Components/ui/input';
 import {
     Select,
@@ -10,7 +11,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
-import { Skeleton } from '@/Components/ui/skeleton';
 import { Switch } from '@/Components/ui/switch';
 import {
     Table,
@@ -251,7 +251,10 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                                     </div>
                                 </div>
                             ) : (
-                                <Skeleton className="h-48 w-full" />
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
                             )}
                         </CardContent>
                     </Card>

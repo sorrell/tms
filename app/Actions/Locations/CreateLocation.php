@@ -26,6 +26,9 @@ class CreateLocation
         ?float $longitude = null
     ): Location
     {
+        // Try to convert this to the full state in case it's short
+        $address_state = AbbreviationToState::run($address_state);
+
         return Location::create([
             'name' => $name,
             'address_line_1' => $address_line_1,
@@ -72,7 +75,7 @@ class CreateLocation
             'address_line_1' => ['required', 'string', 'min:3', 'max:255'],
             'address_line_2' => ['nullable', 'string', 'min:3', 'max:255'],
             'address_city' => ['required', 'string', 'min:3', 'max:255'],
-            'address_state' => ['required', 'string', 'min:3', 'max:255'],
+            'address_state' => ['required', 'string', 'max:255'],
             'address_zipcode' => ['required', 'string', 'min:3', 'max:255'],
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric']

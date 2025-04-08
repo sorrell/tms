@@ -28,6 +28,8 @@ class ShipmentResource extends JsonResource
             'trip_distance' => $this->trip_distance,
             'trailer_type' => $this->whenLoaded('trailer_type', TrailerTypeResource::make($this->trailer_type)),
             'trailer_size' => $this->whenLoaded('trailer_size', TrailerSizeResource::make($this->trailer_size)),
+            'trailer_type_id' => $this->trailer_type_id,
+            'trailer_size_id' => $this->trailer_size_id,
             'trailer_temperature_range' => $this->trailer_temperature_range,
             'trailer_temperature' => $this->trailer_temperature,
             'trailer_temperature_maximum' => $this->trailer_temperature_maximum,

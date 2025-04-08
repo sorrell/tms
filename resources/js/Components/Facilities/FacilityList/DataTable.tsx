@@ -57,7 +57,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                 {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                         <TableRow
-                            className=""
+                            className="cursor-pointer"
                             key={row.id}
                             data-state={row.getIsSelected() && 'selected'}
                             onClick={() => {

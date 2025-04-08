@@ -397,6 +397,20 @@ class UpdateFacility
 namespace App\Actions\Locations;
 
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $abbreviation)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $abbreviation)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $abbreviation)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $abbreviation)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $abbreviation)
+ * @method static dispatchSync(string $abbreviation)
+ * @method static dispatchNow(string $abbreviation)
+ * @method static dispatchAfterResponse(string $abbreviation)
+ * @method static string run(string $abbreviation)
+ */
+class AbbreviationToState
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null, ?float $latitude = null, ?float $longitude = null)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null, ?float $latitude = null, ?float $longitude = null)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $address_line_1, string $address_city, string $address_state, string $address_zipcode, ?string $name = null, ?string $address_line_2 = null, ?float $latitude = null, ?float $longitude = null)
@@ -487,15 +501,15 @@ class CancelShipment
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static dispatchSync(array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static dispatchNow(array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static dispatchAfterResponse(array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
- * @method static \App\Models\Shipments\Shipment run(array $customerIds, int $carrierId, array $stops, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static dispatchSync(array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static dispatchNow(array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static dispatchAfterResponse(array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
+ * @method static \App\Models\Shipments\Shipment run(array $customerIds, array $stops, ?int $carrierId = null, ?float $weight = null, ?float $tripDistance = null, ?int $trailerTypeId = null, ?int $trailerSizeId = null, ?bool $trailerTemperatureRange = false, ?float $trailerTemperature = null, ?float $trailerTemperatureMaximum = null, ?string $shipmentNumber = null)
  */
 class CreateShipment
 {

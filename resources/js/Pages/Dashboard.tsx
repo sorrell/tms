@@ -1,7 +1,7 @@
 import DashboardCard from '@/Components/Dashboard/DashboardCard';
 import RecentCarriersCard from '@/Components/Dashboard/RecentCarriersCard';
 import RecentShipmentsCard from '@/Components/Dashboard/RecentShipmentsCard';
-import { Skeleton } from '@/Components/ui/skeleton';
+import { ComingSoon } from '@/Components/ui/coming-soon';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
@@ -33,13 +33,13 @@ export default function Dashboard() {
                     {getGreeting()}
                 </span>
                 <DashboardCard title="Last 7 days">
-                    <Skeleton className="h-[64px] w-full" />
+                    <ComingSoon variant="outline" />
                 </DashboardCard>
                 <DashboardCard title="Last 30 days">
-                    <Skeleton className="h-[64px] w-full" />
+                    <ComingSoon variant="outline" />
                 </DashboardCard>
                 <DashboardCard title="Year-to-date">
-                    <Skeleton className="h-[64px] w-full" />
+                    <ComingSoon variant="outline" />
                 </DashboardCard>
 
                 <RecentShipmentsCard />

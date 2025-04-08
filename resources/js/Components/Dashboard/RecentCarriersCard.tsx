@@ -3,7 +3,7 @@ import { router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { columns } from '../Carriers/CarrierList/Columns';
 import { DataTable } from '../Carriers/CarrierList/DataTable';
-import { Skeleton } from '../ui/skeleton';
+import { Loading } from '../ui/loading';
 import DashboardCard from './DashboardCard';
 
 export default function RecentCarriersCard() {
@@ -40,7 +40,10 @@ export default function RecentCarriersCard() {
             className="md:overflow-x-scroll"
         >
             {loading ? (
-                <Skeleton className="h-[32px] w-full" />
+                <Loading
+                    className="mx-auto h-[200px] w-full"
+                    text="Loading..."
+                />
             ) : (
                 <DataTable
                     columns={columns}
