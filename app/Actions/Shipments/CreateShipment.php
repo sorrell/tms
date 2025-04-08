@@ -19,8 +19,8 @@ class CreateShipment
 
     public function handle(
         array $customerIds,
-        int $carrierId,
         array $stops,
+        ?int $carrierId = null,
         ?float $weight = null,
         ?float $tripDistance = null,
         ?int $trailerTypeId = null,
@@ -106,7 +106,7 @@ class CreateShipment
             'trailer_temperature' => ['nullable', 'numeric'],
             'trailer_temperature_maximum' => ['nullable', 'numeric'],
 
-            'carrier_id' => ['required', 'exists:carriers,id'],
+            'carrier_id' => ['exists:carriers,id'],
             'stops' => ['required', 'array'],
             'stops.*.stop_type' => ['required', Rule::enum(StopType::class)],
             'stops.*.facility_id' => ['required', 'exists:facilities,id'],
