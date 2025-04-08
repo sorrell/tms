@@ -160,7 +160,7 @@ export interface Shipment {
     id: number;
     shipment_number: string;
     customers: Customer[];
-    carrier: Carrier;
+    carrier?: Carrier;
     driver?: Contact;
     stops: ShipmentStop[];
     weight: number;
@@ -168,7 +168,7 @@ export interface Shipment {
     trailer_type_id: number;
     trailer_size_id: number;
     trailer_temperature_range: boolean;
-    trailer_temperature: number;
+    trailer_temperature?: number;
     trailer_temperature_maximum?: number;
     lane?: string;
     next_stop?: ShipmentStop;

@@ -245,7 +245,7 @@ const EditRows = forwardRef(
         // Add shipment carrier if it exists
         if (
             shipment.carrier &&
-            !carrierOptions.find((v) => v.id == shipment.carrier.id)
+            !carrierOptions.find((v) => v.id == shipment.carrier?.id)
         ) {
             carrierOptions.push(shipment.carrier);
         }
