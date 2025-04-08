@@ -2,7 +2,7 @@ import AccessorialsTable from '@/Components/Shipments/AccessorialsTable';
 import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
 import CustomerRatesTable from '@/Components/Shipments/CustomerRatesTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Skeleton } from '@/Components/ui/skeleton';
+import { Loading } from '@/Components/ui/loading';
 import {
     AccessorialType,
     CarrierRateType,
@@ -101,9 +101,7 @@ export default function ShipmentFinancialDetails({
             </CardHeader>
             <CardContent className="grid columns-1 md:columns-2">
                 {isLoading ? (
-                    <>
-                        <Skeleton className="h-[64px] w-full" />
-                    </>
+                    <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
                 ) : (
                     <>
                         <div className="pb-2 md:pr-4">

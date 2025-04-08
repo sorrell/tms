@@ -10,7 +10,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
-import { Skeleton } from '@/Components/ui/skeleton';
 import { Switch } from '@/Components/ui/switch';
 import {
     Table,
@@ -36,6 +35,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
+import { Loading } from '@/Components/ui/loading';
 
 export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -251,7 +251,7 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                                     </div>
                                 </div>
                             ) : (
-                                <Skeleton className="h-48 w-full" />
+                                <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
                             )}
                         </CardContent>
                     </Card>

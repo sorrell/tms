@@ -2,8 +2,8 @@ import { Shipment } from '@/types';
 import { useEffect, useState } from 'react';
 import { columns } from '../Shipments/ShipmentList/Columns';
 import { DataTable } from '../Shipments/ShipmentList/DataTable';
-import { Skeleton } from '../ui/skeleton';
 import DashboardCard from './DashboardCard';
+import { Loading } from '../ui/loading';
 
 export default function RecentShipmentsCard() {
     const [shipments, setShipments] = useState<Shipment[]>([]);
@@ -39,7 +39,7 @@ export default function RecentShipmentsCard() {
             className="md:overflow-x-scroll"
         >
             {loading ? (
-                <Skeleton className="h-[32px] w-full" />
+                <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
             ) : (
                 <DataTable columns={columns} data={shipments} />
             )}

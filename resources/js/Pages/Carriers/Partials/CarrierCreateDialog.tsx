@@ -12,12 +12,12 @@ import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { DialogContent } from '@/Components/ui/dialog';
 import { Label } from '@/Components/ui/label';
-import { Skeleton } from '@/Components/ui/skeleton';
 import { CarrierSaferReport } from '@/types';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { ArrowLeft, ArrowRight, Search } from 'lucide-react';
 import { useState } from 'react';
+import { Loading } from '@/Components/ui/loading';
 
 function CarrierManualCreateForm({
     setIsOpen,
@@ -169,9 +169,10 @@ function CarrierFmcsaCreateForm({
                 <div className="space-y-2">
                     <div className="max-h-[500px] space-y-2 overflow-y-auto">
                         {isLoading &&
-                            [1, 2, 3].map((i) => (
-                                <Skeleton key={i} className="h-40 w-full" />
-                            ))}
+                            (
+                            <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
+                            )
+                        }
                         {!isLoading && possibleCarriers.length < 1 && (
                             <p className="text-center text-muted-foreground">
                                 No carriers found

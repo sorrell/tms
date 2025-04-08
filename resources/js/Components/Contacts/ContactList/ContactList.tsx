@@ -16,7 +16,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
-import { Skeleton } from '@/Components/ui/skeleton';
 import { useToast } from '@/hooks/UseToast';
 import { Contact } from '@/types';
 import { Contactable } from '@/types/enums';
@@ -26,6 +25,7 @@ import { Plus, Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
+import { Loading } from '@/Components/ui/loading';
 
 export default function ContactList({
     contactForId,
@@ -202,7 +202,7 @@ export default function ContactList({
             </div>
             {isLoading ? (
                 <>
-                    <Skeleton className="mx-auto h-[200px] w-1/2 rounded-md" />
+                    <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
                 </>
             ) : (
                 <>

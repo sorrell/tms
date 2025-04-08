@@ -18,8 +18,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from './ui/dialog';
-import { Skeleton } from './ui/skeleton';
 import { Textarea } from './ui/textarea';
+import { Loading } from './ui/loading';
 
 export default function Notes({
     notableType,
@@ -157,9 +157,7 @@ export default function Notes({
             </div>
             {loading ? (
                 <div className="flex flex-col gap-2">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
+                    <Loading className="mx-auto h-[200px] w-full" text="Loading notes..." />
                 </div>
             ) : notes.length === 0 ? (
                 <div className="text-center text-sm text-gray-500">

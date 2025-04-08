@@ -14,7 +14,7 @@ import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { ExternalLink } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { Skeleton } from '../ui/skeleton';
+import { Loading } from '../ui/loading';
 
 export default function CustomerFacilities({
     customer,
@@ -79,7 +79,7 @@ export default function CustomerFacilities({
             <CardContent className="p-0 pt-2">
                 <div className="flex flex-col">
                     {isLoading ? (
-                        <Skeleton className="h-32 w-full" />
+                        <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
                     ) : (
                         <>
                             {facilities.length === 0 ? (
