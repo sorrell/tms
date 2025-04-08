@@ -94,7 +94,7 @@ export default function LocationForm({
             {...props}
         >
             <h2 className="text-lg font-medium">Create Location</h2>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 hidden">
                 <Label htmlFor="name">Name</Label>
                 <Input
                     id="name"
