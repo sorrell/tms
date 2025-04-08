@@ -335,7 +335,7 @@ export default function ShipmentStopsList({
                                             </>
                                         ) : (
                                             <Avatar>
-                                                <AvatarFallback className="bg-primary p-1 text-white">
+                                                <AvatarFallback className="bg-primary text-white dark:text-secondary p-1">
                                                     {stop.stop_type ===
                                                     StopType.Delivery ? (
                                                         <ArrowDown className="inline h-4 w-4" />
