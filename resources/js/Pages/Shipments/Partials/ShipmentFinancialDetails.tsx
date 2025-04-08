@@ -101,7 +101,10 @@ export default function ShipmentFinancialDetails({
             </CardHeader>
             <CardContent className="grid columns-1 md:columns-2">
                 {isLoading ? (
-                    <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
+                    <Loading
+                        className="mx-auto h-[200px] w-full"
+                        text="Loading..."
+                    />
                 ) : (
                     <>
                         <div className="pb-2 md:pr-4">

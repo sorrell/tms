@@ -1,12 +1,12 @@
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
+import { Loading } from '@/Components/ui/loading';
 import { Carrier } from '@/types';
 import axios from 'axios';
 import { Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
-import { Loading } from '@/Components/ui/loading';
 
 export default function CarrierList({
     onSelect,
@@ -74,7 +74,10 @@ export default function CarrierList({
             </div>
             {isLoading ? (
                 <>
-                    <Loading className="mx-auto h-[200px] w-full" text="Loading carriers..." />
+                    <Loading
+                        className="mx-auto h-[200px] w-full"
+                        text="Loading carriers..."
+                    />
                 </>
             ) : (
                 <>

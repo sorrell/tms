@@ -3,6 +3,7 @@ import DocumentsList from '@/Components/Documents/DocumentsList';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
+import { Loading } from '@/Components/ui/loading';
 import {
     Select,
     SelectContent,
@@ -35,7 +36,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CarrierDetailsGeneral from './CarrierDetailsGeneral';
-import { Loading } from '@/Components/ui/loading';
 
 export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -251,7 +251,10 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                                     </div>
                                 </div>
                             ) : (
-                                <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
+                                <Loading
+                                    className="mx-auto h-[200px] w-full"
+                                    text="Loading..."
+                                />
                             )}
                         </CardContent>
                     </Card>

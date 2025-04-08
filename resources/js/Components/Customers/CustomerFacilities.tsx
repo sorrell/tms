@@ -79,7 +79,10 @@ export default function CustomerFacilities({
             <CardContent className="p-0 pt-2">
                 <div className="flex flex-col">
                     {isLoading ? (
-                        <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
+                        <Loading
+                            className="mx-auto h-[200px] w-full"
+                            text="Loading..."
+                        />
                     ) : (
                         <>
                             {facilities.length === 0 ? (

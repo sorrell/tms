@@ -9,6 +9,7 @@ import {
 } from '@/Components/ui/dialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
+import { Loading } from '@/Components/ui/loading';
 import {
     Select,
     SelectContent,
@@ -25,7 +26,6 @@ import { Plus, Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
-import { Loading } from '@/Components/ui/loading';
 
 export default function ContactList({
     contactForId,
@@ -202,7 +202,10 @@ export default function ContactList({
             </div>
             {isLoading ? (
                 <>
-                    <Loading className="mx-auto h-[200px] w-full" text="Loading..." />
+                    <Loading
+                        className="mx-auto h-[200px] w-full"
+                        text="Loading..."
+                    />
                 </>
             ) : (
                 <>

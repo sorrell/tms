@@ -87,7 +87,10 @@ export default function ShipmentList({
             </div>
             {isLoading ? (
                 <>
-                    <Loading className="mx-auto h-[200px] w-full" text="Loading shipments..." />
+                    <Loading
+                        className="mx-auto h-[200px] w-full"
+                        text="Loading shipments..."
+                    />
                 </>
             ) : (
                 <>
