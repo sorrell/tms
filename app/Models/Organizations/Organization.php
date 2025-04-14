@@ -54,4 +54,12 @@ class Organization extends Model
                 config('permission.models.role')
         );
     }
+    
+    /**
+     * Get the integration settings for this organization
+     */
+    public function integrationSettings() : HasMany
+    {
+        return $this->hasMany(IntegrationSetting::class);
+    }
 }
