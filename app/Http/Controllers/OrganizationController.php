@@ -83,6 +83,27 @@ class OrganizationController extends Controller
         return redirect()->route('organizations.edit', $organization);
     }
 
+    public function showUsers(Organization $organization)
+    {
+        Gate::authorize('view', $organization);
+
+        return Inertia::render('Organizations/Users', [
+            'organization' => $organization->load('owner', 'users'),
+            'invites' => $organization->invites,
+        ]);
+    }
+
+    public function showRoles(Organization $organization)
+    {
+        Gate::authorize('view', $organization);
+
+        return Inertia::render('Organizations/Roles', [
+            'organization' => $organization->load('owner', 'users'),
+            'roles' => $organization->roles->load('permissions', 'users'),
+            'permissions' => Permission::all(),
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

@@ -106,6 +106,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::post('organizations/{organization}/switch', [OrganizationController::class, 'switchOrganization'])->name('organizations.switch');
 
+    Route::get('organizations/{organization}/users', [OrganizationController::class, 'showUsers'])->name('organizations.users');
+    Route::get('organizations/{organization}/roles', [OrganizationController::class, 'showRoles'])->name('organizations.roles');
+
 
     Route::prefix('organizations/{organization}/permissions')->group(function () {
         Route::post('role', [PermissionController::class, 'storeRole'])->name('organizations.permissions.role.store');
