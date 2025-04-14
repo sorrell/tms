@@ -26,7 +26,7 @@ class IntegrationSetting extends Model
         'expose_to_frontend' => 'boolean',
     ];
 
-    protected function value(): Attribute
+    public function value(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => $this->is_encrypted ? Crypt::decryptString($value) : $value,

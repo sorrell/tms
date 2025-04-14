@@ -1,27 +1,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {
-    Organization,
-    OrganizationInvite,
-    Permission,
-    Role,
-} from '@/types/organization';
-import { Head, usePage } from '@inertiajs/react';
+import { Organization, Permission, Role } from '@/types/organization';
+import { Head } from '@inertiajs/react';
 import RolesTable from './Partials/RolesTable';
 
 export default function Show({
     organization,
-    invites,
     roles,
     permissions,
 }: {
     organization: Organization;
-    invites: OrganizationInvite[];
     roles: Role[];
     permissions: Permission[];
 }) {
-    const userPermissions = usePage().props.auth.permissions;
-
-
     return (
         <AuthenticatedLayout
             breadcrumbs={[
@@ -30,7 +20,7 @@ export default function Show({
                 },
                 {
                     title: 'Roles',
-                }
+                },
             ]}
         >
             <Head title="Organization" />

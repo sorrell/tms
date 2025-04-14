@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Organization, IntegrationSetting } from '@/types/organization';
-import { Head, usePage } from '@inertiajs/react';
+import { IntegrationSetting, Organization } from '@/types/organization';
+import { Head } from '@inertiajs/react';
 import IntegrationSettingsTable from './Partials/IntegrationSettingsTable';
 
 export default function IntegrationSettingsPage({
@@ -10,7 +10,6 @@ export default function IntegrationSettingsPage({
     organization: Organization;
     integrationSettings: IntegrationSetting[];
 }) {
-
     return (
         <AuthenticatedLayout
             breadcrumbs={[
@@ -28,7 +27,6 @@ export default function IntegrationSettingsPage({
                     organization={organization}
                 />
             </div>
-
         </AuthenticatedLayout>
     );
-} 
+}

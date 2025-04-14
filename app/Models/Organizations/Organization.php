@@ -57,6 +57,8 @@ class Organization extends Model
     
     /**
      * Get the integration settings for this organization
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<IntegrationSetting, $this>
      */
     public function integration_settings() : HasMany
     {

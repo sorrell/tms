@@ -2,6 +2,7 @@
 
 namespace App\Actions\IntegrationSettings;
 
+use App\Models\Organizations\IntegrationSetting;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -44,7 +45,7 @@ class GetFrontendIntegrationSettings
             $orgSettings = $organization->integration_settings()
                 ->where('expose_to_frontend', true)
                 ->get()
-                ->mapWithKeys(function ($setting) {
+                ->mapWithKeys(function (IntegrationSetting $setting) {
                     return [$setting->key => $setting->value];
                 })
                 ->toArray();

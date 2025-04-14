@@ -27,7 +27,11 @@ import {
     SidebarRail,
 } from '@/Components/ui/sidebar';
 import { usePage } from '@inertiajs/react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from './ui/collapsible';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const user = usePage().props.auth.user;
@@ -120,63 +124,81 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
                     {(permissions.ORGANIZATION_MANAGER ||
                         permissions.ORGANIZATION_MANAGE_USERS) && (
-                            <Collapsible 
-                                open={isOrgMenuOpen} 
-                                onOpenChange={handleOrgMenuChange}
-                                asChild 
-                                className='group/collapsible'
-                            >
-                                <SidebarMenuItem className='list-none'>
-                                    <CollapsibleTrigger asChild>
-                                        <SidebarMenuButton>
-                                            <Building />
-                                            <span>Organization</span>
-                                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                        </SidebarMenuButton>
-                                    </CollapsibleTrigger>
-                                    <CollapsibleContent>
-                                        <SidebarMenuSub>
-                                            <SidebarMenuSubItem >
-                                                <SidebarMenuSubButton
-                                                    isActive={route().current('organizations.users', [
+                        <Collapsible
+                            open={isOrgMenuOpen}
+                            onOpenChange={handleOrgMenuChange}
+                            asChild
+                            className="group/collapsible"
+                        >
+                            <SidebarMenuItem className="list-none">
+                                <CollapsibleTrigger asChild>
+                                    <SidebarMenuButton>
+                                        <Building />
+                                        <span>Organization</span>
+                                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                    </SidebarMenuButton>
+                                </CollapsibleTrigger>
+                                <CollapsibleContent>
+                                    <SidebarMenuSub>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                isActive={route().current(
+                                                    'organizations.users',
+                                                    [
                                                         user.current_organization_id,
-                                                    ])}
-                                                    href={route('organizations.users', [
+                                                    ],
+                                                )}
+                                                href={route(
+                                                    'organizations.users',
+                                                    [
                                                         user.current_organization_id,
-                                                    ])}
-                                                >
-                                                    Users
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                            <SidebarMenuSubItem >
-                                                <SidebarMenuSubButton
-                                                    href={route('organizations.roles', [
+                                                    ],
+                                                )}
+                                            >
+                                                Users
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                href={route(
+                                                    'organizations.roles',
+                                                    [
                                                         user.current_organization_id,
-                                                    ])}
-                                                    isActive={route().current('organizations.roles', [
+                                                    ],
+                                                )}
+                                                isActive={route().current(
+                                                    'organizations.roles',
+                                                    [
                                                         user.current_organization_id,
-                                                    ])}
-                                                >
-                                                    Roles
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                            <SidebarMenuSubItem >
-                                                <SidebarMenuSubButton
-                                                    href={route('organizations.integration-settings', [
+                                                    ],
+                                                )}
+                                            >
+                                                Roles
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                href={route(
+                                                    'organizations.integration-settings',
+                                                    [
                                                         user.current_organization_id,
-                                                    ])}
-                                                    isActive={route().current('organizations.integration-settings', [
+                                                    ],
+                                                )}
+                                                isActive={route().current(
+                                                    'organizations.integration-settings',
+                                                    [
                                                         user.current_organization_id,
-                                                    ])}
-                                                >
-                                                    Integration Settings
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        </SidebarMenuSub>
-                                    </CollapsibleContent>
-                                </SidebarMenuItem>
-                            </Collapsible>
-                        )}
+                                                    ],
+                                                )}
+                                            >
+                                                Integration Settings
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    </SidebarMenuSub>
+                                </CollapsibleContent>
+                            </SidebarMenuItem>
+                        </Collapsible>
+                    )}
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>

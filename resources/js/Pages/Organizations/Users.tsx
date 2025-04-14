@@ -1,14 +1,7 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {
-    Organization,
-    OrganizationInvite,
-    Permission,
-    Role,
-} from '@/types/organization';
-import { Head, usePage } from '@inertiajs/react';
+import { Organization, OrganizationInvite } from '@/types/organization';
+import { Head } from '@inertiajs/react';
 import InvitesTable from './Partials/InvitesTable';
-import RolesTable from './Partials/RolesTable';
 import UsersTable from './Partials/UsersTable';
 
 export default function Users({
@@ -26,7 +19,7 @@ export default function Users({
                 },
                 {
                     title: 'Users',
-                }
+                },
             ]}
         >
             <Head title="Organization" />
