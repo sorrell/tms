@@ -2,6 +2,8 @@
 
 namespace App\Actions\IntegrationSettings;
 
+use App\Models\Organizations\IntegrationSetting;
+use App\Models\Organizations\Organization;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\ActionRequest;
@@ -34,9 +36,13 @@ class DeleteIntegrationSetting
         return $result > 0;
     }
 
-    public function asController(ActionRequest $request)
+    public function asController(
+        ActionRequest $request,
+        Organization $organization,
+        IntegrationSetting $setting
+    )
     {
-        return $this->handle($request->validated('key'));
+        return $this->handle($setting->key);
     }
 
     public function htmlResponse(bool $result)
@@ -51,7 +57,7 @@ class DeleteIntegrationSetting
     public function rules()
     {
         return [
-            'key' => 'required|string',
+
         ];
     }
 } 

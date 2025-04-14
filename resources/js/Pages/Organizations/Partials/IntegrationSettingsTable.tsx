@@ -13,8 +13,16 @@ import {
 } from '@/Components/ui/dialog';
 import { useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, MoreHorizontal } from 'lucide-react';
 import { useToast } from '@/hooks/UseToast';
+import PrimaryButton from '@/Components/PrimaryButton';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
 
 interface Props {
     integrationSettings: IntegrationSetting[];
@@ -32,7 +40,7 @@ interface IntegrationSettingForm {
 
 export default function IntegrationSettingsTable({ integrationSettings, organization }: Props) {
     const { toast } = useToast();
-    const { data, setData, post, processing, errors, reset, setError } = useForm<IntegrationSettingForm>({
+    const { data, setData, post, processing, errors, reset, setError, delete: destroy } = useForm<IntegrationSettingForm>({
         key: '',
         value: '',
         provider: '',
@@ -41,17 +49,18 @@ export default function IntegrationSettingsTable({ integrationSettings, organiza
     });
     const [open, setOpen] = useState(false);
     const [revealedId, setRevealedId] = useState<number | null>(null);
+    const [activeSetting, setActiveSetting] = useState<IntegrationSetting | null>(null);
 
-    const handleAdd = useCallback((e: React.FormEvent) => {
-
+    const handleAddOrEdit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
 
-        // Check if the key already exists in the settings
-        const keyExists = integrationSettings.some(setting => setting.key === data.key);
-
-        if (keyExists) {
-            setError('key', 'This integration setting key already exists.');
-            return;
+        // If adding, check for duplicate key
+        if (!activeSetting) {
+            const keyExists = integrationSettings.some(setting => setting.key === data.key);
+            if (keyExists) {
+                setError('key', 'This integration setting key already exists.');
+                return;
+            }
         }
 
         post(route('organizations.integration-settings.store', { organization: organization.id }), {
@@ -60,21 +69,50 @@ export default function IntegrationSettingsTable({ integrationSettings, organiza
             onSuccess: () => {
                 reset();
                 setOpen(false);
+                setActiveSetting(null);
                 toast({
-                    description: 'Integration setting added!',
+                    description: activeSetting ? 'Integration setting updated!' : 'Integration setting added!',
                 });
             },
         });
-    }, [integrationSettings, data, reset, toast, setOpen]);
+    }, [integrationSettings, data, reset, toast, setOpen, activeSetting]);
+
+    const handleEdit = (setting: IntegrationSetting) => {
+        setActiveSetting(setting);
+        setData({
+            key: setting.key,
+            value: setting.value,
+            provider: setting.provider || '',
+            encrypted: setting.encrypted,
+            expose_to_frontend: setting.expose_to_frontend,
+        });
+        setOpen(true);
+    };
+
+    const handleDelete = (setting: IntegrationSetting) => {
+        destroy(
+            route('organizations.integration-settings.destroy', { organization: organization.id, setting: setting.id }),
+            {
+                preserveScroll: true,
+                replace: true,
+                onSuccess: () => {
+                    toast({ description: 'Integration setting deleted!' });
+                },
+                onError: () => {
+                    toast({ description: 'Failed to delete integration setting', variant: 'destructive' });
+                },
+            }
+        );
+    };
 
     return (
         <div>
-            <Button onClick={() => setOpen(true)}>Add Integration Setting</Button>
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Button onClick={() => { setOpen(true); setActiveSetting(null); setData({ key: '', value: '', provider: '', encrypted: false, expose_to_frontend: false }) }}>Add Integration Setting</Button>
+            <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) { setActiveSetting(null); reset(); } }}>
                 <DialogContent>
-                    <form onSubmit={handleAdd}>
+                    <form onSubmit={handleAddOrEdit}>
                         <DialogHeader>
-                            <DialogTitle className="mb-4">Add Integration Setting</DialogTitle>
+                            <DialogTitle className="mb-4">{activeSetting ? 'Edit' : 'Add'} Integration Setting</DialogTitle>
                             <div className="flex flex-col gap-4">
                                 <Input
                                     name="key"
@@ -82,6 +120,7 @@ export default function IntegrationSettingsTable({ integrationSettings, organiza
                                     value={data.key}
                                     onChange={(e) => setData('key', e.target.value)}
                                     required
+                                    disabled={!!activeSetting}
                                 />
                                 <InputError message={errors.key} />
                                 <Input
@@ -134,7 +173,7 @@ export default function IntegrationSettingsTable({ integrationSettings, organiza
                         <TableHead>Provider</TableHead>
                         <TableHead>Encrypted</TableHead>
                         <TableHead>Expose to Frontend</TableHead>
-                        <TableHead>Actions</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -169,10 +208,35 @@ export default function IntegrationSettingsTable({ integrationSettings, organiza
                             <TableCell>
                                 <Checkbox checked={setting.expose_to_frontend} disabled />
                             </TableCell>
-                            <TableCell>
-                                {/* Actions like edit/delete can go here */}
-                                <Button size="sm" variant="ghost" disabled>Edit</Button>
-                                <Button size="sm" variant="ghost" disabled>Delete</Button>
+                            <TableCell className="flex justify-end space-x-4">
+                                <PrimaryButton
+                                    onClick={() => handleEdit(setting)}
+                                >
+                                    Edit
+                                </PrimaryButton>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            className="h-8 w-8 p-0"
+                                        >
+                                            <span className="sr-only">
+                                                Open menu
+                                            </span>
+                                            <MoreHorizontal className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuLabel>
+                                            Actions
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuItem
+                                            onClick={() => handleDelete(setting)}
+                                        >
+                                            Delete Setting
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </TableCell>
                         </TableRow>
                     ))}

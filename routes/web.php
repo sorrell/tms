@@ -112,7 +112,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('organizations/{organization}/roles', [OrganizationController::class, 'showRoles'])->name('organizations.roles');
     Route::get('organizations/{organization}/integration-settings', [OrganizationController::class, 'showIntegrationSettings'])->name('organizations.integration-settings');
     Route::post('organizations/{organization}/integration-settings', SetIntegrationSetting::class)->name('organizations.integration-settings.store');
-    Route::delete('organizations/{organization}/integration-settings/{key}', DeleteIntegrationSetting::class)->name('organizations.integration-settings.destroy');
+    Route::delete('organizations/{organization}/integration-settings/{setting}', DeleteIntegrationSetting::class)->name('organizations.integration-settings.destroy');
 
 
     Route::prefix('organizations/{organization}/permissions')->group(function () {
