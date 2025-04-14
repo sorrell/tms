@@ -21,6 +21,9 @@ export type PageProps<
     app: {
         name: string;
     };
+    integration_settings: {
+        [key: string]: string;
+    };
 };
 
 export interface Location {

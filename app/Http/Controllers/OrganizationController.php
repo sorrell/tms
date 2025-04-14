@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
+use App\Http\Resources\Organization\IntegrationSettingResource;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationUser;
 use App\Models\Permissions\Permission;
@@ -101,6 +102,19 @@ class OrganizationController extends Controller
             'organization' => $organization->load('owner', 'users'),
             'roles' => $organization->roles->load('permissions', 'users'),
             'permissions' => Permission::all(),
+        ]);
+    }
+
+    public function showIntegrationSettings(Organization $organization)
+    {
+        Gate::authorize('view', $organization);
+
+        // Do not decrypt encrypted values for the frontend
+        $settings = $organization->integration_settings()->get();
+
+        return Inertia::render('Organizations/IntegrationSettings', [
+            'organization' => $organization->load('owner', 'users'),
+            'integrationSettings' => IntegrationSettingResource::collection($settings),
         ]);
     }
 

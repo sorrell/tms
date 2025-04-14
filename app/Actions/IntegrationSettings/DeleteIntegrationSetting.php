@@ -4,6 +4,7 @@ namespace App\Actions\IntegrationSettings;
 
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class DeleteIntegrationSetting
@@ -13,7 +14,7 @@ class DeleteIntegrationSetting
     /**
      * Delete an integration setting by key
      */
-    public function handle(string $key)
+    public function handle(string $key) : bool
     {
         $organization = current_organization();
 
@@ -21,15 +22,36 @@ class DeleteIntegrationSetting
             throw new Exception("A current organization is required to delete integration settings");
         }
 
-        $setting = $organization->integrationSettings()
+        $setting = $organization->integration_settings()
             ->where('key', $key)
             ->first();
         
         $result = $setting->delete();
         
         // Clear the cache for this key
-        ClearIntegrationCache::run($key, $setting->provider);
+        ClearIntegrationCaches::run($key, $setting->provider);
         
         return $result > 0;
+    }
+
+    public function asController(ActionRequest $request)
+    {
+        return $this->handle($request->validated('key'));
+    }
+
+    public function htmlResponse(bool $result)
+    {
+        if ($result) {
+            return redirect()->back()->with('success', 'Integration setting deleted');
+        }
+
+        return redirect()->back()->with('error', 'Failed to delete integration setting');
+    }
+
+    public function rules()
+    {
+        return [
+            'key' => 'required|string',
+        ];
     }
 } 

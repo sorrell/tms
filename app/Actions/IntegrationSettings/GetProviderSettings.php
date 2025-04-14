@@ -36,7 +36,7 @@ class GetProviderSettings
         $cacheKey = self::getCacheKey($provider);
         
         return Cache::remember($cacheKey, $this->cacheDuration, function () use ($organization, $provider) {
-            return $organization->integrationSettings()
+            return $organization->integration_settings()
                 ->where('provider', $provider)
                 ->get()
                 ->mapWithKeys(function ($setting) {

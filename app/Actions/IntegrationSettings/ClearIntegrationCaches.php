@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class ClearIntegrationCache
+class ClearIntegrationCaches
 {
     use AsAction;
 
@@ -24,9 +24,12 @@ class ClearIntegrationCache
         // Clear the cache for this key
         Cache::forget(GetIntegrationSetting::getCacheKey($key));
         Cache::forget(GetFrontendIntegrationSettings::getCacheKey());
-        Cache::forget(IsIntegrationConfigured::getCacheKey($provider));
-        Cache::forget(GetProviderSettings::getCacheKey($provider));
-        
+
+        if ($provider) {
+            Cache::forget(IsIntegrationConfigured::getCacheKey($provider));
+            Cache::forget(GetProviderSettings::getCacheKey($provider));
+        }
+
         return true;
     }
 }

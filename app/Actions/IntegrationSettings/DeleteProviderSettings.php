@@ -21,17 +21,17 @@ class DeleteProviderSettings
             throw new Exception("A current organization is required to delete integration settings");
         }
 
-        $settings = $organization->integrationSettings()
+        $settings = $organization->integration_settings()
             ->where('provider', $provider)
             ->get();
             
-        $result = $organization->integrationSettings()
+        $result = $organization->integration_settings()
             ->where('provider', $provider)
             ->delete();
             
         // Clear all relevant caches
         foreach ($settings as $setting) {
-            ClearIntegrationCache::run($setting->key, $setting->provider);
+            ClearIntegrationCaches::run($setting->key, $setting->provider);
         }
         
         return $result > 0;

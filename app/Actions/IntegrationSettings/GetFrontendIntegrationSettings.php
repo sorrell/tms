@@ -41,7 +41,7 @@ class GetFrontendIntegrationSettings
             $settings = config('integrationsettings');
 
             // Get all organization settings that are exposed to frontend
-            $orgSettings = $organization->integrationSettings()
+            $orgSettings = $organization->integration_settings()
                 ->where('expose_to_frontend', true)
                 ->get()
                 ->mapWithKeys(function ($setting) {

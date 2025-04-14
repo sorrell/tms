@@ -32,7 +32,7 @@ class GetIntegrationSetting
         $cacheKey = self::getCacheKey($key);
         
         return Cache::remember($cacheKey, $this->cacheDuration, function () use ($organization, $key) {
-            $setting = $organization->integrationSettings()
+            $setting = $organization->integration_settings()
                 ->where('key', $key)
                 ->first();
             

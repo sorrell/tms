@@ -58,7 +58,7 @@ class Organization extends Model
     /**
      * Get the integration settings for this organization
      */
-    public function integrationSettings() : HasMany
+    public function integration_settings() : HasMany
     {
         return $this->hasMany(IntegrationSetting::class);
     }

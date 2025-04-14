@@ -3,6 +3,7 @@
 namespace App\Models\Organizations;
 
 use App\Traits\HasOrganization;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Crypt;
@@ -25,28 +26,12 @@ class IntegrationSetting extends Model
         'expose_to_frontend' => 'boolean',
     ];
 
-    /**
-     * Get the decrypted value
-     */
-    public function getValueAttribute($value)
+    protected function value(): Attribute
     {
-        if ($this->is_encrypted && $value) {
-            return Crypt::decryptString($value);
-        }
-        
-        return $value;
-    }
-
-    /**
-     * Set the encrypted value when needed
-     */
-    public function setValueAttribute($value)
-    {
-        if ($this->is_encrypted && $value) {
-            $this->attributes['value'] = Crypt::encryptString($value);
-        } else {
-            $this->attributes['value'] = $value;
-        }
+        return Attribute::make(
+            get: fn (string $value) => $this->is_encrypted ? Crypt::decryptString($value) : $value,
+            set: fn (string $value) => $this->is_encrypted ? Crypt::encryptString($value) : $value,
+        );
     }
 
     /**
