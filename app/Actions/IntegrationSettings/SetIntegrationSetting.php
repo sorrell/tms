@@ -2,10 +2,12 @@
 
 namespace App\Actions\IntegrationSettings;
 
+use App\Enums\Permission;
 use App\Models\Organizations\IntegrationSetting;
 use App\Rules\BetterBoolean;
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -83,5 +85,10 @@ class SetIntegrationSetting
             'provider' => 'nullable|string',
             'expose_to_frontend' => ['nullable', new BetterBoolean]
         ];
+    }
+
+    public function authorize(ActionRequest $request)
+    {
+        return Gate::allows('create', IntegrationSetting::class);
     }
 }

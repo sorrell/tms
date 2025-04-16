@@ -176,8 +176,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                 Roles
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
-                                        <SidebarMenuSubItem>
-                                            <SidebarMenuSubButton
+                                        {permissions.INTEGRATION_SETTINGS_EDIT && (
+                                            <SidebarMenuSubItem>
+                                                <SidebarMenuSubButton
                                                 href={route(
                                                     'organizations.integration-settings',
                                                     [
@@ -194,6 +195,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                 Integration Settings
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
+                                        )}
                                     </SidebarMenuSub>
                                 </CollapsibleContent>
                             </SidebarMenuItem>

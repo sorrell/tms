@@ -16,7 +16,7 @@ class IntegrationSettingPolicy
      */
     public function view(User $user, IntegrationSetting $setting): bool
     {
-        return $user->hasPermissionTo(Permission::ORGANIZATION_MANAGER->value) && 
+        return $user->hasPermissionTo(Permission::INTEGRATION_SETTINGS_EDIT->value) && 
                $user->current_organization_id === $setting->organization_id;
     }
 
@@ -25,7 +25,7 @@ class IntegrationSettingPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo(Permission::ORGANIZATION_MANAGER->value);
+        return $user->hasPermissionTo(Permission::INTEGRATION_SETTINGS_EDIT->value);
     }
 
     /**
@@ -33,7 +33,7 @@ class IntegrationSettingPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo(Permission::ORGANIZATION_MANAGER->value);
+        return $user->hasPermissionTo(Permission::INTEGRATION_SETTINGS_EDIT->value);
     }
 
     /**
@@ -41,7 +41,7 @@ class IntegrationSettingPolicy
      */
     public function update(User $user, IntegrationSetting $setting): bool
     {
-        return $user->hasPermissionTo(Permission::ORGANIZATION_MANAGER->value) && 
+        return $user->hasPermissionTo(Permission::INTEGRATION_SETTINGS_EDIT->value) && 
                $user->current_organization_id === $setting->organization_id;
     }
 
@@ -50,7 +50,7 @@ class IntegrationSettingPolicy
      */
     public function delete(User $user, IntegrationSetting $setting): bool
     {
-        return $user->hasPermissionTo(Permission::ORGANIZATION_MANAGER->value) && 
+        return $user->hasPermissionTo(Permission::INTEGRATION_SETTINGS_EDIT->value) && 
                $user->current_organization_id === $setting->organization_id;
     }
 } 

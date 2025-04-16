@@ -7,6 +7,7 @@ use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Http\Resources\Organization\GlobalIntegrationSettingResource;
 use App\Http\Resources\Organization\IntegrationSettingResource;
+use App\Models\Organizations\IntegrationSetting;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationUser;
 use App\Models\Permissions\Permission;
@@ -109,7 +110,7 @@ class OrganizationController extends Controller
 
     public function showIntegrationSettings(Organization $organization)
     {
-        Gate::authorize('view', $organization);
+        Gate::authorize('viewAny', IntegrationSetting::class);
 
         $settings = $organization->integration_settings()->get();
 
@@ -154,6 +155,12 @@ class OrganizationController extends Controller
     {
         Gate::authorize('update', $organization);
 
+        // Check if the current user is the organization owner
+        if (auth()->id() !== $organization->owner_id) {
+            return redirect()->route('organizations.show', $organization)
+                ->with('error', 'Only the organization owner can transfer ownership');
+        }
+
         // ensure the $user is a member of the org
         $organizationUser = OrganizationUser::where('organization_id', $organization->id)
             ->where('user_id', $user->id)
@@ -175,6 +182,16 @@ class OrganizationController extends Controller
     public function switchOrganization(Organization $organization)
     {
         $user = auth()->user();
+
+        // Check if the user is a member of the organization
+        $isMember = OrganizationUser::where('organization_id', $organization->id)
+            ->where('user_id', $user->id)
+            ->exists();
+            
+        if (!$isMember) {
+            return redirect()->back()
+                ->with('error', 'You are not a member of this organization');
+        }
         $user->update([
             'current_organization_id' => $organization->id,
         ]);

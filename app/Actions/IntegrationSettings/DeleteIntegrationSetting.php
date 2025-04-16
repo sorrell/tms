@@ -6,6 +6,7 @@ use App\Models\Organizations\IntegrationSetting;
 use App\Models\Organizations\Organization;
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -59,5 +60,11 @@ class DeleteIntegrationSetting
         return [
 
         ];
+    }
+
+    public function authorize(ActionRequest $request)
+    {
+        $setting = $request->route('setting');
+        return Gate::allows('delete', $setting);
     }
 } 
