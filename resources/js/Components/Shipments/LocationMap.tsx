@@ -1,4 +1,5 @@
 import { Shipment } from '@/types';
+import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import { useEffect, useState } from 'react';
 
@@ -25,9 +26,12 @@ export default function LocationMap({ shipment }: { shipment: Shipment }) {
         }>
     >([]);
 
+    const { getGoogleMapsApiKey } = useIntegrationSettings();
+    const googleMapsApiKey = getGoogleMapsApiKey();
+
     // Load Google Maps script
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+        googleMapsApiKey: googleMapsApiKey || '',
     });
 
     useEffect(() => {
@@ -105,7 +109,7 @@ export default function LocationMap({ shipment }: { shipment: Shipment }) {
         return <div>Loading maps...</div>;
     }
 
-    if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
+    if (!googleMapsApiKey) {
         return (
             <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
                 <div className="flex items-start">
@@ -144,10 +148,11 @@ export default function LocationMap({ shipment }: { shipment: Shipment }) {
 
     return (
         <div>
-            <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                zoom={5}
-                center={mapCenter}
+            { isLoaded && (
+                <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={5}
+                    center={mapCenter}
             >
                 {markers.map((marker, index) => (
                     <Marker
@@ -155,8 +160,11 @@ export default function LocationMap({ shipment }: { shipment: Shipment }) {
                         position={{ lat: marker.lat, lng: marker.lng }}
                         label={{ text: marker.label, color: 'white' }}
                     />
-                ))}
-            </GoogleMap>
+                    ))}
+                </GoogleMap>
+            )}
+
+
 
             <div className="mt-4">
                 <div className="flex items-center space-x-6 text-sm">
@@ -169,10 +177,6 @@ export default function LocationMap({ shipment }: { shipment: Shipment }) {
                         <span>Delivery Locations</span>
                     </div>
                 </div>
-                <p className="mt-2 text-sm text-gray-500">
-                    Note: For this map to work, you need to add a Google Maps
-                    API key to your environment variables.
-                </p>
             </div>
         </div>
     );

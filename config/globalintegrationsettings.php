@@ -10,7 +10,7 @@
 return [
     'google_maps.api_key' => [
         'label' => 'Google Maps API Key',
-        'description' => 'The API key for the Google Maps API',
+        'description' => 'Used for location search and map display',
         'expose_to_frontend' => true,
         'provider' => 'Google',
         'value' => env('GOOGLE_MAPS_API_KEY'),

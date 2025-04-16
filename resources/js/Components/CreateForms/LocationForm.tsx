@@ -9,6 +9,8 @@ import InputError from '../InputError';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
+import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
+
 export default function LocationForm({
     className,
     onCreate,
@@ -27,9 +29,10 @@ export default function LocationForm({
     const [latitude, setLatitude] = useState<number | null>(null);
     const [longitude, setLongitude] = useState<number | null>(null);
 
-    const hasGoogleMapsKey =
-        import.meta.env.VITE_GOOGLE_MAPS_API_KEY &&
-        import.meta.env.VITE_GOOGLE_MAPS_API_KEY != '';
+    const { getGoogleMapsApiKey } = useIntegrationSettings();
+    const googleMapsApiKey = getGoogleMapsApiKey();
+
+    const hasGoogleMapsKey = googleMapsApiKey && googleMapsApiKey != '';
 
     const [searchMode, setSearchMode] = useState(hasGoogleMapsKey);
 

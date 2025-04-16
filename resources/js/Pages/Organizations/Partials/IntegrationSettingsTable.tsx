@@ -27,7 +27,7 @@ import {
 } from '@/Components/ui/table';
 import { useToast } from '@/hooks/UseToast';
 import { GlobalIntegrationSetting, IntegrationSetting, Organization } from '@/types/organization';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { Eye, EyeOff, MoreHorizontal, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
