@@ -1,13 +1,9 @@
-import { ChevronsUpDown, Plus } from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
 
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu';
 import {
@@ -58,6 +54,11 @@ export function TeamSwitcher({
                         align="start"
                         side={isMobile ? 'bottom' : 'right'}
                         sideOffset={4}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setActiveTeam(teams[0]); //placeholder
+                        }}
                     >
                         <ComingSoon />
                     </DropdownMenuContent>

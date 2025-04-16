@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Laptop, Moon, Sun, ChevronRight } from 'lucide-react';
+import { Check, ChevronRight, Laptop, Moon, Sun } from 'lucide-react';
 
 import {
     DropdownMenu,
@@ -9,7 +9,6 @@ import {
     DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu';
 import { useTheme } from '@/Components/ui/theme-provider';
-import { cn } from '@/lib/utils';
 
 export function ThemeToggle() {
     const { setTheme, theme } = useTheme();
