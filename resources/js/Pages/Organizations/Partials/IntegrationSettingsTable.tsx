@@ -489,7 +489,8 @@ export default function IntegrationSettingsTable({
                                                             )}
                                                         </span>
                                                     ) : (
-                                                        <span className="text-gray-500">{setting.value || '(Not set)'}</span>
+                                                        <span className="text-gray-500">{setting.value || (isGlobalSetting ? '(Global Default)' : '(Not set)')}
+                                                        </span>
                                                     )
                                                 ) : (
                                                     <span className="flex items-center gap-2">
