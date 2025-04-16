@@ -1,9 +1,8 @@
+import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
 import { Location } from '@/types';
-import { usePage } from '@inertiajs/react';
 import GooglePlacesAutocomplete, {
     geocodeByAddress,
 } from 'react-google-places-autocomplete';
-import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
 
 export default function AddressSearch({
     onAddressSelect,

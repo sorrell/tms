@@ -1,3 +1,4 @@
+import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
 import { useToast } from '@/hooks/UseToast';
 import { cn } from '@/lib/utils';
 import { Location } from '@/types';
@@ -9,7 +10,6 @@ import InputError from '../InputError';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
-import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
 
 export default function LocationForm({
     className,

@@ -1,5 +1,5 @@
-import { Shipment } from '@/types';
 import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
+import { Shipment } from '@/types';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import { useEffect, useState } from 'react';
 
@@ -148,23 +148,21 @@ export default function LocationMap({ shipment }: { shipment: Shipment }) {
 
     return (
         <div>
-            { isLoaded && (
+            {isLoaded && (
                 <GoogleMap
                     mapContainerStyle={mapContainerStyle}
                     zoom={5}
                     center={mapCenter}
-            >
-                {markers.map((marker, index) => (
-                    <Marker
-                        key={index}
-                        position={{ lat: marker.lat, lng: marker.lng }}
-                        label={{ text: marker.label, color: 'white' }}
-                    />
+                >
+                    {markers.map((marker, index) => (
+                        <Marker
+                            key={index}
+                            position={{ lat: marker.lat, lng: marker.lng }}
+                            label={{ text: marker.label, color: 'white' }}
+                        />
                     ))}
                 </GoogleMap>
             )}
-
-
 
             <div className="mt-4">
                 <div className="flex items-center space-x-6 text-sm">

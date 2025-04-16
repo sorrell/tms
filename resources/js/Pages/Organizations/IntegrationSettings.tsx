@@ -1,5 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { GlobalIntegrationSetting, IntegrationSetting, Organization } from '@/types/organization';
+import {
+    GlobalIntegrationSetting,
+    IntegrationSetting,
+    Organization,
+} from '@/types/organization';
 import { Head } from '@inertiajs/react';
 import IntegrationSettingsTable from './Partials/IntegrationSettingsTable';
 

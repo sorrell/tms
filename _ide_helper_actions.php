@@ -495,15 +495,15 @@ class GetProviderSettings
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static dispatchSync(string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static dispatchNow(string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static dispatchAfterResponse(string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
- * @method static \App\Models\Organizations\IntegrationSetting run(string $key, mixed $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static dispatchSync(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static dispatchNow(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static dispatchAfterResponse(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \App\Models\Organizations\IntegrationSetting run(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
  */
 class SetIntegrationSetting
 {
