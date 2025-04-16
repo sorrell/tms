@@ -1,3 +1,4 @@
+import { useIntegrationSettings } from '@/hooks/useIntegrationSettings';
 import { Location } from '@/types';
 import GooglePlacesAutocomplete, {
     geocodeByAddress,
@@ -87,9 +88,12 @@ export default function AddressSearch({
             .catch((error) => console.error(error));
     };
 
+    const { getGoogleMapsApiKey } = useIntegrationSettings();
+    const googleMapsApiKey = getGoogleMapsApiKey();
+
     return (
         <GooglePlacesAutocomplete
-            apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+            apiKey={googleMapsApiKey}
             selectProps={{
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onChange: (result: any) => {

@@ -54,4 +54,14 @@ class Organization extends Model
                 config('permission.models.role')
         );
     }
+    
+    /**
+     * Get the integration settings for this organization
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<IntegrationSetting, $this>
+     */
+    public function integration_settings() : HasMany
+    {
+        return $this->hasMany(IntegrationSetting::class);
+    }
 }

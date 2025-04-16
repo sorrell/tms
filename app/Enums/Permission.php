@@ -21,6 +21,8 @@ enum Permission: string
 
     case SHIPMENT_EDIT = 'shipment-edit';
 
+    case INTEGRATION_SETTINGS_EDIT = 'integration-settings-edit';
+
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
     public function label(): string
     {
@@ -34,6 +36,7 @@ enum Permission: string
             self::CARRIER_EDIT => 'Edit Carrier Details',
             self::CARRIER_VIEW => 'View Carrier Details',
             self::SHIPMENT_EDIT => 'Edit Shipment Details',
+            self::INTEGRATION_SETTINGS_EDIT => 'Edit Integration Settings',
         };
     }
 

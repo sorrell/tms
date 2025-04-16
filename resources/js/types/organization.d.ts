@@ -34,3 +34,22 @@ export interface Permission {
     name: string;
     label: string;
 }
+
+export interface IntegrationSetting {
+    id: number;
+    key: string;
+    value: string;
+    provider: string;
+    expose_to_frontend: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface GlobalIntegrationSetting {
+    key: string;
+    value?: string;
+    provider?: string;
+    expose_to_frontend: boolean;
+    label: string;
+    description: string;
+}

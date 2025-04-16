@@ -394,6 +394,106 @@ class CreateFacility
 class UpdateFacility
 {
 }
+namespace App\Actions\IntegrationSettings;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $key, ?string $provider = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $key, ?string $provider = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $key, ?string $provider = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $key, ?string $provider = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $key, ?string $provider = null)
+ * @method static dispatchSync(string $key, ?string $provider = null)
+ * @method static dispatchNow(string $key, ?string $provider = null)
+ * @method static dispatchAfterResponse(string $key, ?string $provider = null)
+ * @method static mixed run(string $key, ?string $provider = null)
+ */
+class ClearIntegrationCaches
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $key)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $key)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $key)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $key)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $key)
+ * @method static dispatchSync(string $key)
+ * @method static dispatchNow(string $key)
+ * @method static dispatchAfterResponse(string $key)
+ * @method static bool run(string $key)
+ */
+class DeleteIntegrationSetting
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean)
+ * @method static dispatchSync()
+ * @method static dispatchNow()
+ * @method static dispatchAfterResponse()
+ * @method static \Illuminate\Support\Collection run()
+ */
+class GetAllGlobalIntegrationSettings
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean)
+ * @method static dispatchSync()
+ * @method static dispatchNow()
+ * @method static dispatchAfterResponse()
+ * @method static \Illuminate\Support\Collection run()
+ */
+class GetFrontendIntegrationSettings
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $key)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $key)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $key)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $key)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $key)
+ * @method static dispatchSync(string $key)
+ * @method static dispatchNow(string $key)
+ * @method static dispatchAfterResponse(string $key)
+ * @method static mixed run(string $key)
+ */
+class GetIntegrationSetting
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $provider)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $provider)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $provider)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $provider)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $provider)
+ * @method static dispatchSync(string $provider)
+ * @method static dispatchNow(string $provider)
+ * @method static dispatchAfterResponse(string $provider)
+ * @method static \Illuminate\Support\Collection run(string $provider)
+ */
+class GetProviderSettings
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static dispatchSync(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static dispatchNow(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static dispatchAfterResponse(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ * @method static \App\Models\Organizations\IntegrationSetting run(string $key, mixed $value, ?string $provider = null, bool $exposeToFrontend = false)
+ */
+class SetIntegrationSetting
+{
+}
 namespace App\Actions\Locations;
 
 /**
