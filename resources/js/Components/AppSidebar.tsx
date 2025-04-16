@@ -179,22 +179,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                         {permissions.INTEGRATION_SETTINGS_EDIT && (
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
-                                                href={route(
-                                                    'organizations.integration-settings',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                                isActive={route().current(
-                                                    'organizations.integration-settings',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                            >
-                                                Integration Settings
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
+                                                    href={route(
+                                                        'organizations.integration-settings',
+                                                        [
+                                                            user.current_organization_id,
+                                                        ],
+                                                    )}
+                                                    isActive={route().current(
+                                                        'organizations.integration-settings',
+                                                        [
+                                                            user.current_organization_id,
+                                                        ],
+                                                    )}
+                                                >
+                                                    Integration Settings
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
                                         )}
                                     </SidebarMenuSub>
                                 </CollapsibleContent>

@@ -425,20 +425,6 @@ class DeleteIntegrationSetting
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $provider)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $provider)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $provider)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $provider)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $provider)
- * @method static dispatchSync(string $provider)
- * @method static dispatchNow(string $provider)
- * @method static dispatchAfterResponse(string $provider)
- * @method static mixed run(string $provider)
- */
-class DeleteProviderSettings
-{
-}
-/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
