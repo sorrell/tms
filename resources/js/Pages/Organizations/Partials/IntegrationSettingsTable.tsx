@@ -294,54 +294,78 @@ export default function IntegrationSettingsTable({
                                         : 'Add Custom Setting'}
                             </DialogTitle>
                             <div className="flex flex-col gap-4">
-                                <Input
-                                    name="key"
-                                    placeholder="Key"
-                                    value={data.key}
-                                    onChange={(e) =>
-                                        setData('key', e.target.value)
-                                    }
-                                    required
-                                    disabled={!!activeSetting || !!activeGlobalSetting}
-                                />
-                                <InputError message={errors.key} />
-                                <Input
-                                    name="value"
-                                    placeholder="Value"
-                                    value={data.value}
-                                    onChange={(e) =>
-                                        setData('value', e.target.value)
-                                    }
-                                    required
-                                />
-                                <InputError message={errors.value} />
-                                <Input
-                                    name="provider"
-                                    placeholder="Provider"
-                                    value={data.provider}
-                                    onChange={(e) =>
-                                        setData('provider', e.target.value)
-                                    }
-                                    disabled={!!activeGlobalSetting}
-                                />
-                                <InputError message={errors.provider} />
-                                <label className="flex items-center gap-2">
-                                    <Checkbox
-                                        name="expose_to_frontend"
-                                        checked={data.expose_to_frontend}
-                                        onCheckedChange={(checked) =>
-                                            setData(
-                                                'expose_to_frontend',
-                                                !!checked,
-                                            )
+                                <div className="space-y-2">
+                                    <label htmlFor="key" className="text-sm font-medium">
+                                        Key
+                                    </label>
+                                    <Input
+                                        id="key"
+                                        name="key"
+                                        placeholder="Key"
+                                        value={data.key}
+                                        onChange={(e) =>
+                                            setData('key', e.target.value)
+                                        }
+                                        required
+                                        disabled={!!activeSetting || !!activeGlobalSetting}
+                                    />
+                                    <InputError message={errors.key} />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <label htmlFor="value" className="text-sm font-medium">
+                                        Value
+                                    </label>
+                                    <Input
+                                        id="value"
+                                        name="value"
+                                        placeholder="Value"
+                                        value={data.value}
+                                        onChange={(e) =>
+                                            setData('value', e.target.value)
+                                        }
+                                        required
+                                    />
+                                    <InputError message={errors.value} />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <label htmlFor="provider" className="text-sm font-medium">
+                                        Provider
+                                    </label>
+                                    <Input
+                                        id="provider"
+                                        name="provider"
+                                        placeholder="Provider"
+                                        value={data.provider}
+                                        onChange={(e) =>
+                                            setData('provider', e.target.value)
                                         }
                                         disabled={!!activeGlobalSetting}
                                     />
-                                    Expose to Frontend
-                                </label>
-                                <InputError
-                                    message={errors.expose_to_frontend}
-                                />
+                                    <InputError message={errors.provider} />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <label className="flex items-center gap-2">
+                                        <Checkbox
+                                            id="expose_to_frontend"
+                                            name="expose_to_frontend"
+                                            checked={data.expose_to_frontend}
+                                            onCheckedChange={(checked) =>
+                                                setData(
+                                                    'expose_to_frontend',
+                                                    !!checked,
+                                                )
+                                            }
+                                            disabled={!!activeGlobalSetting}
+                                        />
+                                        <span className="text-sm font-medium">Expose to Frontend</span>
+                                    </label>
+                                    <InputError
+                                        message={errors.expose_to_frontend}
+                                    />
+                                </div>
                                 
                                 {activeGlobalSetting && (
                                     <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
