@@ -31,15 +31,21 @@ class GetFrontendIntegrationSettings
     {
         $organization = current_organization();
         if (!$organization) {
-            throw new Exception("A current organization is required to get frontend integration settings");
+            return collect();
         }
 
         $cacheKey = self::getCacheKey();
         
         return Cache::remember($cacheKey, $this->cacheDuration, function () use ($organization) {
 
-            // Default settings
-            $settings = config('integrationsettings');
+            // get global settings, look for keys that are exposed to frontend
+            // and map key=>value
+            $settings = collect(config('globalintegrationsettings'))
+                ->filter(function ($setting) {
+                    return $setting['expose_to_frontend'];
+                })->mapWithKeys(function ($setting, $key) {
+                    return [$key => $setting['value']];
+                })->toArray();
 
             // Get all organization settings that are exposed to frontend
             $orgSettings = $organization->integration_settings()

@@ -26,7 +26,6 @@ class ClearIntegrationCaches
         Cache::forget(GetFrontendIntegrationSettings::getCacheKey());
 
         if ($provider) {
-            Cache::forget(IsIntegrationConfigured::getCacheKey($provider));
             Cache::forget(GetProviderSettings::getCacheKey($provider));
         }
 

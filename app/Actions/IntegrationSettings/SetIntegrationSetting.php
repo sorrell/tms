@@ -25,6 +25,17 @@ class SetIntegrationSetting
             throw new Exception("A current organization is required to set integration settings");
         }
 
+
+        // Check if the key is a global setting
+        // if so we will force the defaults besides the value to match
+        $globalSetting = config('globalintegrationsettings.' . $key);
+        if ($globalSetting) {
+            $encrypted = $globalSetting['is_encrypted'];
+            $exposeToFrontend = $globalSetting['expose_to_frontend'];
+            $provider = $globalSetting['provider'];
+        }
+
+
         $setting = $organization->integration_settings()->where('key', $key)->first();
 
         if (!$setting) {

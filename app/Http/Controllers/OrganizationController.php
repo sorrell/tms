@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\IntegrationSettings\GetAllGlobalIntegrationSettings;
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
+use App\Http\Resources\Organization\GlobalIntegrationSettingResource;
 use App\Http\Resources\Organization\IntegrationSettingResource;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationUser;
@@ -115,6 +117,7 @@ class OrganizationController extends Controller
         return Inertia::render('Organizations/IntegrationSettings', [
             'organization' => $organization->load('owner', 'users'),
             'integrationSettings' => IntegrationSettingResource::collection($settings),
+            'globalIntegrationSettings' => GlobalIntegrationSettingResource::collection(GetAllGlobalIntegrationSettings::run()),
         ]);
     }
 

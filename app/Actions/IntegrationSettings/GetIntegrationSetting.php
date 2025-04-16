@@ -36,7 +36,7 @@ class GetIntegrationSetting
                 ->where('key', $key)
                 ->first();
             
-            return $setting ? $setting->value : config(sprintf('integrationsettings.%s', $key));
+            return $setting ? $setting->value : config(sprintf('globalintegrationsettings.%s.value', $key));
         });
     }
 }

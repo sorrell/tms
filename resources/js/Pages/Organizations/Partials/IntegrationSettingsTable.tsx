@@ -27,7 +27,7 @@ import {
     TableRow,
 } from '@/Components/ui/table';
 import { useToast } from '@/hooks/UseToast';
-import { IntegrationSetting, Organization } from '@/types/organization';
+import { GlobalIntegrationSetting, IntegrationSetting, Organization } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
 import { Eye, EyeOff, MoreHorizontal } from 'lucide-react';
 import { useCallback, useState } from 'react';
@@ -35,6 +35,7 @@ import { useCallback, useState } from 'react';
 interface Props {
     integrationSettings: IntegrationSetting[];
     organization: Organization;
+    globalIntegrationSettings: GlobalIntegrationSetting[];
 }
 
 interface IntegrationSettingForm {
@@ -49,6 +50,7 @@ interface IntegrationSettingForm {
 export default function IntegrationSettingsTable({
     integrationSettings,
     organization,
+    globalIntegrationSettings,
 }: Props) {
     const { toast } = useToast();
     const {

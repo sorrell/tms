@@ -1,14 +1,16 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { IntegrationSetting, Organization } from '@/types/organization';
+import { GlobalIntegrationSetting, IntegrationSetting, Organization } from '@/types/organization';
 import { Head } from '@inertiajs/react';
 import IntegrationSettingsTable from './Partials/IntegrationSettingsTable';
 
 export default function IntegrationSettingsPage({
     organization,
     integrationSettings,
+    globalIntegrationSettings,
 }: {
     organization: Organization;
     integrationSettings: IntegrationSetting[];
+    globalIntegrationSettings: GlobalIntegrationSetting[];
 }) {
     return (
         <AuthenticatedLayout
@@ -25,6 +27,7 @@ export default function IntegrationSettingsPage({
                 <IntegrationSettingsTable
                     integrationSettings={integrationSettings}
                     organization={organization}
+                    globalIntegrationSettings={globalIntegrationSettings}
                 />
             </div>
         </AuthenticatedLayout>
