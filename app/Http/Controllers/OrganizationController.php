@@ -111,7 +111,6 @@ class OrganizationController extends Controller
     {
         Gate::authorize('view', $organization);
 
-        // Do not decrypt encrypted values for the frontend
         $settings = $organization->integration_settings()->get();
 
         return Inertia::render('Organizations/IntegrationSettings', [

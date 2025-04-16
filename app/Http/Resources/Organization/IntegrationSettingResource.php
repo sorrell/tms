@@ -20,9 +20,8 @@ class IntegrationSettingResource extends JsonResource
         return [
             'id' => $this->id,
             'key' => $this->key,
-            'value' => $this->is_encrypted ? null : $this->value,
+            'value' => $this->expose_to_frontend ? $this->value : null,
             'provider' => $this->provider,
-            'encrypted' => $this->is_encrypted,
             'expose_to_frontend' => $this->expose_to_frontend,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

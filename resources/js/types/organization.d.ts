@@ -40,7 +40,6 @@ export interface IntegrationSetting {
     key: string;
     value: string;
     provider: string;
-    encrypted: boolean;
     expose_to_frontend: boolean;
     created_at: string;
     updated_at: string;
@@ -50,7 +49,6 @@ export interface GlobalIntegrationSetting {
     key: string;
     value?: string;
     provider?: string;
-    encrypted: boolean;
     expose_to_frontend: boolean;
     label: string;
     description: string;

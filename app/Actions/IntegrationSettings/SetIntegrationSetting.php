@@ -16,7 +16,7 @@ class SetIntegrationSetting
     /**
      * Set an integration setting value
      */
-    public function handle(string $key, $value, ?string $provider = null, bool $encrypted = false, bool $exposeToFrontend = false) : IntegrationSetting
+    public function handle(string $key, $value, ?string $provider = null, bool $exposeToFrontend = false) : IntegrationSetting
     {
 
         $organization = current_organization();
@@ -30,7 +30,6 @@ class SetIntegrationSetting
         // if so we will force the defaults besides the value to match
         $globalSetting = config('globalintegrationsettings.' . $key);
         if ($globalSetting) {
-            $encrypted = $globalSetting['is_encrypted'];
             $exposeToFrontend = $globalSetting['expose_to_frontend'];
             $provider = $globalSetting['provider'];
         }
@@ -41,8 +40,7 @@ class SetIntegrationSetting
         if (!$setting) {
             $setting = new IntegrationSetting();
             $setting->key = $key;
-            $setting->is_encrypted = $encrypted;
-            $setting->value = $value;   // Must come after is_encrypted so encryption is applied correctly
+            $setting->value = $value;  
             $setting->provider = $provider;
             $setting->expose_to_frontend = $exposeToFrontend;
             $organization->integration_settings()->save($setting);
@@ -50,8 +48,7 @@ class SetIntegrationSetting
             $oldKey = $setting->key;
             $oldProvider = $setting->provider;
             $setting->provider = $provider;
-            $setting->is_encrypted = $encrypted;
-            $setting->value = $value;   // Must come after is_encrypted so encryption is applied correctly
+            $setting->value = $value;  
             $setting->expose_to_frontend = $exposeToFrontend;
             $setting->save();
             // Clear cache for old values too
@@ -69,7 +66,6 @@ class SetIntegrationSetting
             key: $request->validated('key'),
             value: $request->validated('value'),
             provider: $request->validated('provider'),
-            encrypted: $request->validated('encrypted'),
             exposeToFrontend: $request->validated('expose_to_frontend')
         );
     }
@@ -85,7 +81,6 @@ class SetIntegrationSetting
             'key' => 'required|string',
             'value' => 'required|string',
             'provider' => 'nullable|string',
-            'encrypted' => ['nullable', new BetterBoolean],
             'expose_to_frontend' => ['nullable', new BetterBoolean]
         ];
     }

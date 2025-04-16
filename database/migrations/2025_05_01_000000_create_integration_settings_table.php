@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('key');
             $table->text('value')->nullable();
             $table->string('provider')->nullable()->comment('Integration provider name (e.g., stripe, twilio)');
-            $table->boolean('is_encrypted')->default(false);
             $table->boolean('expose_to_frontend')->default(false);
             $table->timestampsTz();
             

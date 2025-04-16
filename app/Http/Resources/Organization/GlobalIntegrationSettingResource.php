@@ -9,7 +9,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $key
  * @property mixed $value
  * @property string $provider
- * @property bool $is_encrypted
  * @property bool $expose_to_frontend
  * @property string $label
  * @property string $description
@@ -25,9 +24,8 @@ class GlobalIntegrationSettingResource extends JsonResource
     {
         return [
             'key' => $this['key'],
-            'value' => $this['is_encrypted'] || !$this['expose_to_frontend'] ? null : $this['value'],
+            'value' => $this['expose_to_frontend'] ? $this['value'] : null,
             'provider' => $this['provider'],
-            'encrypted' => $this['is_encrypted'],
             'expose_to_frontend' => $this['expose_to_frontend'],
             'label' => $this['label'],
             'description' => $this['description'],

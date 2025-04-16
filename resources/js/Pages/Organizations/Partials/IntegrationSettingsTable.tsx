@@ -41,7 +41,6 @@ interface IntegrationSettingForm {
     key: string;
     value: string;
     provider?: string;
-    encrypted: boolean;
     expose_to_frontend: boolean;
     [key: string]: string | boolean | undefined;
 }
@@ -71,11 +70,10 @@ export default function IntegrationSettingsTable({
         key: '',
         value: '',
         provider: '',
-        encrypted: false,
         expose_to_frontend: false,
     });
     const [open, setOpen] = useState(false);
-    const [revealedId, setRevealedId] = useState<number | null>(null);
+    const [revealedId, setRevealedId] = useState<number | string | null>(null);
     const [activeSetting, setActiveSetting] = useState<IntegrationSetting | null>(null);
     const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
     const [activeGlobalSetting, setActiveGlobalSetting] = useState<GlobalIntegrationSetting | null>(null);
@@ -201,7 +199,6 @@ export default function IntegrationSettingsTable({
             key: setting.key,
             value: setting.value,
             provider: setting.provider || '',
-            encrypted: setting.encrypted,
             expose_to_frontend: setting.expose_to_frontend,
         });
         setOpen(true);
@@ -226,7 +223,6 @@ export default function IntegrationSettingsTable({
             key: globalSetting.key,
             value: globalSetting.value || '',
             provider: globalSetting.provider || '',
-            encrypted: globalSetting.encrypted || false,
             expose_to_frontend: globalSetting.expose_to_frontend || false,
         });
         setOpen(true);
@@ -262,7 +258,6 @@ export default function IntegrationSettingsTable({
             key: '',
             value: '',
             provider: selectedProvider && selectedProvider !== 'Other' ? selectedProvider : '',
-            encrypted: false,
             expose_to_frontend: false,
         });
     };
@@ -332,18 +327,6 @@ export default function IntegrationSettingsTable({
                                 <InputError message={errors.provider} />
                                 <label className="flex items-center gap-2">
                                     <Checkbox
-                                        name="encrypted"
-                                        checked={data.encrypted}
-                                        onCheckedChange={(checked) =>
-                                            setData('encrypted', !!checked)
-                                        }
-                                        disabled={!!activeGlobalSetting}
-                                    />
-                                    Encrypted
-                                </label>
-                                <InputError message={errors.encrypted} />
-                                <label className="flex items-center gap-2">
-                                    <Checkbox
                                         name="expose_to_frontend"
                                         checked={data.expose_to_frontend}
                                         onCheckedChange={(checked) =>
@@ -361,7 +344,7 @@ export default function IntegrationSettingsTable({
                                 />
                                 
                                 {activeGlobalSetting && (
-                                    <div className="text-sm text-gray-500 bg-gray-100 p-3 rounded-md">
+                                    <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
                                         <p>This setting is derived from global configuration.</p>
                                         <p>Only the value can be overridden.</p>
                                     </div>
@@ -379,14 +362,14 @@ export default function IntegrationSettingsTable({
             
             <div className="grid grid-cols-4 gap-6">
                 {/* Left Sidebar - Provider List */}
-                <div className="col-span-1 border-r pr-4">
+                <div className="col-span-1 border-r border-border pr-4">
                     <h3 className="font-semibold mb-2">Providers</h3>
                     <ul className="space-y-1">
                         {providerGroups.map((group) => (
                             <li 
                                 key={group.name}
-                                className={`cursor-pointer p-2 rounded-md hover:bg-gray-100 ${
-                                    selectedProvider === group.name ? 'bg-gray-100 font-medium' : ''
+                                className={`cursor-pointer p-2 rounded-md hover:bg-muted ${
+                                    selectedProvider === group.name ? 'bg-muted font-medium' : ''
                                 }`}
                                 onClick={() => setSelectedProvider(group.name)}
                             >
@@ -401,7 +384,7 @@ export default function IntegrationSettingsTable({
                     <h3 className="font-semibold mb-4">{selectedProvider} Settings</h3>
                     
                     {currentProviderSettings.length === 0 ? (
-                        <div className="text-gray-500 text-center py-8">
+                        <div className="text-muted-foreground text-center py-8">
                             No settings found for this provider
                         </div>
                     ) : (
@@ -433,12 +416,12 @@ export default function IntegrationSettingsTable({
                                                     {isGlobalSetting && (
                                                         <>
                                                             {setting.label && (
-                                                                <span className="text-sm text-gray-500 font-medium">
+                                                                <span className="text-sm text-muted-foreground font-medium">
                                                                     {setting.label}
                                                                 </span>
                                                             )}
                                                             {setting.description && (
-                                                                <span className="text-xs text-gray-400 italic">
+                                                                <span className="text-xs text-muted-foreground/70 italic">
                                                                     {setting.description}
                                                                 </span>
                                                             )}
@@ -449,12 +432,12 @@ export default function IntegrationSettingsTable({
                                                             {globalIntegrationSettings.some(g => g.key === setting.key) && (
                                                                 <>
                                                                     {globalIntegrationSettings.find(g => g.key === setting.key)?.label && (
-                                                                        <span className="text-sm text-gray-500 font-medium">
+                                                                        <span className="text-sm text-muted-foreground font-medium">
                                                                             {globalIntegrationSettings.find(g => g.key === setting.key)?.label}
                                                                         </span>
                                                                     )}
                                                                     {globalIntegrationSettings.find(g => g.key === setting.key)?.description && (
-                                                                        <span className="text-xs text-gray-400 italic">
+                                                                        <span className="text-xs text-muted-foreground/70 italic">
                                                                             {globalIntegrationSettings.find(g => g.key === setting.key)?.description}
                                                                         </span>
                                                                     )}
@@ -468,66 +451,67 @@ export default function IntegrationSettingsTable({
                                                 {isGlobalSetting ? (
                                                     orgSetting ? (
                                                         <span className="flex items-center gap-2">
-                                                            {orgSetting.encrypted ? (
-                                                                <span className="italic text-gray-400">••••••••</span>
-                                                            ) : (
-                                                                revealedId === orgSetting.id ? orgSetting.value : (
-                                                                    <span className="italic text-gray-400">••••••••</span>
-                                                                )
+                                                            {revealedId === orgSetting.id ? orgSetting.value : (
+                                                                <span className="italic text-muted-foreground/70">••••••••</span>
                                                             )}
-                                                            {!orgSetting.encrypted && (
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="ghost"
-                                                                    type="button"
-                                                                    onClick={() => setRevealedId(
-                                                                        revealedId === orgSetting.id ? null : orgSetting.id
-                                                                    )}
-                                                                >
-                                                                    {revealedId === orgSetting.id ? <EyeOff /> : <Eye />}
-                                                                </Button>
-                                                            )}
-                                                        </span>
-                                                    ) : (
-                                                        <span className="text-gray-500">{setting.value || (isGlobalSetting ? '(Global Default)' : '(Not set)')}
-                                                        </span>
-                                                    )
-                                                ) : (
-                                                    <span className="flex items-center gap-2">
-                                                        {setting.encrypted ? (
-                                                            <span className="italic text-gray-400">••••••••</span>
-                                                        ) : (
-                                                            revealedId === setting.id ? setting.value : (
-                                                                <span className="italic text-gray-400">••••••••</span>
-                                                            )
-                                                        )}
-                                                        {!setting.encrypted && (
                                                             <Button
                                                                 size="sm"
                                                                 variant="ghost"
                                                                 type="button"
                                                                 onClick={() => setRevealedId(
-                                                                    revealedId === setting.id ? null : setting.id
+                                                                    revealedId === orgSetting.id ? null : orgSetting.id
                                                                 )}
                                                             >
-                                                                {revealedId === setting.id ? <EyeOff /> : <Eye />}
+                                                                {revealedId === orgSetting.id ? <EyeOff /> : <Eye />}
                                                             </Button>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="flex items-center gap-2">
+                                                            {revealedId === `global-${setting.key}` ? (setting.value || '(Not set)') : (
+                                                                <span className="italic text-muted-foreground/70">••••••••</span>
+                                                            )}
+                                                            <Button
+                                                                size="sm"
+                                                                variant="ghost"
+                                                                type="button"
+                                                                onClick={() => setRevealedId(
+                                                                    revealedId === `global-${setting.key}` ? null : `global-${setting.key}`
+                                                                )}
+                                                            >
+                                                                {revealedId === `global-${setting.key}` ? <EyeOff /> : <Eye />}
+                                                            </Button>
+                                                        </span>
+                                                    )
+                                                ) : (
+                                                    <span className="flex items-center gap-2">
+                                                        {revealedId === setting.id ? setting.value : (
+                                                            <span className="italic text-muted-foreground/70">••••••••</span>
                                                         )}
+                                                        <Button
+                                                            size="sm"
+                                                            variant="ghost"
+                                                            type="button"
+                                                            onClick={() => setRevealedId(
+                                                                revealedId === setting.id ? null : setting.id
+                                                            )}
+                                                        >
+                                                            {revealedId === setting.id ? <EyeOff /> : <Eye />}
+                                                        </Button>
                                                     </span>
                                                 )}
                                             </TableCell>
                                             <TableCell>
                                                 {isGlobalSetting ? (
                                                     orgSetting ? (
-                                                        <span className="text-amber-600 text-sm">Overridden</span>
+                                                        <span className="text-amber-500 dark:text-amber-400 text-sm">Overridden</span>
                                                     ) : (
-                                                        <span className="text-blue-600 text-sm">Global Default</span>
+                                                        <span className="text-blue-500 dark:text-blue-400 text-sm">Global Default</span>
                                                     )
                                                 ) : (
                                                     overridesGlobal ? (
-                                                        <span className="text-amber-600 text-sm">Overridden</span>
+                                                        <span className="text-amber-500 dark:text-amber-400 text-sm">Overridden</span>
                                                     ) : (
-                                                        <span className="text-green-600 text-sm">Custom</span>
+                                                        <span className="text-green-500 dark:text-green-400 text-sm">Custom</span>
                                                     )
                                                 )}
                                             </TableCell>

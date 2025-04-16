@@ -18,19 +18,17 @@ class IntegrationSetting extends Model
         'value',
         'provider',
         'expose_to_frontend',
-        'is_encrypted',
     ];
 
     protected $casts = [
-        'is_encrypted' => 'boolean',
         'expose_to_frontend' => 'boolean',
     ];
 
     public function value(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $this->is_encrypted ? Crypt::decryptString($value) : $value,
-            set: fn (string $value) => $this->is_encrypted ? Crypt::encryptString($value) : $value,
+            get: fn (string $value) => Crypt::decryptString($value),
+            set: fn (string $value) => Crypt::encryptString($value),
         );
     }
 
