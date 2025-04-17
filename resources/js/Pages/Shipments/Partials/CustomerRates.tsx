@@ -2,7 +2,7 @@ import AccessorialsTable from '@/Components/Shipments/AccessorialsTable';
 import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Loading } from '@/Components/ui/loading';
-import { Table, TableBody, TableCell, TableRow } from '@/Components/ui/table';
+import { Table, TableBody, TableCell, TableHeader, TableRow, TableHead } from '@/Components/ui/table';
 import { toast } from '@/hooks/UseToast';
 import { useForm } from '@inertiajs/react';
 import {
@@ -209,6 +209,16 @@ export default function CustomerRates({
             return (
                 <>
                     <Table className="w-full">
+                        <TableHeader>
+                            <TableRow className="hidden sm:table-row">
+                                <TableHead>Customer</TableHead>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Rate</TableHead>
+                                <TableHead>Quantity</TableHead>
+                                <TableHead className="text-right">Total</TableHead>
+                                <TableHead></TableHead>
+                            </TableRow>
+                        </TableHeader>
                         <TableBody>
                             {data.rates.map(
                                 (rate: ShipmentCustomerRateData, index: number) => (

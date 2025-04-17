@@ -1,7 +1,7 @@
 import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Loading } from '@/Components/ui/loading';
-import { Table, TableBody, TableCell, TableRow } from '@/Components/ui/table';
+import { Table, TableBody, TableCell, TableRow, TableHeader, TableHead } from '@/Components/ui/table';
 import { toast } from '@/hooks/UseToast';
 import { useForm } from '@inertiajs/react';
 import { Check, Pencil, PlusCircle, Trash2, Truck, X } from 'lucide-react';
@@ -223,6 +223,16 @@ export default function CarrierRates({
             return (
                 <>
                     <Table className="w-full">
+                        <TableHeader>
+                            <TableRow className="hidden sm:table-row">
+                                <TableHead>Carrier</TableHead>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Rate</TableHead>
+                                <TableHead>Quantity</TableHead>
+                                <TableHead className="text-right">Total</TableHead>
+                                <TableHead></TableHead>
+                            </TableRow>
+                        </TableHeader>
                         <TableBody>
                             {data.rates.map(
                                 (rate: ShipmentCarrierRateData, index: number) => (
