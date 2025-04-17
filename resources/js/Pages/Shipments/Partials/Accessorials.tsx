@@ -1,14 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Loading } from '@/Components/ui/loading';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
-import { toast } from '@/hooks/UseToast';
-import { useForm } from '@inertiajs/react';
-import { Check, Package, Pencil, PlusCircle, Trash2, X } from 'lucide-react';
-import { useEffect, useState, useRef, useImperativeHandle, forwardRef, useMemo } from 'react';
 import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Checkbox } from '@/Components/ui/checkbox';
 import { Input } from '@/Components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover';
+import { Loading } from '@/Components/ui/loading';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/Components/ui/popover';
 import {
     Select,
     SelectContent,
@@ -16,7 +15,31 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
-import { Accessorial, AccessorialType, Shipment, ShipmentFinancials } from '@/types';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
+import { toast } from '@/hooks/UseToast';
+import {
+    Accessorial,
+    AccessorialType,
+    Shipment,
+    ShipmentFinancials,
+} from '@/types';
+import { useForm } from '@inertiajs/react';
+import { Check, Package, Pencil, PlusCircle, Trash2, X } from 'lucide-react';
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 export default function Accessorials({
     shipment,
@@ -25,8 +48,9 @@ export default function Accessorials({
     shipment: Shipment;
     shipmentFinancials?: ShipmentFinancials;
 }) {
-
-    const [accessorialTypes, setAccessorialTypes] = useState<AccessorialType[]>([]);
+    const [accessorialTypes, setAccessorialTypes] = useState<AccessorialType[]>(
+        [],
+    );
     const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const editRowsRef = useRef<{ save: () => void } | null>(null);
@@ -44,7 +68,9 @@ export default function Accessorials({
                 setAccessorialTypes(data);
                 setIsLoading(false);
             })
-            .catch((error) => console.error('Error fetching accessorial types:', error));
+            .catch((error) =>
+                console.error('Error fetching accessorial types:', error),
+            );
     }, [setAccessorialTypes]);
 
     const handleSave = () => {
@@ -90,7 +116,10 @@ export default function Accessorials({
             const carrierOptions: { name: string; id: number }[] = [];
             // Add carriers from accessorials, filtering out undefined values
             accessorials.forEach((a) => {
-                if (a.carrier && !carrierOptions.find((v) => v.id == a.carrier?.id)) {
+                if (
+                    a.carrier &&
+                    !carrierOptions.find((v) => v.id == a.carrier?.id)
+                ) {
                     carrierOptions.push(a.carrier);
                 }
             });
@@ -103,7 +132,9 @@ export default function Accessorials({
             }
 
             const sortedAccessorialTypes = useMemo(() => {
-                return accessorial_types.sort((a, b) => a.name.localeCompare(b.name));
+                return accessorial_types.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
             }, [accessorial_types]);
 
             const updateRow = (
@@ -136,10 +167,13 @@ export default function Accessorials({
                               rate: 0,
                               quantity: 1,
                               total: 0,
-                              accessorial_type_id: accessorial_types[0]?.id || 0,
-                              currency_id: data.accessorials[0]?.currency_id || 1,
+                              accessorial_type_id:
+                                  accessorial_types[0]?.id || 0,
+                              currency_id:
+                                  data.accessorials[0]?.currency_id || 1,
                               customer_id:
-                                  shipment.customers && shipment.customers.length > 0
+                                  shipment.customers &&
+                                  shipment.customers.length > 0
                                       ? shipment.customers[0].id
                                       : undefined,
                               carrier_id: shipment.carrier?.id,
@@ -154,7 +188,8 @@ export default function Accessorials({
                             rate: 0,
                             quantity: 1,
                             total: 0,
-                            accessorial_type_id: defaultValues.accessorial_type_id,
+                            accessorial_type_id:
+                                defaultValues.accessorial_type_id,
                             currency_id: defaultValues.currency_id,
                             customer_id: defaultValues.customer_id,
                             carrier_id: defaultValues.carrier_id,
@@ -205,7 +240,9 @@ export default function Accessorials({
                                 <TableHead>Quantity</TableHead>
                                 <TableHead>Invoice Customer</TableHead>
                                 <TableHead>Pay Carrier</TableHead>
-                                <TableHead className="text-right">Total</TableHead>
+                                <TableHead className="text-right">
+                                    Total
+                                </TableHead>
                                 <TableHead></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -244,7 +281,9 @@ export default function Accessorials({
                                                         {sortedAccessorialTypes.map(
                                                             (type) => (
                                                                 <SelectItem
-                                                                    key={type.id}
+                                                                    key={
+                                                                        type.id
+                                                                    }
                                                                     value={
                                                                         type.id?.toString() ||
                                                                         ''
@@ -277,14 +316,16 @@ export default function Accessorials({
                                                         <SelectValue placeholder="Select customer" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {shipment.customers.map((c) => (
-                                                            <SelectItem
-                                                                key={c.id}
-                                                                value={c.id?.toString()}
-                                                            >
-                                                                {c.name}
-                                                            </SelectItem>
-                                                        ))}
+                                                        {shipment.customers.map(
+                                                            (c) => (
+                                                                <SelectItem
+                                                                    key={c.id}
+                                                                    value={c.id?.toString()}
+                                                                >
+                                                                    {c.name}
+                                                                </SelectItem>
+                                                            ),
+                                                        )}
                                                     </SelectContent>
                                                 </Select>
                                             </div>
@@ -308,14 +349,16 @@ export default function Accessorials({
                                                         <SelectValue placeholder="Select carrier" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {carrierOptions.map((c) => (
-                                                            <SelectItem
-                                                                key={c.id}
-                                                                value={c.id.toString()}
-                                                            >
-                                                                {c.name}
-                                                            </SelectItem>
-                                                        ))}
+                                                        {carrierOptions.map(
+                                                            (c) => (
+                                                                <SelectItem
+                                                                    key={c.id}
+                                                                    value={c.id.toString()}
+                                                                >
+                                                                    {c.name}
+                                                                </SelectItem>
+                                                            ),
+                                                        )}
                                                     </SelectContent>
                                                 </Select>
                                             </div>
@@ -326,7 +369,10 @@ export default function Accessorials({
                                                     Rate
                                                 </span>
                                                 <div className="relative w-full">
-                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">{accessorial.currency_symbol || '$'}</span>
+                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                                        {accessorial.currency_symbol ||
+                                                            '$'}
+                                                    </span>
                                                     <Input
                                                         type="number"
                                                         value={accessorial.rate}
@@ -334,7 +380,10 @@ export default function Accessorials({
                                                             updateRow(
                                                                 index,
                                                                 'rate',
-                                                                parseFloat(e.target.value),
+                                                                parseFloat(
+                                                                    e.target
+                                                                        .value,
+                                                                ),
                                                             )
                                                         }
                                                         className="w-full rounded border p-1 pl-6"
@@ -355,7 +404,9 @@ export default function Accessorials({
                                                         updateRow(
                                                             index,
                                                             'quantity',
-                                                            parseInt(e.target.value),
+                                                            parseInt(
+                                                                e.target.value,
+                                                            ),
                                                         )
                                                     }
                                                     className="w-full rounded border p-1"
@@ -371,7 +422,9 @@ export default function Accessorials({
                                                     checked={
                                                         accessorial.invoice_customer
                                                     }
-                                                    onCheckedChange={(checked) =>
+                                                    onCheckedChange={(
+                                                        checked,
+                                                    ) =>
                                                         updateRow(
                                                             index,
                                                             'invoice_customer',
@@ -387,8 +440,12 @@ export default function Accessorials({
                                                     Pay Carrier
                                                 </span>
                                                 <Checkbox
-                                                    checked={accessorial.pay_carrier}
-                                                    onCheckedChange={(checked) =>
+                                                    checked={
+                                                        accessorial.pay_carrier
+                                                    }
+                                                    onCheckedChange={(
+                                                        checked,
+                                                    ) =>
                                                         updateRow(
                                                             index,
                                                             'pay_carrier',
@@ -403,7 +460,11 @@ export default function Accessorials({
                                                 <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                     Total
                                                 </span>
-                                                {(accessorial.total || 0).toFixed(2)}
+                                                {accessorial.currency_symbol ||
+                                                    '$'}
+                                                {(
+                                                    accessorial.total || 0
+                                                ).toFixed(2)}
                                             </div>
                                         </TableCell>
                                         <TableCell className="w-full sm:w-auto">
@@ -415,7 +476,9 @@ export default function Accessorials({
                                                     variant="ghost"
                                                     size="icon"
                                                     className="text-destructive"
-                                                    onClick={() => deleteRow(index)}
+                                                    onClick={() =>
+                                                        deleteRow(index)
+                                                    }
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
@@ -426,7 +489,10 @@ export default function Accessorials({
                             )}
                             {data.accessorials.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={9} className="text-center text-muted-foreground">
+                                    <TableCell
+                                        colSpan={9}
+                                        className="text-center text-muted-foreground"
+                                    >
                                         No accessorials added
                                     </TableCell>
                                 </TableRow>
@@ -435,7 +501,7 @@ export default function Accessorials({
                     </Table>
 
                     <div className="mt-4 flex justify-between">
-                        <Button variant="outline" size="sm" onClick={addRow}>
+                        <Button variant="default" size="sm" onClick={addRow}>
                             <PlusCircle className="h-4 w-4" /> Add
                         </Button>
                     </div>
@@ -515,7 +581,9 @@ export default function Accessorials({
                         {isEditing ? (
                             <EditRows
                                 ref={editRowsRef}
-                                accessorials={shipmentFinancials?.accessorials ?? []}
+                                accessorials={
+                                    shipmentFinancials?.accessorials ?? []
+                                }
                                 accessorial_types={accessorialTypes}
                                 shipment={shipment}
                             />
@@ -529,11 +597,15 @@ export default function Accessorials({
                                         <TableHead>Rate & Quantity</TableHead>
                                         <TableHead>Invoice Customer</TableHead>
                                         <TableHead>Pay Carrier</TableHead>
-                                        <TableHead className="text-right">Total</TableHead>
+                                        <TableHead className="text-right">
+                                            Total
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {(shipmentFinancials?.accessorials ?? []).map((accessorial, index) => (
+                                    {(
+                                        shipmentFinancials?.accessorials ?? []
+                                    ).map((accessorial, index) => (
                                         <TableRow
                                             key={index}
                                             className="grid grid-cols-2 gap-2 sm:table-row sm:gap-0"
@@ -543,7 +615,11 @@ export default function Accessorials({
                                                     <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                         Type
                                                     </span>
-                                                    {accessorial.accessorial_type?.name}
+                                                    {
+                                                        accessorial
+                                                            .accessorial_type
+                                                            ?.name
+                                                    }
                                                 </div>
                                             </TableCell>
                                             <TableCell className="w-full sm:w-auto">
@@ -554,11 +630,19 @@ export default function Accessorials({
                                                     <Popover>
                                                         <PopoverTrigger>
                                                             <span className="inline-block max-w-[150px] cursor-pointer truncate">
-                                                                {accessorial.customer?.name}
+                                                                {
+                                                                    accessorial
+                                                                        .customer
+                                                                        ?.name
+                                                                }
                                                             </span>
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto border-2 border-foreground p-2 shadow">
-                                                            {accessorial.customer?.name}
+                                                            {
+                                                                accessorial
+                                                                    .customer
+                                                                    ?.name
+                                                            }
                                                         </PopoverContent>
                                                     </Popover>
                                                 </div>
@@ -571,11 +655,18 @@ export default function Accessorials({
                                                     <Popover>
                                                         <PopoverTrigger>
                                                             <span className="inline-block max-w-[150px] cursor-pointer truncate">
-                                                                {accessorial.carrier?.name || '-'}
+                                                                {accessorial
+                                                                    .carrier
+                                                                    ?.name ||
+                                                                    '-'}
                                                             </span>
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto border-2 border-foreground p-2 shadow">
-                                                            {accessorial.carrier?.name}
+                                                            {
+                                                                accessorial
+                                                                    .carrier
+                                                                    ?.name
+                                                            }
                                                         </PopoverContent>
                                                     </Popover>
                                                 </div>
@@ -586,8 +677,14 @@ export default function Accessorials({
                                                         Rate & Quantity
                                                     </span>
                                                     <span className="text-muted-foreground">
-                                                        {accessorial.currency?.symbol || '$'}
-                                                        {accessorial.rate?.toFixed(2) || '0.00'} x {accessorial.quantity || 0}
+                                                        {accessorial.currency
+                                                            ?.symbol || '$'}
+                                                        {accessorial.rate?.toFixed(
+                                                            2,
+                                                        ) || '0.00'}{' '}
+                                                        x{' '}
+                                                        {accessorial.quantity ||
+                                                            0}
                                                     </span>
                                                 </div>
                                             </TableCell>
@@ -596,7 +693,9 @@ export default function Accessorials({
                                                     <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                         Invoice Customer
                                                     </span>
-                                                    {accessorial.invoice_customer ? 'Yes' : 'No'}
+                                                    {accessorial.invoice_customer
+                                                        ? 'Yes'
+                                                        : 'No'}
                                                 </div>
                                             </TableCell>
                                             <TableCell className="w-full sm:w-auto">
@@ -604,7 +703,9 @@ export default function Accessorials({
                                                     <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                         Pay Carrier
                                                     </span>
-                                                    {accessorial.pay_carrier ? 'Yes' : 'No'}
+                                                    {accessorial.pay_carrier
+                                                        ? 'Yes'
+                                                        : 'No'}
                                                 </div>
                                             </TableCell>
                                             <TableCell className="w-full text-right sm:w-auto">
@@ -612,13 +713,17 @@ export default function Accessorials({
                                                     <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                         Total
                                                     </span>
-                                                    {accessorial.currency?.symbol || '$'}
-                                                    {accessorial.total?.toFixed(2) || '0.00'}
+                                                    {accessorial.currency
+                                                        ?.symbol || '$'}
+                                                    {accessorial.total?.toFixed(
+                                                        2,
+                                                    ) || '0.00'}
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ))}
-                                    {(shipmentFinancials?.accessorials ?? []).length === 0 && (
+                                    {(shipmentFinancials?.accessorials ?? [])
+                                        .length === 0 && (
                                         <TableRow>
                                             <TableCell
                                                 colSpan={7}
@@ -636,4 +741,4 @@ export default function Accessorials({
             </CardContent>
         </Card>
     );
-} 
+}

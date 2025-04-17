@@ -1,13 +1,7 @@
-import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Loading } from '@/Components/ui/loading';
-import { Table, TableBody, TableCell, TableRow, TableHeader, TableHead } from '@/Components/ui/table';
-import { toast } from '@/hooks/UseToast';
-import { useForm } from '@inertiajs/react';
-import { Check, Pencil, PlusCircle, Trash2, Truck, X } from 'lucide-react';
-import { useEffect, useState, useRef, useImperativeHandle, forwardRef } from 'react';
 import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
+import { Loading } from '@/Components/ui/loading';
 import {
     Select,
     SelectContent,
@@ -15,7 +9,30 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
-import { CarrierRateType, Shipment, ShipmentFinancials, ShipmentCarrierRate } from '@/types';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
+import { toast } from '@/hooks/UseToast';
+import {
+    CarrierRateType,
+    Shipment,
+    ShipmentCarrierRate,
+    ShipmentFinancials,
+} from '@/types';
+import { useForm } from '@inertiajs/react';
+import { Check, Pencil, PlusCircle, Trash2, Truck, X } from 'lucide-react';
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from 'react';
 
 export default function CarrierRates({
     shipment,
@@ -24,10 +41,9 @@ export default function CarrierRates({
     shipment: Shipment;
     shipmentFinancials?: ShipmentFinancials;
 }) {
-
-    const [carrierRateTypes, setCarrierRateTypes] = useState<
-        CarrierRateType[]
-    >([]);
+    const [carrierRateTypes, setCarrierRateTypes] = useState<CarrierRateType[]>(
+        [],
+    );
 
     const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -58,23 +74,6 @@ export default function CarrierRates({
         }
     };
 
-    const groupedRates = (shipmentFinancials?.shipment_carrier_rates ?? []).reduce(
-        (acc, rate) => {
-            if (!acc[rate.carrier.id]) {
-                acc[rate.carrier.id] = {
-                    carrier: rate.carrier,
-                    rates: [],
-                    total: 0,
-                    currency: rate.currency,
-                };
-            }
-            acc[rate.carrier.id].rates.push(rate);
-            acc[rate.carrier.id].total += rate.total;
-            return acc;
-        },
-        {} as Record<number, CarrierRateGroup>,
-    );
-
     interface ShipmentCarrierRateData {
         id?: number;
         rate: number;
@@ -85,13 +84,6 @@ export default function CarrierRates({
         currency_id: number;
         currency_symbol: string;
         [key: string]: string | number | boolean | undefined;
-    }
-
-    interface CarrierRateGroup {
-        carrier: { id: number; name: string };
-        rates: ShipmentCarrierRate[];
-        total: number;
-        currency: { id: number; code: string; symbol: string };
     }
 
     const EditRows = forwardRef(
@@ -122,7 +114,7 @@ export default function CarrierRates({
                 })),
             });
 
-            const updateRow = ( 
+            const updateRow = (
                 index: number,
                 field: keyof ShipmentCarrierRateData,
                 value: number | string,
@@ -148,14 +140,15 @@ export default function CarrierRates({
                     data.rates.length > 0
                         ? data.rates[0]
                         : {
-                            rate: 0,
-                            quantity: 1,
-                            total: 0,
-                            carrier_id: shipment.carrier?.id || 0,
-                            carrier_rate_type_id: rate_types[0]?.id || 0,
-                            currency_id: data.rates[0]?.currency_id || 1,
-                            currency_symbol: data.rates[0]?.currency_symbol || '$',
-                        };
+                              rate: 0,
+                              quantity: 1,
+                              total: 0,
+                              carrier_id: shipment.carrier?.id || 0,
+                              carrier_rate_type_id: rate_types[0]?.id || 0,
+                              currency_id: data.rates[0]?.currency_id || 1,
+                              currency_symbol:
+                                  data.rates[0]?.currency_symbol || '$',
+                          };
 
                 setData({
                     rates: [
@@ -229,13 +222,18 @@ export default function CarrierRates({
                                 <TableHead>Type</TableHead>
                                 <TableHead>Rate</TableHead>
                                 <TableHead>Quantity</TableHead>
-                                <TableHead className="text-right">Total</TableHead>
+                                <TableHead className="text-right">
+                                    Total
+                                </TableHead>
                                 <TableHead></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {data.rates.map(
-                                (rate: ShipmentCarrierRateData, index: number) => (
+                                (
+                                    rate: ShipmentCarrierRateData,
+                                    index: number,
+                                ) => (
                                     <TableRow
                                         key={index}
                                         className="grid grid-cols-2 gap-2 sm:table-row sm:gap-0"
@@ -262,17 +260,21 @@ export default function CarrierRates({
                                                         />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {carrierOptions.map((carrier) => (
-                                                            <SelectItem
-                                                                key={
-                                                                    carrier.id
-                                                                }
-                                                                value={carrier.id.toString()}
-                                                                className="truncate"
-                                                            >
-                                                                {carrier.name}
-                                                            </SelectItem>
-                                                        ))}
+                                                        {carrierOptions.map(
+                                                            (carrier) => (
+                                                                <SelectItem
+                                                                    key={
+                                                                        carrier.id
+                                                                    }
+                                                                    value={carrier.id.toString()}
+                                                                    className="truncate"
+                                                                >
+                                                                    {
+                                                                        carrier.name
+                                                                    }
+                                                                </SelectItem>
+                                                            ),
+                                                        )}
                                                     </SelectContent>
                                                 </Select>
                                             </div>
@@ -296,14 +298,18 @@ export default function CarrierRates({
                                                         <SelectValue placeholder="Select rate type" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {rate_types.map((type) => (
-                                                            <SelectItem
-                                                                key={type.id}
-                                                                value={type.id?.toString()}
-                                                            >
-                                                                {type.name}
-                                                            </SelectItem>
-                                                        ))}
+                                                        {rate_types.map(
+                                                            (type) => (
+                                                                <SelectItem
+                                                                    key={
+                                                                        type.id
+                                                                    }
+                                                                    value={type.id?.toString()}
+                                                                >
+                                                                    {type.name}
+                                                                </SelectItem>
+                                                            ),
+                                                        )}
                                                     </SelectContent>
                                                 </Select>
                                             </div>
@@ -314,7 +320,9 @@ export default function CarrierRates({
                                                     Rate
                                                 </span>
                                                 <div className="relative w-full">
-                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">{rate.currency_symbol}</span>
+                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                                        {rate.currency_symbol}
+                                                    </span>
                                                     <Input
                                                         type="number"
                                                         value={rate.rate}
@@ -323,7 +331,8 @@ export default function CarrierRates({
                                                                 index,
                                                                 'rate',
                                                                 parseFloat(
-                                                                    e.target.value,
+                                                                    e.target
+                                                                        .value,
                                                                 ),
                                                             )
                                                         }
@@ -359,6 +368,7 @@ export default function CarrierRates({
                                                 <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                     Total
                                                 </span>
+                                                {rate.currency_symbol}
                                                 {rate.total.toFixed(2)}
                                             </div>
                                         </TableCell>
@@ -371,7 +381,9 @@ export default function CarrierRates({
                                                     variant="ghost"
                                                     size="icon"
                                                     className="text-destructive"
-                                                    onClick={() => deleteRow(index)}
+                                                    onClick={() =>
+                                                        deleteRow(index)
+                                                    }
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
@@ -383,7 +395,10 @@ export default function CarrierRates({
 
                             {data.rates.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                                    <TableCell
+                                        colSpan={5}
+                                        className="text-center text-muted-foreground"
+                                    >
                                         No carrier rates added
                                     </TableCell>
                                 </TableRow>
@@ -392,7 +407,7 @@ export default function CarrierRates({
                     </Table>
 
                     <div className="mt-4 flex justify-between">
-                        <Button variant="outline" size="sm" onClick={addRow}>
+                        <Button variant="default" size="sm" onClick={addRow}>
                             <PlusCircle className="h-4 w-4" /> Add
                         </Button>
                     </div>
@@ -402,65 +417,6 @@ export default function CarrierRates({
     );
 
     EditRows.displayName = 'EditRows';
-
-    function CarrierRateGroup(rateGroup: CarrierRateGroup) {
-        const rates = rateGroup.rates;
-        const currency = rateGroup.currency;
-        const total = rateGroup.total;
-        const title = rateGroup.carrier.name;
-
-        return (
-            <div className="mb-4">
-                <div className="mb-2 flex items-center justify-between rounded bg-foreground/5 p-1">
-                    <h4 className="font-medium">{title}</h4>
-                    <span className="text-sm text-muted-foreground">
-                        Total: {currency.symbol}
-                        {total.toFixed(2)}
-                    </span>
-                </div>
-                <Table>
-                    <TableBody>
-                        {rates.map((rate, index) => (
-                            <TableRow key={index}>
-                                <TableCell>
-                                    {rate.carrier_rate_type?.name}
-                                </TableCell>
-                                <TableCell className="text-right text-muted-foreground">
-                                    {rate.currency.symbol}
-                                    {rate.rate.toFixed(2)} x {rate.quantity}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {rate.currency.symbol}
-                                    {rate.total.toFixed(2)}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
-        );
-    }
-
-    function CarrierRateGroups({ groupedRates }: { groupedRates: Record<number, CarrierRateGroup> }) {
-        return (
-            <>
-                {Object.values(groupedRates).length === 0 && (
-                    <div className="text-center text-muted-foreground text-sm">
-                        No carrier rates added
-                    </div>
-                )}
-                {Object.values(groupedRates).map((group) => (
-                    <CarrierRateGroup
-                        key={group.carrier.id}
-                        carrier={group.carrier}
-                        rates={group.rates}
-                        total={group.total}
-                        currency={group.currency}
-                    />
-                ))}
-            </>
-        );
-    }
 
     return (
         <Card>
@@ -511,20 +467,76 @@ export default function CarrierRates({
                     />
                 ) : (
                     <>
-
                         {isEditing ? (
                             <EditRows
                                 ref={editRowsRef}
-                                rates={shipmentFinancials?.shipment_carrier_rates ?? []}
+                                rates={
+                                    shipmentFinancials?.shipment_carrier_rates ??
+                                    []
+                                }
                                 rate_types={carrierRateTypes}
                                 shipment={shipment}
                             />
                         ) : (
-                            <CarrierRateGroups groupedRates={groupedRates} />
+                            <Table className="w-full">
+                                <TableHeader>
+                                    <TableRow className="hidden sm:table-row">
+                                        <TableHead>Carrier</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Rate & Quantity</TableHead>
+                                        <TableHead className="text-right">
+                                            Total
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {(
+                                        shipmentFinancials?.shipment_carrier_rates ??
+                                        []
+                                    ).map((carrierRate, index) => (
+                                        <TableRow
+                                            key={index}
+                                            className="grid grid-cols-2 gap-2 sm:table-row sm:gap-0"
+                                        >
+                                            <TableCell>
+                                                {carrierRate.carrier.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                {
+                                                    carrierRate
+                                                        .carrier_rate_type.name
+                                                }
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground">
+                                                {carrierRate.currency.symbol}
+                                                {carrierRate.rate} x{' '}
+                                                {carrierRate.quantity}
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                {carrierRate.currency.symbol}
+                                                {carrierRate.total.toFixed(2)}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                    {(
+                                        shipmentFinancials?.shipment_carrier_rates ??
+                                        []
+                                    ).length === 0 && (
+                                        <TableRow>
+                                            <TableCell
+                                                colSpan={7}
+                                                className="text-center text-muted-foreground"
+                                            >
+                                                No carrier rates added
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
                         )}
                     </>
                 )}
             </CardContent>
         </Card>
     );
-} 
+}

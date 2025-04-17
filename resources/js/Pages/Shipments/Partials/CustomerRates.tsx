@@ -1,22 +1,7 @@
-import AccessorialsTable from '@/Components/Shipments/AccessorialsTable';
-import CarrierRatesTable from '@/Components/Shipments/CarrierRatesTable';
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Loading } from '@/Components/ui/loading';
-import { Table, TableBody, TableCell, TableHeader, TableRow, TableHead } from '@/Components/ui/table';
-import { toast } from '@/hooks/UseToast';
-import { useForm } from '@inertiajs/react';
-import {
-    AccessorialType,
-    CarrierRateType,
-    CustomerRateType,
-    Shipment,
-    ShipmentFinancials,
-    ShipmentCustomerRate
-} from '@/types';
-import { BadgeDollarSign, Users, Check, Pencil, PlusCircle, Trash2, X } from 'lucide-react';
-import { useEffect, useState, useRef, useImperativeHandle, forwardRef } from 'react';
 import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
+import { Loading } from '@/Components/ui/loading';
 import {
     Select,
     SelectContent,
@@ -24,6 +9,30 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
+import { toast } from '@/hooks/UseToast';
+import {
+    CustomerRateType,
+    Shipment,
+    ShipmentCustomerRate,
+    ShipmentFinancials,
+} from '@/types';
+import { useForm } from '@inertiajs/react';
+import { Check, Pencil, PlusCircle, Trash2, Users, X } from 'lucide-react';
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from 'react';
 
 export default function CustomerRates({
     shipment,
@@ -32,7 +41,6 @@ export default function CustomerRates({
     shipment: Shipment;
     shipmentFinancials?: ShipmentFinancials;
 }) {
-
     const [customerRateTypes, setCustomerRateTypes] = useState<
         CustomerRateType[]
     >([]);
@@ -66,7 +74,9 @@ export default function CustomerRates({
         }
     };
 
-    const groupedRates = (shipmentFinancials?.shipment_customer_rates ?? []).reduce(
+    const groupedRates = (
+        shipmentFinancials?.shipment_customer_rates ?? []
+    ).reduce(
         (acc, rate) => {
             if (!acc[rate.customer.id]) {
                 acc[rate.customer.id] = {
@@ -154,13 +164,13 @@ export default function CustomerRates({
                     data.rates.length > 0
                         ? data.rates[0]
                         : {
-                            rate: 0,
-                            quantity: 1,
-                            total: 0,
-                            customer_id: shipment.customers[0]?.id || 0,
-                            customer_rate_type_id: rate_types[0]?.id || 0,
-                            currency_id: data.rates[0]?.currency_id || 1,
-                        };
+                              rate: 0,
+                              quantity: 1,
+                              total: 0,
+                              customer_id: shipment.customers[0]?.id || 0,
+                              customer_rate_type_id: rate_types[0]?.id || 0,
+                              currency_id: data.rates[0]?.currency_id || 1,
+                          };
 
                 setData({
                     rates: [
@@ -215,13 +225,18 @@ export default function CustomerRates({
                                 <TableHead>Type</TableHead>
                                 <TableHead>Rate</TableHead>
                                 <TableHead>Quantity</TableHead>
-                                <TableHead className="text-right">Total</TableHead>
+                                <TableHead className="text-right">
+                                    Total
+                                </TableHead>
                                 <TableHead></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {data.rates.map(
-                                (rate: ShipmentCustomerRateData, index: number) => (
+                                (
+                                    rate: ShipmentCustomerRateData,
+                                    index: number,
+                                ) => (
                                     <TableRow
                                         key={index}
                                         className="grid grid-cols-2 gap-2 sm:table-row sm:gap-0"
@@ -257,7 +272,9 @@ export default function CustomerRates({
                                                                     value={customer.id.toString()}
                                                                     className="truncate"
                                                                 >
-                                                                    {customer.name}
+                                                                    {
+                                                                        customer.name
+                                                                    }
                                                                 </SelectItem>
                                                             ),
                                                         )}
@@ -284,14 +301,18 @@ export default function CustomerRates({
                                                         <SelectValue placeholder="Select rate type" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {rate_types.map((type) => (
-                                                            <SelectItem
-                                                                key={type.id}
-                                                                value={type.id?.toString()}
-                                                            >
-                                                                {type.name}
-                                                            </SelectItem>
-                                                        ))}
+                                                        {rate_types.map(
+                                                            (type) => (
+                                                                <SelectItem
+                                                                    key={
+                                                                        type.id
+                                                                    }
+                                                                    value={type.id?.toString()}
+                                                                >
+                                                                    {type.name}
+                                                                </SelectItem>
+                                                            ),
+                                                        )}
                                                     </SelectContent>
                                                 </Select>
                                             </div>
@@ -302,7 +323,10 @@ export default function CustomerRates({
                                                     Rate
                                                 </span>
                                                 <div className="relative w-full">
-                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">{rate.currency_symbol || '$'}</span>
+                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                                        {rate.currency_symbol ||
+                                                            '$'}
+                                                    </span>
                                                     <Input
                                                         type="number"
                                                         value={rate.rate}
@@ -311,7 +335,8 @@ export default function CustomerRates({
                                                                 index,
                                                                 'rate',
                                                                 parseFloat(
-                                                                    e.target.value,
+                                                                    e.target
+                                                                        .value,
                                                                 ),
                                                             )
                                                         }
@@ -347,6 +372,7 @@ export default function CustomerRates({
                                                 <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                     Total
                                                 </span>
+                                                {rate.currency_symbol || '$'}
                                                 {rate.total.toFixed(2)}
                                             </div>
                                         </TableCell>
@@ -359,7 +385,9 @@ export default function CustomerRates({
                                                     variant="ghost"
                                                     size="icon"
                                                     className="text-destructive"
-                                                    onClick={() => deleteRow(index)}
+                                                    onClick={() =>
+                                                        deleteRow(index)
+                                                    }
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
@@ -371,7 +399,10 @@ export default function CustomerRates({
 
                             {data.rates.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                                    <TableCell
+                                        colSpan={5}
+                                        className="text-center text-muted-foreground"
+                                    >
                                         No customer rates added
                                     </TableCell>
                                 </TableRow>
@@ -380,7 +411,7 @@ export default function CustomerRates({
                     </Table>
 
                     <div className="mt-4 flex justify-between">
-                        <Button variant="outline" size="sm" onClick={addRow}>
+                        <Button variant="default" size="sm" onClick={addRow}>
                             <PlusCircle className="h-4 w-4" /> Add
                         </Button>
                     </div>
@@ -391,62 +422,58 @@ export default function CustomerRates({
 
     EditRows.displayName = 'EditRows';
 
-    function CustomerRateGroup(rateGroup: CustomerRateGroup) {
-        const rates = rateGroup.rates;
-        const currency = rateGroup.currency;
-        const total = rateGroup.total;
-        const title = rateGroup.customer.name;
-
+    function CustomerRateGroups({
+        groupedRates,
+    }: {
+        groupedRates: Record<number, CustomerRateGroup>;
+    }) {
         return (
-            <div className="mb-4">
-                <div className="mb-2 flex items-center justify-between rounded bg-foreground/5 p-1">
-                    <h4 className="font-medium">{title}</h4>
-                    <span className="text-sm text-muted-foreground">
-                        Total: {currency.symbol}
-                        {total.toFixed(2)}
-                    </span>
-                </div>
-                <Table>
-                    <TableBody>
-                        {rates.map((rate, index) => (
-                            <TableRow key={index}>
+            <Table className="w-full">
+                <TableHeader>
+                    <TableRow className="hidden sm:table-row">
+                        <TableHead>Customer</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Rate & Quantity</TableHead>
+                        <TableHead className="text-right">Total</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {Object.values(groupedRates)
+                        .flatMap((group) => group.rates)
+                        .map((customerRate, index) => (
+                            <TableRow
+                                key={index}
+                                className="grid grid-cols-2 gap-2 sm:table-row sm:gap-0"
+                            >
                                 <TableCell>
-                                    {rate.customer_rate_type?.name}
+                                    {customerRate.customer.name}
                                 </TableCell>
-                                <TableCell className="text-right text-muted-foreground">
-                                    {rate.currency.symbol}
-                                    {rate.rate.toFixed(2)} x {rate.quantity}
+                                <TableCell>
+                                    {customerRate.customer_rate_type.name}
+                                </TableCell>
+                                <TableCell className="text-muted-foreground">
+                                    {customerRate.currency.symbol}
+                                    {customerRate.rate} x{' '}
+                                    {customerRate.quantity}
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    {rate.currency.symbol}
-                                    {rate.total.toFixed(2)}
+                                    {customerRate.currency.symbol}
+                                    {customerRate.total.toFixed(2)}
                                 </TableCell>
                             </TableRow>
                         ))}
-                    </TableBody>
-                </Table>
-            </div>
-        );
-    }
-
-    function CustomerRateGroups({ groupedRates }: { groupedRates: Record<number, CustomerRateGroup> }) {
-        return (
-            <>
-                {Object.values(groupedRates).length === 0 && (
-                    <div className="text-center text-muted-foreground text-sm">
-                        No customer rates added
-                    </div>
-                )}
-                {Object.values(groupedRates).map((group) => (
-                    <CustomerRateGroup
-                        key={group.customer.id}
-                        customer={group.customer}
-                        rates={group.rates}
-                        total={group.total}
-                        currency={group.currency}
-                    />
-                ))}
-            </>
+                    {Object.values(groupedRates).length === 0 && (
+                        <TableRow>
+                            <TableCell
+                                colSpan={4}
+                                className="text-center text-muted-foreground"
+                            >
+                                No customer rates added
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
         );
     }
 
@@ -499,11 +526,13 @@ export default function CustomerRates({
                     />
                 ) : (
                     <>
-
                         {isEditing ? (
                             <EditRows
                                 ref={editRowsRef}
-                                rates={shipmentFinancials?.shipment_customer_rates ?? []}
+                                rates={
+                                    shipmentFinancials?.shipment_customer_rates ??
+                                    []
+                                }
                                 rate_types={customerRateTypes}
                                 shipment={shipment}
                             />
