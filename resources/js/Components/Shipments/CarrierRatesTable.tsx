@@ -119,15 +119,8 @@ export default function CarrierRatesTable({
                     shipment={shipment}
                 />
             ) : (
-                Object.values(groupedRates).map((group) => (
-                    <CarrierRateGroup
-                        key={group.carrier.id}
-                        carrier={group.carrier}
-                        rates={group.rates}
-                        total={group.total}
-                        currency={group.currency}
-                    />
-                ))
+                <CarrierRateGroups groupedRates={groupedRates} />
+
             )}
         </>
     );
@@ -186,13 +179,13 @@ const EditRows = forwardRef(
                 data.rates.length > 0
                     ? data.rates[0]
                     : {
-                          rate: 0,
-                          quantity: 1,
-                          total: 0,
-                          carrier_id: shipment.carrier?.id || 0,
-                          carrier_rate_type_id: rate_types[0]?.id || 0,
-                          currency_id: data.rates[0]?.currency_id || 1,
-                      };
+                        rate: 0,
+                        quantity: 1,
+                        total: 0,
+                        carrier_id: shipment.carrier?.id || 0,
+                        carrier_rate_type_id: rate_types[0]?.id || 0,
+                        currency_id: data.rates[0]?.currency_id || 1,
+                    };
 
             setData({
                 rates: [
@@ -415,6 +408,27 @@ const EditRows = forwardRef(
 );
 
 EditRows.displayName = 'EditRows';
+
+function CarrierRateGroups({ groupedRates }: { groupedRates: Record<number, CarrierRateGroup> }) {
+    return (
+        <>
+            {Object.values(groupedRates).length === 0 && (
+                <div className="text-center text-muted-foreground text-sm">
+                    No carrier rates added
+                </div>
+            )}
+            {Object.values(groupedRates).map((group) => (
+                <CarrierRateGroup
+                    key={group.carrier.id}
+                    carrier={group.carrier}
+                    rates={group.rates}
+                    total={group.total}
+                    currency={group.currency}
+                />
+            ))}
+        </>
+    );
+}
 
 function CarrierRateGroup(rateGroup: CarrierRateGroup) {
     const rates = rateGroup.rates;

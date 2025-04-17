@@ -107,35 +107,29 @@ export default function ShipmentFinancialDetails({
                     />
                 ) : (
                     <>
-                        <div className="pb-2 md:pr-4">
-                            <CustomerRatesTable
-                                rate_types={customerRateTypes}
-                                rates={
-                                    shipmentFinancials?.shipment_customer_rates ??
-                                    []
-                                }
-                                shipment={shipment}
-                            />
-                        </div>
-                        <div className="mt-8 border-l-accent-foreground/30 pb-2 md:mt-0 md:border-l-2 md:pl-4">
-                            <CarrierRatesTable
-                                rate_types={carrierRateTypes}
-                                rates={
-                                    shipmentFinancials?.shipment_carrier_rates ??
-                                    []
-                                }
-                                shipment={shipment}
-                            />
-                        </div>
-                        <div className="col-span-1 border-t-accent-foreground/30 pt-4 md:col-span-2 md:border-t-2">
-                            <AccessorialsTable
-                                accessorial_types={accessorialTypes}
-                                accessorials={
-                                    shipmentFinancials?.accessorials ?? []
-                                }
-                                shipment={shipment}
-                            />
-                        </div>
+                        <CustomerRatesTable
+                            rate_types={customerRateTypes}
+                            rates={
+                                shipmentFinancials?.shipment_customer_rates ??
+                                []
+                            }
+                            shipment={shipment}
+                        />
+                        <CarrierRatesTable
+                            rate_types={carrierRateTypes}
+                            rates={
+                                shipmentFinancials?.shipment_carrier_rates ??
+                                []
+                            }
+                            shipment={shipment}
+                        />
+                        <AccessorialsTable
+                            accessorial_types={accessorialTypes}
+                            accessorials={
+                                shipmentFinancials?.accessorials ?? []
+                            }
+                            shipment={shipment}
+                        />
                     </>
                 )}
             </CardContent>

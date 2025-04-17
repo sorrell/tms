@@ -380,7 +380,7 @@ const EditRows = forwardRef<
             <Table className="w-full">
                 <TableHeader>
                     <TableRow className="hidden sm:table-row">
-                        <TableHead>Accessorial Type</TableHead>
+                        <TableHead>Type</TableHead>
                         <TableHead>Customer</TableHead>
                         <TableHead>Carrier</TableHead>
                         <TableHead>Rate</TableHead>
