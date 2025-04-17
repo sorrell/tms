@@ -67,7 +67,6 @@ export default function Show({
                         />
 
                         {/* Financials */}
-
                         <ShipmentFinancialDetails shipment={shipment} />
 
                         {/* Notes */}
