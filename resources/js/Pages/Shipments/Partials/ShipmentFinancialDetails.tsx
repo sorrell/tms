@@ -10,8 +10,9 @@ import {
     Shipment,
     ShipmentFinancials,
 } from '@/types';
-import { BadgeDollarSign } from 'lucide-react';
+import { BadgeDollarSign, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import CustomerRates from './CustomerRates';
 
 export default function ShipmentFinancialDetails({
     shipment,
@@ -92,47 +93,54 @@ export default function ShipmentFinancialDetails({
     }, [shipment]);
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <BadgeDollarSign className="h-5 w-5" />
-                    Financials
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="grid columns-1 md:columns-2">
-                {isLoading ? (
-                    <Loading
-                        className="mx-auto h-[200px] w-full"
-                        text="Loading..."
-                    />
-                ) : (
-                    <>
-                        <CustomerRatesTable
-                            rate_types={customerRateTypes}
-                            rates={
-                                shipmentFinancials?.shipment_customer_rates ??
-                                []
-                            }
-                            shipment={shipment}
+        <>
+            <CustomerRates shipment={shipment} shipmentFinancials={shipmentFinancials}/>
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <BadgeDollarSign className="h-5 w-5" />
+                        Carrier Rates
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {isLoading ? (
+                        <Loading
+                            className="mx-auto h-[200px] w-full"
+                            text="Loading..."
                         />
+                    ) : (
                         <CarrierRatesTable
                             rate_types={carrierRateTypes}
-                            rates={
-                                shipmentFinancials?.shipment_carrier_rates ??
-                                []
-                            }
+                            rates={shipmentFinancials?.shipment_carrier_rates ?? []}
                             shipment={shipment}
                         />
+                    )}
+                </CardContent>
+            </Card>
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <BadgeDollarSign className="h-5 w-5" />
+                        Accessorials
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {isLoading ? (
+                        <Loading
+                            className="mx-auto h-[200px] w-full"
+                            text="Loading..."
+                        />
+                    ) : (
                         <AccessorialsTable
                             accessorial_types={accessorialTypes}
-                            accessorials={
-                                shipmentFinancials?.accessorials ?? []
-                            }
+                            accessorials={shipmentFinancials?.accessorials ?? []}
                             shipment={shipment}
                         />
-                    </>
-                )}
-            </CardContent>
-        </Card>
+                    )}
+                </CardContent>
+            </Card>
+        </>
     );
 }
