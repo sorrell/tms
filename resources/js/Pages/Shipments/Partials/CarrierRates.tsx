@@ -83,6 +83,7 @@ export default function CarrierRates({
         carrier_id: number;
         carrier_rate_type_id: number;
         currency_id: number;
+        currency_symbol: string;
         [key: string]: string | number | boolean | undefined;
     }
 
@@ -117,10 +118,11 @@ export default function CarrierRates({
                     carrier_id: rate.carrier.id,
                     carrier_rate_type_id: rate.carrier_rate_type.id,
                     currency_id: rate.currency.id,
+                    currency_symbol: rate.currency.symbol,
                 })),
             });
 
-            const updateRow = (
+            const updateRow = ( 
                 index: number,
                 field: keyof ShipmentCarrierRateData,
                 value: number | string,
@@ -152,6 +154,7 @@ export default function CarrierRates({
                             carrier_id: shipment.carrier?.id || 0,
                             carrier_rate_type_id: rate_types[0]?.id || 0,
                             currency_id: data.rates[0]?.currency_id || 1,
+                            currency_symbol: data.rates[0]?.currency_symbol || '$',
                         };
 
                 setData({
@@ -165,6 +168,7 @@ export default function CarrierRates({
                             carrier_rate_type_id:
                                 defaultValues.carrier_rate_type_id,
                             currency_id: defaultValues.currency_id,
+                            currency_symbol: defaultValues.currency_symbol,
                         },
                     ],
                 });
@@ -299,21 +303,24 @@ export default function CarrierRates({
                                                 <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                     Rate
                                                 </span>
-                                                <Input
-                                                    type="number"
-                                                    value={rate.rate}
-                                                    onChange={(e) =>
-                                                        updateRow(
-                                                            index,
-                                                            'rate',
-                                                            parseFloat(
-                                                                e.target.value,
-                                                            ),
-                                                        )
-                                                    }
-                                                    className="w-full rounded border p-1"
-                                                    step="0.01"
-                                                />
+                                                <div className="relative w-full">
+                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">{rate.currency_symbol}</span>
+                                                    <Input
+                                                        type="number"
+                                                        value={rate.rate}
+                                                        onChange={(e) =>
+                                                            updateRow(
+                                                                index,
+                                                                'rate',
+                                                                parseFloat(
+                                                                    e.target.value,
+                                                                ),
+                                                            )
+                                                        }
+                                                        className="w-full rounded border p-1 pl-6"
+                                                        step="0.01"
+                                                    />
+                                                </div>
                                             </div>
                                         </TableCell>
                                         <TableCell className="w-full sm:w-auto">

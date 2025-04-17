@@ -291,21 +291,24 @@ export default function CustomerRates({
                                                 <span className="mb-1 text-xs text-muted-foreground sm:hidden">
                                                     Rate
                                                 </span>
-                                                <Input
-                                                    type="number"
-                                                    value={rate.rate}
-                                                    onChange={(e) =>
-                                                        updateRow(
-                                                            index,
-                                                            'rate',
-                                                            parseFloat(
-                                                                e.target.value,
-                                                            ),
-                                                        )
-                                                    }
-                                                    className="w-full rounded border p-1"
-                                                    step="0.01"
-                                                />
+                                                <div className="relative w-full">
+                                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">{rate.currency_symbol || '$'}</span>
+                                                    <Input
+                                                        type="number"
+                                                        value={rate.rate}
+                                                        onChange={(e) =>
+                                                            updateRow(
+                                                                index,
+                                                                'rate',
+                                                                parseFloat(
+                                                                    e.target.value,
+                                                                ),
+                                                            )
+                                                        }
+                                                        className="w-full rounded border p-1 pl-6"
+                                                        step="0.01"
+                                                    />
+                                                </div>
                                             </div>
                                         </TableCell>
                                         <TableCell className="w-full sm:w-auto">
