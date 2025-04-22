@@ -5,6 +5,7 @@ namespace App\Models\Shipments;
 use App\Http\Resources\ShipmentResource;
 use App\Models\Carriers\Carrier;
 use App\Models\Carriers\CarrierBounce;
+use App\Models\CheckCalls\CheckCall;
 use App\Models\Contact;
 use App\Models\Customers\Customer;
 use App\States\Shipments\ShipmentState;
@@ -140,6 +141,14 @@ class Shipment extends Model implements HasStatesContract
     public function accessorials(): HasMany
     {
         return $this->hasMany(Accessorial::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<CheckCall, $this>
+     */
+    public function check_calls(): HasMany
+    {
+        return $this->hasMany(CheckCall::class);
     }
 
     public function getNextStopAttribute(): ?ShipmentStop

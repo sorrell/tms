@@ -9,6 +9,7 @@ import { Head } from '@inertiajs/react';
 import { Folder, MapPin } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
 import CustomerDetails from './Partials/CustomerDetails';
+import ShipmentCheckCalls from './Partials/ShipmentCheckCalls';
 import ShipmentFinancialDetails from './Partials/ShipmentFinancialDetails';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
@@ -64,6 +65,13 @@ export default function Show({
                         <ShipmentStopsList
                             shipmentId={shipment.id}
                             stops={stops}
+                        />
+
+                        {/* Check Calls */}
+                        <ShipmentCheckCalls
+                            shipment={shipment}
+                            stops={stops}
+                            carrierContacts={shipment.carrier?.contacts || []}
                         />
 
                         {/* Financials */}

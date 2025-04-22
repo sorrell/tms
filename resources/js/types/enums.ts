@@ -9,6 +9,7 @@ export enum StopType {
 }
 
 export enum Notable {
+    CheckCall = 'check_call',
     Shipment = 'shipment',
     Customer = 'customer',
     Carrier = 'carrier',

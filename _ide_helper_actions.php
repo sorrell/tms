@@ -130,6 +130,36 @@ class FmcsaNameLookup
 class UpdateCarrierGeneral
 {
 }
+namespace App\Actions\CheckCalls;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static dispatchSync(int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static dispatchNow(int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static dispatchAfterResponse(int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \App\Models\CheckCalls\CheckCall run(int $shipmentId, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ */
+class CreateCheckCall
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static dispatchSync(\App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static dispatchNow(\App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static dispatchAfterResponse(\App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ * @method static \App\Models\CheckCalls\CheckCall run(\App\Models\CheckCalls\CheckCall $checkCall, ?int $stopId = null, ?string $eta = null, ?float $reportedTrailerTemp = null, ?string $contactName = null, ?string $contactMethod = null, ?string $contactMethodDetail = null, ?string $arrivedAt = null, ?string $leftAt = null, ?string $loadedUnloadedAt = null)
+ */
+class UpdateCheckCall
+{
+}
 namespace App\Actions\Contacts;
 
 /**

@@ -84,6 +84,8 @@ export interface Carrier {
 
     documents?: Document[];
     document_folders?: DocumentFolder[];
+
+    contacts?: Contact[];
 }
 
 export interface CarrierSaferReport {
@@ -345,4 +347,27 @@ export interface AccessorialType {
     id: number;
     organization_id: number;
     name: string;
+}
+
+export interface CheckCall {
+    id: number;
+    organization_id: number;
+    carrier_id: number;
+    shipment_id: number;
+    stop_id: number | null;
+    created_by: number | null;
+    eta: string | null;
+    reported_trailer_temp: number | null;
+    contact_name: string | null;
+    contact_method: string | null;
+    contact_method_detail: string | null;
+    arrived_at: string | null;
+    left_at: string | null;
+    loaded_unloaded_at: string | null;
+    created_at: string;
+    updated_at: string;
+    stop?: ShipmentStop;
+    carrier?: Carrier;
+    shipment?: Shipment;
+    creator?: User;
 }
