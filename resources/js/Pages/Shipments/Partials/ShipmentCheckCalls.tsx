@@ -8,7 +8,7 @@ import { CheckCall, Contact, Shipment, ShipmentStop } from '@/types';
 import { router } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { ClipboardCheck, Trash2 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type ShipmentCheckCallsProps = {
     shipment: Shipment;
@@ -25,6 +25,9 @@ export default function ShipmentCheckCalls({
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();
     const { subscribe } = useEventBus();
+    const subscribeRef = useRef(subscribe);
+    const unsubscribeRef = useRef<(() => void) | null>(null);
+
     const refreshCheckCalls = useCallback(() => {
         fetch(route('shipments.check-calls.index', { shipment: shipment.id }))
             .then((response) => response.json())
@@ -37,10 +40,21 @@ export default function ShipmentCheckCalls({
     useEffect(() => {
         refreshCheckCalls();
 
-        subscribe('check-call-added-' + shipment.id, () => {
-            refreshCheckCalls();
-        });
-    }, [shipment.id, refreshCheckCalls, subscribe]);
+        // Subscribe to the new event
+        unsubscribeRef.current = subscribeRef.current(
+            'check-call-added-' + shipment.id,
+            () => {
+                refreshCheckCalls();
+            },
+        );
+
+        // Cleanup on unmount
+        return () => {
+            if (unsubscribeRef.current) {
+                unsubscribeRef.current();
+            }
+        };
+    }, [shipment.id, refreshCheckCalls]);
 
     const handleDelete = (checkCallId: number) => {
         router.delete(
