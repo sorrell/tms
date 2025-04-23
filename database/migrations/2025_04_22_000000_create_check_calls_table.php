@@ -23,9 +23,8 @@ return new class extends Migration
             $table->string('contact_name')->nullable();
             $table->string('contact_method')->nullable();
             $table->string('contact_method_detail')->nullable();
-            $table->dateTimeTz('arrived_at')->nullable();
-            $table->dateTimeTz('left_at')->nullable();
-            $table->dateTimeTz('loaded_unloaded_at')->nullable();
+            $table->boolean('is_late')->default(false);
+            $table->json('details')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
         });

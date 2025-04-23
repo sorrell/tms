@@ -23,21 +23,18 @@ class CheckCall extends Model
         'shipment_id',
         'stop_id',
         'created_by',
+        'is_late',
         'eta',
         'reported_trailer_temp',
         'contact_name',
         'contact_method',
         'contact_method_detail',
-        'arrived_at',
-        'left_at',
-        'loaded_unloaded_at',
+        'details',
     ];
 
     protected $casts = [
         'eta' => 'datetime',
-        'arrived_at' => 'datetime',
-        'left_at' => 'datetime',
-        'loaded_unloaded_at' => 'datetime',
+        'details' => 'array',
     ];
     
     /**

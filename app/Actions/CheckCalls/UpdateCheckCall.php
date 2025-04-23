@@ -22,9 +22,8 @@ class UpdateCheckCall
         ?string $contactName = null,
         ?string $contactMethod = null,
         ?string $contactMethodDetail = null,
-        ?string $arrivedAt = null,
-        ?string $leftAt = null,
-        ?string $loadedUnloadedAt = null,
+        ?bool $isLate = null,
+        ?array $details = null,
     ): CheckCall
     {
         $data = [
@@ -34,9 +33,8 @@ class UpdateCheckCall
             'contact_name' => $contactName,
             'contact_method' => $contactMethod,
             'contact_method_detail' => $contactMethodDetail,
-            'arrived_at' => $arrivedAt,
-            'left_at' => $leftAt,
-            'loaded_unloaded_at' => $loadedUnloadedAt,
+            'is_late' => $isLate,
+            'details' => $details,
         ];
         
         // Remove null values to avoid overwriting existing data
@@ -44,29 +42,6 @@ class UpdateCheckCall
         
         $checkCall->update($data);
         
-        // Update the stop with the check call information if a stop is associated
-        if ($stopId) {
-            $stop = ShipmentStop::find($stopId);
-            if ($stop) {
-                $updateData = [];
-                
-                if ($arrivedAt) {
-                    $updateData['arrived_at'] = $arrivedAt;
-                }
-                
-                if ($leftAt) {
-                    $updateData['left_at'] = $leftAt;
-                }
-                
-                if ($loadedUnloadedAt) {
-                    $updateData['loaded_unloaded_at'] = $loadedUnloadedAt;
-                }
-                
-                if (!empty($updateData)) {
-                    $stop->update($updateData);
-                }
-            }
-        }
         
         return $checkCall;
     }
@@ -83,9 +58,8 @@ class UpdateCheckCall
             $validatedData['contact_name'] ?? null,
             $validatedData['contact_method'] ?? null,
             $validatedData['contact_method_detail'] ?? null,
-            $validatedData['arrived_at'] ?? null,
-            $validatedData['left_at'] ?? null,
-            $validatedData['loaded_unloaded_at'] ?? null,
+            $validatedData['is_late'] ?? null,
+            $validatedData['details'] ?? null,
         );
     }
 
@@ -93,14 +67,13 @@ class UpdateCheckCall
     {
         return [
             'stop_id' => ['nullable', 'exists:shipment_stops,id'],
-            'eta' => ['nullable', 'date'],
+            'eta' => ['nullable', 'datetime'],
             'reported_trailer_temp' => ['nullable', 'numeric'],
             'contact_name' => ['nullable', 'string', 'max:255'],
             'contact_method' => ['nullable', 'string', 'max:255'],
             'contact_method_detail' => ['nullable', 'string', 'max:255'],
-            'arrived_at' => ['nullable', 'date'],
-            'left_at' => ['nullable', 'date'],
-            'loaded_unloaded_at' => ['nullable', 'date'],
+            'is_late' => ['nullable', 'boolean'],
+            'details' => ['nullable', 'array'],
         ];
     }
 
