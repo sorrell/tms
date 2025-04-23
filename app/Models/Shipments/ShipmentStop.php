@@ -7,12 +7,13 @@ use App\Models\Facility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\HasOrganization;
+use App\Traits\HasAliases;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShipmentStop extends Model
 {
-    use HasFactory, HasOrganization;
+    use HasFactory, HasOrganization, HasAliases;
 
     protected $fillable = [
         'organization_id',
@@ -35,6 +36,12 @@ class ShipmentStop extends Model
         'stop_type' => StopType::class,
     ];
 
+    public $aliasName = 'stop';
+    public $aliasProperties = [
+        'number' => 'stop_number',
+        'type' => 'stop_type',
+        
+    ];
     /**
      * Boot the model.
      */

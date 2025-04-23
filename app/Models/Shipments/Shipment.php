@@ -9,6 +9,7 @@ use App\Models\CheckCalls\CheckCall;
 use App\Models\Contact;
 use App\Models\Customers\Customer;
 use App\States\Shipments\ShipmentState;
+use App\Traits\HasAliases;
 use App\Traits\HasDocuments;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
@@ -24,7 +25,7 @@ use Spatie\ModelStates\HasStatesContract;
 
 class Shipment extends Model implements HasStatesContract
 {
-    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates, HasDocuments;
+    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates, HasDocuments, HasAliases;
 
     protected $fillable = [
         'organization_id',
@@ -47,6 +48,13 @@ class Shipment extends Model implements HasStatesContract
     ];
 
     protected $appends = ['selectable_label'];
+
+    public $aliasName = 'shipment';
+    public $aliasProperties = [
+        'number' => 'shipment_number',
+        'lane' => 'function:lane',
+        'driver' => 'driver',
+    ];
 
     public function getSelectableLabelAttribute(): string
     {
