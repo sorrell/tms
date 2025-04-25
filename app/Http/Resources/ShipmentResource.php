@@ -40,7 +40,8 @@ class ShipmentResource extends JsonResource
             'driver' => $this->whenLoaded('driver', ContactResource::make($this->driver)),
             'stops' => $this->whenLoaded('stops', fn() => ShipmentStopResource::collection($this->stops)),
             'lane' => $this->whenLoaded('stops', fn() => $this->lane()),
-            'next_stop' => $this->whenLoaded('stops', fn() => ShipmentStopResource::make($this->nextStop)),
+            'next_stop' => $this->whenLoaded('stops', fn() => ShipmentStopResource::make($this->nextStop->load('facility.location'))),
+            'current_stop' => $this->whenLoaded('stops', fn() => ShipmentStopResource::make($this->currentStop->load('facility.location'))),
             'state_label' => $this->state->label(),
             'state' => $this->state,
             

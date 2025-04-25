@@ -37,6 +37,7 @@ export interface Location {
     selectable_label: string;
     latitude?: number;
     longitude?: number;
+    timezone?: TimezoneData;
 }
 
 export interface Contact {
@@ -177,6 +178,7 @@ export interface Shipment {
     trailer_temperature_maximum?: number;
     lane?: string;
     next_stop?: ShipmentStop;
+    current_stop?: ShipmentStop;
     trailer_type?: TrailerType;
     trailer_size?: TrailerSize;
     state_label: string;
@@ -369,4 +371,12 @@ export interface CheckCall {
     carrier?: Carrier;
     shipment?: Shipment;
     creator?: User;
+}
+
+
+// Typescript interface for timezone data
+export interface TimezoneData {
+    identifier: string;
+    dst_tz: string;
+    std_tz: string;
 }

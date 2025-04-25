@@ -128,7 +128,7 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
             </div>
             <div className="flex flex-wrap gap-2">
                 <NewCheckCallButton
-                    shipmentId={shipment.id}
+                    shipment={shipment}
                     carrierId={shipment.carrier?.id}
                     stops={shipment.stops}
                     carrierContacts={shipment.carrier?.contacts || []}

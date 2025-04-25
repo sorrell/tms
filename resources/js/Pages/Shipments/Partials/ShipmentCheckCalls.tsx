@@ -97,10 +97,9 @@ export default function ShipmentCheckCalls({
                     Check Calls
                 </CardTitle>
                 <NewCheckCallButton
-                    shipmentId={shipment.id}
+                    shipment={shipment}
                     carrierId={shipment.carrier?.id}
-                    stopId={currentStop?.id ?? undefined}
-                    stops={stops}
+                    stops={shipment.stops}
                     carrierContacts={carrierContacts}
                 />
             </CardHeader>

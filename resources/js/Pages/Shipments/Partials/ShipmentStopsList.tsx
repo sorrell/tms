@@ -17,8 +17,9 @@ import {
 } from '@/Components/ui/select';
 import { Textarea } from '@/Components/ui/textarea';
 import { useToast } from '@/hooks/UseToast';
-import { ShipmentStop } from '@/types';
+import { ShipmentStop, TimezoneData } from '@/types';
 import { StopType } from '@/types/enums';
+import { fetchTimezones, getTimezoneByZipcode, convertDateForTimezone } from '@/lib/timezone';
 import { useForm } from '@inertiajs/react';
 import {
     ArrowDown,
@@ -45,32 +46,18 @@ export default function ShipmentStopsList({
 }) {
     const [editMode, setEditMode] = useState(false);
     const { toast } = useToast();
-    const [timezones, setTimezones] = useState<
-        Record<string, { identifier: string; dst_tz: string; std_tz: string }>
-    >({});
+    const [timezones, setTimezones] = useState<Record<string, TimezoneData>>({});
 
     useEffect(() => {
         const zipcodes = stops
             .map((stop) => stop.facility?.location?.address_zipcode ?? '')
             .filter(Boolean);
 
-        // if any of the zipcodes are new, fetch the timezones
-        const newZipcodes = zipcodes.filter(
-            (zipcode) => !(zipcode in timezones),
-        );
-        if (newZipcodes.length > 0) {
-            fetch(route('timezones.zipcode', { zipcodes: newZipcodes }), {
-                method: 'GET',
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setTimezones((prev) => ({
-                        ...prev,
-                        ...data,
-                    }));
-                });
-        }
-    }, [stops, setTimezones, timezones]);
+        // Use the fetchTimezones helper function
+        fetchTimezones(zipcodes, timezones).then((data) => {
+            setTimezones(data);
+        });
+    }, [stops, timezones]);
 
     const updateStops = () => {
         patch(
@@ -122,28 +109,19 @@ export default function ShipmentStopsList({
         return mappedStops as ShipmentStop[];
     };
 
-    const convertForTimezone = (stop: ShipmentStop, date: string) => {
-        if (date.substring(date.length - 1) !== 'Z') {
-            date = date + 'Z';
-        }
-        const dateObj = new Date(date);
-        const stopTimezone = getTimezone(stop);
-        if (stopTimezone) {
-            return dateObj.toLocaleString('en-US', { timeZone: stopTimezone });
-        }
-        return dateObj.toLocaleString('en-US');
-    };
-
+    // Replace with helper function
     const getTimezone = (stop: ShipmentStop): string | undefined => {
         if (!stop.facility?.location?.address_zipcode) {
             return;
         }
+        
+        return getTimezoneByZipcode(stop.facility.location.address_zipcode, timezones);
+    };
 
-        const stopTimezone =
-            timezones[stop.facility?.location?.address_zipcode]?.identifier;
-        if (stopTimezone) {
-            return stopTimezone;
-        }
+    // Replace with helper function
+    const convertForTimezone = (stop: ShipmentStop, date: string) => {
+        const timezone = getTimezone(stop);
+        return convertDateForTimezone(date, timezone);
     };
 
     const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>(

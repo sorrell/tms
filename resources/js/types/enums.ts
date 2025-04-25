@@ -40,3 +40,12 @@ export enum Documentable {
     Carrier = 'carrier',
     Facility = 'facility',
 }
+
+
+export enum ContactMethodType {
+    Phone = 'phone',
+    Email = 'email',
+    Text = 'text',
+    Fax = 'fax',
+    Web = 'web',
+}
