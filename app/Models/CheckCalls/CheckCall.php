@@ -2,7 +2,9 @@
 
 namespace App\Models\CheckCalls;
 
+use App\Enums\ContactMethodType;
 use App\Models\Carriers\Carrier;
+use App\Models\Note;
 use App\Models\Shipments\Shipment;
 use App\Models\Shipments\ShipmentStop;
 use App\Models\User;
@@ -22,19 +24,25 @@ class CheckCall extends Model
         'carrier_id',
         'shipment_id',
         'stop_id',
-        'created_by',
-        'is_late',
-        'eta',
-        'reported_trailer_temp',
+        'user_id',
         'contact_name',
         'contact_method',
-        'contact_method_detail',
-        'details',
+        'contact_method_value',
+        'is_late',
+        'arrived_at',
+        'left_at',
+        'eta',
+        'is_truck_empty',
+        'reported_trailer_temp',
+        'loaded_unloaded_at',
+        'note_id',
     ];
 
     protected $casts = [
-        'eta' => 'datetime',
         'details' => 'array',
+        'contact_method' => ContactMethodType::class,
+        'is_late' => 'boolean',
+        'is_truck_empty' => 'boolean',
     ];
     
     /**
@@ -45,7 +53,7 @@ class CheckCall extends Model
         parent::boot();
         
         static::creating(function ($model) {
-            $model->created_by = $model->created_by ?? Auth::id();
+            $model->user_id = $model->user_id ?? Auth::id();
         });
 
         static::addGlobalScope('order', function ($query) {
@@ -82,6 +90,14 @@ class CheckCall extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Note, $this>
+     */
+    public function note(): BelongsTo
+    {
+        return $this->belongsTo(Note::class);
     }
 } 

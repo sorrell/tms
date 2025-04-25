@@ -2,6 +2,7 @@
 
 namespace App\Actions\CheckCalls;
 
+use App\Enums\ContactMethodType;
 use App\Enums\Permission;
 use App\Models\CheckCalls\CheckCall;
 use App\Models\Shipments\Shipment;
@@ -17,14 +18,18 @@ class CreateCheckCall
 
     public function handle(
         int $shipmentId,
-        ?int $stopId = null,
-        ?string $eta = null,
-        ?float $reportedTrailerTemp = null,
-        ?string $contactName = null,
-        ?string $contactMethod = null,
-        ?string $contactMethodDetail = null,
-        ?bool $isLate = null,
-        ?array $details = null,
+        ?int $stopId,
+        ?string $eta,
+        ?int $reportedTrailerTemp,
+        string $contactName,
+        ContactMethodType $contactMethod,
+        string $contactMethodDetail,
+        ?bool $isLate,
+        ?bool $isTruckEmpty,
+        ?string $note,
+        ?string $arrivedAt,
+        ?string $leftAt,
+        ?string $loadedUnloadedAt,
     ): CheckCall
     {
         $shipment = Shipment::findOrFail($shipmentId);
@@ -33,6 +38,14 @@ class CreateCheckCall
         // Use current stop if none provided
         if (!$stopId && $shipment->getCurrentStopAttribute()) {
             $stopId = $shipment->getCurrentStopAttribute()->id;
+        }
+
+        $noteId = null;
+        if ($note) {
+            $note = $shipment->notes()->create([
+                'note' => $note,
+            ]);
+            $noteId = $note->id;
         }
         
         $checkCall = CheckCall::create([
@@ -44,11 +57,16 @@ class CreateCheckCall
             'reported_trailer_temp' => $reportedTrailerTemp,
             'contact_name' => $contactName,
             'contact_method' => $contactMethod,
-            'contact_method_detail' => $contactMethodDetail,
+            'contact_method_value' => $contactMethodDetail,
             'is_late' => $isLate,
-            'details' => $details,
+            'is_truck_empty' => $isTruckEmpty,
+            'note_id' => $noteId,
+            'arrived_at' => $arrivedAt,
+            'left_at' => $leftAt,
+            'loaded_unloaded_at' => $loadedUnloadedAt,
+            'user_id' => Auth::id(),
         ]);
-        
+
         // TODO - update fields from details
         
         return $checkCall;
@@ -59,15 +77,19 @@ class CreateCheckCall
         $validatedData = $request->validated();
         
         return $this->handle(
-            $shipment->id,
-            $validatedData['stop_id'] ?? null,
-            $validatedData['eta'] ?? null,
-            $validatedData['reported_trailer_temp'] ?? null,
-            $validatedData['contact_name'] ?? null,
-            $validatedData['contact_method'] ?? null,
-            $validatedData['contact_method_detail'] ?? null,
-            $validatedData['is_late'] ?? null,
-            $validatedData['details'] ?? null,
+            shipmentId: $shipment->id,
+            stopId: $validatedData['stop_id'] ?? null,
+            eta: $validatedData['eta'] ?? null,
+            reportedTrailerTemp: $validatedData['reported_trailer_temp'] ?? null,
+            contactName: $validatedData['contact_name'] ?? null,
+            contactMethod: $validatedData['contact_method'] ?? null,
+            contactMethodDetail: $validatedData['contact_method_detail'] ?? null,
+            isLate: $validatedData['is_late'] ?? null,
+            isTruckEmpty: $validatedData['is_truck_empty'] ?? null,
+            note: $validatedData['note'] ?? null,
+            arrivedAt: $validatedData['arrived_at'] ?? null,
+            leftAt: $validatedData['left_at'] ?? null,
+            loadedUnloadedAt: $validatedData['loaded_unloaded_at'] ?? null,
         );
     }
 
@@ -81,7 +103,11 @@ class CreateCheckCall
             'contact_method' => ['nullable', 'string', 'max:255'],
             'contact_method_detail' => ['nullable', 'string', 'max:255'],
             'is_late' => ['nullable', 'boolean'],
-            'details' => ['nullable', 'array'],
+            'is_truck_empty' => ['nullable', 'boolean'],
+            'note' => ['nullable', 'string', 'max:255'],
+            'arrived_at' => ['nullable', 'datetime'],
+            'left_at' => ['nullable', 'datetime'],
+            'loaded_unloaded_at' => ['nullable', 'datetime'],
         ];
     }
 

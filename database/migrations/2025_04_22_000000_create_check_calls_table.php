@@ -11,20 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('check_calls', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('carrier_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('shipment_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('stop_id')->nullable()->constrained('shipment_stops')->cascadeOnDelete();
-            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('organization_id');
+            $table->foreignId('carrier_id')->nullable();
+            $table->foreignId('shipment_id');
+            $table->foreignId('stop_id');
+            $table->foreignId('user_id');
+            $table->string('contact_name');
+            $table->string('contact_method');
+            $table->string('contact_method_value');
+            $table->boolean('is_late')->nullable();
+            $table->dateTimeTz('arrived_at')->nullable();
+            $table->dateTimeTz('left_at')->nullable();
             $table->dateTimeTz('eta')->nullable();
-            $table->float('reported_trailer_temp')->nullable();
-            $table->string('contact_name')->nullable();
-            $table->string('contact_method')->nullable();
-            $table->string('contact_method_detail')->nullable();
-            $table->boolean('is_late')->default(false);
-            $table->json('details')->nullable();
+            $table->dateTimeTz('is_truck_empty')->nullable();
+            $table->dateTimeTz('reported_trailer_temp')->nullable();
+            $table->dateTimeTz('loaded_unloaded_at')->nullable();
+            $table->foreignId('note_id')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
         });
