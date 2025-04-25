@@ -17,11 +17,10 @@ return new class extends Migration
             $table->foreignId('organization_id');
             $table->foreignId('carrier_id')->nullable();
             $table->foreignId('shipment_id');
-            $table->foreignId('stop_id');
             $table->foreignId('user_id');
             $table->string('contact_name');
             $table->string('contact_method');
-            $table->string('contact_method_value');
+            $table->string('contact_method_detail');
             $table->boolean('is_late')->nullable();
             $table->dateTimeTz('arrived_at')->nullable();
             $table->dateTimeTz('left_at')->nullable();

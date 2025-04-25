@@ -23,11 +23,10 @@ class CheckCall extends Model
         'organization_id',
         'carrier_id',
         'shipment_id',
-        'stop_id',
         'user_id',
         'contact_name',
         'contact_method',
-        'contact_method_value',
+        'contact_method_detail',
         'is_late',
         'arrived_at',
         'left_at',
@@ -67,14 +66,6 @@ class CheckCall extends Model
     public function shipment(): BelongsTo
     {
         return $this->belongsTo(Shipment::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<ShipmentStop, $this>
-     */
-    public function stop(): BelongsTo
-    {
-        return $this->belongsTo(ShipmentStop::class, 'stop_id');
     }
 
     /**

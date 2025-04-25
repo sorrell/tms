@@ -43,9 +43,10 @@ export enum Documentable {
 
 
 export enum ContactMethodType {
-    Phone = 'phone',
+    Phonecall = 'phonecall',
     Email = 'email',
     Text = 'text',
     Fax = 'fax',
     Web = 'web',
+    Other = 'other',
 }

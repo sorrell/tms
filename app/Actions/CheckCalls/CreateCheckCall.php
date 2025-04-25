@@ -18,7 +18,6 @@ class CreateCheckCall
 
     public function handle(
         int $shipmentId,
-        ?int $stopId,
         ?string $eta,
         ?int $reportedTrailerTemp,
         string $contactName,
@@ -30,15 +29,9 @@ class CreateCheckCall
         ?string $arrivedAt,
         ?string $leftAt,
         ?string $loadedUnloadedAt,
-    ): CheckCall
-    {
+    ): CheckCall {
         $shipment = Shipment::findOrFail($shipmentId);
         $carrierId = $shipment->carrier_id;
-        
-        // Use current stop if none provided
-        if (!$stopId && $shipment->getCurrentStopAttribute()) {
-            $stopId = $shipment->getCurrentStopAttribute()->id;
-        }
 
         $noteId = null;
         if ($note) {
@@ -47,17 +40,16 @@ class CreateCheckCall
             ]);
             $noteId = $note->id;
         }
-        
+
         $checkCall = CheckCall::create([
             'organization_id' => Auth::user()->current_organization_id,
             'carrier_id' => $carrierId,
             'shipment_id' => $shipmentId,
-            'stop_id' => $stopId,
             'eta' => $eta,
             'reported_trailer_temp' => $reportedTrailerTemp,
             'contact_name' => $contactName,
             'contact_method' => $contactMethod,
-            'contact_method_value' => $contactMethodDetail,
+            'contact_method_detail' => $contactMethodDetail,
             'is_late' => $isLate,
             'is_truck_empty' => $isTruckEmpty,
             'note_id' => $noteId,
@@ -67,22 +59,22 @@ class CreateCheckCall
             'user_id' => Auth::id(),
         ]);
 
-        // TODO - update fields from details
-        
+        $this->reflectCheckCallDetails($checkCall);
+
+
         return $checkCall;
     }
 
     public function asController(ActionRequest $request, Shipment $shipment): CheckCall
     {
         $validatedData = $request->validated();
-        
+
         return $this->handle(
             shipmentId: $shipment->id,
-            stopId: $validatedData['stop_id'] ?? null,
             eta: $validatedData['eta'] ?? null,
             reportedTrailerTemp: $validatedData['reported_trailer_temp'] ?? null,
             contactName: $validatedData['contact_name'] ?? null,
-            contactMethod: $validatedData['contact_method'] ?? null,
+            contactMethod: ContactMethodType::from($validatedData['contact_method'] ?? null),
             contactMethodDetail: $validatedData['contact_method_detail'] ?? null,
             isLate: $validatedData['is_late'] ?? null,
             isTruckEmpty: $validatedData['is_truck_empty'] ?? null,
@@ -96,8 +88,7 @@ class CreateCheckCall
     public function rules(): array
     {
         return [
-            'stop_id' => ['nullable', 'exists:shipment_stops,id'],
-            'eta' => ['nullable', 'datetime'],
+            'eta' => ['nullable', 'date'],
             'reported_trailer_temp' => ['nullable', 'numeric'],
             'contact_name' => ['nullable', 'string', 'max:255'],
             'contact_method' => ['nullable', 'string', 'max:255'],
@@ -105,9 +96,9 @@ class CreateCheckCall
             'is_late' => ['nullable', 'boolean'],
             'is_truck_empty' => ['nullable', 'boolean'],
             'note' => ['nullable', 'string', 'max:255'],
-            'arrived_at' => ['nullable', 'datetime'],
-            'left_at' => ['nullable', 'datetime'],
-            'loaded_unloaded_at' => ['nullable', 'datetime'],
+            'arrived_at' => ['nullable', 'date'],
+            'left_at' => ['nullable', 'date'],
+            'loaded_unloaded_at' => ['nullable', 'date'],
         ];
     }
 
@@ -128,4 +119,40 @@ class CreateCheckCall
     {
         return redirect()->back()->with('success', 'Check call created successfully');
     }
-} 
+
+
+    private function reflectCheckCallDetails(CheckCall $checkCall)
+    {        
+        // Updates related to next stop
+        $nextStop = $checkCall->shipment->next_stop;
+        $nextStopUpdates = [];
+        // Update arrival time if provided in the check call
+        if ($checkCall->arrived_at) {
+            $nextStopUpdates['arrived_at'] = $checkCall->arrived_at;
+        }
+        if ($checkCall->eta) {
+            $nextStopUpdates['eta'] = $checkCall->eta;
+        }
+
+        if ($nextStopUpdates) {
+            $nextStop->update($nextStopUpdates);
+        }
+
+        // Updates related to current stop
+        $currentStop = $checkCall->shipment->current_stop;
+        $currentStopUpdates = [];
+        // Update departure time if provided in the check call
+        if ($checkCall->left_at) {
+            $currentStopUpdates['left_at'] = $checkCall->left_at;
+        }
+
+        // Update loaded/unloaded time if provided in the check call
+        if ($checkCall->loaded_unloaded_at) {
+            $currentStopUpdates['loaded_unloaded_at'] = $checkCall->loaded_unloaded_at;
+        }
+
+        if ($currentStopUpdates) {
+            $currentStop->update($currentStopUpdates);
+        }
+    }
+}

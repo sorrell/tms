@@ -22,7 +22,6 @@ class CheckCallResource extends JsonResource
             'organization_id' => $this->organization_id,
             'carrier_id' => $this->carrier_id,
             'shipment_id' => $this->shipment_id,
-            'stop_id' => $this->stop_id,
             'created_by' => $this->created_by,
             'is_late' => $this->is_late,
             'eta' => $this->eta,
@@ -35,7 +34,6 @@ class CheckCallResource extends JsonResource
             'updated_at' => $this->updated_at,
             'carrier' => $this->whenLoaded('carrier'),
             'shipment' => $this->whenLoaded('shipment'),
-            'stop' => $this->whenLoaded('stop'),
             'creator' => $this->whenLoaded('creator'),
         ];
     }

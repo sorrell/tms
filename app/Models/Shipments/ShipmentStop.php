@@ -53,6 +53,27 @@ class ShipmentStop extends Model
         static::addGlobalScope('order', function ($query) {
             $query->orderBy('stop_number', 'asc');
         });
+
+        // When a stop is updated, fire the ShipmentStopsUpdated event
+        static::updated(function ($stop) {
+            if ($stop->shipment) {
+                event(new \App\Events\Shipments\ShipmentStopsUpdated($stop->shipment));
+            }
+        });
+        
+        // Also fire the event when a stop is created
+        static::created(function ($stop) {
+            if ($stop->shipment) {
+                event(new \App\Events\Shipments\ShipmentStopsUpdated($stop->shipment));
+            }
+        });
+        
+        // And when a stop is deleted
+        static::deleted(function ($stop) {
+            if ($stop->shipment) {
+                event(new \App\Events\Shipments\ShipmentStopsUpdated($stop->shipment));
+            }
+        });
     }
 
     /**
