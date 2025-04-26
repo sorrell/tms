@@ -2,7 +2,7 @@
 
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/loadpartner/tms/tree/main)
 
-Open source and extensible freight brokerage Transportation Management System
+The Open Source Transportation Management System for Freight Brokers
 
 #### 🌐 [tms.loadpartner.io](https://tms.loadpartner.io)
 
