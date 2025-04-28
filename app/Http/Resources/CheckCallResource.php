@@ -34,13 +34,16 @@ class CheckCallResource extends JsonResource
             'reported_trailer_temp' => $this->reported_trailer_temp,
             'loaded_unloaded_at' => $this->loaded_unloaded_at,
             'note_id' => $this->note_id,
-            'details' => $this->details,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'carrier' => $this->whenLoaded('carrier'),
             'shipment' => $this->whenLoaded('shipment'),
-            'creator' => $this->whenLoaded('creator'),
-            'note' => $this->whenLoaded('note'),
+            'creator' => $this->whenLoaded('creator', function () {
+                return UserResource::make($this->creator);
+            }),
+            'note' => $this->whenLoaded('note', function () {
+                return NoteResource::make($this->note);
+            }),
         ];
     }
 } 

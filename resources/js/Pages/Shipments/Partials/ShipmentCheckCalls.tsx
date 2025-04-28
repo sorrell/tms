@@ -26,6 +26,7 @@ export default function ShipmentCheckCalls({
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [expandedNotes, setExpandedNotes] = useState<number[]>([]);
     const itemsPerPage = 5;
     const { toast } = useToast();
     const { subscribe } = useEventBus();
@@ -108,6 +109,14 @@ export default function ShipmentCheckCalls({
         }
     };
 
+    const toggleNoteExpand = (checkCallId: number) => {
+        setExpandedNotes(prev => 
+            prev.includes(checkCallId) 
+                ? prev.filter(id => id !== checkCallId) 
+                : [...prev, checkCallId]
+        );
+    };
+
     // Find the current stop from the stops array
     const currentStop = stops.find((s) => s.arrived_at && !s.left_at);
 
@@ -141,7 +150,7 @@ export default function ShipmentCheckCalls({
                             {paginatedCheckCalls.map((checkCall) => (
                                 <div
                                     key={checkCall.id}
-                                    className="rounded-lg border p-3"
+                                    className="border-t p-2"
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="font-medium">
@@ -155,7 +164,10 @@ export default function ShipmentCheckCalls({
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="text-xs text-gray-500">
-                                                {formatDateTime(checkCall.created_at)}
+                                                <div>{formatDateTime(checkCall.created_at)}</div>
+                                                {checkCall.creator && 
+                                                    <div className="">by {checkCall.creator.name}</div>
+                                                }
                                             </div>
                                             <ConfirmButton
                                                 variant="ghost"
@@ -169,7 +181,7 @@ export default function ShipmentCheckCalls({
                                         </div>
                                     </div>
 
-                                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                                    <div className="mt-2 flex flex-col gap-x-4 gap-y-1 text-sm">
                                         {checkCall.eta && (
                                             <div className="flex items-center gap-1">
                                                 <span className="font-medium">ETA:</span>
@@ -181,6 +193,18 @@ export default function ShipmentCheckCalls({
                                             <div className="flex items-center gap-1">
                                                 <span className="font-medium">Temp:</span>
                                                 {checkCall.reported_trailer_temp}°
+                                            </div>
+                                        )}
+
+                                        {checkCall.is_late && (
+                                            <div className="flex items-center gap-1 text-destructive">
+                                                <span className="font-medium">Truck is late</span>
+                                            </div>
+                                        )}
+
+                                        {checkCall.is_truck_empty && (
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">Truck is empty</span>
                                             </div>
                                         )}
 
@@ -205,6 +229,40 @@ export default function ShipmentCheckCalls({
                                             </div>
                                         )}
                                     </div>
+
+                                    {checkCall.note && checkCall.note.note && (
+                                        <div className="">
+                                            <div className="text-sm text-gray-600 mt-2">
+                                                {expandedNotes.includes(checkCall.id) ? (
+                                                    <>
+                                                        {checkCall.note.note}
+                                                        <Button 
+                                                            variant="link" 
+                                                            className="p-0 h-auto text-xs text-primary ml-1"
+                                                            onClick={() => toggleNoteExpand(checkCall.id)}
+                                                        >
+                                                            Show less
+                                                        </Button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {checkCall.note.note.length > 100 
+                                                            ? `${checkCall.note.note.substring(0, 100)}... `
+                                                            : checkCall.note.note}
+                                                        {checkCall.note.note.length > 100 && (
+                                                            <Button 
+                                                                variant="link" 
+                                                                className="p-0 h-auto text-xs text-primary"
+                                                                onClick={() => toggleNoteExpand(checkCall.id)}
+                                                            >
+                                                                Show more
+                                                            </Button>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

@@ -18,7 +18,11 @@ class CheckCallController extends Controller
     public function index(Shipment $shipment)
     {   
         Gate::authorize('view', $shipment);
-        return CheckCallResource::collection($shipment->check_calls);
+        return CheckCallResource::collection(
+            $shipment->check_calls
+                ->sortByDesc('created_at')
+                ->load('note', 'creator')
+        );
     }
 
 
