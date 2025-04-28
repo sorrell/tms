@@ -21,8 +21,8 @@ class CreateCheckCall
         ?string $eta,
         ?int $reportedTrailerTemp,
         string $contactName,
-        ContactMethodType $contactMethod,
-        string $contactMethodDetail,
+        ?ContactMethodType $contactMethod,
+        ?string $contactMethodDetail,
         ?bool $isLate,
         ?bool $isTruckEmpty,
         ?string $note,
@@ -69,12 +69,13 @@ class CreateCheckCall
     {
         $validatedData = $request->validated();
 
+        $contactMethod = $validatedData['contact_method'] ? ContactMethodType::from($validatedData['contact_method']) : null;
         return $this->handle(
             shipmentId: $shipment->id,
             eta: $validatedData['eta'] ?? null,
             reportedTrailerTemp: $validatedData['reported_trailer_temp'] ?? null,
             contactName: $validatedData['contact_name'] ?? null,
-            contactMethod: ContactMethodType::from($validatedData['contact_method'] ?? null),
+            contactMethod: $contactMethod,
             contactMethodDetail: $validatedData['contact_method_detail'] ?? null,
             isLate: $validatedData['is_late'] ?? null,
             isTruckEmpty: $validatedData['is_truck_empty'] ?? null,

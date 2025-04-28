@@ -26,6 +26,7 @@ import { Clipboard } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
 import { DateTimePicker } from '@/Components/DatetimePicker';
 import { convertDateForTimezone } from '@/lib/timezone';
+import { Textarea } from '../ui/textarea';
 
 type NewCheckCallButtonProps = {
     shipment: Shipment;
@@ -318,7 +319,7 @@ export default function NewCheckCallButton({
 
                         <div className="space-y-2">
                             <Label htmlFor="contact_method_detail">
-                                Contact Detail *
+                                Contact Detail
                             </Label>
                             <Input
                                 id="contact_method_detail"
@@ -421,6 +422,28 @@ export default function NewCheckCallButton({
                         </div>
                     )}
 
+                   
+
+                    <div className="space-y-2">
+                        <Label htmlFor="note">
+                            Note
+                        </Label>
+                        <Textarea
+                            id="note"
+                            value={data.note || ''}
+                            onChange={(e) =>
+                                setData('note', e.target.value)
+                            }
+                            placeholder="Add a note"
+                            rows={3}
+                        />
+                        {errors.note && (
+                            <p className="text-sm text-red-500">
+                                {errors.note}
+                            </p>
+                        )}
+                    </div>
+
                     {shouldShowField(shipment, shipment.next_stop, 'is_truck_empty') && (
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2">
@@ -468,25 +491,6 @@ export default function NewCheckCallButton({
                             )}
                         </div>
                     )}
-
-                    <div className="space-y-2">
-                        <Label htmlFor="note">
-                            Note
-                        </Label>
-                        <Input
-                            id="note"
-                            value={data.note || ''}
-                            onChange={(e) =>
-                                setData('note', e.target.value)
-                            }
-                            placeholder="Add a note"
-                        />
-                        {errors.note && (
-                            <p className="text-sm text-red-500">
-                                {errors.note}
-                            </p>
-                        )}
-                    </div>
 
                     <DialogFooter>
                         <Button type="submit" disabled={processing}>

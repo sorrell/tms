@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('shipment_id');
             $table->foreignId('user_id');
             $table->string('contact_name');
-            $table->string('contact_method');
-            $table->string('contact_method_detail');
+            $table->string('contact_method')->nullable();
+            $table->string('contact_method_detail')->nullable();
             $table->boolean('is_late')->nullable();
             $table->dateTimeTz('arrived_at')->nullable();
             $table->dateTimeTz('left_at')->nullable();
