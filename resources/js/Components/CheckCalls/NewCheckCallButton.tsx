@@ -219,7 +219,12 @@ export default function NewCheckCallButton({
 
                     {shouldShowField(shipment, shipment.next_stop, 'eta') && (
                         <div className="space-y-2">
-                            <Label htmlFor="eta">ETA</Label>
+                            <Label htmlFor="eta" className="flex items-center">
+                                <span className="font-bold">ETA</span>
+                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                    ({shipment.next_stop?.facility?.name})
+                                </span>
+                            </Label>
                             <DateTimePicker
                                 clearable={true}
                                 value={data.eta ? new Date(convertForTimezone(shipment.next_stop, data.eta)) : undefined}
@@ -272,6 +277,7 @@ export default function NewCheckCallButton({
                             autoComplete='off'
                             placeholder="Who you spoke with"
                             list="carrier-contacts-list"
+                            required={true}
                         />
                         <datalist id="carrier-contacts-list">
                             {carrierContacts.map((contact) => (
@@ -355,8 +361,11 @@ export default function NewCheckCallButton({
 
                     {shouldShowField(shipment, shipment.next_stop, 'arrived_at') && (
                         <div className="space-y-2">
-                            <Label htmlFor="arrived_at">
-                                Arrived At
+                            <Label htmlFor="arrived_at" className="flex items-center">
+                                <span className="font-bold">Arrived At</span>
+                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                    ({shipment.next_stop?.facility?.name})
+                                </span>
                             </Label>
                             <DateTimePicker
                                 clearable={true}
@@ -378,9 +387,14 @@ export default function NewCheckCallButton({
 
                     {shouldShowField(shipment, shipment.current_stop, 'loaded_unloaded_at') && (
                         <div className="space-y-2">
-                            <Label htmlFor="loaded_unloaded_at">
-                                {shipment.current_stop?.stop_type === 'pickup' ? 'Loaded At' : 'Unloaded At'}
+                            <Label htmlFor="loaded_unloaded_at" className="flex items-center">
+                                <span className="font-bold">
+                                    {shipment.current_stop?.stop_type === 'pickup' ? 'Loaded At' : 'Unloaded At'}
+                                </span>
                                 {isLoadedUnloadedRequired && <span className="text-red-500 ml-1">*</span>}
+                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                    ({shipment.current_stop?.facility?.name})
+                                </span>
                             </Label>
                             <DateTimePicker
                                 clearable={true}
@@ -405,7 +419,12 @@ export default function NewCheckCallButton({
 
                     {shouldShowField(shipment, shipment.current_stop, 'left_at') && (
                         <div className="space-y-2">
-                            <Label htmlFor="left_at">Left At</Label>
+                            <Label htmlFor="left_at" className="flex items-center">
+                                <span className="font-bold">Left At</span>
+                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                    ({shipment.current_stop?.facility?.name})
+                                </span>
+                            </Label>
                             <DateTimePicker
                                 clearable={true}
                                 value={data.left_at ? new Date(convertForTimezone(shipment.current_stop, data.left_at)) : undefined}

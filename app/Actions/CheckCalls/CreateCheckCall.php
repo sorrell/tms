@@ -91,7 +91,7 @@ class CreateCheckCall
         return [
             'eta' => ['nullable', 'date'],
             'reported_trailer_temp' => ['nullable', 'numeric'],
-            'contact_name' => ['nullable', 'string', 'max:255'],
+            'contact_name' => ['required', 'string', 'max:255'],
             'contact_method' => ['nullable', 'string', 'max:255'],
             'contact_method_detail' => ['nullable', 'string', 'max:255'],
             'is_late' => ['nullable', 'boolean'],

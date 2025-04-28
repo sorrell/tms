@@ -19,7 +19,7 @@ import { Textarea } from '@/Components/ui/textarea';
 import { useToast } from '@/hooks/UseToast';
 import { Shipment } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { Check, CheckCircle2, Ghost, Pencil, Truck, X } from 'lucide-react';
+import { Check, CheckCircle2, ExternalLink, Ghost, Pencil, Truck, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
@@ -115,7 +115,21 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                             allowUnselect={false}
                         />
                     ) : (
-                        <p>{shipment.carrier?.name ?? '-'}</p>
+                        <>
+                            {shipment.carrier?.id ? (
+                                <a
+                                    target='external'
+                                    href={route('carriers.show', {
+                                        carrier: shipment.carrier.id,
+                                    })}
+                                >
+                                    {shipment.carrier?.name}
+                                    <ExternalLink className="h-4 w-4 inline ml-1" />
+                                </a>
+                            ) : (
+                                <p className="text-muted-foreground">-</p>
+                            )}
+                        </>
                     )}
                 </div>
                 <div className="flex flex-col gap-2">
