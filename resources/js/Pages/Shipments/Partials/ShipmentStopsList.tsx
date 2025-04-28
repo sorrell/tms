@@ -133,12 +133,19 @@ export default function ShipmentStopsList({
         return convertDateForTimezone(date, timezone);
     };
 
-    const { patch, setData, data, errors, setDefaults, reset } = useForm<{
+    const { patch, setData, data, errors } = useForm<{
         stops: ShipmentStop[];
     }>({
         stops: getSavedStops(),
     });
 
+    const setDataRef = useRef(setData);
+
+    useEffect(() => {
+        setDataRef.current({
+            stops: getSavedStops(),
+        });
+    }, [stops, getSavedStops]);
 
     const formErrors = errors as FormErrors;
 
