@@ -147,20 +147,6 @@ export default function ShipmentCheckCalls({
                                 </div>
 
                                 <div className="mt-4 grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-                                    {checkCall.stop && (
-                                        <div>
-                                            <span className="text-sm text-gray-500">
-                                                Stop:
-                                            </span>{' '}
-                                            <span className="text-sm">
-                                                {checkCall.stop.facility
-                                                    ?.name ||
-                                                    'Unknown facility'}{' '}
-                                                - {checkCall.stop.stop_type}
-                                            </span>
-                                        </div>
-                                    )}
-
                                     {checkCall.eta && (
                                         <div>
                                             <span className="text-sm text-gray-500">

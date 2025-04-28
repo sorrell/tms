@@ -356,21 +356,25 @@ export interface CheckCall {
     organization_id: number;
     carrier_id: number;
     shipment_id: number;
-    stop_id: number | null;
-    created_by: number | null;
+    user_id: number | null;
     is_late: boolean;
+    arrived_at: string | null;
+    left_at: string | null;
     eta: string | null;
+    is_truck_empty: boolean | null;
     reported_trailer_temp: number | null;
+    loaded_unloaded_at: string | null;
     contact_name: string | null;
     contact_method: string | null;
     contact_method_detail: string | null;
-    details: Record<string, unknown>;
+    note_id: number | null;
     created_at: string;
     updated_at: string;
-    stop?: ShipmentStop;
+    deleted_at: string | null;
     carrier?: Carrier;
     shipment?: Shipment;
     creator?: User;
+    note?: Note;
 }
 
 
