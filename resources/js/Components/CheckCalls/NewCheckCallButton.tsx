@@ -22,7 +22,7 @@ import { useEventBus } from '@/hooks/useEventBus';
 import { useToast } from '@/hooks/UseToast';
 import { convertDateForTimezone } from '@/lib/timezone';
 import { Contact, Shipment, ShipmentStop } from '@/types';
-import { ContactMethodType, ShipmentState } from '@/types/enums';
+import { ContactMethodType, Notable, ShipmentState } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
 import { Clipboard } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -121,7 +121,7 @@ export default function NewCheckCallButton({
 
     const [open, setOpen] = useState(false);
     const { toast } = useToast();
-    const { emit } = useEventBus();
+    const { emit, emitNoteChanged } = useEventBus();
     const [isLoadedUnloadedRequired, setIsLoadedUnloadedRequired] =
         useState(false);
 
@@ -188,12 +188,17 @@ export default function NewCheckCallButton({
 
         post(route('shipments.check-calls.store', { shipment: shipmentId }), {
             onSuccess: () => {
+                emit('check-call-added-' + shipmentId);
+                if (data.note) {
+                    emitNoteChanged(Notable.Shipment, shipmentId);
+                }
+                
                 toast({
                     description: 'Check call created successfully',
                 });
                 reset();
                 setOpen(false);
-                emit('check-call-added-' + shipmentId);
+                
             },
             onError: () => {
                 toast({

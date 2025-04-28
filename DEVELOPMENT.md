@@ -54,3 +54,64 @@ The `CreateOrganizationDefaults` action is responsible for adding defaults to an
 If you need to alter the default values of existing organizations, a migration is required.
 If you want to just change defaults moving forward, you can modify the defaults action.
 ** NOTE ** When making changes to defaults, it's recommended to consider both a migration AND an update to the defaults action, so that both existing and new organizations will be correctly updated!
+
+
+## Reflecting updates real-time between inertia and fetch (event bus)
+
+### Inertia forms, reflecting prop updates
+This is for components that are being filled from the inertia connection, data that is being provided at load, not async or self contained loads.
+
+See ShipmentStopsList.tsx
+
+Essentially need to use refs to avoid infinite loops.
+```js
+const { patch, setData, data, errors } = useForm<{
+    stops: ShipmentStop[];
+}>({
+    stops: getSavedStops(),
+});
+
+const setDataRef = useRef(setData);
+
+useEffect(() => {
+    setDataRef.current({
+        stops: getSavedStops(),
+    });
+}, [stops, getSavedStops]);
+```
+
+### Self contained data fetch/xhr components
+Use the event bus to emit and subscribe to events which trigger reloads of the data
+See Notes.tsx
+
+#### Subscribing
+```js
+const { subscribe } = useEventBus();
+const subscribeRef = useRef(subscribe);
+const unsubscribeRef = useRef<(() => void) | null>(null);
+
+useEffect(() => {
+    refreshNotes();
+
+    // Subscribe to the new event
+    unsubscribeRef.current = subscribeRef.current(
+        'note-changed-' + notableType + '-' + notableId,
+        () => {
+            refreshNotes();
+        },
+    );
+
+    // Cleanup on unmount
+    return () => {
+        if (unsubscribeRef.current) {
+            unsubscribeRef.current();
+        }
+    };
+}, [notableType, notableId, refreshNotes]);
+```
+
+#### Emitting
+```js
+const { emit } = useEventBus();
+emit('check-call-added-' + shipmentId);
+```

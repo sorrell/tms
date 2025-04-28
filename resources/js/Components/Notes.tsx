@@ -5,7 +5,7 @@ import { Notable } from '@/types/enums';
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
-import { FormEventHandler, useCallback, useEffect, useState } from 'react';
+import { FormEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import InputError from './InputError';
 import { Button } from './ui/button';
 import { ConfirmButton } from './ui/confirm-button';
@@ -20,6 +20,7 @@ import {
 } from './ui/dialog';
 import { Loading } from './ui/loading';
 import { Textarea } from './ui/textarea';
+import { useEventBus } from '@/hooks/useEventBus';
 
 export default function Notes({
     notableType,
@@ -54,6 +55,30 @@ export default function Notes({
                 setLoading(false);
             });
     }, [notableType, notableId, toast]);
+
+    const { subscribe } = useEventBus();
+    const subscribeRef = useRef(subscribe);
+    const unsubscribeRef = useRef<(() => void) | null>(null);
+
+    useEffect(() => {
+        refreshNotes();
+
+        // Subscribe to the new event
+        unsubscribeRef.current = subscribeRef.current(
+            'note-changed-' + notableType + '-' + notableId,
+            () => {
+                refreshNotes();
+            },
+        );
+
+        // Cleanup on unmount
+        return () => {
+            if (unsubscribeRef.current) {
+                unsubscribeRef.current();
+            }
+        };
+    }, [notableType, notableId, refreshNotes]);
+
 
     useEffect(() => {
         refreshNotes();

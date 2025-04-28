@@ -1,4 +1,5 @@
 // useEventBus.ts
+import { Notable } from '@/types/enums';
 import EventEmitter from 'eventemitter3';
 
 // Create a singleton event emitter
@@ -17,5 +18,9 @@ export function useEventBus() {
         return () => eventEmitter.off(event, callback);
     };
 
-    return { emit, subscribe };
+    const emitNoteChanged = (notableType: Notable, notableId: number) => {
+        emit('note-changed-' + notableType + '-' + notableId);
+    };
+
+    return { emit, subscribe, emitNoteChanged };
 }
