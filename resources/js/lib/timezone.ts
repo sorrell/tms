@@ -1,6 +1,6 @@
 // resources/js/utils/timezone.ts
 
-import { TimezoneData } from "@/types";
+import { TimezoneData } from '@/types';
 
 /**
  * Converts IANA timezone format (e.g., "America/New_York") to shorthand format (e.g., "EST")
@@ -35,24 +35,27 @@ export function getUserBrowserTimezone(): string {
  * @returns Promise that resolves to record of zipcode to timezone data
  */
 export async function fetchTimezones(
-    zipcodes: string[], 
-    existingTimezones: Record<string, TimezoneData> = {}
+    zipcodes: string[],
+    existingTimezones: Record<string, TimezoneData> = {},
 ): Promise<Record<string, TimezoneData>> {
     // Filter out zipcodes we already have data for
     const newZipcodes = zipcodes.filter(
-        (zipcode) => !(zipcode in existingTimezones) && Boolean(zipcode)
+        (zipcode) => !(zipcode in existingTimezones) && Boolean(zipcode),
     );
-    
+
     if (newZipcodes.length === 0) {
         return existingTimezones;
     }
-    
+
     try {
-        const response = await fetch(route('timezones.zipcode', { zipcodes: newZipcodes }), {
-            method: 'GET',
-        });
+        const response = await fetch(
+            route('timezones.zipcode', { zipcodes: newZipcodes }),
+            {
+                method: 'GET',
+            },
+        );
         const data = await response.json();
-        
+
         return {
             ...existingTimezones,
             ...data,
@@ -71,12 +74,12 @@ export async function fetchTimezones(
  */
 export function getTimezoneByZipcode(
     zipcode: string | undefined,
-    timezones: Record<string, TimezoneData>
+    timezones: Record<string, TimezoneData>,
 ): string | undefined {
     if (!zipcode) {
         return undefined;
     }
-    
+
     return timezones[zipcode]?.identifier;
 }
 
@@ -88,24 +91,24 @@ export function getTimezoneByZipcode(
  */
 export function convertDateForTimezone(
     date: string,
-    timezone?: string
+    timezone?: string,
 ): string {
     if (!date) {
         return '';
     }
-    
+
     // Ensure date string has Z suffix for UTC
     if (date.substring(date.length - 1) !== 'Z') {
         date = date + 'Z';
     }
-    
+
     const dateObj = new Date(date);
-    
+
     // Convert to specified timezone if available
     if (timezone) {
         return dateObj.toLocaleString('en-US', { timeZone: timezone });
     }
-    
+
     // Default to local timezone
     return dateObj.toLocaleString('en-US');
 }

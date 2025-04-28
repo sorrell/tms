@@ -17,9 +17,13 @@ import {
 } from '@/Components/ui/select';
 import { Textarea } from '@/Components/ui/textarea';
 import { useToast } from '@/hooks/UseToast';
+import {
+    convertDateForTimezone,
+    fetchTimezones,
+    getTimezoneByZipcode,
+} from '@/lib/timezone';
 import { ShipmentStop, TimezoneData } from '@/types';
 import { StopType } from '@/types/enums';
-import { fetchTimezones, getTimezoneByZipcode, convertDateForTimezone } from '@/lib/timezone';
 import { useForm } from '@inertiajs/react';
 import {
     ArrowDown,
@@ -31,7 +35,7 @@ import {
     Warehouse,
     X,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type FormErrors = {
     [key: `stops.${number}.${string}`]: string;
@@ -46,7 +50,9 @@ export default function ShipmentStopsList({
 }) {
     const [editMode, setEditMode] = useState(false);
     const { toast } = useToast();
-    const [timezones, setTimezones] = useState<Record<string, TimezoneData>>({});
+    const [timezones, setTimezones] = useState<Record<string, TimezoneData>>(
+        {},
+    );
 
     useEffect(() => {
         const zipcodes = stops
@@ -83,7 +89,7 @@ export default function ShipmentStopsList({
         );
     };
 
-    const getSavedStops = () => {
+    const getSavedStops = useCallback(() => {
         const mappedStops = stops.map((stop) => ({
             ...stop,
             eta: stop.eta ? new Date(stop.eta).toISOString().slice(0, 16) : '',
@@ -107,15 +113,18 @@ export default function ShipmentStopsList({
         }));
 
         return mappedStops as ShipmentStop[];
-    };
+    }, [stops]);
 
     // Replace with helper function
     const getTimezone = (stop: ShipmentStop): string | undefined => {
         if (!stop.facility?.location?.address_zipcode) {
             return;
         }
-        
-        return getTimezoneByZipcode(stop.facility.location.address_zipcode, timezones);
+
+        return getTimezoneByZipcode(
+            stop.facility.location.address_zipcode,
+            timezones,
+        );
     };
 
     // Replace with helper function
@@ -124,11 +133,12 @@ export default function ShipmentStopsList({
         return convertDateForTimezone(date, timezone);
     };
 
-    const { patch, setData, data, errors } = useForm<{ stops: ShipmentStop[] }>(
-        {
-            stops: getSavedStops(),
-        },
-    );
+    const { patch, setData, data, errors, setDefaults, reset } = useForm<{
+        stops: ShipmentStop[];
+    }>({
+        stops: getSavedStops(),
+    });
+
 
     const formErrors = errors as FormErrors;
 

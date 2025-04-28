@@ -1,8 +1,8 @@
 import NewCheckCallButton from '@/Components/CheckCalls/NewCheckCallButton';
+import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { ConfirmButton } from '@/Components/ui/confirm-button';
 import { Loading } from '@/Components/ui/loading';
-import { Button } from '@/Components/ui/button';
 import { useEventBus } from '@/hooks/useEventBus';
 import { useToast } from '@/hooks/UseToast';
 import { CheckCall, Contact, Shipment, ShipmentStop } from '@/types';
@@ -94,7 +94,7 @@ export default function ShipmentCheckCalls({
 
     const paginatedCheckCalls = checkCalls.slice(
         (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
+        currentPage * itemsPerPage,
     );
 
     const goToNextPage = () => {
@@ -110,10 +110,10 @@ export default function ShipmentCheckCalls({
     };
 
     const toggleNoteExpand = (checkCallId: number) => {
-        setExpandedNotes(prev => 
-            prev.includes(checkCallId) 
-                ? prev.filter(id => id !== checkCallId) 
-                : [...prev, checkCallId]
+        setExpandedNotes((prev) =>
+            prev.includes(checkCallId)
+                ? prev.filter((id) => id !== checkCallId)
+                : [...prev, checkCallId],
         );
     };
 
@@ -154,26 +154,40 @@ export default function ShipmentCheckCalls({
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="font-medium">
-                                            {checkCall.contact_name || 'Unknown contact'}
-                                            {checkCall.contact_method && ` (${checkCall.contact_method})`}
-                                            {checkCall.contact_method_detail && 
-                                                <span className="text-sm text-gray-500 ml-1">
-                                                    - {checkCall.contact_method_detail}
+                                            {checkCall.contact_name ||
+                                                'Unknown contact'}
+                                            {checkCall.contact_method &&
+                                                ` (${checkCall.contact_method})`}
+                                            {checkCall.contact_method_detail && (
+                                                <span className="ml-1 text-sm text-gray-500">
+                                                    -{' '}
+                                                    {
+                                                        checkCall.contact_method_detail
+                                                    }
                                                 </span>
-                                            }
+                                            )}
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="text-xs text-gray-500">
-                                                <div>{formatDateTime(checkCall.created_at)}</div>
-                                                {checkCall.creator && 
-                                                    <div className="">by {checkCall.creator.name}</div>
-                                                }
+                                                <div>
+                                                    {formatDateTime(
+                                                        checkCall.created_at,
+                                                    )}
+                                                </div>
+                                                {checkCall.creator && (
+                                                    <div className="">
+                                                        by{' '}
+                                                        {checkCall.creator.name}
+                                                    </div>
+                                                )}
                                             </div>
                                             <ConfirmButton
                                                 variant="ghost"
                                                 size="icon"
                                                 className="h-7 w-7 text-destructive"
-                                                onConfirm={() => handleDelete(checkCall.id)}
+                                                onConfirm={() =>
+                                                    handleDelete(checkCall.id)
+                                                }
                                                 confirmText="Delete"
                                             >
                                                 <Trash className="h-4 w-4" />
@@ -184,76 +198,113 @@ export default function ShipmentCheckCalls({
                                     <div className="mt-2 flex flex-col gap-x-4 gap-y-1 text-sm">
                                         {checkCall.eta && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">ETA:</span>
+                                                <span className="font-medium">
+                                                    ETA:
+                                                </span>
                                                 {formatDateTime(checkCall.eta)}
                                             </div>
                                         )}
 
-                                        {checkCall.reported_trailer_temp !== null && (
+                                        {checkCall.reported_trailer_temp !==
+                                            null && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">Temp:</span>
-                                                {checkCall.reported_trailer_temp}°
+                                                <span className="font-medium">
+                                                    Temp:
+                                                </span>
+                                                {
+                                                    checkCall.reported_trailer_temp
+                                                }
+                                                °
                                             </div>
                                         )}
 
                                         {checkCall.is_late && (
                                             <div className="flex items-center gap-1 text-destructive">
-                                                <span className="font-medium">Truck is late</span>
+                                                <span className="font-medium">
+                                                    Truck is late
+                                                </span>
                                             </div>
                                         )}
 
                                         {checkCall.is_truck_empty && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">Truck is empty</span>
+                                                <span className="font-medium">
+                                                    Truck is empty
+                                                </span>
                                             </div>
                                         )}
 
                                         {checkCall.arrived_at && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">Arrived:</span>
-                                                {formatDateTime(checkCall.arrived_at)}
+                                                <span className="font-medium">
+                                                    Arrived:
+                                                </span>
+                                                {formatDateTime(
+                                                    checkCall.arrived_at,
+                                                )}
                                             </div>
                                         )}
 
                                         {checkCall.loaded_unloaded_at && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">Loaded/Unloaded:</span>
-                                                {formatDateTime(checkCall.loaded_unloaded_at)}
+                                                <span className="font-medium">
+                                                    Loaded/Unloaded:
+                                                </span>
+                                                {formatDateTime(
+                                                    checkCall.loaded_unloaded_at,
+                                                )}
                                             </div>
                                         )}
 
                                         {checkCall.left_at && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">Left:</span>
-                                                {formatDateTime(checkCall.left_at)}
+                                                <span className="font-medium">
+                                                    Left:
+                                                </span>
+                                                {formatDateTime(
+                                                    checkCall.left_at,
+                                                )}
                                             </div>
                                         )}
                                     </div>
 
                                     {checkCall.note && checkCall.note.note && (
                                         <div className="">
-                                            <div className="text-sm text-gray-600 mt-2">
-                                                {expandedNotes.includes(checkCall.id) ? (
+                                            <div className="mt-2 text-sm text-gray-600">
+                                                {expandedNotes.includes(
+                                                    checkCall.id,
+                                                ) ? (
                                                     <>
                                                         {checkCall.note.note}
-                                                        <Button 
-                                                            variant="link" 
-                                                            className="p-0 h-auto text-xs text-primary ml-1"
-                                                            onClick={() => toggleNoteExpand(checkCall.id)}
+                                                        <Button
+                                                            variant="link"
+                                                            className="ml-1 h-auto p-0 text-xs text-primary"
+                                                            onClick={() =>
+                                                                toggleNoteExpand(
+                                                                    checkCall.id,
+                                                                )
+                                                            }
                                                         >
                                                             Show less
                                                         </Button>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        {checkCall.note.note.length > 100 
+                                                        {checkCall.note.note
+                                                            .length > 100
                                                             ? `${checkCall.note.note.substring(0, 100)}... `
-                                                            : checkCall.note.note}
-                                                        {checkCall.note.note.length > 100 && (
-                                                            <Button 
-                                                                variant="link" 
-                                                                className="p-0 h-auto text-xs text-primary"
-                                                                onClick={() => toggleNoteExpand(checkCall.id)}
+                                                            : checkCall.note
+                                                                  .note}
+                                                        {checkCall.note.note
+                                                            .length > 100 && (
+                                                            <Button
+                                                                variant="link"
+                                                                className="h-auto p-0 text-xs text-primary"
+                                                                onClick={() =>
+                                                                    toggleNoteExpand(
+                                                                        checkCall.id,
+                                                                    )
+                                                                }
                                                             >
                                                                 Show more
                                                             </Button>
@@ -266,7 +317,7 @@ export default function ShipmentCheckCalls({
                                 </div>
                             ))}
                         </div>
-                        
+
                         {checkCalls.length > itemsPerPage && (
                             <div className="mt-4 flex items-center justify-between">
                                 <Button
@@ -274,24 +325,28 @@ export default function ShipmentCheckCalls({
                                     size="sm"
                                     onClick={goToPreviousPage}
                                     disabled={currentPage === 1}
-                                    className="flex items-center gap-1 px-3 py-1 h-9"
+                                    className="flex h-9 items-center gap-1 px-3 py-1"
                                 >
                                     <ChevronLeft className="h-4 w-4" />
-                                    <span className="hidden sm:inline">Previous</span>
+                                    <span className="hidden sm:inline">
+                                        Previous
+                                    </span>
                                 </Button>
-                                
+
                                 <span className="text-sm text-gray-500">
                                     Page {currentPage} of {totalPages}
                                 </span>
-                                
+
                                 <Button
                                     variant="outline"
                                     size="sm"
                                     onClick={goToNextPage}
                                     disabled={currentPage === totalPages}
-                                    className="flex items-center gap-1 px-3 py-1 h-9"
+                                    className="flex h-9 items-center gap-1 px-3 py-1"
                                 >
-                                    <span className="hidden sm:inline">Next</span>
+                                    <span className="hidden sm:inline">
+                                        Next
+                                    </span>
                                     <ChevronRight className="h-4 w-4" />
                                 </Button>
                             </div>

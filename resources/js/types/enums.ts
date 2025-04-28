@@ -41,7 +41,6 @@ export enum Documentable {
     Facility = 'facility',
 }
 
-
 export enum ContactMethodType {
     Phonecall = 'phonecall',
     Email = 'email',

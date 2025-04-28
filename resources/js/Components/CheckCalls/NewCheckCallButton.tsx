@@ -1,3 +1,4 @@
+import { DateTimePicker } from '@/Components/DatetimePicker';
 import { Button } from '@/Components/ui/button';
 import {
     Dialog,
@@ -19,13 +20,12 @@ import {
 } from '@/Components/ui/select';
 import { useEventBus } from '@/hooks/useEventBus';
 import { useToast } from '@/hooks/UseToast';
+import { convertDateForTimezone } from '@/lib/timezone';
 import { Contact, Shipment, ShipmentStop } from '@/types';
 import { ContactMethodType, ShipmentState } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
 import { Clipboard } from 'lucide-react';
-import { useState, useCallback, useEffect } from 'react';
-import { DateTimePicker } from '@/Components/DatetimePicker';
-import { convertDateForTimezone } from '@/lib/timezone';
+import { useCallback, useEffect, useState } from 'react';
 import { Textarea } from '../ui/textarea';
 
 type NewCheckCallButtonProps = {
@@ -35,19 +35,19 @@ type NewCheckCallButtonProps = {
     carrierId?: number;
     buttonText?: string;
     buttonVariant?:
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | 'link';
+        | 'default'
+        | 'destructive'
+        | 'outline'
+        | 'secondary'
+        | 'ghost'
+        | 'link';
 };
 
 // Function to determine if a field should be shown based on shipment state and context
 const shouldShowField = (
     shipment: Shipment,
     stop: ShipmentStop | undefined,
-    fieldName: string
+    fieldName: string,
 ): boolean => {
     const state = shipment.state as ShipmentState;
 
@@ -56,7 +56,11 @@ const shouldShowField = (
             return true;
 
         case 'eta':
-            return ![ShipmentState.AtDelivery, ShipmentState.Delivered, ShipmentState.Canceled].includes(state);
+            return ![
+                ShipmentState.AtDelivery,
+                ShipmentState.Delivered,
+                ShipmentState.Canceled,
+            ].includes(state);
 
         case 'reported_trailer_temp':
             // Show for temperature-sensitive shipments in active states
@@ -71,7 +75,9 @@ const shouldShowField = (
 
         case 'is_late':
             // Show is_late until the shipment is delivered or canceled
-            return ![ShipmentState.Delivered, ShipmentState.Canceled].includes(state);
+            return ![ShipmentState.Delivered, ShipmentState.Canceled].includes(
+                state,
+            );
 
         case 'is_truck_empty':
             // Show is_truck_empty only in these specific states
@@ -79,27 +85,24 @@ const shouldShowField = (
                 ShipmentState.Pending,
                 ShipmentState.Dispatched,
                 ShipmentState.Booked,
-                ShipmentState.Delivered
+                ShipmentState.Delivered,
             ].includes(state);
 
         case 'arrived_at':
             // Show arrived_at for in-transit states
-            return [
-                ShipmentState.InTransit,
-                ShipmentState.Dispatched,
-            ].includes(state);
+            return [ShipmentState.InTransit, ShipmentState.Dispatched].includes(
+                state,
+            );
 
         case 'left_at':
-            return [
-                ShipmentState.AtPickup,
-                ShipmentState.AtDelivery,
-            ].includes(state);
+            return [ShipmentState.AtPickup, ShipmentState.AtDelivery].includes(
+                state,
+            );
         case 'loaded_unloaded_at':
             // Show these fields for active stops where loading/unloading happens
-            return [
-                ShipmentState.AtPickup,
-                ShipmentState.AtDelivery
-            ].includes(state);
+            return [ShipmentState.AtPickup, ShipmentState.AtDelivery].includes(
+                state,
+            );
 
         default:
             return false;
@@ -114,19 +117,22 @@ export default function NewCheckCallButton({
     buttonText = 'New Check Call',
     buttonVariant = 'default',
 }: NewCheckCallButtonProps) {
-
-    let shipmentId = shipment.id;
+    const shipmentId = shipment.id;
 
     const [open, setOpen] = useState(false);
     const { toast } = useToast();
     const { emit } = useEventBus();
-    const [isLoadedUnloadedRequired, setIsLoadedUnloadedRequired] = useState(false);
+    const [isLoadedUnloadedRequired, setIsLoadedUnloadedRequired] =
+        useState(false);
 
     // Helper function to convert date for timezone display
-    const convertForTimezone = useCallback((stop: ShipmentStop | undefined, date: string) => {
-        const timezone = stop?.facility?.location?.timezone?.identifier;
-        return convertDateForTimezone(date, timezone);
-    }, []);
+    const convertForTimezone = useCallback(
+        (stop: ShipmentStop | undefined, date: string) => {
+            const timezone = stop?.facility?.location?.timezone?.identifier;
+            return convertDateForTimezone(date, timezone);
+        },
+        [],
+    );
 
     const { data, setData, post, processing, errors, reset } = useForm<{
         eta: string | null;
@@ -158,9 +164,12 @@ export default function NewCheckCallButton({
     useEffect(() => {
         // If left_at has a value and the selected stop doesn't have loaded_unloaded, make loaded_unloaded_at required
         const hasLeftAtValue = !!data.left_at;
-        const stopMissingLoadedUnloaded = !shipment.current_stop?.loaded_unloaded_at;
+        const stopMissingLoadedUnloaded =
+            !shipment.current_stop?.loaded_unloaded_at;
 
-        setIsLoadedUnloadedRequired(hasLeftAtValue && stopMissingLoadedUnloaded);
+        setIsLoadedUnloadedRequired(
+            hasLeftAtValue && stopMissingLoadedUnloaded,
+        );
     }, [data.left_at, shipment.current_stop]);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -170,7 +179,8 @@ export default function NewCheckCallButton({
         if (isLoadedUnloadedRequired && !data.loaded_unloaded_at) {
             toast({
                 title: 'Validation Error',
-                description: 'Loaded/Unloaded time is required when setting left at time',
+                description:
+                    'Loaded/Unloaded time is required when setting left at time',
                 variant: 'destructive',
             });
             return;
@@ -215,31 +225,47 @@ export default function NewCheckCallButton({
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
-
-
                     {shouldShowField(shipment, shipment.next_stop, 'eta') && (
                         <div className="space-y-2">
                             <Label htmlFor="eta" className="flex items-center">
                                 <span className="font-bold">ETA</span>
-                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                <span className="ml-2 text-xs font-normal text-muted-foreground">
                                     ({shipment.next_stop?.facility?.name})
                                 </span>
                             </Label>
                             <DateTimePicker
                                 clearable={true}
-                                value={data.eta ? new Date(convertForTimezone(shipment.next_stop, data.eta)) : undefined}
-                                timezone={shipment.next_stop?.facility?.location?.timezone?.identifier}
+                                value={
+                                    data.eta
+                                        ? new Date(
+                                              convertForTimezone(
+                                                  shipment.next_stop,
+                                                  data.eta,
+                                              ),
+                                          )
+                                        : undefined
+                                }
+                                timezone={
+                                    shipment.next_stop?.facility?.location
+                                        ?.timezone?.identifier
+                                }
                                 onChange={(e: Date | undefined) => {
                                     setData('eta', e?.toISOString() || null);
                                 }}
                             />
                             {errors.eta && (
-                                <p className="text-sm text-red-500">{errors.eta}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.eta}
+                                </p>
                             )}
                         </div>
                     )}
 
-                    {shouldShowField(shipment, shipment.current_stop, 'reported_trailer_temp') && (
+                    {shouldShowField(
+                        shipment,
+                        shipment.current_stop,
+                        'reported_trailer_temp',
+                    ) && (
                         <div className="space-y-2">
                             <Label htmlFor="reported_trailer_temp">
                                 Reported Trailer Temp
@@ -250,7 +276,10 @@ export default function NewCheckCallButton({
                                 step="0.1"
                                 value={data.reported_trailer_temp || ''}
                                 onChange={(e) =>
-                                    setData('reported_trailer_temp', e.target.value)
+                                    setData(
+                                        'reported_trailer_temp',
+                                        e.target.value,
+                                    )
                                 }
                                 placeholder="Enter temperature"
                             />
@@ -264,9 +293,7 @@ export default function NewCheckCallButton({
 
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="contact_name">
-                                Contact Name *
-                            </Label>
+                            <Label htmlFor="contact_name">Contact Name *</Label>
                         </div>
                         <Input
                             id="contact_name"
@@ -274,7 +301,7 @@ export default function NewCheckCallButton({
                             onChange={(e) =>
                                 setData('contact_name', e.target.value)
                             }
-                            autoComplete='off'
+                            autoComplete="off"
                             placeholder="Who you spoke with"
                             list="carrier-contacts-list"
                             required={true}
@@ -306,14 +333,19 @@ export default function NewCheckCallButton({
                                     <SelectValue placeholder="Select method" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {Object.values(ContactMethodType).map((method) => (
-                                        <SelectItem
-                                            key={method}
-                                            value={method}
-                                        >
-                                            {method.charAt(0).toUpperCase() + method.slice(1)}
-                                        </SelectItem>
-                                    ))}
+                                    {Object.values(ContactMethodType).map(
+                                        (method) => (
+                                            <SelectItem
+                                                key={method}
+                                                value={method}
+                                            >
+                                                {method
+                                                    .charAt(0)
+                                                    .toUpperCase() +
+                                                    method.slice(1)}
+                                            </SelectItem>
+                                        ),
+                                    )}
                                 </SelectContent>
                             </Select>
                             {errors.contact_method && (
@@ -333,8 +365,8 @@ export default function NewCheckCallButton({
                                     data.contact_method === 'email'
                                         ? 'email'
                                         : data.contact_method === 'phone'
-                                            ? 'tel'
-                                            : 'text'
+                                          ? 'tel'
+                                          : 'text'
                                 }
                                 value={data.contact_method_detail || ''}
                                 onChange={(e) =>
@@ -345,10 +377,10 @@ export default function NewCheckCallButton({
                                 }
                                 placeholder={
                                     data.contact_method === 'email'
-                                        ? "Email address"
+                                        ? 'Email address'
                                         : data.contact_method === 'phone'
-                                            ? "Phone number"
-                                            : "Phone number, email, etc."
+                                          ? 'Phone number'
+                                          : 'Phone number, email, etc.'
                                 }
                             />
                             {errors.contact_method_detail && (
@@ -359,20 +391,42 @@ export default function NewCheckCallButton({
                         </div>
                     </div>
 
-                    {shouldShowField(shipment, shipment.next_stop, 'arrived_at') && (
+                    {shouldShowField(
+                        shipment,
+                        shipment.next_stop,
+                        'arrived_at',
+                    ) && (
                         <div className="space-y-2">
-                            <Label htmlFor="arrived_at" className="flex items-center">
+                            <Label
+                                htmlFor="arrived_at"
+                                className="flex items-center"
+                            >
                                 <span className="font-bold">Arrived At</span>
-                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                <span className="ml-2 text-xs font-normal text-muted-foreground">
                                     ({shipment.next_stop?.facility?.name})
                                 </span>
                             </Label>
                             <DateTimePicker
                                 clearable={true}
-                                value={data.arrived_at ? new Date(convertForTimezone(shipment.next_stop, data.arrived_at)) : undefined}
-                                timezone={shipment.next_stop?.facility?.location?.timezone?.identifier}
+                                value={
+                                    data.arrived_at
+                                        ? new Date(
+                                              convertForTimezone(
+                                                  shipment.next_stop,
+                                                  data.arrived_at,
+                                              ),
+                                          )
+                                        : undefined
+                                }
+                                timezone={
+                                    shipment.next_stop?.facility?.location
+                                        ?.timezone?.identifier
+                                }
                                 onChange={(e: Date | undefined) => {
-                                    setData('arrived_at', e?.toISOString() || null);
+                                    setData(
+                                        'arrived_at',
+                                        e?.toISOString() || null,
+                                    );
                                 }}
                             />
                             {errors.arrived_at && (
@@ -383,25 +437,50 @@ export default function NewCheckCallButton({
                         </div>
                     )}
 
-
-
-                    {shouldShowField(shipment, shipment.current_stop, 'loaded_unloaded_at') && (
+                    {shouldShowField(
+                        shipment,
+                        shipment.current_stop,
+                        'loaded_unloaded_at',
+                    ) && (
                         <div className="space-y-2">
-                            <Label htmlFor="loaded_unloaded_at" className="flex items-center">
+                            <Label
+                                htmlFor="loaded_unloaded_at"
+                                className="flex items-center"
+                            >
                                 <span className="font-bold">
-                                    {shipment.current_stop?.stop_type === 'pickup' ? 'Loaded At' : 'Unloaded At'}
+                                    {shipment.current_stop?.stop_type ===
+                                    'pickup'
+                                        ? 'Loaded At'
+                                        : 'Unloaded At'}
                                 </span>
-                                {isLoadedUnloadedRequired && <span className="text-red-500 ml-1">*</span>}
-                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                {isLoadedUnloadedRequired && (
+                                    <span className="ml-1 text-red-500">*</span>
+                                )}
+                                <span className="ml-2 text-xs font-normal text-muted-foreground">
                                     ({shipment.current_stop?.facility?.name})
                                 </span>
                             </Label>
                             <DateTimePicker
                                 clearable={true}
-                                value={data.loaded_unloaded_at ? new Date(convertForTimezone(shipment.current_stop, data.loaded_unloaded_at)) : undefined}
-                                timezone={shipment.current_stop?.facility?.location?.timezone?.identifier}
+                                value={
+                                    data.loaded_unloaded_at
+                                        ? new Date(
+                                              convertForTimezone(
+                                                  shipment.current_stop,
+                                                  data.loaded_unloaded_at,
+                                              ),
+                                          )
+                                        : undefined
+                                }
+                                timezone={
+                                    shipment.current_stop?.facility?.location
+                                        ?.timezone?.identifier
+                                }
                                 onChange={(e: Date | undefined) => {
-                                    setData('loaded_unloaded_at', e?.toISOString() || null);
+                                    setData(
+                                        'loaded_unloaded_at',
+                                        e?.toISOString() || null,
+                                    );
                                 }}
                             />
                             {errors.loaded_unloaded_at && (
@@ -409,28 +488,51 @@ export default function NewCheckCallButton({
                                     {errors.loaded_unloaded_at}
                                 </p>
                             )}
-                            {isLoadedUnloadedRequired && !data.loaded_unloaded_at && (
-                                <p className="text-sm text-red-500">
-                                    Required when setting departure time
-                                </p>
-                            )}
+                            {isLoadedUnloadedRequired &&
+                                !data.loaded_unloaded_at && (
+                                    <p className="text-sm text-red-500">
+                                        Required when setting departure time
+                                    </p>
+                                )}
                         </div>
                     )}
 
-                    {shouldShowField(shipment, shipment.current_stop, 'left_at') && (
+                    {shouldShowField(
+                        shipment,
+                        shipment.current_stop,
+                        'left_at',
+                    ) && (
                         <div className="space-y-2">
-                            <Label htmlFor="left_at" className="flex items-center">
+                            <Label
+                                htmlFor="left_at"
+                                className="flex items-center"
+                            >
                                 <span className="font-bold">Left At</span>
-                                <span className="text-xs font-normal text-muted-foreground ml-2">
+                                <span className="ml-2 text-xs font-normal text-muted-foreground">
                                     ({shipment.current_stop?.facility?.name})
                                 </span>
                             </Label>
                             <DateTimePicker
                                 clearable={true}
-                                value={data.left_at ? new Date(convertForTimezone(shipment.current_stop, data.left_at)) : undefined}
-                                timezone={shipment.current_stop?.facility?.location?.timezone?.identifier}
+                                value={
+                                    data.left_at
+                                        ? new Date(
+                                              convertForTimezone(
+                                                  shipment.current_stop,
+                                                  data.left_at,
+                                              ),
+                                          )
+                                        : undefined
+                                }
+                                timezone={
+                                    shipment.current_stop?.facility?.location
+                                        ?.timezone?.identifier
+                                }
                                 onChange={(e: Date | undefined) => {
-                                    setData('left_at', e?.toISOString() || null);
+                                    setData(
+                                        'left_at',
+                                        e?.toISOString() || null,
+                                    );
                                 }}
                             />
                             {errors.left_at && (
@@ -441,18 +543,12 @@ export default function NewCheckCallButton({
                         </div>
                     )}
 
-                   
-
                     <div className="space-y-2">
-                        <Label htmlFor="note">
-                            Note
-                        </Label>
+                        <Label htmlFor="note">Note</Label>
                         <Textarea
                             id="note"
                             value={data.note || ''}
-                            onChange={(e) =>
-                                setData('note', e.target.value)
-                            }
+                            onChange={(e) => setData('note', e.target.value)}
                             placeholder="Add a note"
                             rows={3}
                         />
@@ -463,7 +559,11 @@ export default function NewCheckCallButton({
                         )}
                     </div>
 
-                    {shouldShowField(shipment, shipment.next_stop, 'is_truck_empty') && (
+                    {shouldShowField(
+                        shipment,
+                        shipment.next_stop,
+                        'is_truck_empty',
+                    ) && (
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2">
                                 <input
@@ -471,7 +571,10 @@ export default function NewCheckCallButton({
                                     id="is_truck_empty"
                                     checked={data.is_truck_empty || false}
                                     onChange={(e) =>
-                                        setData('is_truck_empty', e.target.checked)
+                                        setData(
+                                            'is_truck_empty',
+                                            e.target.checked,
+                                        )
                                     }
                                     className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
@@ -487,7 +590,11 @@ export default function NewCheckCallButton({
                         </div>
                     )}
 
-                    {shouldShowField(shipment, shipment.next_stop, 'is_late') && (
+                    {shouldShowField(
+                        shipment,
+                        shipment.next_stop,
+                        'is_late',
+                    ) && (
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2">
                                 <input
@@ -499,9 +606,7 @@ export default function NewCheckCallButton({
                                     }
                                     className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
-                                <Label htmlFor="is_late">
-                                    Is Late?
-                                </Label>
+                                <Label htmlFor="is_late">Is Late?</Label>
                             </div>
                             {errors.is_late && (
                                 <p className="text-sm text-red-500">

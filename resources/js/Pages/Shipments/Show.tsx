@@ -67,8 +67,6 @@ export default function Show({
                             stops={stops}
                         />
 
-                        
-
                         {/* Financials */}
                         <ShipmentFinancialDetails shipment={shipment} />
 
@@ -91,6 +89,28 @@ export default function Show({
                         {/* Customers */}
                         <CustomerDetails shipment={shipment} />
 
+                        
+
+                        {/* Check Calls */}
+                        <ShipmentCheckCalls
+                            shipment={shipment}
+                            stops={stops}
+                            carrierContacts={shipment.carrier?.contacts || []}
+                        />
+
+                        {/* Activity Feed */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Recent Activity</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
+                            </CardContent>
+                        </Card>
+
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-between gap-2">
@@ -110,25 +130,7 @@ export default function Show({
                             </CardContent>
                         </Card>
 
-                        {/* Activity Feed */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Recent Activity</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <ComingSoon
-                                    variant="outline"
-                                    className="mx-auto"
-                                />
-                            </CardContent>
-                        </Card>
-
-                        {/* Check Calls */}
-                        <ShipmentCheckCalls
-                            shipment={shipment}
-                            stops={stops}
-                            carrierContacts={shipment.carrier?.contacts || []}
-                        />
+                        
                     </div>
                 </div>
             </div>

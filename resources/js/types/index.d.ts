@@ -377,7 +377,6 @@ export interface CheckCall {
     note?: Note;
 }
 
-
 // Typescript interface for timezone data
 export interface TimezoneData {
     identifier: string;
