@@ -188,10 +188,11 @@ export default function Notes({
                         {note.user_id === user?.id && (
                             <div className="flex justify-end">
                                 <ConfirmButton
-                                    variant="destructive"
+                                    variant="ghost"
                                     size="icon"
                                     onConfirm={() => handleDeleteNote(note.id)}
                                     confirmText="Delete"
+                                    className="text-destructive"
                                 >
                                     <Trash className="h-4 w-4" />
                                 </ConfirmButton>

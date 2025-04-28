@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/UseToast';
 import { CheckCall, Contact, Shipment, ShipmentStop } from '@/types';
 import { router } from '@inertiajs/react';
 import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight, ClipboardCheck, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ClipboardCheck, Trash } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 type ShipmentCheckCallsProps = {
@@ -137,114 +137,71 @@ export default function ShipmentCheckCalls({
                     </div>
                 ) : (
                     <>
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             {paginatedCheckCalls.map((checkCall) => (
                                 <div
                                     key={checkCall.id}
-                                    className="rounded-lg border p-4"
+                                    className="rounded-lg border p-3"
                                 >
-                                    <div className="mb-2 flex items-center justify-between">
+                                    <div className="flex items-center justify-between">
                                         <div className="font-medium">
-                                            {checkCall.contact_name ||
-                                                'Unknown contact'}
-                                            {checkCall.contact_method &&
-                                                ` - ${checkCall.contact_method}`}
+                                            {checkCall.contact_name || 'Unknown contact'}
+                                            {checkCall.contact_method && ` (${checkCall.contact_method})`}
+                                            {checkCall.contact_method_detail && 
+                                                <span className="text-sm text-gray-500 ml-1">
+                                                    - {checkCall.contact_method_detail}
+                                                </span>
+                                            }
                                         </div>
-                                        <div className="flex gap-2">
-                                            <div className="text-sm text-gray-500">
-                                                {formatDateTime(
-                                                    checkCall.created_at,
-                                                )}
+                                        <div className="flex items-center gap-2">
+                                            <div className="text-xs text-gray-500">
+                                                {formatDateTime(checkCall.created_at)}
                                             </div>
                                             <ConfirmButton
-                                                variant="destructive"
+                                                variant="ghost"
                                                 size="icon"
-                                                onConfirm={() =>
-                                                    handleDelete(checkCall.id)
-                                                }
+                                                className="h-7 w-7 text-destructive"
+                                                onConfirm={() => handleDelete(checkCall.id)}
                                                 confirmText="Delete"
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash className="h-4 w-4" />
                                             </ConfirmButton>
                                         </div>
                                     </div>
 
-                                    <div className="mt-4 grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+                                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
                                         {checkCall.eta && (
-                                            <div>
-                                                <span className="text-sm text-gray-500">
-                                                    ETA:
-                                                </span>{' '}
-                                                <span className="text-sm">
-                                                    {formatDateTime(checkCall.eta)}
-                                                </span>
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">ETA:</span>
+                                                {formatDateTime(checkCall.eta)}
                                             </div>
                                         )}
 
-                                        {checkCall.reported_trailer_temp !==
-                                            null && (
-                                            <div>
-                                                <span className="text-sm text-gray-500">
-                                                    Trailer Temp:
-                                                </span>{' '}
-                                                <span className="text-sm">
-                                                    {
-                                                        checkCall.reported_trailer_temp
-                                                    }
-                                                    °
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        {checkCall.contact_method_detail && (
-                                            <div>
-                                                <span className="text-sm text-gray-500">
-                                                    Contact Detail:
-                                                </span>{' '}
-                                                <span className="text-sm">
-                                                    {
-                                                        checkCall.contact_method_detail
-                                                    }
-                                                </span>
+                                        {checkCall.reported_trailer_temp !== null && (
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">Temp:</span>
+                                                {checkCall.reported_trailer_temp}°
                                             </div>
                                         )}
 
                                         {checkCall.arrived_at && (
-                                            <div>
-                                                <span className="text-sm text-gray-500">
-                                                    Arrived:
-                                                </span>{' '}
-                                                <span className="text-sm">
-                                                    {formatDateTime(
-                                                        checkCall.arrived_at,
-                                                    )}
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        {checkCall.left_at && (
-                                            <div>
-                                                <span className="text-sm text-gray-500">
-                                                    Left:
-                                                </span>{' '}
-                                                <span className="text-sm">
-                                                    {formatDateTime(
-                                                        checkCall.left_at,
-                                                    )}
-                                                </span>
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">Arrived:</span>
+                                                {formatDateTime(checkCall.arrived_at)}
                                             </div>
                                         )}
 
                                         {checkCall.loaded_unloaded_at && (
-                                            <div>
-                                                <span className="text-sm text-gray-500">
-                                                    Loaded/Unloaded:
-                                                </span>{' '}
-                                                <span className="text-sm">
-                                                    {formatDateTime(
-                                                        checkCall.loaded_unloaded_at,
-                                                    )}
-                                                </span>
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">Loaded/Unloaded:</span>
+                                                {formatDateTime(checkCall.loaded_unloaded_at)}
+                                            </div>
+                                        )}
+
+                                        {checkCall.left_at && (
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">Left:</span>
+                                                {formatDateTime(checkCall.left_at)}
                                             </div>
                                         )}
                                     </div>

@@ -166,10 +166,11 @@ export default function CarrierDetails({ shipment }: { shipment: Shipment }) {
                 <div className="flex">
                     {!editMode && shipment.carrier?.id && (
                         <Button
-                            variant="destructive"
+                            variant="ghost"
                             onClick={() => {
                                 setBounceModalOpen(true);
                             }}
+                            className="text-destructive"
                         >
                             <Ghost className="h-4 w-4" />
                             Bounce

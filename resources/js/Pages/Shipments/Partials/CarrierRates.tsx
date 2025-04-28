@@ -25,7 +25,7 @@ import {
     ShipmentFinancials,
 } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { Check, Pencil, PlusCircle, Trash2, Truck, X } from 'lucide-react';
+import { Check, Pencil, PlusCircle, Trash, Truck, X } from 'lucide-react';
 import {
     forwardRef,
     useEffect,
@@ -385,7 +385,7 @@ export default function CarrierRates({
                                                         deleteRow(index)
                                                     }
                                                 >
-                                                    <Trash2 className="h-4 w-4" />
+                                                    <Trash className="h-4 w-4" />
                                                 </Button>
                                             </div>
                                         </TableCell>
