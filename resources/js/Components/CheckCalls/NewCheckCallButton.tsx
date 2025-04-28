@@ -56,7 +56,7 @@ const shouldShowField = (
             return true;
 
         case 'eta':
-            return ![ShipmentState.Delivered, ShipmentState.Canceled].includes(state);
+            return ![ShipmentState.AtDelivery, ShipmentState.Delivered, ShipmentState.Canceled].includes(state);
 
         case 'reported_trailer_temp':
             // Show for temperature-sensitive shipments in active states
