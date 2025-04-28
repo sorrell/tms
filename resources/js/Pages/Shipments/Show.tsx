@@ -67,12 +67,7 @@ export default function Show({
                             stops={stops}
                         />
 
-                        {/* Check Calls */}
-                        <ShipmentCheckCalls
-                            shipment={shipment}
-                            stops={stops}
-                            carrierContacts={shipment.carrier?.contacts || []}
-                        />
+                        
 
                         {/* Financials */}
                         <ShipmentFinancialDetails shipment={shipment} />
@@ -127,6 +122,13 @@ export default function Show({
                                 />
                             </CardContent>
                         </Card>
+
+                        {/* Check Calls */}
+                        <ShipmentCheckCalls
+                            shipment={shipment}
+                            stops={stops}
+                            carrierContacts={shipment.carrier?.contacts || []}
+                        />
                     </div>
                 </div>
             </div>
