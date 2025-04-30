@@ -9,6 +9,7 @@ import { Head } from '@inertiajs/react';
 import { Folder, MapPin } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
 import CustomerDetails from './Partials/CustomerDetails';
+import ShipmentCheckCalls from './Partials/ShipmentCheckCalls';
 import ShipmentFinancialDetails from './Partials/ShipmentFinancialDetails';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
@@ -88,6 +89,26 @@ export default function Show({
                         {/* Customers */}
                         <CustomerDetails shipment={shipment} />
 
+                        {/* Check Calls */}
+                        <ShipmentCheckCalls
+                            shipment={shipment}
+                            stops={stops}
+                            carrierContacts={shipment.carrier?.contacts || []}
+                        />
+
+                        {/* Activity Feed */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Recent Activity</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <ComingSoon
+                                    variant="outline"
+                                    className="mx-auto"
+                                />
+                            </CardContent>
+                        </Card>
+
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-between gap-2">
@@ -103,19 +124,6 @@ export default function Show({
                                     folders={shipment.document_folders ?? []}
                                     documentableType={Documentable.Shipment}
                                     documentableId={shipment.id}
-                                />
-                            </CardContent>
-                        </Card>
-
-                        {/* Activity Feed */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Recent Activity</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <ComingSoon
-                                    variant="outline"
-                                    className="mx-auto"
                                 />
                             </CardContent>
                         </Card>

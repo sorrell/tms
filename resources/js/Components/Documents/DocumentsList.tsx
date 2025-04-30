@@ -19,7 +19,7 @@ import {
     Folder,
     FolderOpen,
     PencilIcon,
-    Trash2,
+    Trash,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
@@ -332,7 +332,7 @@ export default function DocumentsList({
                     }}
                     data-tree-item-id={'trash'}
                 >
-                    <Trash2 className="inline h-4 w-4" />
+                    <Trash className="inline h-4 w-4" />
                     <span className="">trashcan</span>
                 </div>
             </div>

@@ -130,6 +130,22 @@ class FmcsaNameLookup
 class UpdateCarrierGeneral
 {
 }
+namespace App\Actions\CheckCalls;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static dispatchSync(int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static dispatchNow(int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static dispatchAfterResponse(int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ * @method static \App\Models\CheckCalls\CheckCall run(int $shipmentId, ?string $eta, ?int $reportedTrailerTemp, string $contactName, ?\App\Enums\ContactMethodType $contactMethod, ?string $contactMethodDetail, ?bool $isLate, ?bool $isTruckEmpty, ?string $note, ?string $arrivedAt, ?string $leftAt, ?string $loadedUnloadedAt)
+ */
+class CreateCheckCall
+{
+}
 namespace App\Actions\Contacts;
 
 /**

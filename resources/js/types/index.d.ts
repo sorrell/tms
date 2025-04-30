@@ -37,6 +37,7 @@ export interface Location {
     selectable_label: string;
     latitude?: number;
     longitude?: number;
+    timezone?: TimezoneData;
 }
 
 export interface Contact {
@@ -84,6 +85,8 @@ export interface Carrier {
 
     documents?: Document[];
     document_folders?: DocumentFolder[];
+
+    contacts?: Contact[];
 }
 
 export interface CarrierSaferReport {
@@ -175,6 +178,7 @@ export interface Shipment {
     trailer_temperature_maximum?: number;
     lane?: string;
     next_stop?: ShipmentStop;
+    current_stop?: ShipmentStop;
     trailer_type?: TrailerType;
     trailer_size?: TrailerSize;
     state_label: string;
@@ -345,4 +349,41 @@ export interface AccessorialType {
     id: number;
     organization_id: number;
     name: string;
+}
+
+export interface CheckCall {
+    id: number;
+    organization_id: number;
+    carrier_id: number;
+    shipment_id: number;
+    user_id: number | null;
+    is_late: boolean;
+    arrived_at: string | null;
+    left_at: string | null;
+    eta: string | null;
+    is_truck_empty: boolean | null;
+    reported_trailer_temp: number | null;
+    loaded_unloaded_at: string | null;
+    contact_name: string | null;
+    contact_method: string | null;
+    contact_method_detail: string | null;
+    note_id: number | null;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    carrier?: Carrier;
+    shipment?: Shipment;
+    creator?: User;
+    note?: Note;
+    next_stop?: ShipmentStop;
+    current_stop?: ShipmentStop;
+    current_stop_id?: number;
+    next_stop_id?: number;
+}
+
+// Typescript interface for timezone data
+export interface TimezoneData {
+    identifier: string;
+    dst_tz: string;
+    std_tz: string;
 }

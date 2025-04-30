@@ -1,3 +1,4 @@
+import NewCheckCallButton from '@/Components/CheckCalls/NewCheckCallButton';
 import { Button } from '@/Components/ui/button';
 import { ConfirmDropdownMenuItem } from '@/Components/ui/confirm-dropdown-menu-item';
 import {
@@ -125,7 +126,15 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                 </div>
                 <p className="text-muted-foreground">{shipment.state_label}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+                <NewCheckCallButton
+                    shipment={shipment}
+                    carrierId={shipment.carrier?.id}
+                    carrierContacts={shipment.carrier?.contacts || []}
+                    buttonVariant="outline"
+                    buttonText="Check Call"
+                />
+
                 {shipment.state === ShipmentState.Booked && (
                     <Button
                         onClick={() => {

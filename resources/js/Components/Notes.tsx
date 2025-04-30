@@ -1,3 +1,4 @@
+import { useEventBus } from '@/hooks/useEventBus';
 import { useToast } from '@/hooks/UseToast';
 import { cn } from '@/lib/utils';
 import { Note } from '@/types';
@@ -5,7 +6,13 @@ import { Notable } from '@/types/enums';
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
-import { FormEventHandler, useCallback, useEffect, useState } from 'react';
+import {
+    FormEventHandler,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import InputError from './InputError';
 import { Button } from './ui/button';
 import { ConfirmButton } from './ui/confirm-button';
@@ -54,6 +61,29 @@ export default function Notes({
                 setLoading(false);
             });
     }, [notableType, notableId, toast]);
+
+    const { subscribe } = useEventBus();
+    const subscribeRef = useRef(subscribe);
+    const unsubscribeRef = useRef<(() => void) | null>(null);
+
+    useEffect(() => {
+        refreshNotes();
+
+        // Subscribe to the new event
+        unsubscribeRef.current = subscribeRef.current(
+            'note-changed-' + notableType + '-' + notableId,
+            () => {
+                refreshNotes();
+            },
+        );
+
+        // Cleanup on unmount
+        return () => {
+            if (unsubscribeRef.current) {
+                unsubscribeRef.current();
+            }
+        };
+    }, [notableType, notableId, refreshNotes]);
 
     useEffect(() => {
         refreshNotes();
@@ -188,10 +218,11 @@ export default function Notes({
                         {note.user_id === user?.id && (
                             <div className="flex justify-end">
                                 <ConfirmButton
-                                    variant="destructive"
+                                    variant="ghost"
                                     size="icon"
                                     onConfirm={() => handleDeleteNote(note.id)}
                                     confirmText="Delete"
+                                    className="text-destructive"
                                 >
                                     <Trash className="h-4 w-4" />
                                 </ConfirmButton>

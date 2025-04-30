@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Actions\ZipToTimezone;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,6 +18,13 @@ class LocationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $timezones = ZipToTimezone::run($this->address_zipcode);
+
+        $timezone = null;
+        if ($timezones) {
+            $timezone = $timezones[$this->address_zipcode];
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -28,6 +36,7 @@ class LocationResource extends JsonResource
             'selectable_label' => $this->selectable_label,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'timezone' => $timezone,
         ];
     }
 }

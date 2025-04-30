@@ -196,6 +196,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('notes/{notableType}/{notableId}', GetNotes::class)->name('notes.index');
     Route::post('notes/{notableType}/{notableId}', CreateNote::class)->name('notes.store');
 
+    // Check Calls routes
+    Route::get('shipments/{shipment}/check-calls', [\App\Http\Controllers\CheckCalls\CheckCallController::class, 'index'])->name('shipments.check-calls.index');
+    Route::delete('shipments/{shipment}/check-calls/{checkcall}', [\App\Http\Controllers\CheckCalls\CheckCallController::class, 'destroy'])->name('shipments.check-calls.destroy');
+    Route::post('shipments/{shipment}/check-calls', \App\Actions\CheckCalls\CreateCheckCall::class)->name('shipments.check-calls.store');
+
     Route::get('locations/search', [LocationController::class, 'search'])->name('locations.search');
     Route::post('locations', CreateLocation::class)->name('locations.store');
 
