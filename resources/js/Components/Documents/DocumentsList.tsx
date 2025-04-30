@@ -24,6 +24,7 @@ import {
 import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
+import { Progress } from '../ui/progress';
 
 interface DocumentsListProps {
     documents: Document[];
@@ -91,6 +92,7 @@ export default function DocumentsList({
         data: fileUploadData,
         setData: setFileUploadData,
         post,
+        progress,
     } = useForm<{
         file: File | null;
         folder_name: string | null;
@@ -346,12 +348,13 @@ export default function DocumentsList({
                     initialPreview={fileUploadData.file?.name}
                 />
                 <Button
-                    disabled={!fileUploadData.file}
+                    disabled={!fileUploadData.file || progress != null}
                     className="mx-auto w-fit"
                     type="submit"
                 >
                     Upload
                 </Button>
+                {progress && <Progress value={progress.percentage} />}
             </form>
 
             {/* Delete Document Dialog */}
