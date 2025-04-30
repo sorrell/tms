@@ -222,7 +222,7 @@ export default function NewCheckCallButton({
                     {buttonText}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>New Check Call</DialogTitle>
                     <DialogDescription>
