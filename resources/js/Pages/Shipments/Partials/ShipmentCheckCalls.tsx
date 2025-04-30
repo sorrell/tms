@@ -10,7 +10,7 @@ import { CheckCall, Contact, Shipment, ShipmentStop } from '@/types';
 import { StopType } from '@/types/enums';
 import { router } from '@inertiajs/react';
 import { format } from 'date-fns';
-import { BoxSelect, ChevronLeft, ChevronRight, ClipboardCheck, Timer, Trash } from 'lucide-react';
+import { BoxSelect, ChevronLeft, ChevronRight, ClipboardCheck, PlusCircle, Timer, Trash } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 type ShipmentCheckCallsProps = {
@@ -119,8 +119,6 @@ export default function ShipmentCheckCalls({
         );
     };
 
-    console.log(checkCalls);
-
     // Find the current stop from the stops array
     const currentStop = stops.find((s) => s.arrived_at && !s.left_at);
 
@@ -134,8 +132,10 @@ export default function ShipmentCheckCalls({
                 <NewCheckCallButton
                     shipment={shipment}
                     carrierId={shipment.carrier?.id}
-                    stops={shipment.stops}
                     carrierContacts={carrierContacts}
+                    buttonVariant='ghost'
+                    buttonIcon={<PlusCircle className="h-4 w-4" />}
+                    buttonText="New"
                 />
             </CardHeader>
             <CardContent>
@@ -218,16 +218,16 @@ export default function ShipmentCheckCalls({
 
                                         {checkCall.reported_trailer_temp !==
                                             null && (
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-medium">
-                                                    Temp:
-                                                </span>
-                                                {
-                                                    checkCall.reported_trailer_temp
-                                                }
-                                                °
-                                            </div>
-                                        )}
+                                                <div className="flex items-center gap-1">
+                                                    <span className="font-medium">
+                                                        Temp:
+                                                    </span>
+                                                    {
+                                                        checkCall.reported_trailer_temp
+                                                    }
+                                                    °
+                                                </div>
+                                            )}
 
                                         {checkCall.is_late && (
                                             <div className="flex items-center gap-1 text-destructive">
@@ -326,21 +326,21 @@ export default function ShipmentCheckCalls({
                                                             .length > 100
                                                             ? `${checkCall.note.note.substring(0, 100)}... `
                                                             : checkCall.note
-                                                                  .note}
+                                                                .note}
                                                         {checkCall.note.note
                                                             .length > 100 && (
-                                                            <Button
-                                                                variant="link"
-                                                                className="h-auto p-0 text-xs text-primary"
-                                                                onClick={() =>
-                                                                    toggleNoteExpand(
-                                                                        checkCall.id,
-                                                                    )
-                                                                }
-                                                            >
-                                                                Show more
-                                                            </Button>
-                                                        )}
+                                                                <Button
+                                                                    variant="link"
+                                                                    className="h-auto p-0 text-xs text-primary"
+                                                                    onClick={() =>
+                                                                        toggleNoteExpand(
+                                                                            checkCall.id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Show more
+                                                                </Button>
+                                                            )}
                                                     </>
                                                 )}
                                             </div>

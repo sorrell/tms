@@ -24,13 +24,12 @@ import { convertDateForTimezone } from '@/lib/timezone';
 import { Contact, Shipment, ShipmentStop } from '@/types';
 import { ContactMethodType, Notable, ShipmentState } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
-import { Clipboard } from 'lucide-react';
+import { ClipboardCheck } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Textarea } from '../ui/textarea';
 
 type NewCheckCallButtonProps = {
     shipment: Shipment;
-    stops?: ShipmentStop[];
     carrierContacts?: Contact[];
     carrierId?: number;
     buttonText?: string;
@@ -41,6 +40,7 @@ type NewCheckCallButtonProps = {
         | 'secondary'
         | 'ghost'
         | 'link';
+    buttonIcon?: React.ReactNode;
 };
 
 // Function to determine if a field should be shown based on shipment state and context
@@ -111,11 +111,11 @@ const shouldShowField = (
 
 export default function NewCheckCallButton({
     shipment,
-    stops = [],
     carrierContacts = [],
     carrierId,
     buttonText = 'New Check Call',
     buttonVariant = 'default',
+    buttonIcon = <ClipboardCheck className="mr-2 h-4 w-4" />,
 }: NewCheckCallButtonProps) {
     const shipmentId = shipment.id;
 
@@ -218,7 +218,7 @@ export default function NewCheckCallButton({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant={buttonVariant}>
-                    <Clipboard className="mr-2 h-4 w-4" />
+                    {buttonIcon}
                     {buttonText}
                 </Button>
             </DialogTrigger>

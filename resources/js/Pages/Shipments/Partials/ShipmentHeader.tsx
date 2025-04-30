@@ -130,9 +130,9 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                 <NewCheckCallButton
                     shipment={shipment}
                     carrierId={shipment.carrier?.id}
-                    stops={shipment.stops}
                     carrierContacts={shipment.carrier?.contacts || []}
                     buttonVariant="outline"
+                    buttonText="Check Call"
                 />
 
                 {shipment.state === ShipmentState.Booked && (
