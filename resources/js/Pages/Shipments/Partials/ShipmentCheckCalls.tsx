@@ -240,7 +240,7 @@ export default function ShipmentCheckCalls({
 
                                         {checkCall.is_truck_empty && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium flex items-center ">
+                                                <span className="font-medium flex items-center text-success">
                                                     <BoxSelect className="h-4 w-4 inline mr-2" />
                                                     Truck is empty
                                                 </span>
