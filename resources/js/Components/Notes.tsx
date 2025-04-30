@@ -1,3 +1,4 @@
+import { useEventBus } from '@/hooks/useEventBus';
 import { useToast } from '@/hooks/UseToast';
 import { cn } from '@/lib/utils';
 import { Note } from '@/types';
@@ -5,7 +6,13 @@ import { Notable } from '@/types/enums';
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
-import { FormEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import {
+    FormEventHandler,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import InputError from './InputError';
 import { Button } from './ui/button';
 import { ConfirmButton } from './ui/confirm-button';
@@ -20,7 +27,6 @@ import {
 } from './ui/dialog';
 import { Loading } from './ui/loading';
 import { Textarea } from './ui/textarea';
-import { useEventBus } from '@/hooks/useEventBus';
 
 export default function Notes({
     notableType,
@@ -78,7 +84,6 @@ export default function Notes({
             }
         };
     }, [notableType, notableId, refreshNotes]);
-
 
     useEffect(() => {
         refreshNotes();

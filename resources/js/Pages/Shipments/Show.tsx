@@ -89,8 +89,6 @@ export default function Show({
                         {/* Customers */}
                         <CustomerDetails shipment={shipment} />
 
-                        
-
                         {/* Check Calls */}
                         <ShipmentCheckCalls
                             shipment={shipment}
@@ -129,8 +127,6 @@ export default function Show({
                                 />
                             </CardContent>
                         </Card>
-
-                        
                     </div>
                 </div>
             </div>

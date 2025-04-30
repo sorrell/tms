@@ -10,7 +10,15 @@ import { CheckCall, Contact, Shipment, ShipmentStop } from '@/types';
 import { StopType } from '@/types/enums';
 import { router } from '@inertiajs/react';
 import { format } from 'date-fns';
-import { BoxSelect, ChevronLeft, ChevronRight, ClipboardCheck, PlusCircle, Timer, Trash } from 'lucide-react';
+import {
+    BoxSelect,
+    ChevronLeft,
+    ChevronRight,
+    ClipboardCheck,
+    PlusCircle,
+    Timer,
+    Trash,
+} from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 type ShipmentCheckCallsProps = {
@@ -119,8 +127,21 @@ export default function ShipmentCheckCalls({
         );
     };
 
-    // Find the current stop from the stops array
-    const currentStop = stops.find((s) => s.arrived_at && !s.left_at);
+    // Get and set timezones map for quick lookup
+    const stopMap = new Map<number, ShipmentStop>();
+    stops.forEach((stop) => {
+        if (stop.id) {
+            stopMap.set(stop.id, stop);
+        }
+    });
+    const getStopTimezoneIdentifier = (stopId: number | undefined) => {
+        if (!stopId) {
+            return '';
+        }
+        return (
+            stopMap.get(stopId)?.facility?.location?.timezone?.identifier ?? ''
+        );
+    };
 
     return (
         <Card>
@@ -133,7 +154,7 @@ export default function ShipmentCheckCalls({
                     shipment={shipment}
                     carrierId={shipment.carrier?.id}
                     carrierContacts={carrierContacts}
-                    buttonVariant='ghost'
+                    buttonVariant="ghost"
                     buttonIcon={<PlusCircle className="h-4 w-4" />}
                     buttonText="New"
                 />
@@ -206,33 +227,31 @@ export default function ShipmentCheckCalls({
                                                     ETA:
                                                 </span>
                                                 <DatetimeDisplay
-                                                    datetime={
-                                                        checkCall.eta
-                                                    }
-                                                    timezone={
-                                                        checkCall.next_stop?.facility?.location?.timezone?.identifier
-                                                    }
+                                                    datetime={checkCall.eta}
+                                                    timezone={getStopTimezoneIdentifier(
+                                                        checkCall.next_stop_id,
+                                                    )}
                                                 />
                                             </div>
                                         )}
 
                                         {checkCall.reported_trailer_temp !==
                                             null && (
-                                                <div className="flex items-center gap-1">
-                                                    <span className="font-medium">
-                                                        Temp:
-                                                    </span>
-                                                    {
-                                                        checkCall.reported_trailer_temp
-                                                    }
-                                                    °
-                                                </div>
-                                            )}
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">
+                                                    Temp:
+                                                </span>
+                                                {
+                                                    checkCall.reported_trailer_temp
+                                                }
+                                                °
+                                            </div>
+                                        )}
 
                                         {checkCall.is_late && (
                                             <div className="flex items-center gap-1 text-destructive">
-                                                <span className="font-medium text-destructive flex items-center">
-                                                    <Timer className="h-4 w-4 mr-2" />
+                                                <span className="flex items-center font-medium text-destructive">
+                                                    <Timer className="mr-2 h-4 w-4" />
                                                     Truck is late
                                                 </span>
                                             </div>
@@ -240,8 +259,8 @@ export default function ShipmentCheckCalls({
 
                                         {checkCall.is_truck_empty && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium flex items-center text-success">
-                                                    <BoxSelect className="h-4 w-4 inline mr-2" />
+                                                <span className="flex items-center font-medium text-success">
+                                                    <BoxSelect className="mr-2 inline h-4 w-4" />
                                                     Truck is empty
                                                 </span>
                                             </div>
@@ -256,9 +275,9 @@ export default function ShipmentCheckCalls({
                                                     datetime={
                                                         checkCall.arrived_at
                                                     }
-                                                    timezone={
-                                                        checkCall.next_stop?.facility?.location?.timezone?.identifier
-                                                    }
+                                                    timezone={getStopTimezoneIdentifier(
+                                                        checkCall.next_stop_id,
+                                                    )}
                                                 />
                                             </div>
                                         )}
@@ -266,19 +285,22 @@ export default function ShipmentCheckCalls({
                                         {checkCall.loaded_unloaded_at && (
                                             <div className="flex items-center gap-1">
                                                 <span className="font-medium">
-                                                    {
-                                                        checkCall.current_stop?.stop_type == StopType.Delivery
-                                                            ? 'Unloaded'
-                                                            : 'Loaded'
-                                                    }:
+                                                    {checkCall.current_stop_id &&
+                                                    stopMap.get(
+                                                        checkCall.current_stop_id,
+                                                    )?.stop_type ==
+                                                        StopType.Delivery
+                                                        ? 'Unloaded'
+                                                        : 'Loaded'}
+                                                    :
                                                 </span>
                                                 <DatetimeDisplay
                                                     datetime={
                                                         checkCall.loaded_unloaded_at
                                                     }
-                                                    timezone={
-                                                        checkCall.current_stop?.facility?.location?.timezone?.identifier
-                                                    }
+                                                    timezone={getStopTimezoneIdentifier(
+                                                        checkCall.current_stop_id,
+                                                    )}
                                                 />
                                             </div>
                                         )}
@@ -289,12 +311,10 @@ export default function ShipmentCheckCalls({
                                                     Left:
                                                 </span>
                                                 <DatetimeDisplay
-                                                    datetime={
-                                                        checkCall.left_at
-                                                    }
-                                                    timezone={
-                                                        checkCall.current_stop?.facility?.location?.timezone?.identifier
-                                                    }
+                                                    datetime={checkCall.left_at}
+                                                    timezone={getStopTimezoneIdentifier(
+                                                        checkCall.current_stop_id,
+                                                    )}
                                                 />
                                             </div>
                                         )}
@@ -326,21 +346,21 @@ export default function ShipmentCheckCalls({
                                                             .length > 100
                                                             ? `${checkCall.note.note.substring(0, 100)}... `
                                                             : checkCall.note
-                                                                .note}
+                                                                  .note}
                                                         {checkCall.note.note
                                                             .length > 100 && (
-                                                                <Button
-                                                                    variant="link"
-                                                                    className="h-auto p-0 text-xs text-primary"
-                                                                    onClick={() =>
-                                                                        toggleNoteExpand(
-                                                                            checkCall.id,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    Show more
-                                                                </Button>
-                                                            )}
+                                                            <Button
+                                                                variant="link"
+                                                                className="h-auto p-0 text-xs text-primary"
+                                                                onClick={() =>
+                                                                    toggleNoteExpand(
+                                                                        checkCall.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Show more
+                                                            </Button>
+                                                        )}
                                                     </>
                                                 )}
                                             </div>

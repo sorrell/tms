@@ -48,7 +48,7 @@ class CheckCallPolicy
     {
         return (
             $user->can(Permission::CHECK_CALL_EDIT) 
-            && $checkCall->created_by === $user->id
+            && $checkCall->user_id === $user->id
         );
     }
 

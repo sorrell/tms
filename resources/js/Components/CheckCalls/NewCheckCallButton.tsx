@@ -192,13 +192,12 @@ export default function NewCheckCallButton({
                 if (data.note) {
                     emitNoteChanged(Notable.Shipment, shipmentId);
                 }
-                
+
                 toast({
                     description: 'Check call created successfully',
                 });
                 reset();
                 setOpen(false);
-                
             },
             onError: () => {
                 toast({
@@ -222,7 +221,7 @@ export default function NewCheckCallButton({
                     {buttonText}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>New Check Call</DialogTitle>
                     <DialogDescription>

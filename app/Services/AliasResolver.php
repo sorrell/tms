@@ -93,24 +93,26 @@ class AliasResolver
         return $modelAliasesMap[$modelAlias] ?? null;
     }
 
+    
     protected function resolveAliasProperty(Model $model, string $propertyAlias) : string
     {
-
         $property = $model->aliasProperties[$propertyAlias] ?? "";
 
         if ($property == "" && strpos($propertyAlias, '.') !== false) {
             list($leftAlias, $rightProperty) = explode('.', $propertyAlias, 2); // driver, name
-            $nestedModel = $model->{$model->aliasProperties[$leftAlias]};
+            
+            $nestedModel = $model->{$model->aliasProperties[$leftAlias] ?? null} ?? null;
             
             if ($nestedModel instanceof Model && in_array(\App\Traits\HasAliases::class, class_uses($nestedModel))) {
                 return $this->resolveAliasProperty($nestedModel, $rightProperty);
             } else {
-                throw new \Exception("Nested model {$leftAlias} is not a model or does not use HasAliases trait " . "ref id " . $model->id . " type " . get_class($model));
+                throw new \Exception("Nested model {$leftAlias} is not a model or does not use HasAliases trait " . "ref id " . ($model->id ?? 'unknown') . " type " . get_class($model));
             }
         }
         
         if ($property == "") {
-            throw new \Exception("Property {$propertyAlias} not found on " . $model->getAliasName() . " for model " . get_class($model) . " ref id " . $model->id);
+            // @phpstan-ignore-next-line
+            throw new \Exception("Property {$propertyAlias} not found on " . $model->getAliasName() . " for model " . get_class($model) . " ref id " . ($model->id ?? 'unknown'));
         }
         
         $result = "";
@@ -122,6 +124,7 @@ class AliasResolver
                 $result = $model->$function();
             }
             else {
+                // @phpstan-ignore-next-line
                 throw new \Exception("Function {$function} does not exist on " . $model->getAliasName() . " ref id " . $model->id . " type " . get_class($model));
             }
 
