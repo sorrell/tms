@@ -29,6 +29,8 @@ return new class extends Migration
             $table->dateTimeTz('reported_trailer_temp')->nullable();
             $table->dateTimeTz('loaded_unloaded_at')->nullable();
             $table->foreignId('note_id')->nullable();
+            $table->foreignId('next_stop_id')->nullable();
+            $table->foreignId('current_stop_id')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
         });

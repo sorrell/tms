@@ -41,6 +41,9 @@ class CreateCheckCall
             $noteId = $note->id;
         }
 
+        $nextStopId = $shipment->next_stop?->id;
+        $currentStopId = $shipment->current_stop?->id;
+
         $checkCall = CheckCall::create([
             'organization_id' => Auth::user()->current_organization_id,
             'carrier_id' => $carrierId,
@@ -57,6 +60,8 @@ class CreateCheckCall
             'left_at' => $leftAt,
             'loaded_unloaded_at' => $loadedUnloadedAt,
             'user_id' => Auth::id(),
+            'next_stop_id' => $nextStopId,
+            'current_stop_id' => $currentStopId,
         ]);
 
         $this->reflectCheckCallDetails($checkCall);
@@ -125,7 +130,7 @@ class CreateCheckCall
     private function reflectCheckCallDetails(CheckCall $checkCall)
     {        
         // Updates related to next stop
-        $nextStop = $checkCall->shipment->next_stop;
+        $nextStop = $checkCall->nextStop;
         $nextStopUpdates = [];
         // Update arrival time if provided in the check call
         if ($checkCall->arrived_at) {
@@ -140,7 +145,7 @@ class CreateCheckCall
         }
 
         // Updates related to current stop
-        $currentStop = $checkCall->shipment->current_stop;
+        $currentStop = $checkCall->currentStop;
         $currentStopUpdates = [];
         // Update departure time if provided in the check call
         if ($checkCall->left_at) {

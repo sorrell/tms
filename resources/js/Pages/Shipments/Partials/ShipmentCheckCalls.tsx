@@ -1,4 +1,5 @@
 import NewCheckCallButton from '@/Components/CheckCalls/NewCheckCallButton';
+import DatetimeDisplay from '@/Components/DatetimeDisplay';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { ConfirmButton } from '@/Components/ui/confirm-button';
@@ -6,9 +7,10 @@ import { Loading } from '@/Components/ui/loading';
 import { useEventBus } from '@/hooks/useEventBus';
 import { useToast } from '@/hooks/UseToast';
 import { CheckCall, Contact, Shipment, ShipmentStop } from '@/types';
+import { StopType } from '@/types/enums';
 import { router } from '@inertiajs/react';
 import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight, ClipboardCheck, Trash } from 'lucide-react';
+import { BoxSelect, ChevronLeft, ChevronRight, ClipboardCheck, Timer, Trash } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 type ShipmentCheckCallsProps = {
@@ -117,6 +119,8 @@ export default function ShipmentCheckCalls({
         );
     };
 
+    console.log(checkCalls);
+
     // Find the current stop from the stops array
     const currentStop = stops.find((s) => s.arrived_at && !s.left_at);
 
@@ -201,7 +205,14 @@ export default function ShipmentCheckCalls({
                                                 <span className="font-medium">
                                                     ETA:
                                                 </span>
-                                                {formatDateTime(checkCall.eta)}
+                                                <DatetimeDisplay
+                                                    datetime={
+                                                        checkCall.eta
+                                                    }
+                                                    timezone={
+                                                        checkCall.next_stop?.facility?.location?.timezone?.identifier
+                                                    }
+                                                />
                                             </div>
                                         )}
 
@@ -220,7 +231,8 @@ export default function ShipmentCheckCalls({
 
                                         {checkCall.is_late && (
                                             <div className="flex items-center gap-1 text-destructive">
-                                                <span className="font-medium">
+                                                <span className="font-medium text-destructive flex items-center">
+                                                    <Timer className="h-4 w-4 mr-2" />
                                                     Truck is late
                                                 </span>
                                             </div>
@@ -228,7 +240,8 @@ export default function ShipmentCheckCalls({
 
                                         {checkCall.is_truck_empty && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">
+                                                <span className="font-medium flex items-center ">
+                                                    <BoxSelect className="h-4 w-4 inline mr-2" />
                                                     Truck is empty
                                                 </span>
                                             </div>
@@ -239,20 +252,34 @@ export default function ShipmentCheckCalls({
                                                 <span className="font-medium">
                                                     Arrived:
                                                 </span>
-                                                {formatDateTime(
-                                                    checkCall.arrived_at,
-                                                )}
+                                                <DatetimeDisplay
+                                                    datetime={
+                                                        checkCall.arrived_at
+                                                    }
+                                                    timezone={
+                                                        checkCall.next_stop?.facility?.location?.timezone?.identifier
+                                                    }
+                                                />
                                             </div>
                                         )}
 
                                         {checkCall.loaded_unloaded_at && (
                                             <div className="flex items-center gap-1">
                                                 <span className="font-medium">
-                                                    Loaded/Unloaded:
+                                                    {
+                                                        checkCall.current_stop?.stop_type == StopType.Delivery
+                                                            ? 'Unloaded'
+                                                            : 'Loaded'
+                                                    }:
                                                 </span>
-                                                {formatDateTime(
-                                                    checkCall.loaded_unloaded_at,
-                                                )}
+                                                <DatetimeDisplay
+                                                    datetime={
+                                                        checkCall.loaded_unloaded_at
+                                                    }
+                                                    timezone={
+                                                        checkCall.current_stop?.facility?.location?.timezone?.identifier
+                                                    }
+                                                />
                                             </div>
                                         )}
 
@@ -261,9 +288,14 @@ export default function ShipmentCheckCalls({
                                                 <span className="font-medium">
                                                     Left:
                                                 </span>
-                                                {formatDateTime(
-                                                    checkCall.left_at,
-                                                )}
+                                                <DatetimeDisplay
+                                                    datetime={
+                                                        checkCall.left_at
+                                                    }
+                                                    timezone={
+                                                        checkCall.current_stop?.facility?.location?.timezone?.identifier
+                                                    }
+                                                />
                                             </div>
                                         )}
                                     </div>

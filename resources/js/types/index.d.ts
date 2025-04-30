@@ -375,6 +375,8 @@ export interface CheckCall {
     shipment?: Shipment;
     creator?: User;
     note?: Note;
+    next_stop?: ShipmentStop;
+    current_stop?: ShipmentStop;
 }
 
 // Typescript interface for timezone data

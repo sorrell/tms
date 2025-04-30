@@ -35,6 +35,8 @@ class CheckCall extends Model
         'reported_trailer_temp',
         'loaded_unloaded_at',
         'note_id',
+        'next_stop_id',
+        'current_stop_id',
     ];
 
     protected $casts = [
@@ -90,5 +92,21 @@ class CheckCall extends Model
     public function note(): BelongsTo
     {
         return $this->belongsTo(Note::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<ShipmentStop, $this>
+     */
+    public function nextStop(): BelongsTo
+    {
+        return $this->belongsTo(ShipmentStop::class, 'next_stop_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<ShipmentStop, $this>
+     */
+    public function currentStop(): BelongsTo
+    {
+        return $this->belongsTo(ShipmentStop::class, 'current_stop_id');
     }
 } 

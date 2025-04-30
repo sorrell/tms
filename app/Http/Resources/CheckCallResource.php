@@ -36,6 +36,8 @@ class CheckCallResource extends JsonResource
             'note_id' => $this->note_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'next_stop_id' => $this->next_stop_id,
+            'current_stop_id' => $this->current_stop_id,
             'carrier' => $this->whenLoaded('carrier'),
             'shipment' => $this->whenLoaded('shipment'),
             'creator' => $this->whenLoaded('creator', function () {
@@ -43,6 +45,12 @@ class CheckCallResource extends JsonResource
             }),
             'note' => $this->whenLoaded('note', function () {
                 return NoteResource::make($this->note);
+            }),
+            'next_stop' => $this->whenLoaded('nextStop', function () {
+                return ShipmentStopResource::make($this->nextStop);
+            }),
+            'current_stop' => $this->whenLoaded('currentStop', function () {
+                return ShipmentStopResource::make($this->currentStop);
             }),
         ];
     }

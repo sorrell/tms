@@ -21,7 +21,7 @@ class CheckCallController extends Controller
         return CheckCallResource::collection(
             $shipment->check_calls
                 ->sortByDesc('created_at')
-                ->load('note', 'creator')
+                ->load('note', 'creator', 'nextStop', 'currentStop', 'nextStop.facility.location', 'currentStop.facility.location')
         );
     }
 

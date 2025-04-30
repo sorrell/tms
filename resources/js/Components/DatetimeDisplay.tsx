@@ -15,7 +15,16 @@ export default function DatetimeDisplay({
 
         formattedDatetime = new Date(formattedDatetime).toLocaleString(
             'en-US',
-            { timeZone: timezone, timeZoneName: 'short' },
+            { 
+                timeZone: timezone,
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+                timeZoneName: 'short'
+            },
         );
     }
 
