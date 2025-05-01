@@ -15,7 +15,9 @@ import {
     ChevronLeft,
     ChevronRight,
     ClipboardCheck,
+    MessageCircle,
     PlusCircle,
+    Thermometer,
     Timer,
     Trash,
 } from 'lucide-react';
@@ -166,7 +168,7 @@ export default function ShipmentCheckCalls({
                         text="Loading check calls..."
                     />
                 ) : checkCalls.length === 0 ? (
-                    <div className="py-8 text-center text-sm text-gray-500">
+                    <div className="py-8 text-center text-sm text-muted-foreground">
                         No check calls recorded yet
                     </div>
                 ) : (
@@ -175,7 +177,7 @@ export default function ShipmentCheckCalls({
                             {paginatedCheckCalls.map((checkCall) => (
                                 <div
                                     key={checkCall.id}
-                                    className="border-t p-2"
+                                    className="border-b p-0"
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="font-medium">
@@ -184,7 +186,7 @@ export default function ShipmentCheckCalls({
                                             {checkCall.contact_method &&
                                                 ` (${checkCall.contact_method})`}
                                             {checkCall.contact_method_detail && (
-                                                <span className="ml-1 text-sm text-gray-500">
+                                                <span className="ml-1 text-sm text-muted-foreground">
                                                     -{' '}
                                                     {
                                                         checkCall.contact_method_detail
@@ -192,137 +194,124 @@ export default function ShipmentCheckCalls({
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="text-xs text-gray-500">
-                                                <div>
-                                                    {formatDateTime(
-                                                        checkCall.created_at,
-                                                    )}
+
+                                    </div>
+
+                                    <div className="text-sm flex flex-row justify-between my-2">
+                                        <div>
+                                            {checkCall.is_late && (
+                                                <div className="flex items-center gap-1 text-destructive">
+                                                    <span className="flex items-center font-medium text-destructive">
+                                                        <Timer className="mr-2 h-4 w-4" />
+                                                        Truck is late
+                                                    </span>
                                                 </div>
-                                                {checkCall.creator && (
-                                                    <div className="">
-                                                        by{' '}
-                                                        {checkCall.creator.name}
+                                            )}
+
+                                            {checkCall.is_truck_empty && (
+                                                <div className="flex items-center gap-1">
+                                                    <span className="flex items-center font-medium text-success">
+                                                        <BoxSelect className="mr-2 inline h-4 w-4" />
+                                                        Truck is empty
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col gap-x-4 gap-y-1">
+
+                                            {checkCall.reported_trailer_temp !==
+                                                null && (
+                                                    <div className="flex items-center gap-1">
+                                                        <Thermometer className="h-4 w-4 inline" />
+                                                        <span className="font-medium">
+                                                            Temp:
+                                                        </span>
+                                                        {
+                                                            checkCall.reported_trailer_temp
+                                                        }
+                                                        °
                                                     </div>
                                                 )}
-                                            </div>
-                                            <ConfirmButton
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-7 w-7 text-destructive"
-                                                onConfirm={() =>
-                                                    handleDelete(checkCall.id)
-                                                }
-                                                confirmText="Delete"
-                                            >
-                                                <Trash className="h-4 w-4" />
-                                            </ConfirmButton>
+
+
+                                            {checkCall.eta && (
+                                                <div className="flex items-center gap-1">
+                                                    <span className="font-medium">
+                                                        ETA:
+                                                    </span>
+                                                    <DatetimeDisplay
+                                                        datetime={checkCall.eta}
+                                                        timezone={getStopTimezoneIdentifier(
+                                                            checkCall.next_stop_id,
+                                                        )}
+                                                    />
+                                                </div>
+                                            )}
+
+
+
+                                            {checkCall.arrived_at && (
+                                                <div className="flex items-center gap-1">
+                                                    <span className="font-medium">
+                                                        Arrived:
+                                                    </span>
+                                                    <DatetimeDisplay
+                                                        datetime={
+                                                            checkCall.arrived_at
+                                                        }
+                                                        timezone={getStopTimezoneIdentifier(
+                                                            checkCall.next_stop_id,
+                                                        )}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {checkCall.loaded_unloaded_at && (
+                                                <div className="flex items-center gap-1">
+                                                    <span className="font-medium">
+                                                        {checkCall.current_stop_id &&
+                                                            stopMap.get(
+                                                                checkCall.current_stop_id,
+                                                            )?.stop_type ==
+                                                            StopType.Delivery
+                                                            ? 'Unloaded'
+                                                            : 'Loaded'}
+                                                        :
+                                                    </span>
+                                                    <DatetimeDisplay
+                                                        datetime={
+                                                            checkCall.loaded_unloaded_at
+                                                        }
+                                                        timezone={getStopTimezoneIdentifier(
+                                                            checkCall.current_stop_id,
+                                                        )}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {checkCall.left_at && (
+                                                <div className="flex items-center gap-1">
+                                                    <span className="font-medium">
+                                                        Left:
+                                                    </span>
+                                                    <DatetimeDisplay
+                                                        datetime={checkCall.left_at}
+                                                        timezone={getStopTimezoneIdentifier(
+                                                            checkCall.current_stop_id,
+                                                        )}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
+
                                     </div>
 
-                                    <div className="mt-2 flex flex-col gap-x-4 gap-y-1 text-sm">
-                                        {checkCall.eta && (
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-medium">
-                                                    ETA:
-                                                </span>
-                                                <DatetimeDisplay
-                                                    datetime={checkCall.eta}
-                                                    timezone={getStopTimezoneIdentifier(
-                                                        checkCall.next_stop_id,
-                                                    )}
-                                                />
-                                            </div>
-                                        )}
 
-                                        {checkCall.reported_trailer_temp !==
-                                            null && (
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-medium">
-                                                    Temp:
-                                                </span>
-                                                {
-                                                    checkCall.reported_trailer_temp
-                                                }
-                                                °
-                                            </div>
-                                        )}
-
-                                        {checkCall.is_late && (
-                                            <div className="flex items-center gap-1 text-destructive">
-                                                <span className="flex items-center font-medium text-destructive">
-                                                    <Timer className="mr-2 h-4 w-4" />
-                                                    Truck is late
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        {checkCall.is_truck_empty && (
-                                            <div className="flex items-center gap-1">
-                                                <span className="flex items-center font-medium text-success">
-                                                    <BoxSelect className="mr-2 inline h-4 w-4" />
-                                                    Truck is empty
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        {checkCall.arrived_at && (
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-medium">
-                                                    Arrived:
-                                                </span>
-                                                <DatetimeDisplay
-                                                    datetime={
-                                                        checkCall.arrived_at
-                                                    }
-                                                    timezone={getStopTimezoneIdentifier(
-                                                        checkCall.next_stop_id,
-                                                    )}
-                                                />
-                                            </div>
-                                        )}
-
-                                        {checkCall.loaded_unloaded_at && (
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-medium">
-                                                    {checkCall.current_stop_id &&
-                                                    stopMap.get(
-                                                        checkCall.current_stop_id,
-                                                    )?.stop_type ==
-                                                        StopType.Delivery
-                                                        ? 'Unloaded'
-                                                        : 'Loaded'}
-                                                    :
-                                                </span>
-                                                <DatetimeDisplay
-                                                    datetime={
-                                                        checkCall.loaded_unloaded_at
-                                                    }
-                                                    timezone={getStopTimezoneIdentifier(
-                                                        checkCall.current_stop_id,
-                                                    )}
-                                                />
-                                            </div>
-                                        )}
-
-                                        {checkCall.left_at && (
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-medium">
-                                                    Left:
-                                                </span>
-                                                <DatetimeDisplay
-                                                    datetime={checkCall.left_at}
-                                                    timezone={getStopTimezoneIdentifier(
-                                                        checkCall.current_stop_id,
-                                                    )}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
 
                                     {checkCall.note && checkCall.note.note && (
                                         <div className="">
-                                            <div className="mt-2 text-sm text-gray-600">
+                                            <div className="mt-2 text-muted-foreground">
+                                                <MessageCircle className="h-4 w-4 inline mr-2" />
                                                 {expandedNotes.includes(
                                                     checkCall.id,
                                                 ) ? (
@@ -346,26 +335,53 @@ export default function ShipmentCheckCalls({
                                                             .length > 100
                                                             ? `${checkCall.note.note.substring(0, 100)}... `
                                                             : checkCall.note
-                                                                  .note}
+                                                                .note}
                                                         {checkCall.note.note
                                                             .length > 100 && (
-                                                            <Button
-                                                                variant="link"
-                                                                className="h-auto p-0 text-xs text-primary"
-                                                                onClick={() =>
-                                                                    toggleNoteExpand(
-                                                                        checkCall.id,
-                                                                    )
-                                                                }
-                                                            >
-                                                                Show more
-                                                            </Button>
-                                                        )}
+                                                                <Button
+                                                                    variant="link"
+                                                                    className="h-auto p-0 text-xs text-primary"
+                                                                    onClick={() =>
+                                                                        toggleNoteExpand(
+                                                                            checkCall.id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Show more
+                                                                </Button>
+                                                            )}
                                                     </>
                                                 )}
                                             </div>
                                         </div>
                                     )}
+
+                                    <div className="flex items-center w-full gap-2 justify-between ">
+                                        <div className="text-xs text-muted-foreground flex flex-row">
+                                            <div>
+                                                {formatDateTime(
+                                                    checkCall.created_at,
+                                                )}
+                                            </div>
+                                            {checkCall.creator && (
+                                                <div className="ml-1">
+                                                    by{' '}
+                                                    {checkCall.creator.name}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <ConfirmButton
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-7 w-7 text-destructive"
+                                            onConfirm={() =>
+                                                handleDelete(checkCall.id)
+                                            }
+                                            confirmText="Delete"
+                                        >
+                                            <Trash className="h-4 w-4" />
+                                        </ConfirmButton>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -385,7 +401,7 @@ export default function ShipmentCheckCalls({
                                     </span>
                                 </Button>
 
-                                <span className="text-sm text-gray-500">
+                                <span className="text-sm text-muted-foreground">
                                     Page {currentPage} of {totalPages}
                                 </span>
 
