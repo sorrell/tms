@@ -229,73 +229,7 @@ export default function NewCheckCallButton({
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {shouldShowField(shipment, shipment.next_stop, 'eta') && (
-                        <div className="space-y-2">
-                            <Label htmlFor="eta" className="flex items-center">
-                                <span className="font-bold">ETA</span>
-                                <span className="ml-2 text-xs font-normal text-muted-foreground">
-                                    ({shipment.next_stop?.facility?.name})
-                                </span>
-                            </Label>
-                            <DateTimePicker
-                                clearable={true}
-                                value={
-                                    data.eta
-                                        ? new Date(
-                                              convertForTimezone(
-                                                  shipment.next_stop,
-                                                  data.eta,
-                                              ),
-                                          )
-                                        : undefined
-                                }
-                                timezone={
-                                    shipment.next_stop?.facility?.location
-                                        ?.timezone?.identifier
-                                }
-                                onChange={(e: Date | undefined) => {
-                                    setData('eta', e?.toISOString() || null);
-                                }}
-                            />
-                            {errors.eta && (
-                                <p className="text-sm text-red-500">
-                                    {errors.eta}
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    {shouldShowField(
-                        shipment,
-                        shipment.current_stop,
-                        'reported_trailer_temp',
-                    ) && (
-                        <div className="space-y-2">
-                            <Label htmlFor="reported_trailer_temp">
-                                Reported Trailer Temp
-                            </Label>
-                            <Input
-                                id="reported_trailer_temp"
-                                type="number"
-                                step="0.1"
-                                value={data.reported_trailer_temp || ''}
-                                onChange={(e) =>
-                                    setData(
-                                        'reported_trailer_temp',
-                                        e.target.value,
-                                    )
-                                }
-                                placeholder="Enter temperature"
-                            />
-                            {errors.reported_trailer_temp && (
-                                <p className="text-sm text-red-500">
-                                    {errors.reported_trailer_temp}
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    <div className="space-y-2">
+                <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <Label htmlFor="contact_name">Contact Name *</Label>
                         </div>
@@ -394,6 +328,74 @@ export default function NewCheckCallButton({
                             )}
                         </div>
                     </div>
+                    
+                    {shouldShowField(shipment, shipment.next_stop, 'eta') && (
+                        <div className="space-y-2">
+                            <Label htmlFor="eta" className="flex items-center">
+                                <span className="font-bold">ETA</span>
+                                <span className="ml-2 text-xs font-normal text-muted-foreground">
+                                    ({shipment.next_stop?.facility?.name})
+                                </span>
+                            </Label>
+                            <DateTimePicker
+                                clearable={true}
+                                value={
+                                    data.eta
+                                        ? new Date(
+                                              convertForTimezone(
+                                                  shipment.next_stop,
+                                                  data.eta,
+                                              ),
+                                          )
+                                        : undefined
+                                }
+                                timezone={
+                                    shipment.next_stop?.facility?.location
+                                        ?.timezone?.identifier
+                                }
+                                onChange={(e: Date | undefined) => {
+                                    setData('eta', e?.toISOString() || null);
+                                }}
+                            />
+                            {errors.eta && (
+                                <p className="text-sm text-red-500">
+                                    {errors.eta}
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {shouldShowField(
+                        shipment,
+                        shipment.current_stop,
+                        'reported_trailer_temp',
+                    ) && (
+                        <div className="space-y-2">
+                            <Label htmlFor="reported_trailer_temp">
+                                Reported Trailer Temp
+                            </Label>
+                            <Input
+                                id="reported_trailer_temp"
+                                type="number"
+                                step="0.1"
+                                value={data.reported_trailer_temp || ''}
+                                onChange={(e) =>
+                                    setData(
+                                        'reported_trailer_temp',
+                                        e.target.value,
+                                    )
+                                }
+                                placeholder="Enter temperature"
+                            />
+                            {errors.reported_trailer_temp && (
+                                <p className="text-sm text-red-500">
+                                    {errors.reported_trailer_temp}
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    
 
                     {shouldShowField(
                         shipment,
