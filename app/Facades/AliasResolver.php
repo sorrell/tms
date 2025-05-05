@@ -2,13 +2,14 @@
 
 namespace App\Facades;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static mixed get($id, string $alias)
  * @method static bool set($id, array $values)
  * 
- * @see \App\Services\AliasResolver
+ * @see \App\Services\AliasResolverService
  */
 class AliasResolver extends Facade
 {
@@ -19,4 +20,6 @@ class AliasResolver extends Facade
     {
         return 'alias.resolver';
     }
+
+
 } 
