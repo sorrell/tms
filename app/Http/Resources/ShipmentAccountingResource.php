@@ -3,7 +3,9 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\Accounting\PayableResource;
+use App\Http\Resources\Accounting\RateTypeResource;
 use App\Http\Resources\Accounting\ReceivableResource;
+use App\Models\Accounting\RateType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,6 +26,8 @@ class ShipmentAccountingResource extends JsonResource
             'id' => $this->id,
             'payables' => PayableResource::collection($this->payables->load('rate_type', 'currency')),
             'receivables' => ReceivableResource::collection($this->receivables->load('rate_type', 'currency')),
+            'related_entities' => AliasModelResource::collection($this->related_entities),
+            'rate_types' => RateTypeResource::collection(RateType::all()),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Shipments;
 
+use App\Http\Resources\AliasModelResource;
 use App\Http\Resources\ShipmentResource;
 use App\Models\Accounting\Payable;
 use App\Models\Accounting\Receivable;
@@ -151,6 +152,27 @@ class Shipment extends Model implements HasStatesContract
     public function check_calls(): HasMany
     {
         return $this->hasMany(CheckCall::class);
+    }
+
+    public function getRelatedEntitiesAttribute(): array
+    {
+        $entities = [];
+
+        foreach ($this->customers as $customer) {
+            $entities[] = $customer;
+        }
+
+        $entities[] = $this->carrier;
+        
+        foreach($this->stops as $stop) {
+            $entities[] = $stop->facility;
+        }
+
+        foreach($this->bounces as $bounce) {
+            $entities[] = $bounce->carrier;
+        }
+
+        return $entities;
     }
 
     public function getNextStopAttribute(): ?ShipmentStop

@@ -23,7 +23,7 @@ class GetShipmentAccounting {
 
     public function jsonResponse(Shipment $shipment)
     {
-        return ShipmentFinancialsResource::make(
+        return ShipmentAccountingResource::make(
             $shipment->load('payables', 'receivables')
         );
     }
