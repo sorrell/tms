@@ -2,17 +2,17 @@
 
 namespace App\Actions\Accounting;
 
-use App\Http\Resources\Accounting\AccessorialTypeResource;
-use App\Models\Accounting\AccessorialType;
+use App\Http\Resources\Accounting\RateTypeResource;
+use App\Models\Accounting\RateType;
 use Illuminate\Database\Eloquent\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class GetAccessorialTypes {
+class GetRateTypes {
     use AsAction;
 
     public function handle() : Collection
     {
-        return AccessorialType::all();
+        return RateType::all();
     }
 
     public function asController()
@@ -22,6 +22,6 @@ class GetAccessorialTypes {
 
     public function jsonResponse(Collection $rateTypes)
     {
-        return response()->json(AccessorialTypeResource::collection($rateTypes));
+        return response()->json(RateTypeResource::collection($rateTypes));
     }
 }

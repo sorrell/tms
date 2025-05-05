@@ -3,6 +3,8 @@
 namespace App\Models\Shipments;
 
 use App\Http\Resources\ShipmentResource;
+use App\Models\Accounting\Payable;
+use App\Models\Accounting\Receivable;
 use App\Models\Carriers\Carrier;
 use App\Models\Carriers\CarrierBounce;
 use App\Models\CheckCalls\CheckCall;
@@ -128,27 +130,19 @@ class Shipment extends Model implements HasStatesContract
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ShipmentCustomerRate, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Payable, $this>
      */
-    public function shipment_customer_rates(): HasMany
+    public function payables(): HasMany
     {
-        return $this->hasMany(ShipmentCustomerRate::class);
+        return $this->hasMany(Payable::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ShipmentCarrierRate, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Receivable, $this>
      */
-    public function shipment_carrier_rates(): HasMany
+    public function receivables(): HasMany
     {
-        return $this->hasMany(ShipmentCarrierRate::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Accessorial, $this>
-     */
-    public function accessorials(): HasMany
-    {
-        return $this->hasMany(Accessorial::class);
+        return $this->hasMany(Receivable::class);
     }
 
     /**

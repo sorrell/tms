@@ -1,8 +1,8 @@
 <?php
 
-use App\Actions\Accounting\GetAccessorialTypes;
-use App\Actions\Accounting\GetCarrierRateTypes;
-use App\Actions\Accounting\GetCustomerRateTypes;
+use App\Actions\Accounting\GetRateTypes;
+use App\Actions\Accounting\SavePayables;
+use App\Actions\Accounting\SaveReceivables;
 use App\Actions\Carriers\BounceCarrier;
 use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
@@ -33,15 +33,9 @@ use App\Actions\Notes\DeleteNote;
 use App\Actions\Notes\GetNotes;
 use App\Actions\Shipments\CancelShipment;
 use App\Actions\Shipments\CreateShipment;
-use App\Actions\Shipments\CreateShipmentCustomerRate;
-use App\Actions\Shipments\DeleteShipmentCustomerRate;
 use App\Actions\Shipments\DispatchShipment;
-use App\Actions\Shipments\GetShipmentFinancials;
-use App\Actions\Shipments\SaveAccessorials;
-use App\Actions\Shipments\SaveShipmentCarrierRates;
-use App\Actions\Shipments\SaveShipmentCustomerRates;
+use App\Actions\Shipments\GetShipmentAccounting;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
-use App\Actions\Shipments\UpdateShipmentCustomerRate;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentCustomers;
@@ -89,9 +83,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function () {
 
     Route::prefix('accounting')->name('accounting.')->group(function() {
-        Route::get('customer-rate-types', GetCustomerRateTypes::class)->name('customer-rate-types.index');
-        Route::get('carrier-rate-types', GetCarrierRateTypes::class)->name('carrier-rate-types.index');
-        Route::get('accessorial-types', GetAccessorialTypes::class)->name('accessorial-types.index');
+        Route::get('rate-types', GetRateTypes::class)->name('rate-types.index');
     });
 
     Route::get('timezones/search', [TimezoneController::class, 'search'])->name('timezones.search');
@@ -185,10 +177,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::patch('shipments/{shipment}/cancel', CancelShipment::class)->name('shipments.cancel');
     Route::post('shipments/{shipment}/bounce', BounceCarrier::class)->name('shipments.bounce');
 
-    Route::get('shipments/{shipment}/financials', GetShipmentFinancials::class)->name('shipments.financials');
-    Route::post('shipments/{shipment}/financials/customer-rates', SaveShipmentCustomerRates::class)->name('shipments.financials.customer-rates');
-    Route::post('shipments/{shipment}/financials/carrier-rates', SaveShipmentCarrierRates::class)->name('shipments.financials.carrier-rates');
-    Route::post('shipments/{shipment}/financials/accessorials', SaveAccessorials::class)->name('shipments.financials.accessorials');
+    Route::get('shipments/{shipment}/accounting', GetShipmentAccounting::class)->name('shipments.accounting');
+    Route::post('shipments/{shipment}/accounting/payables', SavePayables::class)->name('shipments.accounting.payables');
+    Route::post('shipments/{shipment}/accounting/receivables', SaveReceivables::class)->name('shipments.accounting.receivables');
 
     Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
 
