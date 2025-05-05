@@ -87,7 +87,6 @@ class SaveReceivables
             'receivables.*.id' => 'nullable',
             'receivables.*.payer_id' => 'required',
             'receivables.*.payer_type' => 'required|string',
-            'receivables.*' => 'required|exists:receivables,id,payer_type,payer_id',
             'receivables.*.rate' => 'required|numeric',
             'receivables.*.quantity' => 'required|numeric',
             'receivables.*.total' => 'required|numeric',
