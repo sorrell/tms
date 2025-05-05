@@ -2,6 +2,7 @@
 
 namespace App\Actions\Accounting;
 
+use App\Facades\AliasResolver;
 use App\Http\Resources\Accounting\PayableResource;
 use App\Models\Accounting\Payable;
 use App\Models\Shipments\Shipment;
@@ -57,9 +58,17 @@ class SavePayables
 
     public function asController(ActionRequest $request, Shipment $shipment)
     {
+        $payables = $request->validated('payables', []);
+
+        foreach($payables as $index => $payable) {
+            $payables[$index]['payee_type'] = AliasResolver::getModelClass(
+                $payables[$index]['payee_type']
+            );
+        }
+
         return $this->handle(
             $shipment,
-            $request->validated('payables', [])
+            $payables,
         );
     }
 
@@ -79,7 +88,6 @@ class SavePayables
             'payables.*.id' => 'nullable',
             'payables.*.payee_id' => 'required',
             'payables.*.payee_type' => 'required|string',
-            'payables.*' => 'required|exists:payables,id,payee_type,payee_id',
             'payables.*.rate' => 'required|numeric',
             'payables.*.quantity' => 'required|numeric',
             'payables.*.total' => 'required|numeric',

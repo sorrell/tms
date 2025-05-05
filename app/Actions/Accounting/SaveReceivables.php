@@ -2,6 +2,7 @@
 
 namespace App\Actions\Accounting;
 
+use App\Facades\AliasResolver;
 use App\Http\Resources\Accounting\ReceivableResource;
 use App\Models\Accounting\Receivable;
 use App\Models\Shipments\Shipment;
@@ -57,9 +58,16 @@ class SaveReceivables
 
     public function asController(ActionRequest $request, Shipment $shipment)
     {
+        $receivables = $request->validated('receivables', []);
+
+        foreach($receivables as $index => $receivable) {
+            $receivables[$index]['payer_type'] = AliasResolver::getModelClass(
+                $receivables[$index]['payer_type']
+            );
+        }
         return $this->handle(
             $shipment,
-            $request->validated('receivables', [])
+            $receivables
         );
     }
 
