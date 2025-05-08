@@ -12,6 +12,7 @@ import {
     TableRow,
 } from '@/Components/ui/table';
 import { toast } from '@/hooks/UseToast';
+import InputError from '@/Components/InputError';
 import {
     RateType,
     Shipment,
@@ -39,6 +40,10 @@ type ReceivableFormData = {
     rate_type_id: number;
     currency_id: number;
 };
+
+// Define a type for the errors object from Inertia
+type FormErrors = Record<string, string>;
+
 export default function Receivables({
     shipment,
     shipmentAccounting,
@@ -46,24 +51,27 @@ export default function Receivables({
     shipment: Shipment;
     shipmentAccounting?: ShipmentAccounting;
 }) {
-    const [rateTypes, setRateTypes] = useState<RateType[]>([]);
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    const { data, setData, post, errors, processing } = useForm<{
+    const { data, setData, post, errors: formErrors, processing } = useForm<{
         receivables: ReceivableFormData[];
     }>({
         receivables: shipmentAccounting?.receivables || [],
     });
+    
+    // Correctly type the errors object
+    const errors = formErrors as unknown as FormErrors;
 
     const setDataRef = useRef(setData);
 
     useEffect(() => {
-        setDataRef.current({
-            receivables: shipmentAccounting?.receivables || [],
-        });
-    }, [shipmentAccounting]);
-
+        if (!isEditing) {
+            setDataRef.current({
+                receivables: shipmentAccounting?.receivables || [],
+            });
+        }        
+    }, [shipmentAccounting, isEditing]);
 
     const findRateType = useCallback((id: number) => {
         return shipmentAccounting?.rate_types.find((rateType) => rateType.id === id);
@@ -131,7 +139,7 @@ export default function Receivables({
                         </Button>
                         {isEditing ? (
                             <>
-                                <Button variant="ghost" onClick={() => { 
+                                <Button variant="ghost" onClick={() => {
                                     post(route('shipments.accounting.receivables', { shipment: shipment.id }), {
                                         preserveScroll: true,
                                         onSuccess: () => {
@@ -140,10 +148,11 @@ export default function Receivables({
                                                 title: 'Receivables saved',
                                             })
                                         },
-                                        onError: (e) => {
-                                            console.log(e);
+                                        onError: () => {
                                             toast({
                                                 title: 'Error saving receivables',
+                                                description: 'Please check form for errors',
+                                                variant: 'destructive'
                                             })
                                         }
                                     });
@@ -237,6 +246,8 @@ export default function Receivables({
                                                 ))}
                                             </SelectContent>
                                         </Select>
+                                        <InputError message={errors[`receivables.${index}.payer_id` as keyof typeof errors]} />
+                                        <InputError message={errors[`receivables.${index}.payer_type` as keyof typeof errors]} />
                                     </TableCell>
                                     <TableCell>
                                         <Select value={receivable.rate_type_id?.toString() || ""} onValueChange={(value) => {
@@ -264,6 +275,7 @@ export default function Receivables({
                                                 ))}
                                             </SelectContent>
                                         </Select>
+                                        <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
                                     </TableCell>
                                     <TableCell>
                                         <Input type="number" value={receivable.rate} onChange={(e) => {
@@ -277,6 +289,7 @@ export default function Receivables({
                                                 )
                                             });
                                         }} />
+                                        <InputError message={errors[`receivables.${index}.rate` as keyof typeof errors]} />
                                     </TableCell>
                                     <TableCell>
                                         <Input type="number" value={receivable.quantity} onChange={(e) => {
@@ -290,6 +303,7 @@ export default function Receivables({
                                                 )
                                             });
                                         }} />
+                                        <InputError message={errors[`receivables.${index}.quantity` as keyof typeof errors]} />
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <Input type="number" value={receivable.total} onChange={(e) => {
@@ -303,6 +317,7 @@ export default function Receivables({
                                                 )
                                             });
                                         }} />
+                                        <InputError message={errors[`receivables.${index}.total` as keyof typeof errors]} />
                                     </TableCell>
                                     <TableCell>
                                     <ConfirmButton
