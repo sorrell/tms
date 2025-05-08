@@ -104,7 +104,14 @@ export default function Receivables({
         if (aliasName == 'facility') {
             return Warehouse;
         }
+    }
 
+    const getCurrencySymbol = () => {
+        return '$';
+    }
+
+    const formatCurrency = (value: number) => {
+        return `${getCurrencySymbol()}${value.toFixed(2)}`;
     }
 
     return (
@@ -285,17 +292,27 @@ export default function Receivables({
                                             <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[15%]">
-                                            <Input type="number" value={receivable.rate} onChange={(e) => {
-                                                setData({
-                                                    ...data,
-                                                    receivables: data.receivables.map(
-                                                        (r, i) => 
-                                                            i === index ? 
-                                                                { ...r, rate: parseFloat(e.target.value) } : 
-                                                                r
-                                                    )
-                                                });
-                                            }} />
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                                    {getCurrencySymbol()}
+                                                </span>
+                                                <Input 
+                                                    type="number" 
+                                                    className="pl-7" 
+                                                    value={receivable.rate} 
+                                                    onChange={(e) => {
+                                                        setData({
+                                                            ...data,
+                                                            receivables: data.receivables.map(
+                                                                (r, i) => 
+                                                                    i === index ? 
+                                                                        { ...r, rate: parseFloat(e.target.value) } : 
+                                                                        r
+                                                            )
+                                                        });
+                                                    }} 
+                                                />
+                                            </div>
                                             <InputError message={errors[`receivables.${index}.rate` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[12%]">
@@ -313,17 +330,27 @@ export default function Receivables({
                                             <InputError message={errors[`receivables.${index}.quantity` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[18%] text-right">
-                                            <Input type="number" value={receivable.total} onChange={(e) => {
-                                                setData({
-                                                    ...data,
-                                                    receivables: data.receivables.map(
-                                                        (r, i) => 
-                                                            i === index ? 
-                                                                { ...r, total: parseFloat(e.target.value) } : 
-                                                                r
-                                                    )
-                                                });
-                                            }} />
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                                    {getCurrencySymbol()}
+                                                </span>
+                                                <Input 
+                                                    type="number" 
+                                                    className="pl-7" 
+                                                    value={receivable.total} 
+                                                    onChange={(e) => {
+                                                        setData({
+                                                            ...data,
+                                                            receivables: data.receivables.map(
+                                                                (r, i) => 
+                                                                    i === index ? 
+                                                                        { ...r, total: parseFloat(e.target.value) } : 
+                                                                        r
+                                                            )
+                                                        });
+                                                    }} 
+                                                />
+                                            </div>
                                             <InputError message={errors[`receivables.${index}.total` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[5%]">
@@ -355,9 +382,9 @@ export default function Receivables({
                                                 {findRateType(receivable.rate_type_id)?.name}
                                             </span>
                                         </TableCell>
-                                        <TableCell className="w-[15%]">{receivable.rate}</TableCell>
+                                        <TableCell className="w-[15%]">{formatCurrency(receivable.rate)}</TableCell>
                                         <TableCell className="w-[12%]">{receivable.quantity}</TableCell>
-                                        <TableCell className="w-[18%] text-right">{receivable.total}</TableCell>
+                                        <TableCell className="w-[18%] text-right">{formatCurrency(receivable.total)}</TableCell>
                                         <TableCell className="w-[5%]"></TableCell>
                                     </TableRow>
                                 )
