@@ -19,7 +19,7 @@ import {
     ShipmentAccounting,
 } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { Check, CirclePlus, DollarSign, Pencil, Trash, X } from 'lucide-react';
+import { Check, CirclePlus, DollarSign, Pencil, Trash, Truck, Users, Warehouse, X } from 'lucide-react';
 import {
     forwardRef,
     useCallback,
@@ -82,6 +82,21 @@ export default function Receivables({
     const decodePayerUniqueIdForComponent = (uniqueId: string) => {
         const [type, id] = uniqueId.split('|');
         return { type, id: parseInt(id) };
+    }
+
+    const getAliasNameIcon = (aliasName: string ) => {
+        if (aliasName == 'customer') {
+            return Users;
+        }
+
+        if (aliasName == 'carrier') {
+            return Truck;
+        }
+
+        if (aliasName == 'facility') {
+            return Warehouse;
+        }
+
     }
 
     return (
@@ -194,7 +209,18 @@ export default function Receivables({
                                             }}
                                         >
                                             <SelectTrigger>
-                                                <span>{findPayer(receivable.payer_id, receivable.payer_type)?.label}</span>
+                                                <span>
+                                                    {(() => {
+                                                        const payer = findPayer(receivable.payer_id, receivable.payer_type);
+                                                        const Icon = payer?.alias_name ? getAliasNameIcon(payer.alias_name) : null;
+                                                        return (
+                                                            <>
+                                                                {Icon && <Icon className="w-4 h-4 inline mr-2" />}
+                                                                {payer?.label}
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </span>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {shipmentAccounting?.related_entities.map((entity) => (
@@ -202,6 +228,10 @@ export default function Receivables({
                                                         key={entity.alias_name + entity.id} 
                                                         value={payerUniqueIdForComponent(entity.id, entity.alias_name)}
                                                         >
+                                                        {(() => {
+                                                            const Icon = getAliasNameIcon(entity.alias_name);
+                                                            return Icon ? <Icon className="w-4 h-4 inline mr-2" /> : null;
+                                                        })()}
                                                         {entity.label}
                                                     </SelectItem>
                                                 ))}
