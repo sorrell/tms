@@ -187,164 +187,180 @@ export default function Receivables({
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow className="hidden sm:table-row">
-                            <TableHead>Payer</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Rate</TableHead>
-                            <TableHead>Quantity</TableHead>
-                            <TableHead className="text-right">
+                            <TableHead className="w-[30%]">Payer</TableHead>
+                            <TableHead className="w-[20%]">Type</TableHead>
+                            <TableHead className="w-[15%]">Rate</TableHead>
+                            <TableHead className="w-[12%]">Quantity</TableHead>
+                            <TableHead className="w-[18%] text-right">
                                 Total
                             </TableHead>
-                            <TableHead></TableHead>
+                            <TableHead className="w-[5%]"></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data.receivables.map((receivable, index) =>
-                            isEditing ? (
-                                <TableRow key={index}>
-                                    <TableCell>
-                                        <Select
-                                            value={payerUniqueIdForComponent(receivable.payer_id, receivable.payer_type)} 
-                                            onValueChange={(value) => {
-                                                const { type, id } = decodePayerUniqueIdForComponent(value);
+                        {data.receivables.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                                    No receivables added yet
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            data.receivables.map((receivable, index) =>
+                                isEditing ? (
+                                    <TableRow key={index}>
+                                        <TableCell className="w-[30%]">
+                                            <Select
+                                                value={payerUniqueIdForComponent(receivable.payer_id, receivable.payer_type)} 
+                                                onValueChange={(value) => {
+                                                    const { type, id } = decodePayerUniqueIdForComponent(value);
+                                                    setData({
+                                                        ...data,
+                                                        receivables: data.receivables.map(
+                                                            (receivable, receivableIndex) => 
+                                                                receivableIndex === index ? 
+                                                                    { ...receivable, payer_id: id, payer_type: type } : 
+                                                                    receivable
+                                                        )
+                                                    });
+                                                }}
+                                            >
+                                                <SelectTrigger>
+                                                    <span className="truncate">
+                                                        {(() => {
+                                                            const payer = findPayer(receivable.payer_id, receivable.payer_type);
+                                                            const Icon = payer?.alias_name ? getAliasNameIcon(payer.alias_name) : null;
+                                                            return (
+                                                                <>
+                                                                    {Icon && <Icon className="w-4 h-4 inline mr-2" />}
+                                                                    {payer?.label}
+                                                                </>
+                                                            );
+                                                        })()}
+                                                    </span>
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {shipmentAccounting?.related_entities.map((entity) => (
+                                                        <SelectItem
+                                                            key={entity.alias_name + entity.id} 
+                                                            value={payerUniqueIdForComponent(entity.id, entity.alias_name)}
+                                                            >
+                                                            {(() => {
+                                                                const Icon = getAliasNameIcon(entity.alias_name);
+                                                                return Icon ? <Icon className="w-4 h-4 inline mr-2" /> : null;
+                                                            })()}
+                                                            {entity.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <InputError message={errors[`receivables.${index}.payer_id` as keyof typeof errors]} />
+                                            <InputError message={errors[`receivables.${index}.payer_type` as keyof typeof errors]} />
+                                        </TableCell>
+                                        <TableCell className="w-[20%]">
+                                            <Select value={receivable.rate_type_id?.toString() || ""} onValueChange={(value) => {
                                                 setData({
                                                     ...data,
                                                     receivables: data.receivables.map(
-                                                        (receivable, receivableIndex) => 
-                                                            receivableIndex === index ? 
-                                                                { ...receivable, payer_id: id, payer_type: type } : 
-                                                                receivable
+                                                        (r, i) => 
+                                                            i === index ? 
+                                                                { ...r, rate_type_id: parseInt(value) } : 
+                                                                r
                                                     )
                                                 });
-                                            }}
-                                        >
-                                            <SelectTrigger>
-                                                <span>
-                                                    {(() => {
-                                                        const payer = findPayer(receivable.payer_id, receivable.payer_type);
-                                                        const Icon = payer?.alias_name ? getAliasNameIcon(payer.alias_name) : null;
-                                                        return (
-                                                            <>
-                                                                {Icon && <Icon className="w-4 h-4 inline mr-2" />}
-                                                                {payer?.label}
-                                                            </>
-                                                        );
-                                                    })()}
-                                                </span>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {shipmentAccounting?.related_entities.map((entity) => (
-                                                    <SelectItem
-                                                        key={entity.alias_name + entity.id} 
-                                                        value={payerUniqueIdForComponent(entity.id, entity.alias_name)}
+                                            }}>
+                                                <SelectTrigger>
+                                                    <span className="truncate">{findRateType(receivable.rate_type_id)?.name}</span>
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {shipmentAccounting?.rate_types.map((rateType) => (
+                                                        <SelectItem
+                                                            key={rateType.id} 
+                                                            value={rateType.id.toString()}
                                                         >
-                                                        {(() => {
-                                                            const Icon = getAliasNameIcon(entity.alias_name);
-                                                            return Icon ? <Icon className="w-4 h-4 inline mr-2" /> : null;
-                                                        })()}
-                                                        {entity.label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <InputError message={errors[`receivables.${index}.payer_id` as keyof typeof errors]} />
-                                        <InputError message={errors[`receivables.${index}.payer_type` as keyof typeof errors]} />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Select value={receivable.rate_type_id?.toString() || ""} onValueChange={(value) => {
-                                            setData({
-                                                ...data,
-                                                receivables: data.receivables.map(
-                                                    (r, i) => 
-                                                        i === index ? 
-                                                            { ...r, rate_type_id: parseInt(value) } : 
-                                                            r
-                                                )
-                                            });
-                                        }}>
-                                            <SelectTrigger>
-                                                <span>{findRateType(receivable.rate_type_id)?.name}</span>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {shipmentAccounting?.rate_types.map((rateType) => (
-                                                    <SelectItem
-                                                        key={rateType.id} 
-                                                        value={rateType.id.toString()}
-                                                    >
-                                                        {rateType.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input type="number" value={receivable.rate} onChange={(e) => {
-                                            setData({
-                                                ...data,
-                                                receivables: data.receivables.map(
-                                                    (r, i) => 
-                                                        i === index ? 
-                                                            { ...r, rate: parseFloat(e.target.value) } : 
-                                                            r
-                                                )
-                                            });
-                                        }} />
-                                        <InputError message={errors[`receivables.${index}.rate` as keyof typeof errors]} />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input type="number" value={receivable.quantity} onChange={(e) => {
-                                            setData({
-                                                ...data,
-                                                receivables: data.receivables.map(
-                                                    (r, i) => 
-                                                        i === index ? 
-                                                            { ...r, quantity: parseInt(e.target.value) } : 
-                                                            r
-                                                )
-                                            });
-                                        }} />
-                                        <InputError message={errors[`receivables.${index}.quantity` as keyof typeof errors]} />
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <Input type="number" value={receivable.total} onChange={(e) => {
-                                            setData({
-                                                ...data,
-                                                receivables: data.receivables.map(
-                                                    (r, i) => 
-                                                        i === index ? 
-                                                            { ...r, total: parseFloat(e.target.value) } : 
-                                                            r
-                                                )
-                                            });
-                                        }} />
-                                        <InputError message={errors[`receivables.${index}.total` as keyof typeof errors]} />
-                                    </TableCell>
-                                    <TableCell>
-                                    <ConfirmButton
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-7 w-7 text-destructive"
-                                            onConfirm={() =>
+                                                            {rateType.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
+                                        </TableCell>
+                                        <TableCell className="w-[15%]">
+                                            <Input type="number" value={receivable.rate} onChange={(e) => {
                                                 setData({
                                                     ...data,
-                                                    receivables: data.receivables.filter((_, i) => i !== index)
-                                                })
-                                            }
-                                            confirmText="Delete"
-                                        >
-                                            <Trash className="h-4 w-4" />
-                                        </ConfirmButton>
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                <TableRow key={index}>
-                                    <TableCell>{findPayer(receivable.payer_id, receivable.payer_type)?.label}</TableCell>
-                                    <TableCell>{findRateType(receivable.rate_type_id)?.name}</TableCell>
-                                    <TableCell>{receivable.rate}</TableCell>
-                                    <TableCell>{receivable.quantity}</TableCell>
-                                    <TableCell className="text-right">{receivable.total}</TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
+                                                    receivables: data.receivables.map(
+                                                        (r, i) => 
+                                                            i === index ? 
+                                                                { ...r, rate: parseFloat(e.target.value) } : 
+                                                                r
+                                                    )
+                                                });
+                                            }} />
+                                            <InputError message={errors[`receivables.${index}.rate` as keyof typeof errors]} />
+                                        </TableCell>
+                                        <TableCell className="w-[12%]">
+                                            <Input type="number" value={receivable.quantity} onChange={(e) => {
+                                                setData({
+                                                    ...data,
+                                                    receivables: data.receivables.map(
+                                                        (r, i) => 
+                                                            i === index ? 
+                                                                { ...r, quantity: parseInt(e.target.value) } : 
+                                                                r
+                                                    )
+                                                });
+                                            }} />
+                                            <InputError message={errors[`receivables.${index}.quantity` as keyof typeof errors]} />
+                                        </TableCell>
+                                        <TableCell className="w-[18%] text-right">
+                                            <Input type="number" value={receivable.total} onChange={(e) => {
+                                                setData({
+                                                    ...data,
+                                                    receivables: data.receivables.map(
+                                                        (r, i) => 
+                                                            i === index ? 
+                                                                { ...r, total: parseFloat(e.target.value) } : 
+                                                                r
+                                                    )
+                                                });
+                                            }} />
+                                            <InputError message={errors[`receivables.${index}.total` as keyof typeof errors]} />
+                                        </TableCell>
+                                        <TableCell className="w-[5%]">
+                                        <ConfirmButton
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-7 w-7 text-destructive"
+                                                onConfirm={() =>
+                                                    setData({
+                                                        ...data,
+                                                        receivables: data.receivables.filter((_, i) => i !== index)
+                                                    })
+                                                }
+                                                confirmText="Delete"
+                                            >
+                                                <Trash className="h-4 w-4" />
+                                            </ConfirmButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    <TableRow key={index}>
+                                        <TableCell className="w-[30%]">
+                                            <span className="truncate block">
+                                                {findPayer(receivable.payer_id, receivable.payer_type)?.label}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="w-[20%]">
+                                            <span className="truncate block">
+                                                {findRateType(receivable.rate_type_id)?.name}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="w-[15%]">{receivable.rate}</TableCell>
+                                        <TableCell className="w-[12%]">{receivable.quantity}</TableCell>
+                                        <TableCell className="w-[18%] text-right">{receivable.total}</TableCell>
+                                        <TableCell className="w-[5%]"></TableCell>
+                                    </TableRow>
+                                )
                             )
                         )}
                     </TableBody>
