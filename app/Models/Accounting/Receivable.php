@@ -23,7 +23,7 @@ class Receivable extends Model
         'quantity',
         'total',
         'rate_type_id',
-        'currency_id',
+        'currency_code',
     ];
 
     public function shipment() : BelongsTo
@@ -39,10 +39,5 @@ class Receivable extends Model
     public function rate_type() : BelongsTo
     {
         return $this->belongsTo(RateType::class);
-    }
-
-    public function currency() : BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
     }
 }

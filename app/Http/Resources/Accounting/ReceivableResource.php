@@ -29,10 +29,9 @@ class ReceivableResource extends JsonResource
             'quantity' => $this->quantity,
             'total' => $this->total,
             'rate_type_id' => $this->rate_type_id,
-            'currency_id' => $this->currency_id,
+            'currency_code' => $this->currency_code,
             'payer' => $this->payer?->toResource(),
             'rate_type' => $this->rate_type?->toResource(),
-            'currency' => $this->currency?->toResource(),
         ];
     }
 }

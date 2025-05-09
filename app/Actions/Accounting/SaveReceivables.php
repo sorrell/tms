@@ -2,11 +2,13 @@
 
 namespace App\Actions\Accounting;
 
+use App\Enums\Accounting\Currency;
 use App\Facades\AliasResolver;
 use App\Http\Resources\Accounting\ReceivableResource;
 use App\Models\Accounting\Receivable;
 use App\Models\Shipments\Shipment;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -91,7 +93,7 @@ class SaveReceivables
             'receivables.*.quantity' => 'required|numeric',
             'receivables.*.total' => 'required|numeric',
             'receivables.*.rate_type_id' => 'required|exists:rate_types,id',
-            'receivables.*.currency_id' => 'required|exists:currencies,id'
+            'receivables.*.currency_code' => ['required', Rule::enum(Currency::class)]
         ];
     }
 } 

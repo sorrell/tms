@@ -49,3 +49,7 @@ export enum ContactMethodType {
     Web = 'web',
     Other = 'other',
 }
+
+export enum Currency {
+    UnitedStatesDollar = 'usd'
+}

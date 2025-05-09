@@ -2,11 +2,13 @@
 
 namespace App\Actions\Accounting;
 
+use App\Enums\Accounting\Currency;
 use App\Facades\AliasResolver;
 use App\Http\Resources\Accounting\PayableResource;
 use App\Models\Accounting\Payable;
 use App\Models\Shipments\Shipment;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -92,7 +94,7 @@ class SavePayables
             'payables.*.quantity' => 'required|numeric',
             'payables.*.total' => 'required|numeric',
             'payables.*.rate_type_id' => 'required|exists:rate_types,id',
-            'payables.*.currency_id' => 'required|exists:currencies,id'
+            'payables.*.currency_code' => ['required', Rule::enum(Currency::class)]
         ];
     }
 } 

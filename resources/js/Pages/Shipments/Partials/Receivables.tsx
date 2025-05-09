@@ -29,7 +29,8 @@ import {
     useRef,
     useState,
 } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency, getCurrencySymbol } from '@/lib/utils';
+import { Currency } from '@/types/enums';
 
 type ReceivableFormData = {
     id?: number;
@@ -39,7 +40,7 @@ type ReceivableFormData = {
     quantity: number;
     total: number;
     rate_type_id: number;
-    currency_id: number;
+    currency_code: string;
 };
 
 // Define a type for the errors object from Inertia
@@ -107,14 +108,6 @@ export default function Receivables({
         }
     }
 
-    const getCurrencySymbol = () => {
-        return '$';
-    }
-
-    const formatCurrency = (value: number) => {
-        return `${getCurrencySymbol()}${value.toFixed(2)}`;
-    }
-
     return (
         <Card>
             <CardHeader>
@@ -137,7 +130,7 @@ export default function Receivables({
                                         quantity: 0,
                                         total: 0,
                                         rate_type_id: 0,
-                                        currency_id: 1,
+                                        currency_code: Currency.UnitedStatesDollar
                                     }],
                                 });
                                 setIsEditing(true);
@@ -301,7 +294,7 @@ export default function Receivables({
                                         <TableCell className="w-[15%] hidden sm:table-cell">
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                    {getCurrencySymbol()}
+                                                    {getCurrencySymbol(receivable.currency_code)}
                                                 </span>
                                                 <Input 
                                                     type="number" 
@@ -339,7 +332,7 @@ export default function Receivables({
                                         <TableCell className="w-[18%] text-right hidden sm:table-cell">
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                    {getCurrencySymbol()}
+                                                    {getCurrencySymbol(receivable.currency_code)}
                                                 </span>
                                                 <Input 
                                                     type="number" 
@@ -468,7 +461,7 @@ export default function Receivables({
                                                         <label className="text-sm font-medium pb-1 block truncate">Rate</label>
                                                         <div className="relative">
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                                {getCurrencySymbol()}
+                                                                {getCurrencySymbol(receivable.currency_code)}
                                                             </span>
                                                             <Input 
                                                                 type="number" 
@@ -515,7 +508,7 @@ export default function Receivables({
                                                         <label className="text-sm font-medium pb-1 block truncate">Total</label>
                                                         <div className="relative">
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                                {getCurrencySymbol()}
+                                                                {getCurrencySymbol(receivable.currency_code)}
                                                             </span>
                                                             <Input 
                                                                 type="number" 
@@ -569,9 +562,9 @@ export default function Receivables({
                                                 {findRateType(receivable.rate_type_id)?.name}
                                             </span>
                                         </TableCell>
-                                        <TableCell className="w-[15%] hidden sm:table-cell">{formatCurrency(receivable.rate)}</TableCell>
+                                        <TableCell className="w-[15%] hidden sm:table-cell">{formatCurrency(receivable.rate, receivable.currency_code)}</TableCell>
                                         <TableCell className="w-[12%] hidden sm:table-cell">{receivable.quantity}</TableCell>
-                                        <TableCell className="w-[18%] text-right hidden sm:table-cell">{formatCurrency(receivable.total)}</TableCell>
+                                        <TableCell className="w-[18%] text-right hidden sm:table-cell">{formatCurrency(receivable.total, receivable.currency_code)}</TableCell>
                                         <TableCell className="w-[5%] hidden sm:table-cell"></TableCell>
                                         
                                         {/* Mobile view for non-edit mode */}
@@ -584,14 +577,14 @@ export default function Receivables({
                                                         </span>
                                                     </div>
                                                     <span className="font-bold flex-shrink-0">
-                                                        {formatCurrency(receivable.total)}
+                                                        {formatCurrency(receivable.total, receivable.currency_code)}
                                                     </span>
                                                 </div>
                                                 <div className="text-sm text-muted-foreground truncate">
                                                     {findRateType(receivable.rate_type_id)?.name}
                                                 </div>
                                                 <div className="text-sm grid grid-cols-2 gap-2">
-                                                    <div className="truncate">Rate: {formatCurrency(receivable.rate)}</div>
+                                                    <div className="truncate">Rate: {formatCurrency(receivable.rate, receivable.currency_code)}</div>
                                                     <div className="truncate">Qty: {receivable.quantity}</div>
                                                 </div>
                                             </div>

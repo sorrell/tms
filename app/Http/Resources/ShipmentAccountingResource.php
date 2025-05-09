@@ -24,8 +24,8 @@ class ShipmentAccountingResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'payables' => PayableResource::collection($this->payables->load('rate_type', 'currency')),
-            'receivables' => ReceivableResource::collection($this->receivables->load('rate_type', 'currency')),
+            'payables' => PayableResource::collection($this->payables->load('rate_type')),
+            'receivables' => ReceivableResource::collection($this->receivables->load('rate_type')),
             'related_entities' => AliasModelResource::collection($this->related_entities),
             'rate_types' => RateTypeResource::collection(RateType::all()),
         ];

@@ -267,12 +267,7 @@ export interface Payable {
         id: number;
         name: string;
     };
-    currency_id: number;
-    currency?: {
-        id: number;
-        code: string;
-        symbol: string;
-    };
+    currency_code: string;
 }
 
 
@@ -294,12 +289,7 @@ export interface Receivable {
         id: number;
         name: string;
     };
-    currency_id: number;
-    currency?: {
-        id: number;
-        code: string;
-        symbol: string;
-    };
+    currency_code: string;
 }
 
 export interface ShipmentAccounting {
