@@ -27,7 +27,7 @@ class Organization extends Model
     {
         static::created(function (Organization $organization) {
             // Set the current organization context for the defaults creation
-            \App\Actions\Defaults\CreateOrganizationDefaults::run($organization->id);
+            \App\Actions\Defaults\CreateOrUpdateOrganizationDefaults::run($organization->id);
         });
     }
 

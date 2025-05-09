@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class AliasResolver
+class AliasResolverService
 {
     /**
      * List of models that support aliases
@@ -15,6 +15,9 @@ class AliasResolver
         \App\Models\Shipments\Shipment::class,
         \App\Models\Shipments\ShipmentStop::class,
         \App\Models\Contact::class,
+        \App\Models\Carriers\Carrier::class,
+        \App\Models\Customers\Customer::class,
+        \App\Models\Facility::class
     ];
 
     /**
@@ -44,6 +47,38 @@ class AliasResolver
         
         return $result;
     }
+
+    /**
+     * Get the alias name for a model
+     * 
+     * @param string $modelClass The model class
+     * @return string The alias name
+     */
+    public function getModelAlias(string $modelClass) : string
+    {
+        return (new $modelClass)->getAliasName();
+    }
+
+    /**
+     * Get the model class for an alias name
+     * 
+     * @param string $modelAlias The alias name
+     * @return string The model class or empty string if not found
+     */
+    public function getModelClass(string $modelAlias): string
+    {
+        $models = $this->aliasModels;
+        $modelAliasesMap = Cache::rememberForever("alias.models", function () use ($models) {
+            $map = [];
+            foreach ($models as $model) {
+                $map[$this->getModelAlias($model)] = $model;
+            }
+            return $map;
+        });
+        return $modelAliasesMap[$modelAlias] ?? "";
+    }
+
+
 
     /**
      * Parse an alias string into its components
@@ -80,18 +115,7 @@ class AliasResolver
         return $modelClass::find($id);
     }
 
-    protected function getModelClass(string $modelAlias): string
-    {
-        $models = $this->aliasModels;
-        $modelAliasesMap = Cache::rememberForever("alias.models", function () use ($models) {
-            $map = [];
-            foreach ($models as $model) {
-                $map[(new $model)->getAliasName()] = $model;
-            }
-            return $map;
-        });
-        return $modelAliasesMap[$modelAlias] ?? null;
-    }
+    
 
     
     protected function resolveAliasProperty(Model $model, string $propertyAlias) : string

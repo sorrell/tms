@@ -7,9 +7,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 
 /**
- * @mixin \App\Models\Accounting\CarrierRateType
+ * @mixin \App\Models\Accounting\RateType
  */
-class CarrierRateTypeResource extends JsonResource
+class RateTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

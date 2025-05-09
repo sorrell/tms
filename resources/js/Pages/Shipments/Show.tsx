@@ -9,8 +9,8 @@ import { Head } from '@inertiajs/react';
 import { Folder, MapPin } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
 import CustomerDetails from './Partials/CustomerDetails';
+import ShipmentAccountingDetails from './Partials/ShipmentAccountingDetails';
 import ShipmentCheckCalls from './Partials/ShipmentCheckCalls';
-import ShipmentFinancialDetails from './Partials/ShipmentFinancialDetails';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
@@ -67,8 +67,8 @@ export default function Show({
                             stops={stops}
                         />
 
-                        {/* Financials */}
-                        <ShipmentFinancialDetails shipment={shipment} />
+                        {/* Accounting */}
+                        <ShipmentAccountingDetails shipment={shipment} />
 
                         {/* Notes */}
                         <ShipmentNotes shipmentId={shipment.id} />

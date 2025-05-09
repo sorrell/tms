@@ -3,12 +3,12 @@
 
 namespace App\Actions\Shipments;
 
-use App\Http\Resources\ShipmentFinancialsResource;
+use App\Http\Resources\ShipmentAccountingResource;
 use App\Models\Shipments\Shipment;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class GetShipmentFinancials {
+class GetShipmentAccounting {
     use AsAction;
 
     public function handle(Shipment $shipment) : Shipment
@@ -23,7 +23,9 @@ class GetShipmentFinancials {
 
     public function jsonResponse(Shipment $shipment)
     {
-        return ShipmentFinancialsResource::make($shipment->load('shipment_customer_rates', 'shipment_carrier_rates', 'accessorials'));
+        return ShipmentAccountingResource::make(
+            $shipment->load('payables', 'receivables')
+        );
     }
 
     public function htmlResponse(Shipment $shipment)

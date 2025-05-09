@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\Carriers\CarrierResource;
+use App\Http\Resources\Customers\CustomerResource;
 use App\Http\Resources\Documents\DocumentFolderResource;
 use App\Http\Resources\Documents\DocumentResource;
 use Illuminate\Http\Request;

@@ -2,7 +2,10 @@
 
 namespace App\Models\Shipments;
 
+use App\Http\Resources\AliasModelResource;
 use App\Http\Resources\ShipmentResource;
+use App\Models\Accounting\Payable;
+use App\Models\Accounting\Receivable;
 use App\Models\Carriers\Carrier;
 use App\Models\Carriers\CarrierBounce;
 use App\Models\CheckCalls\CheckCall;
@@ -116,6 +119,8 @@ class Shipment extends Model implements HasStatesContract
      */
     public function customers(): BelongsToMany
     {
+        /** Ignoring due to issue with pivot table returns not being supported by Larastan */
+        /** @phpstan-ignore-next-line */
         return $this->belongsToMany(Customer::class, 'shipment_customers')->using(ShipmentCustomer::class);
     }
 
@@ -128,27 +133,19 @@ class Shipment extends Model implements HasStatesContract
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ShipmentCustomerRate, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Payable, $this>
      */
-    public function shipment_customer_rates(): HasMany
+    public function payables(): HasMany
     {
-        return $this->hasMany(ShipmentCustomerRate::class);
+        return $this->hasMany(Payable::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ShipmentCarrierRate, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Receivable, $this>
      */
-    public function shipment_carrier_rates(): HasMany
+    public function receivables(): HasMany
     {
-        return $this->hasMany(ShipmentCarrierRate::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Accessorial, $this>
-     */
-    public function accessorials(): HasMany
-    {
-        return $this->hasMany(Accessorial::class);
+        return $this->hasMany(Receivable::class);
     }
 
     /**
@@ -157,6 +154,27 @@ class Shipment extends Model implements HasStatesContract
     public function check_calls(): HasMany
     {
         return $this->hasMany(CheckCall::class);
+    }
+
+    public function getRelatedEntitiesAttribute(): array
+    {
+        $entities = [];
+
+        foreach ($this->customers as $customer) {
+            $entities[] = $customer;
+        }
+
+        $entities[] = $this->carrier;
+        
+        foreach($this->stops as $stop) {
+            $entities[] = $stop->facility;
+        }
+
+        foreach($this->bounces as $bounce) {
+            $entities[] = $bounce->carrier;
+        }
+
+        return $entities;
     }
 
     public function getNextStopAttribute(): ?ShipmentStop

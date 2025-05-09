@@ -244,111 +244,65 @@ export interface DocumentFolder {
     name: string;
 }
 
-export interface ShipmentCustomerRate {
+export interface RateType {
+    id: number;
+    name: string;
+}
+
+export interface Payable {
     id: number;
     organization_id: number;
     shipment_id: number;
-    customer_id: number;
-    customer: {
+    payee_id: number;
+    payee_type: string;
+    payee?: {
         id: number;
         name: string;
     };
     rate: number;
     quantity: number;
     total: number;
-    customer_rate_type_id: number;
-    customer_rate_type: {
+    rate_type_id: number;
+    rate_type?: {
         id: number;
         name: string;
     };
-    currency_id: number;
-    currency: {
-        id: number;
-        code: string;
-        symbol: string;
-    };
+    currency_code: string;
 }
 
-export interface ShipmentCarrierRate {
+export interface Receivable {
     id: number;
     organization_id: number;
     shipment_id: number;
-    carrier_id: number;
-    carrier: {
+    payer_id: number;
+    payer_type: string;
+    payer?: {
         id: number;
         name: string;
     };
     rate: number;
     quantity: number;
     total: number;
-    carrier_rate_type_id: number;
-    carrier_rate_type: {
+    rate_type_id: number;
+    rate_type?: {
         id: number;
         name: string;
     };
-    currency_id: number;
-    currency: {
-        id: number;
-        code: string;
-        symbol: string;
-    };
+    currency_code: string;
 }
 
-export interface Accessorial {
+export interface ShipmentAccounting {
     id: number;
-    organization_id: number;
-    shipment_id: number;
-    customer_id: number;
-    customer?: {
-        id: number;
-        name: string;
-    };
-    carrier_id: number;
-    carrier?: {
-        id: number;
-        name: string;
-    };
-    invoice_customer: boolean;
-    pay_carrier: boolean;
-    rate: number;
-    quantity: number;
-    total: number;
-    accessorial_type_id: number;
-    accessorial_type?: {
-        id: number;
-        name: string;
-    };
-    currency_id: number;
-    currency?: {
-        id: number;
-        code: string;
-        symbol: string;
-    };
+    receivables: Receivable[];
+    payables: Payable[];
+    rate_types: RateType[];
+    related_entities: AliasModel[];
 }
 
-export interface ShipmentFinancials {
+export interface AliasModel {
     id: number;
-    shipment_customer_rates: ShipmentCustomerRate[];
-    shipment_carrier_rates: ShipmentCarrierRate[];
-    accessorials: Accessorial[];
-}
-
-export interface CustomerRateType {
-    id: number;
-    organization_id: number;
-    name: string;
-}
-
-export interface CarrierRateType {
-    id: number;
-    organization_id: number;
-    name: string;
-}
-
-export interface AccessorialType {
-    id: number;
-    organization_id: number;
-    name: string;
+    alias_name: string;
+    label: string;
 }
 
 export interface CheckCall {

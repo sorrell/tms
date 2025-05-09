@@ -3,6 +3,7 @@
 namespace App\Models\Customers;
 
 use App\Models\Facility;
+use App\Traits\HasAliases;
 use App\Traits\HasContacts;
 use App\Traits\HasDocuments;
 use App\Traits\HasOrganization;
@@ -13,7 +14,7 @@ use Laravel\Scout\Searchable;
 
 class Customer extends Model
 {
-    use HasFactory, HasOrganization, Searchable, HasNotes, HasContacts, HasDocuments;
+    use HasFactory, HasOrganization, Searchable, HasNotes, HasContacts, HasDocuments, HasAliases;
 
     protected $fillable = [
         'organization_id',
@@ -22,16 +23,25 @@ class Customer extends Model
 
     protected $appends = [ 'selectable_label' ];
 
+    public $aliasName = 'customer';
+    public $aliasProperties = [
+        'name' => 'name',
+    ];
+
     public function getSelectableLabelAttribute() : string
     {
         return sprintf("%s", $this->name);
     }
 
     /**
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Facility, $this>
      */
+
     public function facilities(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
+        /** Ignoring due to issue with pivot table returns not being supported by Larastan */
+        /** @phpstan-ignore-next-line */
         return $this->belongsToMany(Facility::class, 'customer_facilities');
     }
 }

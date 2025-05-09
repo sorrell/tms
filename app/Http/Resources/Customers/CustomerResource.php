@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Customers;
 
 use App\Http\Resources\Documents\DocumentFolderResource;
 use App\Http\Resources\Documents\DocumentResource;
