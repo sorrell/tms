@@ -270,7 +270,6 @@ export interface Payable {
     currency_code: string;
 }
 
-
 export interface Receivable {
     id: number;
     organization_id: number;

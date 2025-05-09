@@ -119,6 +119,8 @@ class Shipment extends Model implements HasStatesContract
      */
     public function customers(): BelongsToMany
     {
+        /** Ignoring due to issue with pivot table returns not being supported by Larastan */
+        /** @phpstan-ignore-next-line */
         return $this->belongsToMany(Customer::class, 'shipment_customers')->using(ShipmentCustomer::class);
     }
 

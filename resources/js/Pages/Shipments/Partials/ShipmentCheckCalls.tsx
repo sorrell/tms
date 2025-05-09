@@ -194,10 +194,9 @@ export default function ShipmentCheckCalls({
                                                 </span>
                                             )}
                                         </div>
-
                                     </div>
 
-                                    <div className="text-sm flex flex-row justify-between my-2">
+                                    <div className="my-2 flex flex-row justify-between text-sm">
                                         <div>
                                             {checkCall.is_late && (
                                                 <div className="flex items-center gap-1 text-destructive">
@@ -218,21 +217,19 @@ export default function ShipmentCheckCalls({
                                             )}
                                         </div>
                                         <div className="flex flex-col gap-x-4 gap-y-1">
-
                                             {checkCall.reported_trailer_temp !==
                                                 null && (
-                                                    <div className="flex items-center gap-1">
-                                                        <Thermometer className="h-4 w-4 inline" />
-                                                        <span className="font-medium">
-                                                            Temp:
-                                                        </span>
-                                                        {
-                                                            checkCall.reported_trailer_temp
-                                                        }
-                                                        °
-                                                    </div>
-                                                )}
-
+                                                <div className="flex items-center gap-1">
+                                                    <Thermometer className="inline h-4 w-4" />
+                                                    <span className="font-medium">
+                                                        Temp:
+                                                    </span>
+                                                    {
+                                                        checkCall.reported_trailer_temp
+                                                    }
+                                                    °
+                                                </div>
+                                            )}
 
                                             {checkCall.eta && (
                                                 <div className="flex items-center gap-1">
@@ -247,8 +244,6 @@ export default function ShipmentCheckCalls({
                                                     />
                                                 </div>
                                             )}
-
-
 
                                             {checkCall.arrived_at && (
                                                 <div className="flex items-center gap-1">
@@ -270,9 +265,9 @@ export default function ShipmentCheckCalls({
                                                 <div className="flex items-center gap-1">
                                                     <span className="font-medium">
                                                         {checkCall.current_stop_id &&
-                                                            stopMap.get(
-                                                                checkCall.current_stop_id,
-                                                            )?.stop_type ==
+                                                        stopMap.get(
+                                                            checkCall.current_stop_id,
+                                                        )?.stop_type ==
                                                             StopType.Delivery
                                                             ? 'Unloaded'
                                                             : 'Loaded'}
@@ -295,7 +290,9 @@ export default function ShipmentCheckCalls({
                                                         Left:
                                                     </span>
                                                     <DatetimeDisplay
-                                                        datetime={checkCall.left_at}
+                                                        datetime={
+                                                            checkCall.left_at
+                                                        }
                                                         timezone={getStopTimezoneIdentifier(
                                                             checkCall.current_stop_id,
                                                         )}
@@ -303,15 +300,12 @@ export default function ShipmentCheckCalls({
                                                 </div>
                                             )}
                                         </div>
-
                                     </div>
-
-
 
                                     {checkCall.note && checkCall.note.note && (
                                         <div className="">
                                             <div className="mt-2 text-muted-foreground">
-                                                <MessageCircle className="h-4 w-4 inline mr-2" />
+                                                <MessageCircle className="mr-2 inline h-4 w-4" />
                                                 {expandedNotes.includes(
                                                     checkCall.id,
                                                 ) ? (
@@ -335,29 +329,29 @@ export default function ShipmentCheckCalls({
                                                             .length > 100
                                                             ? `${checkCall.note.note.substring(0, 100)}... `
                                                             : checkCall.note
-                                                                .note}
+                                                                  .note}
                                                         {checkCall.note.note
                                                             .length > 100 && (
-                                                                <Button
-                                                                    variant="link"
-                                                                    className="h-auto p-0 text-xs text-primary"
-                                                                    onClick={() =>
-                                                                        toggleNoteExpand(
-                                                                            checkCall.id,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    Show more
-                                                                </Button>
-                                                            )}
+                                                            <Button
+                                                                variant="link"
+                                                                className="h-auto p-0 text-xs text-primary"
+                                                                onClick={() =>
+                                                                    toggleNoteExpand(
+                                                                        checkCall.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Show more
+                                                            </Button>
+                                                        )}
                                                     </>
                                                 )}
                                             </div>
                                         </div>
                                     )}
 
-                                    <div className="flex items-center w-full gap-2 justify-between ">
-                                        <div className="text-xs text-muted-foreground flex flex-row">
+                                    <div className="flex w-full items-center justify-between gap-2">
+                                        <div className="flex flex-row text-xs text-muted-foreground">
                                             <div>
                                                 {formatDateTime(
                                                     checkCall.created_at,
@@ -365,8 +359,7 @@ export default function ShipmentCheckCalls({
                                             </div>
                                             {checkCall.creator && (
                                                 <div className="ml-1">
-                                                    by{' '}
-                                                    {checkCall.creator.name}
+                                                    by {checkCall.creator.name}
                                                 </div>
                                             )}
                                         </div>

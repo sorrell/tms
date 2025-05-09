@@ -1,7 +1,7 @@
 import { Shipment, ShipmentAccounting } from '@/types';
 import { useEffect, useState } from 'react';
-import Receivables from './Receivables';
 import Payables from './Payables';
+import Receivables from './Receivables';
 
 export default function ShipmentAccountingDetails({
     shipment,
@@ -35,8 +35,6 @@ export default function ShipmentAccountingDetails({
                 shipment={shipment}
                 shipmentAccounting={shipmentAccounting}
             />
-
-            
         </>
     );
 }

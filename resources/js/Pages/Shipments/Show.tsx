@@ -9,12 +9,12 @@ import { Head } from '@inertiajs/react';
 import { Folder, MapPin } from 'lucide-react';
 import CarrierDetails from './Partials/CarrierDetails';
 import CustomerDetails from './Partials/CustomerDetails';
+import ShipmentAccountingDetails from './Partials/ShipmentAccountingDetails';
 import ShipmentCheckCalls from './Partials/ShipmentCheckCalls';
 import ShipmentGeneral from './Partials/ShipmentGeneral';
 import ShipmentHeader from './Partials/ShipmentHeader';
 import ShipmentNotes from './Partials/ShipmentNotes';
 import ShipmentStopsList from './Partials/ShipmentStopsList';
-import ShipmentAccountingDetails from './Partials/ShipmentAccountingDetails';
 
 export default function Show({
     shipment,

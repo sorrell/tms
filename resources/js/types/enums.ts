@@ -51,5 +51,5 @@ export enum ContactMethodType {
 }
 
 export enum Currency {
-    UnitedStatesDollar = 'usd'
+    UnitedStatesDollar = 'usd',
 }

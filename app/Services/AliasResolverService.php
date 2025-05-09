@@ -63,7 +63,7 @@ class AliasResolverService
      * Get the model class for an alias name
      * 
      * @param string $modelAlias The alias name
-     * @return string|null The model class or null if not found
+     * @return string The model class or empty string if not found
      */
     public function getModelClass(string $modelAlias): string
     {
@@ -75,7 +75,7 @@ class AliasResolverService
             }
             return $map;
         });
-        return $modelAliasesMap[$modelAlias] ?? null;
+        return $modelAliasesMap[$modelAlias] ?? "";
     }
 
 

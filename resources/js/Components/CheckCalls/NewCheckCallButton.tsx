@@ -229,7 +229,7 @@ export default function NewCheckCallButton({
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
+                    <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <Label htmlFor="contact_name">Contact Name *</Label>
                         </div>
@@ -328,7 +328,7 @@ export default function NewCheckCallButton({
                             )}
                         </div>
                     </div>
-                    
+
                     {shouldShowField(shipment, shipment.next_stop, 'eta') && (
                         <div className="space-y-2">
                             <Label htmlFor="eta" className="flex items-center">
@@ -394,8 +394,6 @@ export default function NewCheckCallButton({
                             )}
                         </div>
                     )}
-
-                    
 
                     {shouldShowField(
                         shipment,

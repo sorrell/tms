@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * This resource is used to return a model that HasAliases so it can be plugged
  * into a select on the FE with other model types but still be differentiated
  * 
- * @mixin 
+ * @mixin \App\Models\Carriers\Carrier
  */
 class AliasModelResource extends JsonResource
 {

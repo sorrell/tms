@@ -104,6 +104,8 @@ class User extends Authenticatable
      */
     public function organizations() : BelongsToMany
     {
+        /** Ignoring due to issue with pivot table returns not being supported by Larastan */
+        /** @phpstan-ignore-next-line */
         return $this->belongsToMany(Organization::class, 'organization_users')
             ->using(OrganizationUser::class)
             ->withTimestamps();

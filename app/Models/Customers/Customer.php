@@ -34,10 +34,14 @@ class Customer extends Model
     }
 
     /**
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Facility, $this>
      */
+
     public function facilities(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
+        /** Ignoring due to issue with pivot table returns not being supported by Larastan */
+        /** @phpstan-ignore-next-line */
         return $this->belongsToMany(Facility::class, 'customer_facilities');
     }
 }
