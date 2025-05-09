@@ -192,20 +192,20 @@ export default function Receivables({
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <Table className="w-full">
+                <Table className="w-full table-fixed">
                     <TableHeader>
                         <TableRow className="table-row">
                             <TableHead className="w-[30%] hidden sm:table-cell">Payer</TableHead>
                             <TableHead className="w-[20%] hidden sm:table-cell">Type</TableHead>
-                            <TableHead className={cn("w-full sm:w-[15%] hidden sm:table-cell", (!isEditing && 'hidden'))}>Rate</TableHead>
-                            <TableHead className={cn("w-full sm:w-[12%] hidden sm:table-cell", (!isEditing && 'hidden'))}>Quantity</TableHead>
+                            <TableHead className={cn("w-[15%] hidden sm:table-cell", (!isEditing && 'hidden'))}>Rate</TableHead>
+                            <TableHead className={cn("w-[12%] hidden sm:table-cell", (!isEditing && 'hidden'))}>Quantity</TableHead>
                             <TableHead className="w-[18%] text-right hidden sm:table-cell">
                                 Total
                             </TableHead>
                             <TableHead className="w-[5%] hidden sm:table-cell"></TableHead>
                             
                             {/* Mobile Header - only displayed on small screens */}
-                            <TableHead className="sm:hidden">Details</TableHead>
+                            <TableHead className="sm:hidden w-full">Details</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -220,7 +220,7 @@ export default function Receivables({
                                 isEditing ? (
                                     <TableRow key={index}>
                                         {/* Desktop View */}
-                                        <TableCell className="w-[30%] hidden sm:table-cell">
+                                        <TableCell className="w-[30%] max-w-[200px] hidden sm:table-cell">
                                             <Select
                                                 value={payerUniqueIdForComponent(receivable.payer_id, receivable.payer_type)} 
                                                 onValueChange={(value) => {
@@ -236,19 +236,19 @@ export default function Receivables({
                                                     });
                                                 }}
                                             >
-                                                <SelectTrigger>
-                                                    <span className="truncate">
+                                                <SelectTrigger className="w-full overflow-hidden">
+                                                    <div className="flex items-center w-full overflow-hidden">
                                                         {(() => {
                                                             const payer = findPayer(receivable.payer_id, receivable.payer_type);
                                                             const Icon = payer?.alias_name ? getAliasNameIcon(payer.alias_name) : null;
                                                             return (
                                                                 <>
-                                                                    {Icon && <Icon className="w-4 h-4 inline mr-2" />}
-                                                                    {payer?.label}
+                                                                    {Icon && <Icon className="h-4 w-4 mr-2 flex-shrink-0" />}
+                                                                    <span className="truncate">{payer?.label}</span>
                                                                 </>
                                                             );
                                                         })()}
-                                                    </span>
+                                                    </div>
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {shipmentAccounting?.related_entities.map((entity) => (
@@ -258,7 +258,7 @@ export default function Receivables({
                                                             >
                                                             {(() => {
                                                                 const Icon = getAliasNameIcon(entity.alias_name);
-                                                                return Icon ? <Icon className="w-4 h-4 inline mr-2" /> : null;
+                                                                return Icon ? <Icon className="w-4 h-4 inline mr-2 flex-shrink-0" /> : null;
                                                             })()}
                                                             {entity.label}
                                                         </SelectItem>
@@ -280,8 +280,10 @@ export default function Receivables({
                                                     )
                                                 });
                                             }}>
-                                                <SelectTrigger>
-                                                    <span className="truncate">{findRateType(receivable.rate_type_id)?.name}</span>
+                                                <SelectTrigger className="w-full overflow-hidden">
+                                                    <div className="flex items-center w-full overflow-hidden">
+                                                        <span className="truncate">{findRateType(receivable.rate_type_id)?.name}</span>
+                                                    </div>
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {shipmentAccounting?.rate_types.map((rateType) => (
@@ -296,7 +298,7 @@ export default function Receivables({
                                             </Select>
                                             <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
                                         </TableCell>
-                                        <TableCell className="w-full sm:w-[15%] hidden sm:table-cell">
+                                        <TableCell className="w-[15%] hidden sm:table-cell">
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                                                     {getCurrencySymbol()}
@@ -320,7 +322,7 @@ export default function Receivables({
                                             </div>
                                             <InputError message={errors[`receivables.${index}.rate` as keyof typeof errors]} />
                                         </TableCell>
-                                        <TableCell className="w-full sm:w-[12%] hidden sm:table-cell">
+                                        <TableCell className="w-[12%] hidden sm:table-cell">
                                             <Input type="number" value={receivable.quantity} onChange={(e) => {
                                                 setData({
                                                     ...data,
@@ -377,7 +379,7 @@ export default function Receivables({
                                         
                                         {/* Mobile View - Single cell containing all fields */}
                                         <TableCell className="sm:hidden">
-                                            <div className="space-y-3">
+                                            <div className="space-y-3 max-w-full overflow-hidden">
                                                 <div>
                                                     <Select
                                                         value={payerUniqueIdForComponent(receivable.payer_id, receivable.payer_type)} 
@@ -394,19 +396,19 @@ export default function Receivables({
                                                             });
                                                         }}
                                                     >
-                                                        <SelectTrigger className="w-full">
-                                                            <span className="truncate">
+                                                        <SelectTrigger className="w-full overflow-hidden">
+                                                            <div className="flex items-center w-full overflow-hidden">
                                                                 {(() => {
                                                                     const payer = findPayer(receivable.payer_id, receivable.payer_type);
                                                                     const Icon = payer?.alias_name ? getAliasNameIcon(payer.alias_name) : null;
                                                                     return (
                                                                         <>
-                                                                            {Icon && <Icon className="w-4 h-4 inline mr-2" />}
-                                                                            {payer?.label}
+                                                                            {Icon && <Icon className="h-4 w-4 mr-2 flex-shrink-0" />}
+                                                                            <span className="truncate">{payer?.label}</span>
                                                                         </>
                                                                     );
                                                                 })()}
-                                                            </span>
+                                                            </div>
                                                         </SelectTrigger>
                                                         <SelectContent>
                                                             {shipmentAccounting?.related_entities.map((entity) => (
@@ -416,7 +418,7 @@ export default function Receivables({
                                                                     >
                                                                     {(() => {
                                                                         const Icon = getAliasNameIcon(entity.alias_name);
-                                                                        return Icon ? <Icon className="w-4 h-4 inline mr-2" /> : null;
+                                                                        return Icon ? <Icon className="w-4 h-4 inline mr-2 flex-shrink-0" /> : null;
                                                                     })()}
                                                                     {entity.label}
                                                                 </SelectItem>
@@ -442,8 +444,10 @@ export default function Receivables({
                                                             });
                                                         }}
                                                     >
-                                                        <SelectTrigger className="w-full">
-                                                            <span className="truncate">{findRateType(receivable.rate_type_id)?.name}</span>
+                                                        <SelectTrigger className="w-full overflow-hidden">
+                                                            <div className="flex items-center w-full overflow-hidden">
+                                                                <span className="truncate">{findRateType(receivable.rate_type_id)?.name}</span>
+                                                            </div>
                                                         </SelectTrigger>
                                                         <SelectContent>
                                                             {shipmentAccounting?.rate_types.map((rateType) => (
@@ -459,9 +463,9 @@ export default function Receivables({
                                                     <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
                                                 </div>
                                                 
-                                                <div className="grid grid-cols-3 gap-2">
+                                                <div className="grid grid-cols-3 gap-2 max-w-full overflow-hidden">
                                                     <div>
-                                                        <label className="text-sm font-medium pb-1 block">Rate</label>
+                                                        <label className="text-sm font-medium pb-1 block truncate">Rate</label>
                                                         <div className="relative">
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                                                                 {getCurrencySymbol()}
@@ -487,7 +491,7 @@ export default function Receivables({
                                                     </div>
                                                     
                                                     <div>
-                                                        <label className="text-sm font-medium pb-1 block">Quantity</label>
+                                                        <label className="text-sm font-medium pb-1 block truncate">Quantity</label>
                                                         <Input 
                                                             type="number" 
                                                             className="w-full" 
@@ -508,7 +512,7 @@ export default function Receivables({
                                                     </div>
                                                     
                                                     <div>
-                                                        <label className="text-sm font-medium pb-1 block">Total</label>
+                                                        <label className="text-sm font-medium pb-1 block truncate">Total</label>
                                                         <div className="relative">
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                                                                 {getCurrencySymbol()}
@@ -556,7 +560,7 @@ export default function Receivables({
                                 ) : (
                                     <TableRow key={index}>
                                         <TableCell className="w-[30%] hidden sm:table-cell">
-                                            <span className="truncate block">
+                                            <span className="truncate block max-w-full">
                                                 {findPayer(receivable.payer_id, receivable.payer_type)?.label}
                                             </span>
                                         </TableCell>
@@ -565,28 +569,30 @@ export default function Receivables({
                                                 {findRateType(receivable.rate_type_id)?.name}
                                             </span>
                                         </TableCell>
-                                        <TableCell className="w-full sm:w-[15%] hidden sm:table-cell">{formatCurrency(receivable.rate)}</TableCell>
-                                        <TableCell className="w-full sm:w-[12%] hidden sm:table-cell">{receivable.quantity}</TableCell>
+                                        <TableCell className="w-[15%] hidden sm:table-cell">{formatCurrency(receivable.rate)}</TableCell>
+                                        <TableCell className="w-[12%] hidden sm:table-cell">{receivable.quantity}</TableCell>
                                         <TableCell className="w-[18%] text-right hidden sm:table-cell">{formatCurrency(receivable.total)}</TableCell>
                                         <TableCell className="w-[5%] hidden sm:table-cell"></TableCell>
                                         
                                         {/* Mobile view for non-edit mode */}
                                         <TableCell className="sm:hidden">
-                                            <div className="space-y-1">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-medium">
-                                                        {findPayer(receivable.payer_id, receivable.payer_type)?.label}
-                                                    </span>
-                                                    <span className="font-bold">
+                                            <div className="space-y-1 max-w-full overflow-hidden">
+                                                <div className="flex items-center justify-between max-w-full">
+                                                    <div className="truncate max-w-[60%]">
+                                                        <span className="font-medium">
+                                                            {findPayer(receivable.payer_id, receivable.payer_type)?.label}
+                                                        </span>
+                                                    </div>
+                                                    <span className="font-bold flex-shrink-0">
                                                         {formatCurrency(receivable.total)}
                                                     </span>
                                                 </div>
-                                                <div className="text-sm text-muted-foreground">
+                                                <div className="text-sm text-muted-foreground truncate">
                                                     {findRateType(receivable.rate_type_id)?.name}
                                                 </div>
                                                 <div className="text-sm grid grid-cols-2 gap-2">
-                                                    <div>Rate: {formatCurrency(receivable.rate)}</div>
-                                                    <div>Qty: {receivable.quantity}</div>
+                                                    <div className="truncate">Rate: {formatCurrency(receivable.rate)}</div>
+                                                    <div className="truncate">Qty: {receivable.quantity}</div>
                                                 </div>
                                             </div>
                                         </TableCell>
