@@ -36,6 +36,7 @@ class SavePayables
             $calculatedTotal = $payableData['quantity'] * $payableData['rate'];   
             // If there's a discrepancy, adjust the rate to match the total
             if (abs($calculatedTotal - $payableData['total']) > 0.01) {
+                $payableData['quantity'] = max($payableData['quantity'], 1);
                 $payableData['rate'] = $payableData['total'] / $payableData['quantity'];
             }
 

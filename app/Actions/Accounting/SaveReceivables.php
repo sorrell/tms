@@ -36,6 +36,7 @@ class SaveReceivables
             $calculatedTotal = $receivableData['quantity'] * $receivableData['rate'];   
             // If there's a discrepancy, adjust the rate to match the total
             if (abs($calculatedTotal - $receivableData['total']) > 0.01) {
+                $receivableData['quantity'] = max($receivableData['quantity'], 1);
                 $receivableData['rate'] = $receivableData['total'] / $receivableData['quantity'];
             }
 

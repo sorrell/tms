@@ -15,13 +15,11 @@ import {
 import { toast } from '@/hooks/UseToast';
 import InputError from '@/Components/InputError';
 import {
-    RateType,
     Shipment,
-    Receivable,
     ShipmentAccounting,
 } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { ArrowLeft, ArrowUp, Check, CirclePlus, DollarSign, Pencil, Trash, Truck, Users, Warehouse, X } from 'lucide-react';
+import { Check, CirclePlus, DollarSign, Pencil, Trash, Truck, Users, Warehouse, X, ArrowDown, ArrowRight } from 'lucide-react';
 import {
     forwardRef,
     useCallback,
@@ -33,10 +31,10 @@ import {
 import { cn, formatCurrency, getCurrencySymbol } from '@/lib/utils';
 import { Currency } from '@/types/enums';
 
-type ReceivableFormData = {
+type PayableFormData = {
     id?: number;
-    payer_id: number;
-    payer_type: string;
+    payee_id: number;
+    payee_type: string;
     rate: number;
     quantity: number;
     total: number;
@@ -47,7 +45,7 @@ type ReceivableFormData = {
 // Define a type for the errors object from Inertia
 type FormErrors = Record<string, string>;
 
-export default function Receivables({
+export default function Payables({
     shipment,
     shipmentAccounting,
 }: {
@@ -58,9 +56,9 @@ export default function Receivables({
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const { data, setData, post, errors: formErrors, processing } = useForm<{
-        receivables: ReceivableFormData[];
+        payables: PayableFormData[];
     }>({
-        receivables: shipmentAccounting?.receivables || [],
+        payables: shipmentAccounting?.payables || [],
     });
     
     // Correctly type the errors object
@@ -71,7 +69,7 @@ export default function Receivables({
     useEffect(() => {
         if (!isEditing) {
             setDataRef.current({
-                receivables: shipmentAccounting?.receivables || [],
+                payables: shipmentAccounting?.payables || [],
             });
         }        
     }, [shipmentAccounting, isEditing]);
@@ -80,17 +78,17 @@ export default function Receivables({
         return shipmentAccounting?.rate_types.find((rateType) => rateType.id === id);
     }, [shipmentAccounting]);
 
-    const findPayer = useCallback((id: number, type: string) => {
+    const findPayee = useCallback((id: number, type: string) => {
         return shipmentAccounting?.related_entities.find(
             (entity) => entity.id === id && entity.alias_name === type
         );
     }, [shipmentAccounting]);
 
-    const payerUniqueIdForComponent = (id: number, type: string) => {
+    const payeeUniqueIdForComponent = (id: number, type: string) => {
         return `${type}|${id}`;
     }
 
-    const decodePayerUniqueIdForComponent = (uniqueId: string) => {
+    const decodePayeeUniqueIdForComponent = (uniqueId: string) => {
         const [type, id] = uniqueId.split('|');
         return { type, id: parseInt(id) };
     }
@@ -114,13 +112,13 @@ export default function Receivables({
             <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                    <div className="relative">
+                        <div className="relative">
                             <DollarSign className="h-5 w-5" />
-                            <div className="absolute -right-1 -bottom-1 bg-secondary rounded-full border-success border-2">
-                                <ArrowLeft className="h-2 w-2 text-secondary-foreground" />
+                            <div className="absolute -right-1 -bottom-1 bg-secondary rounded-full border-destructive border-2">
+                                <ArrowRight className="h-2 w-2 text-secondary-foreground" />
                             </div>
                         </div>
-                        Receivables
+                        Payables
 
                     </div>
 
@@ -129,9 +127,9 @@ export default function Receivables({
                             variant="ghost"
                             onClick={() => {
                                 setData({
-                                    receivables: [...data.receivables, {
-                                        payer_id: 0,
-                                        payer_type: 'carrier',
+                                    payables: [...data.payables, {
+                                        payee_id: 0,
+                                        payee_type: 'carrier',
                                         rate: 0,
                                         quantity: 0,
                                         total: 0,
@@ -147,17 +145,17 @@ export default function Receivables({
                         {isEditing ? (
                             <>
                                 <Button variant="ghost" onClick={() => {
-                                    post(route('shipments.accounting.receivables', { shipment: shipment.id }), {
+                                    post(route('shipments.accounting.payables', { shipment: shipment.id }), {
                                         preserveScroll: true,
                                         onSuccess: () => {
                                             setIsEditing(false);
                                             toast({
-                                                title: 'Receivables saved',
+                                                title: 'Payables saved',
                                             })
                                         },
                                         onError: () => {
                                             toast({
-                                                title: 'Error saving receivables',
+                                                title: 'Error saving payables',
                                                 description: 'Please check form for errors',
                                                 variant: 'destructive'
                                             })
@@ -171,7 +169,7 @@ export default function Receivables({
                                     onClick={() => {
                                         setIsEditing(false);
                                         setData({
-                                            receivables: shipmentAccounting?.receivables || []
+                                            payables: shipmentAccounting?.payables || []
                                         })
                                     }}
                                 >
@@ -194,7 +192,7 @@ export default function Receivables({
                 <Table className="w-full table-fixed">
                     <TableHeader>
                         <TableRow className="table-row">
-                            <TableHead className="w-[30%] hidden sm:table-cell">Payer</TableHead>
+                            <TableHead className="w-[30%] hidden sm:table-cell">Payee</TableHead>
                             <TableHead className="w-[20%] hidden sm:table-cell">Type</TableHead>
                             <TableHead className={cn("w-[15%] hidden sm:table-cell", (!isEditing && 'hidden'))}>Rate</TableHead>
                             <TableHead className={cn("w-[12%] hidden sm:table-cell", (!isEditing && 'hidden'))}>Quantity</TableHead>
@@ -208,29 +206,29 @@ export default function Receivables({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data.receivables.length === 0 ? (
+                        {data.payables.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                                    No receivables added yet
+                                    No payables added yet
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            data.receivables.map((receivable, index) =>
+                            data.payables.map((payable, index) =>
                                 isEditing ? (
                                     <TableRow key={index}>
                                         {/* Desktop View */}
                                         <TableCell className="w-[30%] max-w-[200px] hidden sm:table-cell">
                                             <Select
-                                                value={payerUniqueIdForComponent(receivable.payer_id, receivable.payer_type)} 
+                                                value={payeeUniqueIdForComponent(payable.payee_id, payable.payee_type)} 
                                                 onValueChange={(value) => {
-                                                    const { type, id } = decodePayerUniqueIdForComponent(value);
+                                                    const { type, id } = decodePayeeUniqueIdForComponent(value);
                                                     setData({
                                                         ...data,
-                                                        receivables: data.receivables.map(
-                                                            (receivable, receivableIndex) => 
-                                                                receivableIndex === index ? 
-                                                                    { ...receivable, payer_id: id, payer_type: type } : 
-                                                                    receivable
+                                                        payables: data.payables.map(
+                                                            (payable, payableIndex) => 
+                                                                payableIndex === index ? 
+                                                                    { ...payable, payee_id: id, payee_type: type } : 
+                                                                    payable
                                                         )
                                                     });
                                                 }}
@@ -238,12 +236,12 @@ export default function Receivables({
                                                 <SelectTrigger className="w-full overflow-hidden">
                                                     <div className="flex items-center w-full overflow-hidden">
                                                         {(() => {
-                                                            const payer = findPayer(receivable.payer_id, receivable.payer_type);
-                                                            const Icon = payer?.alias_name ? getAliasNameIcon(payer.alias_name) : null;
+                                                            const payee = findPayee(payable.payee_id, payable.payee_type);
+                                                            const Icon = payee?.alias_name ? getAliasNameIcon(payee.alias_name) : null;
                                                             return (
                                                                 <>
                                                                     {Icon && <Icon className="h-4 w-4 mr-2 flex-shrink-0" />}
-                                                                    <span className="truncate">{payer?.label}</span>
+                                                                    <span className="truncate">{payee?.label}</span>
                                                                 </>
                                                             );
                                                         })()}
@@ -253,7 +251,7 @@ export default function Receivables({
                                                     {shipmentAccounting?.related_entities.map((entity) => (
                                                         <SelectItem
                                                             key={entity.alias_name + entity.id} 
-                                                            value={payerUniqueIdForComponent(entity.id, entity.alias_name)}
+                                                            value={payeeUniqueIdForComponent(entity.id, entity.alias_name)}
                                                             >
                                                             {(() => {
                                                                 const Icon = getAliasNameIcon(entity.alias_name);
@@ -264,14 +262,14 @@ export default function Receivables({
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                            <InputError message={errors[`receivables.${index}.payer_id` as keyof typeof errors]} />
-                                            <InputError message={errors[`receivables.${index}.payer_type` as keyof typeof errors]} />
+                                            <InputError message={errors[`payables.${index}.payee_id` as keyof typeof errors]} />
+                                            <InputError message={errors[`payables.${index}.payee_type` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[20%] hidden sm:table-cell">
-                                            <Select value={receivable.rate_type_id?.toString() || ""} onValueChange={(value) => {
+                                            <Select value={payable.rate_type_id?.toString() || ""} onValueChange={(value) => {
                                                 setData({
                                                     ...data,
-                                                    receivables: data.receivables.map(
+                                                    payables: data.payables.map(
                                                         (r, i) => 
                                                             i === index ? 
                                                                 { ...r, rate_type_id: parseInt(value) } : 
@@ -281,7 +279,7 @@ export default function Receivables({
                                             }}>
                                                 <SelectTrigger className="w-full overflow-hidden">
                                                     <div className="flex items-center w-full overflow-hidden">
-                                                        <span className="truncate">{findRateType(receivable.rate_type_id)?.name}</span>
+                                                        <span className="truncate">{findRateType(payable.rate_type_id)?.name}</span>
                                                     </div>
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -295,21 +293,21 @@ export default function Receivables({
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                            <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
+                                            <InputError message={errors[`payables.${index}.rate_type_id` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[15%] hidden sm:table-cell">
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                    {getCurrencySymbol(receivable.currency_code)}
+                                                    {getCurrencySymbol(payable.currency_code)}
                                                 </span>
                                                 <Input 
                                                     type="number" 
                                                     className="pl-7" 
-                                                    value={receivable.rate} 
+                                                    value={payable.rate} 
                                                     onChange={(e) => {
                                                         setData({
                                                             ...data,
-                                                            receivables: data.receivables.map(
+                                                            payables: data.payables.map(
                                                                 (r, i) => 
                                                                     i === index ? 
                                                                         { ...r, rate: parseFloat(e.target.value) } : 
@@ -319,13 +317,13 @@ export default function Receivables({
                                                     }} 
                                                 />
                                             </div>
-                                            <InputError message={errors[`receivables.${index}.rate` as keyof typeof errors]} />
+                                            <InputError message={errors[`payables.${index}.rate` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[12%] hidden sm:table-cell">
-                                            <Input type="number" value={receivable.quantity} onChange={(e) => {
+                                            <Input type="number" value={payable.quantity} onChange={(e) => {
                                                 setData({
                                                     ...data,
-                                                    receivables: data.receivables.map(
+                                                    payables: data.payables.map(
                                                         (r, i) => 
                                                             i === index ? 
                                                                 { ...r, quantity: parseInt(e.target.value) } : 
@@ -333,21 +331,21 @@ export default function Receivables({
                                                     )
                                                 });
                                             }} />
-                                            <InputError message={errors[`receivables.${index}.quantity` as keyof typeof errors]} />
+                                            <InputError message={errors[`payables.${index}.quantity` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[18%] text-right hidden sm:table-cell">
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                    {getCurrencySymbol(receivable.currency_code)}
+                                                    {getCurrencySymbol(payable.currency_code)}
                                                 </span>
                                                 <Input 
                                                     type="number" 
                                                     className="pl-7" 
-                                                    value={receivable.total} 
+                                                    value={payable.total} 
                                                     onChange={(e) => {
                                                         setData({
                                                             ...data,
-                                                            receivables: data.receivables.map(
+                                                            payables: data.payables.map(
                                                                 (r, i) => 
                                                                     i === index ? 
                                                                         { ...r, total: parseFloat(e.target.value) } : 
@@ -357,7 +355,7 @@ export default function Receivables({
                                                     }} 
                                                 />
                                             </div>
-                                            <InputError message={errors[`receivables.${index}.total` as keyof typeof errors]} />
+                                            <InputError message={errors[`payables.${index}.total` as keyof typeof errors]} />
                                         </TableCell>
                                         <TableCell className="w-[5%] hidden sm:table-cell">
                                         <ConfirmButton
@@ -367,7 +365,7 @@ export default function Receivables({
                                                 onConfirm={() =>
                                                     setData({
                                                         ...data,
-                                                        receivables: data.receivables.filter((_, i) => i !== index)
+                                                        payables: data.payables.filter((_, i) => i !== index)
                                                     })
                                                 }
                                                 confirmText="Delete"
@@ -381,16 +379,16 @@ export default function Receivables({
                                             <div className="space-y-3 max-w-full overflow-hidden">
                                                 <div>
                                                     <Select
-                                                        value={payerUniqueIdForComponent(receivable.payer_id, receivable.payer_type)} 
+                                                        value={payeeUniqueIdForComponent(payable.payee_id, payable.payee_type)} 
                                                         onValueChange={(value) => {
-                                                            const { type, id } = decodePayerUniqueIdForComponent(value);
+                                                            const { type, id } = decodePayeeUniqueIdForComponent(value);
                                                             setData({
                                                                 ...data,
-                                                                receivables: data.receivables.map(
-                                                                    (receivable, receivableIndex) => 
-                                                                        receivableIndex === index ? 
-                                                                            { ...receivable, payer_id: id, payer_type: type } : 
-                                                                            receivable
+                                                                payables: data.payables.map(
+                                                                    (payable, payableIndex) => 
+                                                                        payableIndex === index ? 
+                                                                            { ...payable, payee_id: id, payee_type: type } : 
+                                                                            payable
                                                                 )
                                                             });
                                                         }}
@@ -398,12 +396,12 @@ export default function Receivables({
                                                         <SelectTrigger className="w-full overflow-hidden">
                                                             <div className="flex items-center w-full overflow-hidden">
                                                                 {(() => {
-                                                                    const payer = findPayer(receivable.payer_id, receivable.payer_type);
-                                                                    const Icon = payer?.alias_name ? getAliasNameIcon(payer.alias_name) : null;
+                                                                    const payee = findPayee(payable.payee_id, payable.payee_type);
+                                                                    const Icon = payee?.alias_name ? getAliasNameIcon(payee.alias_name) : null;
                                                                     return (
                                                                         <>
                                                                             {Icon && <Icon className="h-4 w-4 mr-2 flex-shrink-0" />}
-                                                                            <span className="truncate">{payer?.label}</span>
+                                                                            <span className="truncate">{payee?.label}</span>
                                                                         </>
                                                                     );
                                                                 })()}
@@ -413,7 +411,7 @@ export default function Receivables({
                                                             {shipmentAccounting?.related_entities.map((entity) => (
                                                                 <SelectItem
                                                                     key={entity.alias_name + entity.id} 
-                                                                    value={payerUniqueIdForComponent(entity.id, entity.alias_name)}
+                                                                    value={payeeUniqueIdForComponent(entity.id, entity.alias_name)}
                                                                     >
                                                                     {(() => {
                                                                         const Icon = getAliasNameIcon(entity.alias_name);
@@ -424,17 +422,17 @@ export default function Receivables({
                                                             ))}
                                                         </SelectContent>
                                                     </Select>
-                                                    <InputError message={errors[`receivables.${index}.payer_id` as keyof typeof errors]} />
-                                                    <InputError message={errors[`receivables.${index}.payer_type` as keyof typeof errors]} />
+                                                    <InputError message={errors[`payables.${index}.payee_id` as keyof typeof errors]} />
+                                                    <InputError message={errors[`payables.${index}.payee_type` as keyof typeof errors]} />
                                                 </div>
                                                 
                                                 <div>
                                                     <Select 
-                                                        value={receivable.rate_type_id?.toString() || ""} 
+                                                        value={payable.rate_type_id?.toString() || ""} 
                                                         onValueChange={(value) => {
                                                             setData({
                                                                 ...data,
-                                                                receivables: data.receivables.map(
+                                                                payables: data.payables.map(
                                                                     (r, i) => 
                                                                         i === index ? 
                                                                             { ...r, rate_type_id: parseInt(value) } : 
@@ -445,7 +443,7 @@ export default function Receivables({
                                                     >
                                                         <SelectTrigger className="w-full overflow-hidden">
                                                             <div className="flex items-center w-full overflow-hidden">
-                                                                <span className="truncate">{findRateType(receivable.rate_type_id)?.name}</span>
+                                                                <span className="truncate">{findRateType(payable.rate_type_id)?.name}</span>
                                                             </div>
                                                         </SelectTrigger>
                                                         <SelectContent>
@@ -459,7 +457,7 @@ export default function Receivables({
                                                             ))}
                                                         </SelectContent>
                                                     </Select>
-                                                    <InputError message={errors[`receivables.${index}.rate_type_id` as keyof typeof errors]} />
+                                                    <InputError message={errors[`payables.${index}.rate_type_id` as keyof typeof errors]} />
                                                 </div>
                                                 
                                                 <div className="grid grid-cols-3 gap-2 max-w-full overflow-hidden">
@@ -467,16 +465,16 @@ export default function Receivables({
                                                         <label className="text-sm font-medium pb-1 block truncate">Rate</label>
                                                         <div className="relative">
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                                {getCurrencySymbol(receivable.currency_code)}
+                                                                {getCurrencySymbol(payable.currency_code)}
                                                             </span>
                                                             <Input 
                                                                 type="number" 
                                                                 className="pl-7 w-full" 
-                                                                value={receivable.rate} 
+                                                                value={payable.rate} 
                                                                 onChange={(e) => {
                                                                     setData({
                                                                         ...data,
-                                                                        receivables: data.receivables.map(
+                                                                        payables: data.payables.map(
                                                                             (r, i) => 
                                                                                 i === index ? 
                                                                                     { ...r, rate: parseFloat(e.target.value) } : 
@@ -486,7 +484,7 @@ export default function Receivables({
                                                                 }} 
                                                             />
                                                         </div>
-                                                        <InputError message={errors[`receivables.${index}.rate` as keyof typeof errors]} />
+                                                        <InputError message={errors[`payables.${index}.rate` as keyof typeof errors]} />
                                                     </div>
                                                     
                                                     <div>
@@ -494,11 +492,11 @@ export default function Receivables({
                                                         <Input 
                                                             type="number" 
                                                             className="w-full" 
-                                                            value={receivable.quantity} 
+                                                            value={payable.quantity} 
                                                             onChange={(e) => {
                                                                 setData({
                                                                     ...data,
-                                                                    receivables: data.receivables.map(
+                                                                    payables: data.payables.map(
                                                                         (r, i) => 
                                                                             i === index ? 
                                                                                 { ...r, quantity: parseInt(e.target.value) } : 
@@ -507,23 +505,23 @@ export default function Receivables({
                                                                 });
                                                             }} 
                                                         />
-                                                        <InputError message={errors[`receivables.${index}.quantity` as keyof typeof errors]} />
+                                                        <InputError message={errors[`payables.${index}.quantity` as keyof typeof errors]} />
                                                     </div>
                                                     
                                                     <div>
                                                         <label className="text-sm font-medium pb-1 block truncate">Total</label>
                                                         <div className="relative">
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                                                                {getCurrencySymbol(receivable.currency_code)}
+                                                                {getCurrencySymbol(payable.currency_code)}
                                                             </span>
                                                             <Input 
                                                                 type="number" 
                                                                 className="pl-7 w-full" 
-                                                                value={receivable.total} 
+                                                                value={payable.total} 
                                                                 onChange={(e) => {
                                                                     setData({
                                                                         ...data,
-                                                                        receivables: data.receivables.map(
+                                                                        payables: data.payables.map(
                                                                             (r, i) => 
                                                                                 i === index ? 
                                                                                     { ...r, total: parseFloat(e.target.value) } : 
@@ -533,7 +531,7 @@ export default function Receivables({
                                                                 }} 
                                                             />
                                                         </div>
-                                                        <InputError message={errors[`receivables.${index}.total` as keyof typeof errors]} />
+                                                        <InputError message={errors[`payables.${index}.total` as keyof typeof errors]} />
                                                     </div>
                                                 </div>
                                                 
@@ -545,7 +543,7 @@ export default function Receivables({
                                                         onConfirm={() =>
                                                             setData({
                                                                 ...data,
-                                                                receivables: data.receivables.filter((_, i) => i !== index)
+                                                                payables: data.payables.filter((_, i) => i !== index)
                                                             })
                                                         }
                                                         confirmText="Delete"
@@ -560,17 +558,17 @@ export default function Receivables({
                                     <TableRow key={index}>
                                         <TableCell className="w-[30%] hidden sm:table-cell">
                                             <span className="truncate block max-w-full">
-                                                {findPayer(receivable.payer_id, receivable.payer_type)?.label}
+                                                {findPayee(payable.payee_id, payable.payee_type)?.label}
                                             </span>
                                         </TableCell>
                                         <TableCell className="w-[20%] hidden sm:table-cell">
                                             <span className="truncate block">
-                                                {findRateType(receivable.rate_type_id)?.name}
+                                                {findRateType(payable.rate_type_id)?.name}
                                             </span>
                                         </TableCell>
-                                        <TableCell className="w-[15%] hidden sm:table-cell">{formatCurrency(receivable.rate, receivable.currency_code)}</TableCell>
-                                        <TableCell className="w-[12%] hidden sm:table-cell">{receivable.quantity}</TableCell>
-                                        <TableCell className="w-[18%] text-right hidden sm:table-cell">{formatCurrency(receivable.total, receivable.currency_code)}</TableCell>
+                                        <TableCell className="w-[15%] hidden sm:table-cell">{formatCurrency(payable.rate, payable.currency_code)}</TableCell>
+                                        <TableCell className="w-[12%] hidden sm:table-cell">{payable.quantity}</TableCell>
+                                        <TableCell className="w-[18%] text-right hidden sm:table-cell">{formatCurrency(payable.total, payable.currency_code)}</TableCell>
                                         <TableCell className="w-[5%] hidden sm:table-cell"></TableCell>
                                         
                                         {/* Mobile view for non-edit mode */}
@@ -579,18 +577,18 @@ export default function Receivables({
                                                 <div className="flex items-center justify-between max-w-full">
                                                     <div className="truncate max-w-[60%]">
                                                         <span className="font-medium">
-                                                            {findPayer(receivable.payer_id, receivable.payer_type)?.label}
+                                                            {findPayee(payable.payee_id, payable.payee_type)?.label}
                                                         </span>
                                                     </div>
-                                                    <span className="flex-shrink-0">
-                                                        {formatCurrency(receivable.total, receivable.currency_code)}
+                                                    <span className=" flex-shrink-0">
+                                                        {formatCurrency(payable.total, payable.currency_code)}
                                                     </span>
                                                 </div>
                                                 <div className="text-sm text-muted-foreground truncate">
-                                                    {findRateType(receivable.rate_type_id)?.name}
+                                                    {findRateType(payable.rate_type_id)?.name}
                                                 </div>
                                                 <div className="text-sm text-muted-foreground">
-                                                    {formatCurrency(receivable.rate, receivable.currency_code)} x {receivable.quantity}
+                                                    {formatCurrency(payable.rate, payable.currency_code)} x {payable.quantity}
                                                 </div>
                                             </div>
                                         </TableCell>
@@ -606,8 +604,8 @@ export default function Receivables({
                             </TableCell>
                             <TableCell className="text-right hidden sm:table-cell font-bold">
                                 {formatCurrency(
-                                    data.receivables.reduce((sum, receivable) => sum + receivable.total, 0),
-                                    data.receivables.length > 0 ? data.receivables[0].currency_code : 'USD'
+                                    data.payables.reduce((sum, payable) => sum + payable.total, 0),
+                                    data.payables.length > 0 ? data.payables[0].currency_code : 'USD'
                                 )}
                             </TableCell>
                             <TableCell className="hidden sm:table-cell"></TableCell>
@@ -618,8 +616,8 @@ export default function Receivables({
                                     <span className="font-medium">Total</span>
                                     <span className="font-bold">
                                         {formatCurrency(
-                                            data.receivables.reduce((sum, receivable) => sum + receivable.total, 0),
-                                            data.receivables.length > 0 ? data.receivables[0].currency_code : 'USD'
+                                            data.payables.reduce((sum, payable) => sum + payable.total, 0),
+                                            data.payables.length > 0 ? data.payables[0].currency_code : 'USD'
                                         )}
                                     </span>
                                 </div>

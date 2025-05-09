@@ -1,6 +1,7 @@
 import { Shipment, ShipmentAccounting } from '@/types';
 import { useEffect, useState } from 'react';
 import Receivables from './Receivables';
+import Payables from './Payables';
 
 export default function ShipmentAccountingDetails({
     shipment,
@@ -27,6 +28,10 @@ export default function ShipmentAccountingDetails({
     return (
         <>
             <Receivables
+                shipment={shipment}
+                shipmentAccounting={shipmentAccounting}
+            />
+            <Payables
                 shipment={shipment}
                 shipmentAccounting={shipmentAccounting}
             />
