@@ -13,6 +13,7 @@ import { Shipment } from '@/types';
 import { ShipmentState } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
 import {
+    AlertCircle,
     ArrowRight,
     Check,
     CheckCircle2,
@@ -29,7 +30,7 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
 
     const { toast } = useToast();
 
-    const { patch, setData, data } = useForm({
+    const { post, patch, setData, data } = useForm({
         shipment_number: shipment.shipment_number,
     });
 
@@ -40,6 +41,41 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
     const cancelShipment = () => {
         patch(route('shipments.cancel', { shipment: shipment.id }));
     };
+
+    const generateRateCon = () => {
+        post(
+            route('shipments.documents.generate-rate-confirmation', { shipment: shipment.id }),
+            {
+                onSuccess: (response) => {
+                    toast({
+                        description: (
+                            <>
+                                <CheckCircle2
+                                    className="mr-2 inline h-4 w-4"
+                                    color="green"
+                                />
+                                Rate confirmation generated!
+                            </>
+                        ),
+                    });
+                },
+                onError: (error) => {
+                    console.error(error);
+                    toast({
+                        description: (
+                            <>
+                                <AlertCircle
+                                    className="mr-2 inline h-4 w-4"
+                                    color="red"
+                                />
+                                Rate confirmation failed to generate! Please contact support!
+                            </>
+                        ),
+                    });
+                }
+            }
+        );
+    }
 
     const updateShipmentNumber = () => {
         patch(
@@ -146,7 +182,7 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     </Button>
                 )}
 
-                <Button disabled={true}>
+                <Button onClick={generateRateCon}>
                     <FileText className="mr-2 h-4 w-4" />
                     Generate Ratecon
                 </Button>

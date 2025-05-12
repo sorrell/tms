@@ -100,9 +100,11 @@
 </head>
 <body>
     <div class="header">
+        @if($company_logo)
         <div class="logo-placeholder">
             <img src="{{ $company_logo ?? '' }}" alt="Company Logo" height="80">
         </div>
+        @endif
         <div class="doc-title">CARRIER RATE CONFIRMATION</div>
         <div class="doc-subtitle">AGREEMENT BETWEEN BROKER AND CARRIER</div>
     </div>

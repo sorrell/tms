@@ -6,6 +6,7 @@ use App\Actions\Documents\CreateDocument;
 use App\Enums\Documents\Documentable;
 use App\Enums\Documents\DocumentFolder;
 use App\Enums\StopType;
+use App\Models\Documents\Document;
 use App\Models\Shipments\Shipment;
 use Exception;
 use Illuminate\Http\File;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class GenerateRateConfirmation
@@ -60,6 +62,16 @@ class GenerateRateConfirmation
 
         return $document;
     }
+
+    public function asController(ActionRequest $request, Shipment $shipment)
+    {
+        return $this->handle($shipment);   
+    }
+
+    public function htmlResponse(Document $document)
+    {
+        return redirect()->back();
+    }
     
     private function prepareViewData(Shipment $shipment): array
     {
@@ -74,6 +86,7 @@ class GenerateRateConfirmation
             'broker_phone' => config('company.phone'),
             'broker_email' => config('company.email'),
             'company_logo' => config('company.logo_url'),
+
         ];
         
         // Extract rate confirmation details
