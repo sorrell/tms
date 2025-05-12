@@ -111,7 +111,7 @@ class GenerateRateConfirmation
         $cargo = [
             'weight' => $shipment->weight ?? '',
             'temperature' => $shipment->trailer_temperature ?? 'N/A',
-            'trailer_type' => $shipment->trailer_type?->name ?? '',
+            'trailer_type' => $shipment->trailer_type->name ?? '',
         ];
         
         // Process payables
@@ -156,7 +156,7 @@ class GenerateRateConfirmation
                 'stop_number' => $stop->stop_number,
                 'type' => $stopType,
                 'company' => $facility->name ?? '',
-                'address' => $location->address_line_1 . ($location->address_line_2 ? ', ' . $location->address_line_2 : '') ?? '',
+                'address' => $location->address_line_1 . ($location->address_line_2 ? ', ' . $location->address_line_2 : ''),
                 'city' => $location->address_city ?? '',
                 'state' => $location->state_shorthand ?? '',
                 'zip' => $location->address_zipcode ?? '',

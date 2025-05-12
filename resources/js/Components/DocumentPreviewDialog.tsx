@@ -23,9 +23,7 @@ export default function DocumentPreviewDialog({
                 <div className="flex-grow overflow-hidden">
                     <iframe
                         src={
-                            document
-                                ? route('documents.show', document.id)
-                                : ''
+                            document ? route('documents.show', document.id) : ''
                         }
                         className="h-full w-full border-0"
                         title={`Preview of ${document?.name}`}
@@ -51,4 +49,4 @@ export default function DocumentPreviewDialog({
             </DialogContent>
         </Dialog>
     );
-} 
+}

@@ -67,9 +67,11 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
 
     const generateRateCon = () => {
         post(
-            route('shipments.documents.generate-rate-confirmation', { shipment: shipment.id }),
+            route('shipments.documents.generate-rate-confirmation', {
+                shipment: shipment.id,
+            }),
             {
-                onSuccess: (response) => {
+                onSuccess: () => {
                     toast({
                         description: (
                             <>
@@ -91,14 +93,15 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                                     className="mr-2 inline h-4 w-4"
                                     color="red"
                                 />
-                                Rate confirmation failed to generate! Please contact support!
+                                Rate confirmation failed to generate! Please
+                                contact support!
                             </>
                         ),
                     });
-                }
-            }
+                },
+            },
         );
-    }
+    };
 
     const updateShipmentNumber = () => {
         patch(
@@ -205,21 +208,17 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     </Button>
                 )}
 
-                {shipment.latest_rate_confirmation ?
-                    (
-                        <Button onClick={viewRateCon}>
-                            <FileText className="mr-2 h-4 w-4" />
-                            View Ratecon
-                        </Button>
-                    ) :
-                    ((
-
-                        <Button onClick={generateRateCon}>
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate Ratecon
-                        </Button>
-                    ))
-                }
+                {shipment.latest_rate_confirmation ? (
+                    <Button onClick={viewRateCon}>
+                        <FileText className="mr-2 h-4 w-4" />
+                        View Ratecon
+                    </Button>
+                ) : (
+                    <Button onClick={generateRateCon}>
+                        <FileText className="mr-2 h-4 w-4" />
+                        Generate Ratecon
+                    </Button>
+                )}
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
