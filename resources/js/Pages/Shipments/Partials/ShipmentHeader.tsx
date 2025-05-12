@@ -1,4 +1,5 @@
 import NewCheckCallButton from '@/Components/CheckCalls/NewCheckCallButton';
+import DocumentPreviewDialog from '@/Components/DocumentPreviewDialog';
 import { Button } from '@/Components/ui/button';
 import { ConfirmDropdownMenuItem } from '@/Components/ui/confirm-dropdown-menu-item';
 import {
@@ -9,7 +10,7 @@ import {
 } from '@/Components/ui/dropdown-menu';
 import { Input } from '@/Components/ui/input';
 import { useToast } from '@/hooks/UseToast';
-import { Shipment } from '@/types';
+import { Document, Shipment } from '@/types';
 import { ShipmentState } from '@/types/enums';
 import { useForm } from '@inertiajs/react';
 import {
@@ -27,6 +28,7 @@ import { useState } from 'react';
 
 export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
     const [editMode, setEditMode] = useState(false);
+    const [showRateConDialog, setShowRateConDialog] = useState(false);
 
     const { toast } = useToast();
 
@@ -40,6 +42,27 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
 
     const cancelShipment = () => {
         patch(route('shipments.cancel', { shipment: shipment.id }));
+    };
+
+    const viewRateCon = () => {
+        setShowRateConDialog(true);
+    };
+
+    const downloadRateCon = (document: Document) => {
+        // Create a download link for the document
+        const downloadUrl = route('documents.show', document.id);
+
+        // Create an invisible anchor element
+        const link = window.document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', document.name);
+        window.document.body.appendChild(link);
+
+        // Trigger the download
+        link.click();
+
+        // Clean up - remove the element
+        window.document.body.removeChild(link);
     };
 
     const generateRateCon = () => {
@@ -182,10 +205,21 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     </Button>
                 )}
 
-                <Button onClick={generateRateCon}>
-                    <FileText className="mr-2 h-4 w-4" />
-                    Generate Ratecon
-                </Button>
+                {shipment.latest_rate_confirmation ?
+                    (
+                        <Button onClick={viewRateCon}>
+                            <FileText className="mr-2 h-4 w-4" />
+                            View Ratecon
+                        </Button>
+                    ) :
+                    ((
+
+                        <Button onClick={generateRateCon}>
+                            <FileText className="mr-2 h-4 w-4" />
+                            Generate Ratecon
+                        </Button>
+                    ))
+                }
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -214,6 +248,14 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+
+            {/* Document Preview Dialog */}
+            <DocumentPreviewDialog
+                document={shipment.latest_rate_confirmation}
+                open={showRateConDialog}
+                onOpenChange={setShowRateConDialog}
+                onDownload={downloadRateCon}
+            />
         </div>
     );
 }

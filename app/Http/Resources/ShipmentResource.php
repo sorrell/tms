@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Documents\DocumentFolder;
 use App\Http\Resources\Carriers\CarrierResource;
 use App\Http\Resources\Customers\CustomerResource;
 use App\Http\Resources\Documents\DocumentFolderResource;
@@ -47,7 +48,11 @@ class ShipmentResource extends JsonResource
             'state' => $this->state,
             
             'documents' => $this->whenLoaded('documents', DocumentResource::collection($this->documents)),
-            'document_folders' => $this->whenLoaded('documents', DocumentFolderResource::collection($this->getAllDocumentFolders()))
+            'document_folders' => $this->whenLoaded('documents', DocumentFolderResource::collection($this->getAllDocumentFolders())),
+
+            'latest_rate_confirmation' => DocumentResource::make(
+                $this->documents()->where('folder_name', DocumentFolder::RATECONS)->latest()->first()
+            )
         ];
     }
 }

@@ -185,6 +185,7 @@ export interface Shipment {
     state: ShipmentState;
     documents?: Document[];
     document_folders?: DocumentFolder[];
+    latest_rate_confirmation?: Document;
 }
 
 export interface Note {
