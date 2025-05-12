@@ -87,6 +87,7 @@ class CreateOrUpdateOrganizationDefaults {
         RateType::create(['name' => 'Chassis Split', 'organization_id' => $organizationId]);
         RateType::create(['name' => 'Flat', 'organization_id' => $organizationId]);
         RateType::create(['name' => 'Per Mile', 'organization_id' => $organizationId]);
+        RateType::create(['name' => 'Linehaul', 'organization_id' => $organizationId]);
         
     }
 }

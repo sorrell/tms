@@ -10,7 +10,7 @@
             line-height: 1.6;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             font-size: 12px;
         }
         .header {
@@ -61,15 +61,17 @@
         }
         .box {
             border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
+            padding: 5px;
+            margin-bottom: 5px;
         }
-        .columns {
-            display: flex;
-            justify-content: space-between;
+        .info-table {
+            width: 100%;
+            border-collapse: separate;
         }
-        .column {
-            width: 48%;
+        .info-table td {
+            width: 50%;
+            vertical-align: top;
+            border: none;
         }
         .signature-area {
             border-top: 1px solid #ddd;
@@ -105,113 +107,90 @@
         <div class="doc-subtitle">AGREEMENT BETWEEN BROKER AND CARRIER</div>
     </div>
 
-    <div class="columns">
-        <div class="column">
-            <div class="box">
-                <strong>Broker Information:</strong><br>
-                <strong>{{ $broker_company ?? 'COMPANY NAME' }}</strong><br>
-                {{ $broker_address ?? 'Address Line 1' }}<br>
-                {{ $broker_city ?? 'City' }}, {{ $broker_state ?? 'State' }} {{ $broker_zip ?? 'ZIP' }}<br>
-                MC#: {{ $broker_mc ?? 'MC#' }}<br>
-                Phone: {{ $broker_phone ?? 'Phone' }}<br>
-                Email: {{ $broker_email ?? 'Email' }}
-            </div>
-        </div>
-        <div class="column">
-            <div class="box">
-                <strong>Rate Confirmation Details:</strong><br>
-                Rate Con #: <strong>{{ $rate_con_number ?? 'RC-00000' }}</strong><br>
-                Date: {{ $date ?? date('m/d/Y') }}<br>
-                Load #: {{ $load_number ?? 'LOAD-00000' }}<br>
-                Ref #: {{ $reference_number ?? '' }}
-            </div>
-        </div>
-    </div>
+    <table class="info-table">
+        <tr>
+            <td>
+                <div class="box">
+                    <strong>Broker Information:</strong><br>
+                    <strong>{{ $broker_company ?? 'COMPANY NAME' }}</strong><br>
+                    {{ $broker_address ?? 'Address Line 1' }}<br>
+                    {{ $broker_city ?? 'City' }}, {{ $broker_state ?? 'State' }} {{ $broker_zip ?? 'ZIP' }}<br>
+                    MC#: {{ $broker_mc ?? '-' }}<br>
+                    Phone: {{ $broker_phone ?? '-' }}<br>
+                    Email: {{ $broker_email ?? '-' }}
+                </div>
+            </td>
+            <td>
+                <div class="box">
+                    <strong>Rate Confirmation Details:</strong><br>
+                    Rate Con #: <strong>{{ $load_number ?? 'LOAD-00000' }}</strong><br>
+                    Date: {{ $date ?? date('m/d/Y') }}<br>
+                    Load #: {{ $load_number ?? 'LOAD-00000' }}
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <div class="section">
         <div class="section-title">CARRIER INFORMATION</div>
         <table>
             <tr>
                 <td width="50%"><strong>Carrier Name:</strong> {{ $carrier_name ?? '' }}</td>
-                <td width="50%"><strong>Contact Name:</strong> {{ $carrier_contact ?? '' }}</td>
+                <td width="50%"><strong>Phone:</strong> {{ $carrier_phone ?? '' }}</td>
             </tr>
             <tr>
-                <td><strong>Address:</strong> {{ $carrier_address ?? '' }}</td>
-                <td><strong>Phone:</strong> {{ $carrier_phone ?? '' }}</td>
+                <td colspan="2"><strong>Address:</strong> {{ $carrier_address ?? '' }}</td>
             </tr>
             <tr>
                 <td><strong>MC#:</strong> {{ $carrier_mc ?? '' }}</td>
                 <td><strong>DOT#:</strong> {{ $carrier_dot ?? '' }}</td>
-            </tr>
-            <tr>
-                <td><strong>SCAC:</strong> {{ $carrier_scac ?? '' }}</td>
-                <td><strong>Email:</strong> {{ $carrier_email ?? '' }}</td>
             </tr>
         </table>
     </div>
 
     <div class="section">
         <div class="section-title">SHIPMENT DETAILS</div>
+        @foreach($stops as $stop)
         <table>
             <tr>
-                <th width="50%">PICKUP</th>
-                <th width="50%">DELIVERY</th>
+                <th colspan="2">{{ $stop['type'] }} #{{ $stop['stop_number'] }}</th>
             </tr>
             <tr>
-                <td>
-                    <strong>{{ $pickup_company ?? '' }}</strong><br>
-                    {{ $pickup_address ?? '' }}<br>
-                    {{ $pickup_city ?? '' }}, {{ $pickup_state ?? '' }} {{ $pickup_zip ?? '' }}<br>
-                    Date: {{ $pickup_date ?? '' }}<br>
-                    Time: {{ $pickup_time ?? '' }}
-                </td>
-                <td>
-                    <strong>{{ $delivery_company ?? '' }}</strong><br>
-                    {{ $delivery_address ?? '' }}<br>
-                    {{ $delivery_city ?? '' }}, {{ $delivery_state ?? '' }} {{ $delivery_zip ?? '' }}<br>
-                    Date: {{ $delivery_date ?? '' }}<br>
-                    Time: {{ $delivery_time ?? '' }}
+                <td colspan="2">
+                    <strong>{{ $stop['company'] ?? '' }}</strong><br>
+                    {{ $stop['address'] ?? '' }}<br>
+                    {{ $stop['city'] ?? '' }}, {{ $stop['state'] ?? '' }} {{ $stop['zip'] ?? '' }}<br>
+                    Date: {{ $stop['date'] ?? '' }}<br>
+                    Time: {{ $stop['time'] ?? '' }}
                 </td>
             </tr>
             <tr>
-                <td><strong>Contact:</strong> {{ $pickup_contact ?? '' }}</td>
-                <td><strong>Contact:</strong> {{ $delivery_contact ?? '' }}</td>
+                <td width="50%"><strong>Contact:</strong> {{ $stop['contact'] ?? '' }}</td>
+                <td width="50%"><strong>Phone:</strong> {{ $stop['phone'] ?? '' }}</td>
             </tr>
+            @if(isset($stop['special_instructions']) && !empty($stop['special_instructions']))
             <tr>
-                <td><strong>Phone:</strong> {{ $pickup_phone ?? '' }}</td>
-                <td><strong>Phone:</strong> {{ $delivery_phone ?? '' }}</td>
+                <td colspan="2"><strong>Special Instructions:</strong> {{ $stop['special_instructions'] ?? '' }}</td>
             </tr>
-            <tr>
-                <td colspan="2"><strong>Special Instructions:</strong> {{ $special_instructions ?? '' }}</td>
-            </tr>
+            @endif
         </table>
+        @endforeach
     </div>
 
     <div class="section">
         <div class="section-title">CARGO DETAILS</div>
         <table>
             <tr>
-                <th>Commodity</th>
                 <th>Weight (lbs)</th>
-                <th>Pieces</th>
-                <th>Pallets</th>
-                <th>Dimensions</th>
-                <th>Hazmat</th>
+                <th>Trailer Type</th>
+                <th>Temperature</th>
             </tr>
             <tr>
-                <td>{{ $commodity ?? '' }}</td>
                 <td>{{ $weight ?? '' }}</td>
-                <td>{{ $pieces ?? '' }}</td>
-                <td>{{ $pallets ?? '' }}</td>
-                <td>{{ $dimensions ?? '' }}</td>
-                <td>{{ $hazmat ?? 'No' }}</td>
+                <td>{{ $trailer_type ?? '' }}</td>
+                <td>{{ $temperature ?? 'N/A' }}</td>
             </tr>
         </table>
-        <div class="small-text">
-            <strong>Temperature Requirements:</strong> {{ $temperature ?? 'N/A' }}<br>
-            <strong>Trailer Type Required:</strong> {{ $trailer_type ?? '' }}<br>
-            <strong>Equipment Requirements:</strong> {{ $equipment_requirements ?? '' }}
-        </div>
     </div>
 
     <div class="section">
@@ -221,27 +200,11 @@
                 <th width="70%">Description</th>
                 <th width="30%">Amount</th>
             </tr>
-            <tr>
-                <td>Line Haul Rate</td>
-                <td>${{ $linehaul_rate ?? '0.00' }}</td>
-            </tr>
-            @if(isset($fuel_surcharge) && $fuel_surcharge > 0)
-            <tr>
-                <td>Fuel Surcharge</td>
-                <td>${{ $fuel_surcharge ?? '0.00' }}</td>
-            </tr>
-            @endif
-            @if(isset($detention) && $detention > 0)
-            <tr>
-                <td>Detention</td>
-                <td>${{ $detention ?? '0.00' }}</td>
-            </tr>
-            @endif
-            @if(isset($additional_charges) && count($additional_charges) > 0)
-                @foreach($additional_charges as $charge)
+            @if(isset($payables) && count($payables) > 0)
+                @foreach($payables as $payable)
                 <tr>
-                    <td>{{ $charge['description'] }}</td>
-                    <td>${{ $charge['amount'] }}</td>
+                    <td>{{ $payable['description'] }}</td>
+                    <td>${{ $payable['amount'] }}</td>
                 </tr>
                 @endforeach
             @endif
@@ -252,9 +215,7 @@
         </table>
 
         <div class="box small-text">
-            <p><strong>Payment Terms:</strong> {{ $payment_terms ?? 'Net 30 days from receipt of complete and accurate invoice and all required documentation' }}</p>
             <p><strong>Required Documentation:</strong> Invoice, signed BOL, signed Rate Confirmation, and any additional delivery receipts</p>
-            <p><strong>Quick Pay:</strong> {{ $quick_pay ?? '3% discount for payment within 7 days of receipt of required documentation' }}</p>
             <p><strong>Send Invoice To:</strong> {{ $invoice_email ?? 'accounting@company.com' }}</p>
         </div>
     </div>
@@ -278,26 +239,28 @@
     </div>
 
     <div class="signature-area">
-        <div class="columns">
-            <div class="column">
-                <div class="signature-field">
-                    <div><strong>BROKER AUTHORIZED SIGNATURE</strong></div>
-                    <div class="signature-line"></div>
-                    <div>Name: {{ $broker_name ?? '____________________' }}</div>
-                    <div>Title: {{ $broker_title ?? '____________________' }}</div>
-                    <div>Date: {{ $broker_date ?? '____________________' }}</div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="signature-field">
-                    <div><strong>CARRIER AUTHORIZED SIGNATURE</strong></div>
-                    <div class="signature-line"></div>
-                    <div>Name: ____________________</div>
-                    <div>Title: ____________________</div>
-                    <div>Date: ____________________</div>
-                </div>
-            </div>
-        </div>
+        <table class="info-table">
+            <tr>
+                <td>
+                    <div class="signature-field">
+                        <div><strong>BROKER AUTHORIZED SIGNATURE</strong></div>
+                        <div class="signature-line"></div>
+                        <div>Name: {{ $broker_name ?? '____________________' }}</div>
+                        <div>Title: {{ $broker_title ?? '____________________' }}</div>
+                        <div>Date: {{ $broker_date ?? '____________________' }}</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="signature-field">
+                        <div><strong>CARRIER AUTHORIZED SIGNATURE</strong></div>
+                        <div class="signature-line"></div>
+                        <div>Name: ____________________</div>
+                        <div>Title: ____________________</div>
+                        <div>Date: ____________________</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
         <div class="small-text important">
             THIS RATE CONFIRMATION IS NOT VALID UNLESS SIGNED BY BOTH PARTIES AND RETURNED TO BROKER
         </div>
