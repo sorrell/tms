@@ -2,9 +2,13 @@
 
 namespace App\Actions\Documents\Generators;
 
+use App\Actions\Documents\CreateDocument;
+use App\Enums\Documents\Documentable;
+use App\Enums\Documents\DocumentFolder;
 use App\Enums\StopType;
 use App\Models\Shipments\Shipment;
 use Exception;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -19,43 +23,42 @@ class GenerateRateConfirmation
         Shipment $shipment
     )
     {
-        try {
-            // Prepare data for the view
-            $data = $this->prepareViewData($shipment);
-            
-            // Generate HTML from the view
-            $html = View::make('documents.carrier-rate-confirmation', $data)->render();
-            
-            // Ensure directory exists
-            $directory = 'rate-confirmations';
-            if (!Storage::disk('local')->exists($directory)) {
-                Storage::disk('local')->makeDirectory($directory);
-            }
-            
-            // Generate PDF from HTML
-            $pdf = App::make('dompdf.wrapper');
-            $pdf->loadHTML($html);
-            
-            // Save PDF file to local storage
-            $fileName = $directory . '/carrier-rc-' . $shipment->id . '-' . time() . '.pdf';
-            Storage::disk('local')->put($fileName, $pdf->output());
-            
-            return [
-                'file_path' => Storage::disk('local')->path($fileName),
-                'file_name' => $fileName,
-                'success' => true,
-            ];
-        } catch (Exception $e) {
-            Log::error('Failed to generate rate confirmation: ' . $e->getMessage(), [
-                'shipment_id' => $shipment->id,
-                'exception' => $e,
-            ]);
-            
-            return [
-                'success' => false,
-                'error' => $e->getMessage(),
-            ];
+        // Prepare data for the view
+        $data = $this->prepareViewData($shipment);
+        
+        // Generate HTML from the view
+        $html = View::make('documents.carrier-rate-confirmation', $data)->render();
+        
+        // Ensure directory exists
+        $directory = 'rate-confirmations';
+        if (!Storage::disk('local')->exists($directory)) {
+            Storage::disk('local')->makeDirectory($directory);
         }
+        
+        // Generate PDF from HTML
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadHTML($html);
+        
+        // Save PDF file to local storage
+        $fileName = $directory . '/carrier-rc-' . $shipment->id . '-' . time() . '.pdf';
+        Storage::disk('local')->put($fileName, $pdf->output());
+
+        // Create a File object from the saved PDF
+        $filePath = Storage::disk('local')->path($fileName);
+        $file = new File($filePath);
+
+        $document = CreateDocument::run(
+            Documentable::SHIPMENT->value,
+            $shipment->id,
+            "RateConfirmation.pdf",
+            $file,
+            DocumentFolder::RATECONS->value
+        );
+
+        // Delete the temp doc
+        Storage::disk('local')->delete($fileName);
+
+        return $document;
     }
     
     private function prepareViewData(Shipment $shipment): array

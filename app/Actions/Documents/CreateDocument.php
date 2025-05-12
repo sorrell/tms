@@ -5,6 +5,8 @@ namespace App\Actions\Documents;
 use App\Enums\Documents\Documentable;
 use App\Http\Resources\Documents\DocumentResource;
 use App\Models\Documents\Document;
+use Exception;
+use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -19,12 +21,27 @@ class CreateDocument
         string $documentableType,
         int $documentableId,
         string $fileName,
-        UploadedFile $file,
+        File|UploadedFile $file,
         ?string $folderName = null,
     )
     {
 
         $documentable = Documentable::from($documentableType)->getClassName()::findOrFail($documentableId);
+
+        // Check if a file with the same name already exists in the same path
+        $basePath = sprintf('documents/%s/%s', $documentableType, $documentable->id);
+        $originalFileName = $fileName;
+        $fileNameWithoutExtension = pathinfo($fileName, PATHINFO_FILENAME);
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        
+        $counter = 1;
+        while (Storage::exists("{$basePath}/{$fileName}")) {
+            $fileName = "{$fileNameWithoutExtension}-{$counter}.{$extension}";
+            $counter++;
+            if ($counter > 10) {
+                throw new Exception("File name is matched 10+ times, please rename the file to be unique".$originalFileName);
+            }
+        }
 
         $path = Storage::putFileAs(
             sprintf('documents/%s/%s', $documentableType, $documentable->id),
