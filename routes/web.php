@@ -21,6 +21,7 @@ use App\Actions\Dashboard\RecentCarriersCard;
 use App\Actions\Dashboard\RecentShipmentsCard;
 use App\Actions\Documents\CreateDocument;
 use App\Actions\Documents\DeleteDocument;
+use App\Actions\Documents\Generators\GenerateRateConfirmation;
 use App\Actions\Documents\GetDocument;
 use App\Actions\Documents\GetDocumentsWithFolders;
 use App\Actions\Documents\UpdateDocument;
@@ -180,6 +181,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('shipments/{shipment}/accounting', GetShipmentAccounting::class)->name('shipments.accounting');
     Route::post('shipments/{shipment}/accounting/payables', SavePayables::class)->name('shipments.accounting.payables');
     Route::post('shipments/{shipment}/accounting/receivables', SaveReceivables::class)->name('shipments.accounting.receivables');
+
+    Route::post('shipments/{shipment}/documents/generate-rate-con', GenerateRateConfirmation::class)->name('shipments.documents.generate-rate-confirmation');
 
     Route::get('bounce-reasons', [CarrierController::class, 'bounceReasons'])->name('bounce-reasons');
 
