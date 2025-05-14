@@ -449,7 +449,10 @@ export default function Payables({
                                                     className="pl-7"
                                                     value={payable.rate}
                                                     onChange={(e) => {
-                                                        const newRate = parseFloat(e.target.value);
+                                                        const newRate =
+                                                            parseFloat(
+                                                                e.target.value,
+                                                            );
                                                         setData({
                                                             ...data,
                                                             payables:
@@ -460,7 +463,9 @@ export default function Payables({
                                                                             ? {
                                                                                   ...r,
                                                                                   rate: newRate,
-                                                                                  total: newRate * r.quantity,
+                                                                                  total:
+                                                                                      newRate *
+                                                                                      r.quantity,
                                                                               }
                                                                             : r,
                                                                 ),
@@ -481,7 +486,10 @@ export default function Payables({
                                                 type="number"
                                                 value={payable.quantity}
                                                 onChange={(e) => {
-                                                    const newQuantity = parseInt(e.target.value);
+                                                    const newQuantity =
+                                                        parseInt(
+                                                            e.target.value,
+                                                        );
                                                     setData({
                                                         ...data,
                                                         payables:
@@ -490,8 +498,11 @@ export default function Payables({
                                                                     i === index
                                                                         ? {
                                                                               ...r,
-                                                                              quantity: newQuantity,
-                                                                              total: r.rate * newQuantity,
+                                                                              quantity:
+                                                                                  newQuantity,
+                                                                              total:
+                                                                                  r.rate *
+                                                                                  newQuantity,
                                                                           }
                                                                         : r,
                                                             ),
@@ -769,7 +780,12 @@ export default function Payables({
                                                                 onChange={(
                                                                     e,
                                                                 ) => {
-                                                                    const newRate = parseFloat(e.target.value);
+                                                                    const newRate =
+                                                                        parseFloat(
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        );
                                                                     setData({
                                                                         ...data,
                                                                         payables:
@@ -783,11 +799,13 @@ export default function Payables({
                                                                                         ? {
                                                                                               ...r,
                                                                                               rate: newRate,
-                                                                                              total: newRate * r.quantity,
+                                                                                              total:
+                                                                                                  newRate *
+                                                                                                  r.quantity,
                                                                                           }
                                                                                         : r,
                                                                             ),
-                                                                        });
+                                                                    });
                                                                 }}
                                                             />
                                                         </div>
@@ -811,7 +829,11 @@ export default function Payables({
                                                                 payable.quantity
                                                             }
                                                             onChange={(e) => {
-                                                                const newQuantity = parseInt(e.target.value);
+                                                                const newQuantity =
+                                                                    parseInt(
+                                                                        e.target
+                                                                            .value,
+                                                                    );
                                                                 setData({
                                                                     ...data,
                                                                     payables:
@@ -824,8 +846,11 @@ export default function Payables({
                                                                                 index
                                                                                     ? {
                                                                                           ...r,
-                                                                                          quantity: newQuantity,
-                                                                                          total: r.rate * newQuantity,
+                                                                                          quantity:
+                                                                                              newQuantity,
+                                                                                          total:
+                                                                                              r.rate *
+                                                                                              newQuantity,
                                                                                       }
                                                                                     : r,
                                                                         ),
@@ -857,7 +882,9 @@ export default function Payables({
                                                                 value={
                                                                     payable.total
                                                                 }
-                                                                onChange={(e) => {
+                                                                onChange={(
+                                                                    e,
+                                                                ) => {
                                                                     setData({
                                                                         ...data,
                                                                         payables:
@@ -878,7 +905,7 @@ export default function Payables({
                                                                                           }
                                                                                         : r,
                                                                             ),
-                                                                        });
+                                                                    });
                                                                 }}
                                                             />
                                                         </div>

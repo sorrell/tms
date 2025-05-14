@@ -3,12 +3,21 @@ import DocumentPreviewDialog from '@/Components/DocumentPreviewDialog';
 import { Button } from '@/Components/ui/button';
 import { ConfirmDropdownMenuItem } from '@/Components/ui/confirm-dropdown-menu-item';
 import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/Components/ui/dialog';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu';
 import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/Components/ui/radio-group';
 import { useToast } from '@/hooks/UseToast';
 import { Document, Shipment } from '@/types';
 import { ShipmentState } from '@/types/enums';
@@ -26,21 +35,14 @@ import {
     X,
 } from 'lucide-react';
 import { useState } from 'react';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from '@/Components/ui/dialog';
-import { Label } from '@/Components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/Components/ui/radio-group';
 
 export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
     const [editMode, setEditMode] = useState(false);
     const [showRateConDialog, setShowRateConDialog] = useState(false);
     const [showInvoiceDialog, setShowInvoiceDialog] = useState(false);
-    const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
+    const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(
+        null,
+    );
 
     const { toast } = useToast();
 
@@ -147,7 +149,10 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
             toast({
                 description: (
                     <>
-                        <AlertCircle className="mr-2 inline h-4 w-4" color="red" />
+                        <AlertCircle
+                            className="mr-2 inline h-4 w-4"
+                            color="red"
+                        />
                         Please select a customer
                     </>
                 ),
@@ -161,11 +166,14 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                 customer: selectedCustomerId,
             }),
             {
-                onSuccess: (response: any) => {
+                onSuccess: () => {
                     toast({
                         description: (
                             <>
-                                <CheckCircle2 className="mr-2 inline h-4 w-4" color="green" />
+                                <CheckCircle2
+                                    className="mr-2 inline h-4 w-4"
+                                    color="green"
+                                />
                                 Invoice generated successfully!
                             </>
                         ),
@@ -177,8 +185,12 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     toast({
                         description: (
                             <>
-                                <AlertCircle className="mr-2 inline h-4 w-4" color="red" />
-                                Failed to regenerate invoice! Please contact support.
+                                <AlertCircle
+                                    className="mr-2 inline h-4 w-4"
+                                    color="red"
+                                />
+                                Failed to regenerate invoice! Please contact
+                                support.
                             </>
                         ),
                     });
@@ -321,37 +333,58 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                 onDownload={downloadDocument}
             />
 
-
             {/* Customer Selection Dialog */}
-            <Dialog open={showInvoiceDialog} onOpenChange={setShowInvoiceDialog}>
+            <Dialog
+                open={showInvoiceDialog}
+                onOpenChange={setShowInvoiceDialog}
+            >
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle>Regenerate Invoice</DialogTitle>
                     </DialogHeader>
                     <div className="py-4">
-                        <p className="mb-4">Select a customer to generate an invoice:</p>
-                        <RadioGroup value={selectedCustomerId} onValueChange={(value: string) => setSelectedCustomerId(value)}>
-                            {shipment.customers && shipment.customers.length > 0 ? (
+                        <p className="mb-4">
+                            Select a customer to generate an invoice:
+                        </p>
+                        <RadioGroup
+                            value={selectedCustomerId}
+                            onValueChange={(value: string) =>
+                                setSelectedCustomerId(value)
+                            }
+                        >
+                            {shipment.customers &&
+                            shipment.customers.length > 0 ? (
                                 shipment.customers.map((customer) => (
-                                    <div key={customer.id} className="flex items-center space-x-2 mb-2">
-                                        <RadioGroupItem value={customer.id.toString()} id={`customer-${customer.id}`} />
-                                        <Label htmlFor={`customer-${customer.id}`}>
+                                    <div
+                                        key={customer.id}
+                                        className="mb-2 flex items-center space-x-2"
+                                    >
+                                        <RadioGroupItem
+                                            value={customer.id.toString()}
+                                            id={`customer-${customer.id}`}
+                                        />
+                                        <Label
+                                            htmlFor={`customer-${customer.id}`}
+                                        >
                                             {customer.name}
                                         </Label>
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-muted-foreground">No customers available for this shipment.</p>
+                                <p className="text-muted-foreground">
+                                    No customers available for this shipment.
+                                </p>
                             )}
                         </RadioGroup>
                     </div>
                     <DialogFooter>
-                        <Button onClick={() => setShowInvoiceDialog(false)} variant="outline">
+                        <Button
+                            onClick={() => setShowInvoiceDialog(false)}
+                            variant="outline"
+                        >
                             Cancel
                         </Button>
-                        <Button onClick={regenerateInvoice}>
-                            Regenerate
-                        </Button>
+                        <Button onClick={regenerateInvoice}>Regenerate</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
