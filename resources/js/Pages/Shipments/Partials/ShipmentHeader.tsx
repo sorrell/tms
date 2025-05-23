@@ -266,7 +266,7 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                     shipment={shipment}
                     carrierId={shipment.carrier?.id}
                     carrierContacts={shipment.carrier?.contacts || []}
-                    buttonVariant="outline"
+                    buttonVariant="default"
                     buttonText="Check Call"
                 />
 
@@ -282,7 +282,7 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                 )}
 
                 {shipment.latest_rate_confirmation ? (
-                    <Button onClick={viewRateCon}>
+                    <Button onClick={viewRateCon} variant={'outline'}>
                         <FileText className="mr-2 h-4 w-4" />
                         View Ratecon
                     </Button>
