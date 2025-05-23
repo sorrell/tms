@@ -110,7 +110,7 @@
     </table>
 
     <div class="load-info">
-        <strong>Load #:</strong> {{ $shipment_number ?? '' }} 
+        <strong>Shipment #:</strong> {{ $shipment_number ?? '' }} 
         @if(!empty($customer_reference))
         <strong>Reference:</strong> {{ $customer_reference ?? '' }}
         @endif
