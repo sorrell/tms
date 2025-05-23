@@ -89,7 +89,8 @@ export default function ContactForm({
             )}
             <div className="flex flex-col gap-2">
                 <Label htmlFor="contact-type">
-                    Type <span className="text-xs text-gray-500">(required)</span>
+                    Type{' '}
+                    <span className="text-xs text-gray-500">(required)</span>
                 </Label>
                 <Select value={contactType} onValueChange={setContactType}>
                     <SelectTrigger>
@@ -106,7 +107,8 @@ export default function ContactForm({
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="contact-name">
-                    Name <span className="text-xs text-gray-500">(required)</span>
+                    Name{' '}
+                    <span className="text-xs text-gray-500">(required)</span>
                 </Label>
                 <Input
                     id="contact-name"
@@ -158,10 +160,12 @@ export default function ContactForm({
                         id="office-phone-extension"
                         type="text"
                         value={officePhoneExtension}
-                        onChange={(e) => setOfficePhoneExtension(e.target.value)}
+                        onChange={(e) =>
+                            setOfficePhoneExtension(e.target.value)
+                        }
                     />
                 </div>
             </div>
         </form>
     );
-} 
+}

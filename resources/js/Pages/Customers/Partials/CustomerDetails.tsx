@@ -1,15 +1,14 @@
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
-import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
-import DocumentsList from '@/Components/Documents/DocumentsList';
 import ContactForm from '@/Components/CreateForms/ContactForm';
 import LocationForm from '@/Components/CreateForms/LocationForm';
+import CustomerFacilities from '@/Components/Customers/CustomerFacilities';
+import DocumentsList from '@/Components/Documents/DocumentsList';
 import InputError from '@/Components/InputError';
 import Notes from '@/Components/Notes';
 import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { ComingSoon } from '@/Components/ui/coming-soon';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import {
@@ -25,8 +24,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useToast } from '@/hooks/UseToast';
 import { Customer } from '@/types';
 import { Contactable, Documentable, Notable } from '@/types/enums';
-import { router } from '@inertiajs/react';
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { Check, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -97,9 +95,7 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
             {/* Header Section */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <h1 className="text-2xl font-bold">
-                        {customer?.name}
-                    </h1>
+                    <h1 className="text-2xl font-bold">{customer?.name}</h1>
                 </div>
                 <div className="flex gap-2">
                     {/* Space for future buttons */}
@@ -199,7 +195,7 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     {/* Account Information Section */}
                                     <div className="space-y-4">
                                         <div>
@@ -215,17 +211,28 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                                         id="customer_name"
                                                         value={form.data.name}
                                                         onChange={(e) =>
-                                                            form.setData('name', e.target.value)
+                                                            form.setData(
+                                                                'name',
+                                                                e.target.value,
+                                                            )
                                                         }
-                                                        disabled={form.processing}
+                                                        disabled={
+                                                            form.processing
+                                                        }
                                                     />
                                                     {form.errors.name && (
-                                                        <InputError message={form.errors.name} />
+                                                        <InputError
+                                                            message={
+                                                                form.errors.name
+                                                            }
+                                                        />
                                                     )}
                                                 </div>
                                             ) : (
                                                 <div className="mt-1">
-                                                    {customer?.name || <span>-</span>}
+                                                    {customer?.name || (
+                                                        <span>-</span>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -240,19 +247,33 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                                 <div className="space-y-2">
                                                     <Input
                                                         id="dba_name"
-                                                        value={form.data.dba_name}
-                                                        onChange={(e) =>
-                                                            form.setData('dba_name', e.target.value)
+                                                        value={
+                                                            form.data.dba_name
                                                         }
-                                                        disabled={form.processing}
+                                                        onChange={(e) =>
+                                                            form.setData(
+                                                                'dba_name',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        disabled={
+                                                            form.processing
+                                                        }
                                                     />
                                                     {form.errors.dba_name && (
-                                                        <InputError message={form.errors.dba_name} />
+                                                        <InputError
+                                                            message={
+                                                                form.errors
+                                                                    .dba_name
+                                                            }
+                                                        />
                                                     )}
                                                 </div>
                                             ) : (
                                                 <div className="mt-1">
-                                                    {customer?.dba_name || <span>-</span>}
+                                                    {customer?.dba_name || (
+                                                        <span>-</span>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -271,31 +292,73 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                                 <div className="space-y-2">
                                                     <ResourceSearchSelect
                                                         className="w-full"
-                                                        searchRoute={route('locations.search')}
-                                                        onValueChange={(value) =>
+                                                        searchRoute={route(
+                                                            'locations.search',
+                                                        )}
+                                                        onValueChange={(
+                                                            value,
+                                                        ) =>
                                                             form.setData(
                                                                 'billing_location_id',
-                                                                value ? Number(value) : null,
+                                                                value
+                                                                    ? Number(
+                                                                          value,
+                                                                      )
+                                                                    : null,
                                                             )
                                                         }
                                                         allowMultiple={false}
                                                         defaultSelectedItems={form.data.billing_location_id?.toString()}
-                                                        createForm={LocationForm}
+                                                        createForm={
+                                                            LocationForm
+                                                        }
                                                     />
-                                                    {form.errors.billing_location_id && (
-                                                        <InputError message={form.errors.billing_location_id} />
+                                                    {form.errors
+                                                        .billing_location_id && (
+                                                        <InputError
+                                                            message={
+                                                                form.errors
+                                                                    .billing_location_id
+                                                            }
+                                                        />
                                                     )}
                                                 </div>
                                             ) : customer?.billing_location ? (
                                                 <div className="mt-1 space-y-1">
-                                                    <div>{customer.billing_location.address_line_1}</div>
-                                                    {customer.billing_location.address_line_2 && (
-                                                        <div>{customer.billing_location.address_line_2}</div>
+                                                    <div>
+                                                        {
+                                                            customer
+                                                                .billing_location
+                                                                .address_line_1
+                                                        }
+                                                    </div>
+                                                    {customer.billing_location
+                                                        .address_line_2 && (
+                                                        <div>
+                                                            {
+                                                                customer
+                                                                    .billing_location
+                                                                    .address_line_2
+                                                            }
+                                                        </div>
                                                     )}
                                                     <div>
-                                                        {customer.billing_location.address_city},{' '}
-                                                        {customer.billing_location.address_state}{' '}
-                                                        {customer.billing_location.address_zipcode}
+                                                        {
+                                                            customer
+                                                                .billing_location
+                                                                .address_city
+                                                        }
+                                                        ,{' '}
+                                                        {
+                                                            customer
+                                                                .billing_location
+                                                                .address_state
+                                                        }{' '}
+                                                        {
+                                                            customer
+                                                                .billing_location
+                                                                .address_zipcode
+                                                        }
                                                     </div>
                                                 </div>
                                             ) : (
@@ -315,11 +378,19 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                                 <div className="space-y-2">
                                                     <ResourceSearchSelect
                                                         className="w-full"
-                                                        searchRoute={route('contacts.search')}
-                                                        onValueChange={(value) =>
+                                                        searchRoute={route(
+                                                            'contacts.search',
+                                                        )}
+                                                        onValueChange={(
+                                                            value,
+                                                        ) =>
                                                             form.setData(
                                                                 'billing_contact_id',
-                                                                value ? Number(value) : null,
+                                                                value
+                                                                    ? Number(
+                                                                          value,
+                                                                      )
+                                                                    : null,
                                                             )
                                                         }
                                                         allowMultiple={false}
@@ -327,21 +398,40 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                                         createForm={(props) => (
                                                             <ContactForm
                                                                 {...props}
-                                                                contactForId={customer?.id || 0}
-                                                                contactForType={Contactable.Customer}
+                                                                contactForId={
+                                                                    customer?.id ||
+                                                                    0
+                                                                }
+                                                                contactForType={
+                                                                    Contactable.Customer
+                                                                }
                                                             />
                                                         )}
                                                     />
-                                                    {form.errors.billing_contact_id && (
-                                                        <InputError message={form.errors.billing_contact_id} />
+                                                    {form.errors
+                                                        .billing_contact_id && (
+                                                        <InputError
+                                                            message={
+                                                                form.errors
+                                                                    .billing_contact_id
+                                                            }
+                                                        />
                                                     )}
                                                 </div>
                                             ) : customer?.billing_contact ? (
                                                 <div className="mt-1">
-                                                    {customer.billing_contact.name}
-                                                    {customer.billing_contact.email && (
+                                                    {
+                                                        customer.billing_contact
+                                                            .name
+                                                    }
+                                                    {customer.billing_contact
+                                                        .email && (
                                                         <div className="text-sm text-muted-foreground">
-                                                            {customer.billing_contact.email}
+                                                            {
+                                                                customer
+                                                                    .billing_contact
+                                                                    .email
+                                                            }
                                                         </div>
                                                     )}
                                                 </div>
@@ -365,21 +455,40 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                                         type="number"
                                                         min="0"
                                                         max="365"
-                                                        value={form.data.net_pay_days}
-                                                        onChange={(e) =>
-                                                            form.setData('net_pay_days', e.target.value)
+                                                        value={
+                                                            form.data
+                                                                .net_pay_days
                                                         }
-                                                        disabled={form.processing}
+                                                        onChange={(e) =>
+                                                            form.setData(
+                                                                'net_pay_days',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        disabled={
+                                                            form.processing
+                                                        }
                                                     />
-                                                    {form.errors.net_pay_days && (
-                                                        <InputError message={form.errors.net_pay_days} />
+                                                    {form.errors
+                                                        .net_pay_days && (
+                                                        <InputError
+                                                            message={
+                                                                form.errors
+                                                                    .net_pay_days
+                                                            }
+                                                        />
                                                     )}
                                                 </div>
                                             ) : (
                                                 <div className="mt-1">
-                                                    {customer?.net_pay_days !== null && customer?.net_pay_days !== undefined
-                                                        ? `${customer.net_pay_days} days`
-                                                        : <span>-</span>}
+                                                    {customer?.net_pay_days !==
+                                                        null &&
+                                                    customer?.net_pay_days !==
+                                                        undefined ? (
+                                                        `${customer.net_pay_days} days`
+                                                    ) : (
+                                                        <span>-</span>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -394,19 +503,35 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                                                 <div className="space-y-2">
                                                     <Input
                                                         id="invoice_number_schema"
-                                                        value={form.data.invoice_number_schema}
-                                                        onChange={(e) =>
-                                                            form.setData('invoice_number_schema', e.target.value)
+                                                        value={
+                                                            form.data
+                                                                .invoice_number_schema
                                                         }
-                                                        disabled={form.processing}
+                                                        onChange={(e) =>
+                                                            form.setData(
+                                                                'invoice_number_schema',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        disabled={
+                                                            form.processing
+                                                        }
                                                     />
-                                                    {form.errors.invoice_number_schema && (
-                                                        <InputError message={form.errors.invoice_number_schema} />
+                                                    {form.errors
+                                                        .invoice_number_schema && (
+                                                        <InputError
+                                                            message={
+                                                                form.errors
+                                                                    .invoice_number_schema
+                                                            }
+                                                        />
                                                     )}
                                                 </div>
                                             ) : (
                                                 <div className="mt-1">
-                                                    {customer?.invoice_number_schema || <span>-</span>}
+                                                    {customer?.invoice_number_schema || (
+                                                        <span>-</span>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
