@@ -2,7 +2,9 @@
 
 namespace App\Models\Customers;
 
+use App\Models\Contact;
 use App\Models\Facility;
+use App\Models\Location;
 use App\Traits\HasAliases;
 use App\Traits\HasContacts;
 use App\Traits\HasDocuments;
@@ -19,6 +21,11 @@ class Customer extends Model
     protected $fillable = [
         'organization_id',
         'name',
+        'net_pay_days',
+        'billing_location_id',
+        'dba_name',
+        'invoice_number_schema',
+        'billing_contact_id',
     ];
 
     protected $appends = [ 'selectable_label' ];
@@ -47,5 +54,21 @@ class Customer extends Model
     public function receivables(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(\App\Models\Accounting\Receivable::class, 'payer');
+    }
+
+    /**
+     * Get the billing location for the customer.
+     */
+    public function billingLocation(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'billing_location_id', 'id');
+    }
+
+    /**
+     * Get the billing contact for the customer.
+     */
+    public function billingContact(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Contact::class, 'billing_contact_id', 'id');
     }
 }
