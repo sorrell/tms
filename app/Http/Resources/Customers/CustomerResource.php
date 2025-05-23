@@ -25,10 +25,10 @@ class CustomerResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'net_pay_days' => $this->net_pay_days,
-            'billing_location' => $this->whenLoaded('billingLocation', fn() => LocationResource::make($this->billingLocation)),
+            'billing_location' => LocationResource::make($this->billingLocation),
             'dba_name' => $this->dba_name,
             'invoice_number_schema' => $this->invoice_number_schema,
-            'billing_contact' => $this->whenLoaded('billingContact', fn() => ContactResource::make($this->billingContact)),
+            'billing_contact' => ContactResource::make($this->billingContact),
 
             'documents' => $this->whenLoaded('documents', DocumentResource::collection($this->documents)),
             'document_folders' => $this->whenLoaded('documents', DocumentFolderResource::collection($this->getAllDocumentFolders()))
