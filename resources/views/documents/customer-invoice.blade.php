@@ -105,7 +105,7 @@
         </tr>
         <tr>
             <td>{{ $shipment_number }}-{{ strstr($invoice_number, '-', true) }}</td>
-            <td>{{ $invoice_date ?? '' }}</td>
+            <td>{{ $invoice_date ?? now()->format('M d, Y') }}</td>
         </tr>
     </table>
 
