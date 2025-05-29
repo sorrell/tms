@@ -30,4 +30,4 @@ export default function DocumentTemplates({
             </div>
         </AuthenticatedLayout>
     );
-} 
+}

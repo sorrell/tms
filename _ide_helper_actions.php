@@ -308,6 +308,64 @@ namespace App\Actions\Defaults;
 class CreateOrUpdateOrganizationDefaults
 {
 }
+namespace App\Actions\DocumentTemplates;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static dispatchSync(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static dispatchNow(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static dispatchAfterResponse(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static string run(\App\Enums\Documents\DocumentTemplateType $templateType)
+ */
+class GetDefaultTemplate
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static mixed run(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ */
+class GetDocumentTemplate
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization)
+ * @method static mixed run(\App\Models\Organizations\Organization $organization)
+ */
+class GetDocumentTemplates
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization, array $data)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static mixed run(\App\Models\Organizations\Organization $organization, array $data)
+ */
+class SaveDocumentTemplate
+{
+}
 namespace App\Actions\Documents;
 
 /**

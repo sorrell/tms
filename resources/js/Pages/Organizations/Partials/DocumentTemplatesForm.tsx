@@ -29,7 +29,11 @@ interface DocumentTemplate {
 }
 
 const TEMPLATE_TYPES = [
-    { value: 'carrier_rate_confirmation', label: 'Carrier Rate Confirmation', available: true },
+    {
+        value: 'carrier_rate_confirmation',
+        label: 'Carrier Rate Confirmation',
+        available: true,
+    },
     { value: 'customer_invoice', label: 'Customer Invoice', available: false },
     { value: 'bill_of_lading', label: 'Bill of Lading', available: false },
 ];
@@ -39,9 +43,9 @@ export default function DocumentTemplatesForm({
 }: {
     organization: Organization;
 }) {
-    const [selectedTemplateType, setSelectedTemplateType] = useState<string>('');
+    const [selectedTemplateType, setSelectedTemplateType] =
+        useState<string>('');
     const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
-    const [loadingTemplates, setLoadingTemplates] = useState(false);
     const [loadingDefault, setLoadingDefault] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -51,7 +55,6 @@ export default function DocumentTemplatesForm({
 
     // Load existing templates
     useEffect(() => {
-        setLoadingTemplates(true);
         fetch(route('organizations.document-templates.index', organization.id))
             .then((response) => response.json())
             .then((data) => {
@@ -59,9 +62,6 @@ export default function DocumentTemplatesForm({
             })
             .catch((error) => {
                 console.error('Error loading templates:', error);
-            })
-            .finally(() => {
-                setLoadingTemplates(false);
             });
     }, [organization.id]);
 
@@ -69,26 +69,28 @@ export default function DocumentTemplatesForm({
     useEffect(() => {
         if (selectedTemplateType) {
             setData('template_type', selectedTemplateType);
-            
+
             // Check if this template type is available
-            const templateType = TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType);
+            const templateType = TEMPLATE_TYPES.find(
+                (t) => t.value === selectedTemplateType,
+            );
             if (!templateType?.available) {
                 setData('template', '');
                 return;
             }
-            
+
             // Check if we have an existing template for this type
             const existingTemplate = templates.find(
-                (t) => t.template_type === selectedTemplateType
+                (t) => t.template_type === selectedTemplateType,
             );
 
             if (existingTemplate) {
                 // Load existing template
                 fetch(
-                    route(
-                        'organizations.document-templates.show',
-                        [organization.id, existingTemplate.id]
-                    )
+                    route('organizations.document-templates.show', [
+                        organization.id,
+                        existingTemplate.id,
+                    ]),
                 )
                     .then((response) => response.json())
                     .then((data) => {
@@ -113,21 +115,28 @@ export default function DocumentTemplatesForm({
                     });
             }
         }
-    }, [selectedTemplateType, templates, organization.id]);
+    }, [
+        selectedTemplateType,
+        templates,
+        organization.id,
+        setLoadingDefault,
+        setData,
+    ]);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('organizations.document-templates.store', organization.id), {
             onSuccess: () => {
                 // Reload templates list
-                setLoadingTemplates(true);
-                fetch(route('organizations.document-templates.index', organization.id))
+                fetch(
+                    route(
+                        'organizations.document-templates.index',
+                        organization.id,
+                    ),
+                )
                     .then((response) => response.json())
                     .then((data) => {
                         setTemplates(data);
-                    })
-                    .finally(() => {
-                        setLoadingTemplates(false);
                     });
             },
         });
@@ -157,8 +166,8 @@ export default function DocumentTemplatesForm({
                 <CardHeader>
                     <CardTitle>Document Template Editor</CardTitle>
                     <CardDescription>
-                        Create and customize document templates for your organization.
-                        Select a template type to begin editing.
+                        Create and customize document templates for your
+                        organization. Select a template type to begin editing.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -173,22 +182,29 @@ export default function DocumentTemplatesForm({
                             </SelectTrigger>
                             <SelectContent>
                                 {TEMPLATE_TYPES.map((type) => (
-                                    <SelectItem 
-                                        key={type.value} 
+                                    <SelectItem
+                                        key={type.value}
                                         value={type.value}
                                         disabled={!type.available}
-                                        className={!type.available ? 'opacity-50 cursor-not-allowed' : ''}
+                                        className={
+                                            !type.available
+                                                ? 'cursor-not-allowed opacity-50'
+                                                : ''
+                                        }
                                     >
-                                        <div className="flex items-center justify-between w-full">
+                                        <div className="flex w-full items-center justify-between">
                                             <span>{type.label}</span>
                                             <div className="flex items-center space-x-2">
                                                 {templates.find(
-                                                    (t) => t.template_type === type.value
-                                                ) && type.available && (
-                                                    <span className="text-xs text-green-600">
-                                                        (Custom)
-                                                    </span>
-                                                )}
+                                                    (t) =>
+                                                        t.template_type ===
+                                                        type.value,
+                                                ) &&
+                                                    type.available && (
+                                                        <span className="text-xs text-green-600">
+                                                            (Custom)
+                                                        </span>
+                                                    )}
                                                 {!type.available && (
                                                     <span className="text-xs text-muted-foreground">
                                                         (Coming Soon)
@@ -212,25 +228,37 @@ export default function DocumentTemplatesForm({
                 <Card>
                     <CardHeader>
                         <CardTitle>
-                            {TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType)?.label} Template
+                            {
+                                TEMPLATE_TYPES.find(
+                                    (t) => t.value === selectedTemplateType,
+                                )?.label
+                            }{' '}
+                            Template
                         </CardTitle>
                         <CardDescription>
-                            {TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType)?.available ? (
+                            {TEMPLATE_TYPES.find(
+                                (t) => t.value === selectedTemplateType,
+                            )?.available ? (
                                 <>
-                                    Edit the template content below. You can use Blade template syntax
-                                    for dynamic content (e.g., {`{{ $variable_name }}`}).
+                                    Edit the template content below. You can use
+                                    Blade template syntax for dynamic content
+                                    (e.g., {`{{ $variable_name }}`}).
                                 </>
                             ) : (
-                                "This template type is coming soon and is not yet available for editing."
+                                'This template type is coming soon and is not yet available for editing.'
                             )}
                         </CardDescription>
                     </CardHeader>
-                    {TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType)?.available ? (
+                    {TEMPLATE_TYPES.find(
+                        (t) => t.value === selectedTemplateType,
+                    )?.available ? (
                         <CardContent className="space-y-4">
                             <form onSubmit={submit} className="space-y-4">
                                 <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <Label htmlFor="template">Template Content</Label>
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <Label htmlFor="template">
+                                            Template Content
+                                        </Label>
                                         <Button
                                             type="button"
                                             variant="outline"
@@ -238,13 +266,17 @@ export default function DocumentTemplatesForm({
                                             onClick={loadDefaultTemplate}
                                             disabled={loadingDefault}
                                         >
-                                            {loadingDefault ? 'Loading...' : 'Load Default Template'}
+                                            {loadingDefault
+                                                ? 'Loading...'
+                                                : 'Load Default Template'}
                                         </Button>
                                     </div>
                                     <Textarea
                                         id="template"
                                         value={data.template}
-                                        onChange={(e) => setData('template', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('template', e.target.value)
+                                        }
                                         placeholder="Enter your template content here..."
                                         className="min-h-[400px] font-mono text-sm"
                                         required
@@ -266,16 +298,23 @@ export default function DocumentTemplatesForm({
                                         Cancel
                                     </Button>
                                     <Button type="submit" disabled={processing}>
-                                        {processing ? 'Saving...' : 'Save Template'}
+                                        {processing
+                                            ? 'Saving...'
+                                            : 'Save Template'}
                                     </Button>
                                 </div>
                             </form>
                         </CardContent>
                     ) : (
                         <CardContent>
-                            <div className="text-center py-12 text-muted-foreground">
-                                <p className="text-lg font-medium">Coming Soon</p>
-                                <p className="text-sm">This template type will be available in a future update.</p>
+                            <div className="py-12 text-center text-muted-foreground">
+                                <p className="text-lg font-medium">
+                                    Coming Soon
+                                </p>
+                                <p className="text-sm">
+                                    This template type will be available in a
+                                    future update.
+                                </p>
                             </div>
                         </CardContent>
                     )}
@@ -283,8 +322,11 @@ export default function DocumentTemplatesForm({
             )}
 
             {/* Existing Templates List */}
-            {templates.filter(template => 
-                TEMPLATE_TYPES.find(t => t.value === template.template_type)?.available
+            {templates.filter(
+                (template) =>
+                    TEMPLATE_TYPES.find(
+                        (t) => t.value === template.template_type,
+                    )?.available,
             ).length > 0 && (
                 <Card>
                     <CardHeader>
@@ -296,37 +338,53 @@ export default function DocumentTemplatesForm({
                     <CardContent>
                         <div className="space-y-2">
                             {templates
-                                .filter(template => 
-                                    TEMPLATE_TYPES.find(t => t.value === template.template_type)?.available
+                                .filter(
+                                    (template) =>
+                                        TEMPLATE_TYPES.find(
+                                            (t) =>
+                                                t.value ===
+                                                template.template_type,
+                                        )?.available,
                                 )
                                 .map((template) => (
-                                <div
-                                    key={template.id}
-                                    className="flex items-center justify-between p-3 border rounded-lg"
-                                >
-                                    <div>
-                                        <div className="font-medium">
-                                            {TEMPLATE_TYPES.find(
-                                                (t) => t.value === template.template_type
-                                            )?.label}
-                                        </div>
-                                        <div className="text-sm text-muted-foreground">
-                                            Last updated: {new Date(template.updated_at).toLocaleDateString()}
-                                        </div>
-                                    </div>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => setSelectedTemplateType(template.template_type)}
+                                    <div
+                                        key={template.id}
+                                        className="flex items-center justify-between rounded-lg border p-3"
                                     >
-                                        Edit
-                                    </Button>
-                                </div>
-                            ))}
+                                        <div>
+                                            <div className="font-medium">
+                                                {
+                                                    TEMPLATE_TYPES.find(
+                                                        (t) =>
+                                                            t.value ===
+                                                            template.template_type,
+                                                    )?.label
+                                                }
+                                            </div>
+                                            <div className="text-sm text-muted-foreground">
+                                                Last updated:{' '}
+                                                {new Date(
+                                                    template.updated_at,
+                                                ).toLocaleDateString()}
+                                            </div>
+                                        </div>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() =>
+                                                setSelectedTemplateType(
+                                                    template.template_type,
+                                                )
+                                            }
+                                        >
+                                            Edit
+                                        </Button>
+                                    </div>
+                                ))}
                         </div>
                     </CardContent>
                 </Card>
             )}
         </div>
     );
-} 
+}
