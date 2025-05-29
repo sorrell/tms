@@ -10,6 +10,7 @@ use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -28,33 +29,24 @@ class CreateDocument
 
         $documentable = Documentable::from($documentableType)->getClassName()::findOrFail($documentableId);
 
-        // Check if a file with the same name already exists in the same path
-        $basePath = sprintf('documents/%s/%s', $documentableType, $documentable->id);
-        $originalFileName = $fileName;
-        $fileNameWithoutExtension = pathinfo($fileName, PATHINFO_FILENAME);
+        // Generate a unique filename for filesystem storage to prevent collisions
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-        
-        $counter = 1;
-        while (Storage::exists("{$basePath}/{$fileName}")) {
-            $fileName = "{$fileNameWithoutExtension}-{$counter}.{$extension}";
-            $counter++;
-            if ($counter > 10) {
-                throw new Exception("File name is matched 10+ times, please rename the file to be unique".$originalFileName);
-            }
-        }
+        $uniqueFileName = Str::uuid() . '.' . $extension;
 
+        // Store the file with the unique filename
         $path = Storage::putFileAs(
             sprintf('documents/%s/%s', $documentableType, $documentable->id),
             $file,
-            $fileName,
+            $uniqueFileName,
         );
 
+        // Save the document with the original filename for display purposes
         $document = Document::create([
-            'name' => $fileName,
+            'name' => $fileName, // Original filename for display
             'folder_name' => $folderName,
             'documentable_id' => $documentable->id,
             'documentable_type' => $documentable->getMorphClass(),
-            'path' => $path,
+            'path' => $path, // Path includes the unique filename
             'uploaded_by' => Auth::user()?->id,
         ]);
 
