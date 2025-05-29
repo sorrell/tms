@@ -4,6 +4,7 @@ namespace App\Models\Organizations;
 
 use App\Models\User;
 use App\Models\Location;
+use App\Models\Documents\DocumentTemplate;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -78,5 +79,15 @@ class Organization extends Model
     public function integration_settings() : HasMany
     {
         return $this->hasMany(IntegrationSetting::class);
+    }
+
+    /**
+     * Get the document templates for this organization
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<DocumentTemplate, $this>
+     */
+    public function documentTemplates() : HasMany
+    {
+        return $this->hasMany(DocumentTemplate::class);
     }
 }

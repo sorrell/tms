@@ -107,10 +107,16 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('organizations/{organization}/roles', [OrganizationController::class, 'showRoles'])->name('organizations.roles');
     Route::get('organizations/{organization}/settings', [OrganizationController::class, 'showSettings'])->name('organizations.settings');
     Route::put('organizations/{organization}/settings', UpdateOrganization::class)->name('organizations.settings.update');
+    Route::get('organizations/{organization}/document-templates-page', [OrganizationController::class, 'showDocumentTemplates'])->name('organizations.document-templates-page');
     Route::get('organizations/{organization}/integration-settings', [OrganizationController::class, 'showIntegrationSettings'])->name('organizations.integration-settings');
     Route::post('organizations/{organization}/integration-settings', SetIntegrationSetting::class)->name('organizations.integration-settings.store');
     Route::delete('organizations/{organization}/integration-settings/{setting}', DeleteIntegrationSetting::class)->name('organizations.integration-settings.destroy');
 
+    // Document Templates routes
+    Route::get('organizations/{organization}/document-templates', \App\Actions\DocumentTemplates\GetDocumentTemplates::class)->name('organizations.document-templates.index');
+    Route::get('organizations/{organization}/document-templates/{documentTemplate}', \App\Actions\DocumentTemplates\GetDocumentTemplate::class)->name('organizations.document-templates.show');
+    Route::post('organizations/{organization}/document-templates', \App\Actions\DocumentTemplates\SaveDocumentTemplate::class)->name('organizations.document-templates.store');
+    Route::get('document-templates/default/{templateType}', \App\Actions\DocumentTemplates\GetDefaultTemplate::class)->name('document-templates.default');
 
     Route::prefix('organizations/{organization}/permissions')->group(function () {
         Route::post('role', [PermissionController::class, 'storeRole'])->name('organizations.permissions.role.store');

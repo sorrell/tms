@@ -5,12 +5,14 @@ namespace App\Actions\Documents\Generators;
 use App\Actions\Documents\CreateDocument;
 use App\Enums\Documents\Documentable;
 use App\Enums\Documents\DocumentFolder;
+use App\Enums\Documents\DocumentTemplateType;
 use App\Enums\StopType;
 use App\Models\Documents\Document;
 use App\Models\Shipments\Shipment;
 use Exception;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -28,8 +30,21 @@ class GenerateRateConfirmation
         // Prepare data for the view
         $data = $this->prepareViewData($shipment);
         
-        // Generate HTML from the view
-        $html = View::make('documents.carrier-rate-confirmation', $data)->render();
+        // Get the organization from the shipment
+        $organization = $shipment->organization;
+        
+        // Check if organization has a custom template
+        $customTemplate = $organization->documentTemplates()
+            ->where('template_type', DocumentTemplateType::CARRIER_RATE_CONFIRMATION)
+            ->first();
+        
+        if ($customTemplate) {
+            // Use custom template
+            $html = Blade::render($customTemplate->template, $data);
+        } else {
+            // Use default template
+            $html = View::make('documents.carrier-rate-confirmation', $data)->render();
+        }
         
         // Ensure directory exists
         $directory = 'rate-confirmations';

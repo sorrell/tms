@@ -130,6 +130,15 @@ class OrganizationController extends Controller
         ]);
     }
 
+    public function showDocumentTemplates(Organization $organization)
+    {
+        Gate::authorize('view', $organization);
+
+        return Inertia::render('Organizations/DocumentTemplates', [
+            'organization' => $organization->load('owner', 'users'),
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
