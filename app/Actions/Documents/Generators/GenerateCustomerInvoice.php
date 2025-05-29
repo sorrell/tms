@@ -27,6 +27,9 @@ class GenerateCustomerInvoice
         Customer $customer
     )
     {
+        // Load the customer's billing relationships if not already loaded
+        $customer->loadMissing(['billingLocation', 'billingContact']);
+        
         // Prepare data for the view
         $data = $this->prepareViewData($shipment, $customer);
         
@@ -79,34 +82,59 @@ class GenerateCustomerInvoice
     {
         $data = [];
 
-        // TODO - company prefs fill in
-        $data['company_name'] = "TODO";
-        $data['company_address'] = "TODO";
-        $data['company_city'] = "TODO";
-        $data['company_state'] = "TODO";
-        $data['company_zip'] = "TODO";
-        $data['company_phone'] = "TODO";
-        $data['company_email'] = "TODO";
+        // Get current organization
+        $organization = current_organization();
 
+        // Company information from organization (fixed nullsafe operators)
+        $data['company_name'] = $organization->company_name ?? '';
+        $data['company_address'] = $organization->company_address ?? '';
+        $data['company_city'] = $organization->company_city ?? '';
+        $data['company_state'] = $organization->company_state ?? '';
+        $data['company_zip'] = $organization->company_zip ?? '';
+        $data['company_phone'] = $organization->accounting_contact_phone ?? $organization->company_phone ?? '';
+        $data['company_email'] = $organization->company_email ?? $organization->accounting_contact_email ?? '';
+        
         $data['shipment_number'] = $shipment->shipment_number;
 
-        // TODO track invoice numbers
-        $data['invoice_number'] = sprintf('%s-%s', substr($customer->name, 0, 3), $shipment->shipment_number);
+        // Use customer's invoice number schema if available, otherwise use default format
+        $data['invoice_number'] = $customer->invoice_number_schema 
+            ? sprintf($customer->invoice_number_schema, $shipment->shipment_number)
+            : sprintf('%s-%s', substr($customer->name, 0, 3), $shipment->shipment_number);
 
-        $data['customer_reference'] = '';// TODO
+        $data['customer_reference'] = ''; // TODO: Add customer reference field if needed
 
-        $data['payment_terms'] = ''; //TODO - $customer->payment_terms;
+        // Payment terms from customer's net_pay_days
+        $data['payment_terms'] = $customer->net_pay_days 
+            ? "Net {$customer->net_pay_days} Days" 
+            : 'Net 30 Days';
 
-        // TODO - Customer billing address
+        // Customer billing address from billing location relationship
         $data['customer_name'] = $customer->name;
-        $data['customer_address'] = 'customer address1';
-        $data['customer_city'] = 'city';
-        $data['customer_state'] = 'state';
-        $data['customer_zip'] = '12345';
+        
+        if ($customer->billingLocation) {
+            $data['customer_address'] = $customer->billingLocation->address_line_1 ?? '';
+            $data['customer_address_line_2'] = $customer->billingLocation->address_line_2 ?? '';
+            $data['customer_city'] = $customer->billingLocation->address_city ?? '';
+            $data['customer_state'] = $customer->billingLocation->address_state ?? '';
+            $data['customer_zip'] = $customer->billingLocation->address_zipcode ?? '';
+        } else {
+            $data['customer_address'] = 'No billing address on file';
+            $data['customer_address_line_2'] = '';
+            $data['customer_city'] = '';
+            $data['customer_state'] = '';
+            $data['customer_zip'] = '';
+        }
 
-        // TODO set customer billing contact
-        $data['customer_contact'] = 'contact name';
-        $data['customer_email'] = 'email@test.com';
+        // Customer billing contact
+        if ($customer->billingContact) {
+            $data['customer_contact'] = $customer->billingContact->name ?? '';
+            $data['customer_email'] = $customer->billingContact->email ?? '';
+            $data['customer_phone'] = $customer->billingContact->office_phone ?? $customer->billingContact->mobile_phone ?? '';
+        } else {
+            $data['customer_contact'] = 'No billing contact on file';
+            $data['customer_email'] = '';
+            $data['customer_phone'] = '';
+        }
 
         $receivables = $shipment->receivables()->whereMorphedTo('payer', $customer)->get();
         $data['receivables'] = $receivables->map(function($receivable) {
@@ -118,8 +146,6 @@ class GenerateCustomerInvoice
             ];
         });
         $data['total_due'] = number_format($receivables->sum('total'), 2);
-
-
 
         return $data;
     }

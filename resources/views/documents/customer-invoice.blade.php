@@ -121,9 +121,15 @@
         <div><strong>BILL TO</strong></div>
         <div>{{ $customer_name ?? '[Name]' }}</div>
         <div>{{ $customer_address ?? '[Street Address]' }}</div>
+        @if(!empty($customer_address_line_2))
+        <div>{{ $customer_address_line_2 }}</div>
+        @endif
         <div>{{ $customer_city ?? '[City]' }}, {{ $customer_state ?? 'ST' }} {{ $customer_zip ?? 'ZIP' }}</div>
         <div>Contact: {{ $customer_contact ?? '' }}</div>
         <div>Email: {{ $customer_email ?? '[Email Address]' }}</div>
+        @if(!empty($customer_phone))
+        <div>Phone: {{ $customer_phone }}</div>
+        @endif
     </div>
 
     <table class="items-table">

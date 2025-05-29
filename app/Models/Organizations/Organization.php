@@ -18,6 +18,15 @@ class Organization extends Model
         'id',
         'name',
         'owner_id',
+        'company_name',
+        'company_address',
+        'company_city',
+        'company_state', 
+        'company_zip',
+        'company_phone',
+        'company_email',
+        'accounting_contact_email',
+        'accounting_contact_phone',
     ];
 
     /**

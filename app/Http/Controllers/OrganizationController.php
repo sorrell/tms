@@ -121,6 +121,15 @@ class OrganizationController extends Controller
         ]);
     }
 
+    public function showSettings(Organization $organization)
+    {
+        Gate::authorize('view', $organization);
+
+        return Inertia::render('Organizations/Settings', [
+            'organization' => $organization->load('owner', 'users'),
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

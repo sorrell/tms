@@ -33,6 +33,7 @@ use App\Actions\Locations\CreateLocation;
 use App\Actions\Notes\CreateNote;
 use App\Actions\Notes\DeleteNote;
 use App\Actions\Notes\GetNotes;
+use App\Actions\Organizations\UpdateOrganization;
 use App\Actions\Shipments\CancelShipment;
 use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\DispatchShipment;
@@ -104,6 +105,8 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
 
     Route::get('organizations/{organization}/users', [OrganizationController::class, 'showUsers'])->name('organizations.users');
     Route::get('organizations/{organization}/roles', [OrganizationController::class, 'showRoles'])->name('organizations.roles');
+    Route::get('organizations/{organization}/settings', [OrganizationController::class, 'showSettings'])->name('organizations.settings');
+    Route::put('organizations/{organization}/settings', UpdateOrganization::class)->name('organizations.settings.update');
     Route::get('organizations/{organization}/integration-settings', [OrganizationController::class, 'showIntegrationSettings'])->name('organizations.integration-settings');
     Route::post('organizations/{organization}/integration-settings', SetIntegrationSetting::class)->name('organizations.integration-settings.store');
     Route::delete('organizations/{organization}/integration-settings/{setting}', DeleteIntegrationSetting::class)->name('organizations.integration-settings.destroy');

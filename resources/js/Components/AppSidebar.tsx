@@ -196,6 +196,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
                                         )}
+                                        {permissions.ORGANIZATION_MANAGER && (
+                                            <SidebarMenuSubItem>
+                                                <SidebarMenuSubButton
+                                                    href={route(
+                                                        'organizations.settings',
+                                                        [
+                                                            user.current_organization_id,
+                                                        ],
+                                                    )}
+                                                    isActive={route().current(
+                                                        'organizations.settings',
+                                                        [
+                                                            user.current_organization_id,
+                                                        ],
+                                                    )}
+                                                >
+                                                    Settings
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        )}
                                     </SidebarMenuSub>
                                 </CollapsibleContent>
                             </SidebarMenuItem>
