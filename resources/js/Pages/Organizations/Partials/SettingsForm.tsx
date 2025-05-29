@@ -1,3 +1,6 @@
+import LocationForm from '@/Components/CreateForms/LocationForm';
+import InputError from '@/Components/InputError';
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
 import { Button } from '@/Components/ui/button';
 import {
     Card,
@@ -8,9 +11,6 @@ import {
 } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
-import LocationForm from '@/Components/CreateForms/LocationForm';
-import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
-import InputError from '@/Components/InputError';
 import { Organization } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
 
@@ -54,9 +54,7 @@ export default function SettingsForm({
                             onChange={(e) => setData('name', e.target.value)}
                             required
                         />
-                        {errors.name && (
-                            <InputError message={errors.name} />
-                        )}
+                        {errors.name && <InputError message={errors.name} />}
                     </div>
                 </CardContent>
             </Card>
@@ -86,7 +84,9 @@ export default function SettingsForm({
                     </div>
 
                     <div>
-                        <Label htmlFor="company_location">Company Address</Label>
+                        <Label htmlFor="company_location">
+                            Company Address
+                        </Label>
                         <ResourceSearchSelect
                             className="w-full"
                             searchRoute={route('locations.search')}
@@ -105,11 +105,31 @@ export default function SettingsForm({
                         )}
                         {organization.company_location && (
                             <div className="mt-2 text-sm text-muted-foreground">
-                                Current: {organization.company_location.address_line_1}
-                                {organization.company_location.address_line_2 && (
-                                    <span>, {organization.company_location.address_line_2}</span>
+                                Current:{' '}
+                                {organization.company_location.address_line_1}
+                                {organization.company_location
+                                    .address_line_2 && (
+                                    <span>
+                                        ,{' '}
+                                        {
+                                            organization.company_location
+                                                .address_line_2
+                                        }
+                                    </span>
                                 )}
-                                <span>, {organization.company_location.address_city}, {organization.company_location.address_state} {organization.company_location.address_zipcode}</span>
+                                <span>
+                                    ,{' '}
+                                    {organization.company_location.address_city}
+                                    ,{' '}
+                                    {
+                                        organization.company_location
+                                            .address_state
+                                    }{' '}
+                                    {
+                                        organization.company_location
+                                            .address_zipcode
+                                    }
+                                </span>
                             </div>
                         )}
                     </div>
@@ -174,7 +194,9 @@ export default function SettingsForm({
                                 }
                             />
                             {errors.accounting_contact_email && (
-                                <InputError message={errors.accounting_contact_email} />
+                                <InputError
+                                    message={errors.accounting_contact_email}
+                                />
                             )}
                         </div>
 
@@ -194,7 +216,9 @@ export default function SettingsForm({
                                 }
                             />
                             {errors.accounting_contact_phone && (
-                                <InputError message={errors.accounting_contact_phone} />
+                                <InputError
+                                    message={errors.accounting_contact_phone}
+                                />
                             )}
                         </div>
                     </div>
