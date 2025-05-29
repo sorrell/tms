@@ -122,7 +122,7 @@ class GenerateCustomerInvoice
             : 'Net 30 Days';
 
         // Customer billing address from billing location relationship
-        $data['customer_name'] = $customer->name;
+        $data['customer_name'] = $customer->dba_name ?? $customer->name;
         
         if ($customer->billingLocation) {
             $data['customer_address'] = $customer->billingLocation->address_line_1 ?? '';
