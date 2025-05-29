@@ -249,15 +249,15 @@ class DeleteCustomerFacility
 {
 }
 /**
- * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static dispatchSync(\App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static dispatchNow(\App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static dispatchAfterResponse(\App\Models\Customers\Customer $customer, ?string $name = null)
- * @method static \App\Models\Customers\Customer run(\App\Models\Customers\Customer $customer, ?string $name = null)
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static dispatchSync(\App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static dispatchNow(\App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static dispatchAfterResponse(\App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
+ * @method static \App\Models\Customers\Customer run(\App\Models\Customers\Customer $customer, ?string $name = null, ?int $net_pay_days = null, ?int $billing_location_id = null, ?string $dba_name = null, ?string $invoice_number_schema = null, ?int $billing_contact_id = null)
  */
 class UpdateCustomer
 {
@@ -306,6 +306,78 @@ namespace App\Actions\Defaults;
  * @method static mixed run(int $organizationId)
  */
 class CreateOrUpdateOrganizationDefaults
+{
+}
+namespace App\Actions\DocumentTemplates;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static dispatchSync(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static dispatchNow(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static dispatchAfterResponse(\App\Enums\Documents\DocumentTemplateType $templateType)
+ * @method static string run(\App\Enums\Documents\DocumentTemplateType $templateType)
+ */
+class GetDefaultTemplate
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ * @method static mixed run(\App\Models\Organizations\Organization $organization, \App\Models\Documents\DocumentTemplate $documentTemplate)
+ */
+class GetDocumentTemplate
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization)
+ * @method static mixed run(\App\Models\Organizations\Organization $organization)
+ */
+class GetDocumentTemplates
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization, array $data)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization, array $data)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization, array $data)
+ * @method static mixed run(\App\Models\Organizations\Organization $organization, array $data)
+ */
+class SaveDocumentTemplate
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $template)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $template)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $template)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $template)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $template)
+ * @method static dispatchSync(string $template)
+ * @method static dispatchNow(string $template)
+ * @method static dispatchAfterResponse(string $template)
+ * @method static array run(string $template)
+ */
+class ValidateTemplate
 {
 }
 namespace App\Actions\Documents;
@@ -382,6 +454,20 @@ class UpdateDocument
 }
 namespace App\Actions\Documents\Generators;
 
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ * @method static mixed run(\App\Models\Shipments\Shipment $shipment, \App\Models\Customers\Customer $customer)
+ */
+class GenerateCustomerInvoice
+{
+}
 /**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment)
@@ -614,6 +700,20 @@ namespace App\Actions\Organizations;
  * @method static \App\Models\Organizations\OrganizationInvite run(string $email, \App\Models\Organizations\Organization $organization)
  */
 class SendInvite
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ * @method static \App\Models\Organizations\Organization run(\App\Models\Organizations\Organization $organization, string $name, ?string $company_name = null, ?int $company_location_id = null, ?string $company_phone = null, ?string $company_email = null, ?string $accounting_contact_email = null, ?string $accounting_contact_phone = null)
+ */
+class UpdateOrganization
 {
 }
 namespace App\Actions\Shipments;

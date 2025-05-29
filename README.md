@@ -70,8 +70,3 @@ sail npm run dev
 ``` bash
 sail artisan dev:refresh
 ```
-
-### More Development Questions?
-Checkout [DEVELOPMENT.md](./DEVELOPMENT.md) for some frequently ask questions.
-
-If you still have questions, please join our discord for help!

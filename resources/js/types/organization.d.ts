@@ -1,10 +1,18 @@
 import { User } from '.';
+import { Location } from './index';
 
 export interface Organization {
     id: number;
     name: string;
     users: User[];
     owner_id: number;
+    company_name?: string;
+    company_location_id?: number;
+    company_location?: Location;
+    company_phone?: string;
+    company_email?: string;
+    accounting_contact_email?: string;
+    accounting_contact_phone?: string;
 }
 
 export interface OrganizationInvite {
