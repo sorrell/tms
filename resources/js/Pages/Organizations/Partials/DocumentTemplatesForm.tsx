@@ -29,9 +29,9 @@ interface DocumentTemplate {
 }
 
 const TEMPLATE_TYPES = [
-    { value: 'carrier_rate_confirmation', label: 'Carrier Rate Confirmation' },
-    { value: 'customer_invoice', label: 'Customer Invoice' },
-    { value: 'bill_of_lading', label: 'Bill of Lading' },
+    { value: 'carrier_rate_confirmation', label: 'Carrier Rate Confirmation', available: true },
+    { value: 'customer_invoice', label: 'Customer Invoice', available: false },
+    { value: 'bill_of_lading', label: 'Bill of Lading', available: false },
 ];
 
 export default function DocumentTemplatesForm({
@@ -69,6 +69,13 @@ export default function DocumentTemplatesForm({
     useEffect(() => {
         if (selectedTemplateType) {
             setData('template_type', selectedTemplateType);
+            
+            // Check if this template type is available
+            const templateType = TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType);
+            if (!templateType?.available) {
+                setData('template', '');
+                return;
+            }
             
             // Check if we have an existing template for this type
             const existingTemplate = templates.find(
@@ -166,15 +173,29 @@ export default function DocumentTemplatesForm({
                             </SelectTrigger>
                             <SelectContent>
                                 {TEMPLATE_TYPES.map((type) => (
-                                    <SelectItem key={type.value} value={type.value}>
-                                        {type.label}
-                                        {templates.find(
-                                            (t) => t.template_type === type.value
-                                        ) && (
-                                            <span className="ml-2 text-xs text-green-600">
-                                                (Custom)
-                                            </span>
-                                        )}
+                                    <SelectItem 
+                                        key={type.value} 
+                                        value={type.value}
+                                        disabled={!type.available}
+                                        className={!type.available ? 'opacity-50 cursor-not-allowed' : ''}
+                                    >
+                                        <div className="flex items-center justify-between w-full">
+                                            <span>{type.label}</span>
+                                            <div className="flex items-center space-x-2">
+                                                {templates.find(
+                                                    (t) => t.template_type === type.value
+                                                ) && type.available && (
+                                                    <span className="text-xs text-green-600">
+                                                        (Custom)
+                                                    </span>
+                                                )}
+                                                {!type.available && (
+                                                    <span className="text-xs text-muted-foreground">
+                                                        (Coming Soon)
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -194,60 +215,77 @@ export default function DocumentTemplatesForm({
                             {TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType)?.label} Template
                         </CardTitle>
                         <CardDescription>
-                            Edit the template content below. You can use Blade template syntax
-                            for dynamic content (e.g., {`{{ $variable_name }}`}).
+                            {TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType)?.available ? (
+                                <>
+                                    Edit the template content below. You can use Blade template syntax
+                                    for dynamic content (e.g., {`{{ $variable_name }}`}).
+                                </>
+                            ) : (
+                                "This template type is coming soon and is not yet available for editing."
+                            )}
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <form onSubmit={submit} className="space-y-4">
-                            <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <Label htmlFor="template">Template Content</Label>
+                    {TEMPLATE_TYPES.find((t) => t.value === selectedTemplateType)?.available ? (
+                        <CardContent className="space-y-4">
+                            <form onSubmit={submit} className="space-y-4">
+                                <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <Label htmlFor="template">Template Content</Label>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={loadDefaultTemplate}
+                                            disabled={loadingDefault}
+                                        >
+                                            {loadingDefault ? 'Loading...' : 'Load Default Template'}
+                                        </Button>
+                                    </div>
+                                    <Textarea
+                                        id="template"
+                                        value={data.template}
+                                        onChange={(e) => setData('template', e.target.value)}
+                                        placeholder="Enter your template content here..."
+                                        className="min-h-[400px] font-mono text-sm"
+                                        required
+                                    />
+                                    {errors.template && (
+                                        <InputError message={errors.template} />
+                                    )}
+                                </div>
+
+                                <div className="flex justify-end space-x-2">
                                     <Button
                                         type="button"
                                         variant="outline"
-                                        size="sm"
-                                        onClick={loadDefaultTemplate}
-                                        disabled={loadingDefault}
+                                        onClick={() => {
+                                            setSelectedTemplateType('');
+                                            reset();
+                                        }}
                                     >
-                                        {loadingDefault ? 'Loading...' : 'Load Default Template'}
+                                        Cancel
+                                    </Button>
+                                    <Button type="submit" disabled={processing}>
+                                        {processing ? 'Saving...' : 'Save Template'}
                                     </Button>
                                 </div>
-                                <Textarea
-                                    id="template"
-                                    value={data.template}
-                                    onChange={(e) => setData('template', e.target.value)}
-                                    placeholder="Enter your template content here..."
-                                    className="min-h-[400px] font-mono text-sm"
-                                    required
-                                />
-                                {errors.template && (
-                                    <InputError message={errors.template} />
-                                )}
+                            </form>
+                        </CardContent>
+                    ) : (
+                        <CardContent>
+                            <div className="text-center py-12 text-muted-foreground">
+                                <p className="text-lg font-medium">Coming Soon</p>
+                                <p className="text-sm">This template type will be available in a future update.</p>
                             </div>
-
-                            <div className="flex justify-end space-x-2">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => {
-                                        setSelectedTemplateType('');
-                                        reset();
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button type="submit" disabled={processing}>
-                                    {processing ? 'Saving...' : 'Save Template'}
-                                </Button>
-                            </div>
-                        </form>
-                    </CardContent>
+                        </CardContent>
+                    )}
                 </Card>
             )}
 
             {/* Existing Templates List */}
-            {templates.length > 0 && (
+            {templates.filter(template => 
+                TEMPLATE_TYPES.find(t => t.value === template.template_type)?.available
+            ).length > 0 && (
                 <Card>
                     <CardHeader>
                         <CardTitle>Existing Templates</CardTitle>
@@ -257,7 +295,11 @@ export default function DocumentTemplatesForm({
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2">
-                            {templates.map((template) => (
+                            {templates
+                                .filter(template => 
+                                    TEMPLATE_TYPES.find(t => t.value === template.template_type)?.available
+                                )
+                                .map((template) => (
                                 <div
                                     key={template.id}
                                     className="flex items-center justify-between p-3 border rounded-lg"
