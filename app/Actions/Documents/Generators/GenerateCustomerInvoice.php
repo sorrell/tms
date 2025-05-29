@@ -84,13 +84,26 @@ class GenerateCustomerInvoice
 
         // Get current organization
         $organization = current_organization();
+        
+        // Load the company location relationship if not already loaded
+        $organization->loadMissing('companyLocation');
 
-        // Company information from organization (fixed nullsafe operators)
+        // Company information from organization
         $data['company_name'] = $organization->company_name ?? '';
-        $data['company_address'] = $organization->company_address ?? '';
-        $data['company_city'] = $organization->company_city ?? '';
-        $data['company_state'] = $organization->company_state ?? '';
-        $data['company_zip'] = $organization->company_zip ?? '';
+        
+        // Company location information from companyLocation relationship
+        if ($organization->companyLocation) {
+            $data['company_address'] = $organization->companyLocation->address_line_1 ?? '';
+            $data['company_city'] = $organization->companyLocation->address_city ?? '';
+            $data['company_state'] = $organization->companyLocation->address_state ?? '';
+            $data['company_zip'] = $organization->companyLocation->address_zipcode ?? '';
+        } else {
+            $data['company_address'] = '';
+            $data['company_city'] = '';
+            $data['company_state'] = '';
+            $data['company_zip'] = '';
+        }
+        
         $data['company_phone'] = $organization->accounting_contact_phone ?? $organization->company_phone ?? '';
         $data['company_email'] = $organization->company_email ?? $organization->accounting_contact_email ?? '';
         

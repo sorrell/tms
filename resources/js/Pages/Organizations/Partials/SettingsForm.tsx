@@ -8,6 +8,9 @@ import {
 } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
+import LocationForm from '@/Components/CreateForms/LocationForm';
+import { ResourceSearchSelect } from '@/Components/ResourceSearchSelect';
+import InputError from '@/Components/InputError';
 import { Organization } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
 
@@ -19,10 +22,7 @@ export default function SettingsForm({
     const { data, setData, put, processing, errors } = useForm({
         name: organization.name || '',
         company_name: organization.company_name || '',
-        company_address: organization.company_address || '',
-        company_city: organization.company_city || '',
-        company_state: organization.company_state || '',
-        company_zip: organization.company_zip || '',
+        company_location_id: organization.company_location?.id || null,
         company_phone: organization.company_phone || '',
         company_email: organization.company_email || '',
         accounting_contact_email: organization.accounting_contact_email || '',
@@ -55,9 +55,7 @@ export default function SettingsForm({
                             required
                         />
                         {errors.name && (
-                            <p className="text-sm text-red-600">
-                                {errors.name}
-                            </p>
+                            <InputError message={errors.name} />
                         )}
                     </div>
                 </CardContent>
@@ -83,82 +81,37 @@ export default function SettingsForm({
                             }
                         />
                         {errors.company_name && (
-                            <p className="text-sm text-red-600">
-                                {errors.company_name}
-                            </p>
+                            <InputError message={errors.company_name} />
                         )}
                     </div>
 
                     <div>
-                        <Label htmlFor="company_address">Address</Label>
-                        <Input
-                            id="company_address"
-                            type="text"
-                            value={data.company_address}
-                            onChange={(e) =>
-                                setData('company_address', e.target.value)
+                        <Label htmlFor="company_location">Company Address</Label>
+                        <ResourceSearchSelect
+                            className="w-full"
+                            searchRoute={route('locations.search')}
+                            onValueChange={(value) =>
+                                setData(
+                                    'company_location_id',
+                                    value ? Number(value) : null,
+                                )
                             }
+                            allowMultiple={false}
+                            defaultSelectedItems={data.company_location_id?.toString()}
+                            createForm={LocationForm}
                         />
-                        {errors.company_address && (
-                            <p className="text-sm text-red-600">
-                                {errors.company_address}
-                            </p>
+                        {errors.company_location_id && (
+                            <InputError message={errors.company_location_id} />
                         )}
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        <div>
-                            <Label htmlFor="company_city">City</Label>
-                            <Input
-                                id="company_city"
-                                type="text"
-                                value={data.company_city}
-                                onChange={(e) =>
-                                    setData('company_city', e.target.value)
-                                }
-                            />
-                            {errors.company_city && (
-                                <p className="text-sm text-red-600">
-                                    {errors.company_city}
-                                </p>
-                            )}
-                        </div>
-
-                        <div>
-                            <Label htmlFor="company_state">State</Label>
-                            <Input
-                                id="company_state"
-                                type="text"
-                                value={data.company_state}
-                                onChange={(e) =>
-                                    setData('company_state', e.target.value)
-                                }
-                                maxLength={2}
-                                placeholder="CA"
-                            />
-                            {errors.company_state && (
-                                <p className="text-sm text-red-600">
-                                    {errors.company_state}
-                                </p>
-                            )}
-                        </div>
-
-                        <div>
-                            <Label htmlFor="company_zip">ZIP Code</Label>
-                            <Input
-                                id="company_zip"
-                                type="text"
-                                value={data.company_zip}
-                                onChange={(e) =>
-                                    setData('company_zip', e.target.value)
-                                }
-                            />
-                            {errors.company_zip && (
-                                <p className="text-sm text-red-600">
-                                    {errors.company_zip}
-                                </p>
-                            )}
-                        </div>
+                        {organization.company_location && (
+                            <div className="mt-2 text-sm text-muted-foreground">
+                                Current: {organization.company_location.address_line_1}
+                                {organization.company_location.address_line_2 && (
+                                    <span>, {organization.company_location.address_line_2}</span>
+                                )}
+                                <span>, {organization.company_location.address_city}, {organization.company_location.address_state} {organization.company_location.address_zipcode}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -173,9 +126,7 @@ export default function SettingsForm({
                                 }
                             />
                             {errors.company_phone && (
-                                <p className="text-sm text-red-600">
-                                    {errors.company_phone}
-                                </p>
+                                <InputError message={errors.company_phone} />
                             )}
                         </div>
 
@@ -190,9 +141,7 @@ export default function SettingsForm({
                                 }
                             />
                             {errors.company_email && (
-                                <p className="text-sm text-red-600">
-                                    {errors.company_email}
-                                </p>
+                                <InputError message={errors.company_email} />
                             )}
                         </div>
                     </div>
@@ -225,9 +174,7 @@ export default function SettingsForm({
                                 }
                             />
                             {errors.accounting_contact_email && (
-                                <p className="text-sm text-red-600">
-                                    {errors.accounting_contact_email}
-                                </p>
+                                <InputError message={errors.accounting_contact_email} />
                             )}
                         </div>
 
@@ -247,9 +194,7 @@ export default function SettingsForm({
                                 }
                             />
                             {errors.accounting_contact_phone && (
-                                <p className="text-sm text-red-600">
-                                    {errors.accounting_contact_phone}
-                                </p>
+                                <InputError message={errors.accounting_contact_phone} />
                             )}
                         </div>
                     </div>

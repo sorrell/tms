@@ -126,7 +126,7 @@ class OrganizationController extends Controller
         Gate::authorize('view', $organization);
 
         return Inertia::render('Organizations/Settings', [
-            'organization' => $organization->load('owner', 'users'),
+            'organization' => $organization->load('owner', 'users', 'companyLocation'),
         ]);
     }
 

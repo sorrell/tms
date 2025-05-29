@@ -3,6 +3,7 @@
 namespace App\Models\Organizations;
 
 use App\Models\User;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,10 +20,7 @@ class Organization extends Model
         'name',
         'owner_id',
         'company_name',
-        'company_address',
-        'company_city',
-        'company_state', 
-        'company_zip',
+        'company_location_id',
         'company_phone',
         'company_email',
         'accounting_contact_email',
@@ -43,6 +41,14 @@ class Organization extends Model
     public function owner() : BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get the company location for the organization.
+     */
+    public function companyLocation(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'company_location_id', 'id');
     }
 
     public function users() : BelongsToMany

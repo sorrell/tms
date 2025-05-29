@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::table('organizations', function (Blueprint $table) {
             $table->string('company_name')->nullable();
-            $table->string('company_address')->nullable();
-            $table->string('company_city')->nullable();
-            $table->string('company_state')->nullable();
-            $table->string('company_zip')->nullable();
+            $table->unsignedBigInteger('company_location_id')->nullable();
             $table->string('company_phone')->nullable();
             $table->string('company_email')->nullable();
             $table->string('accounting_contact_email')->nullable();
             $table->string('accounting_contact_phone')->nullable();
+            
+            // Add foreign key constraint
+            $table->foreign('company_location_id')->references('id')->on('locations')->onDelete('set null');
         });
     }
 
@@ -30,12 +30,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('organizations', function (Blueprint $table) {
+            $table->dropForeign(['company_location_id']);
             $table->dropColumn([
                 'company_name',
-                'company_address',
-                'company_city',
-                'company_state',
-                'company_zip',
+                'company_location_id',
                 'company_phone',
                 'company_email',
                 'accounting_contact_email',
