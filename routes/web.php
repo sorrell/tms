@@ -116,6 +116,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('organizations/{organization}/document-templates', \App\Actions\DocumentTemplates\GetDocumentTemplates::class)->name('organizations.document-templates.index');
     Route::get('organizations/{organization}/document-templates/{documentTemplate}', \App\Actions\DocumentTemplates\GetDocumentTemplate::class)->name('organizations.document-templates.show');
     Route::post('organizations/{organization}/document-templates', \App\Actions\DocumentTemplates\SaveDocumentTemplate::class)->name('organizations.document-templates.store');
+    Route::post('document-templates/validate', \App\Actions\DocumentTemplates\ValidateTemplate::class)->name('document-templates.validate');
     Route::get('document-templates/default/{templateType}', \App\Actions\DocumentTemplates\GetDefaultTemplate::class)->name('document-templates.default');
 
     Route::prefix('organizations/{organization}/permissions')->group(function () {

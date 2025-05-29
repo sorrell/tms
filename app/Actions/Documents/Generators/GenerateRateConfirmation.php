@@ -39,8 +39,19 @@ class GenerateRateConfirmation
             ->first();
         
         if ($customTemplate) {
-            // Use custom template
-            $html = Blade::render($customTemplate->template, $data);
+            // Use custom template with error handling
+            try {
+                $html = Blade::render($customTemplate->template, $data);
+            } catch (Exception $e) {
+                // Log the error and fall back to default template
+                Log::error('Failed to render custom template for organization ' . $organization->id, [
+                    'error' => $e->getMessage(),
+                    'template_id' => $customTemplate->id
+                ]);
+                
+                // Fall back to default template
+                $html = View::make('documents.carrier-rate-confirmation', $data)->render();
+            }
         } else {
             // Use default template
             $html = View::make('documents.carrier-rate-confirmation', $data)->render();

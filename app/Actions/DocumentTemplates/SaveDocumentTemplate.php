@@ -5,6 +5,7 @@ namespace App\Actions\DocumentTemplates;
 use App\Enums\Documents\DocumentTemplateType;
 use App\Models\Documents\DocumentTemplate;
 use App\Models\Organizations\Organization;
+use App\Services\TemplateSecurityService;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -22,13 +23,18 @@ class SaveDocumentTemplate
 
     public function handle(Organization $organization, array $data)
     {
+        $templateSecurity = new TemplateSecurityService();
+        
+        // Sanitize the template for security
+        $sanitizedTemplate = $templateSecurity->sanitizeTemplate($data['template']);
+        
         return DocumentTemplate::updateOrCreate(
             [
                 'organization_id' => $organization->id,
                 'template_type' => DocumentTemplateType::from($data['template_type']),
             ],
             [
-                'template' => $data['template'],
+                'template' => $sanitizedTemplate,
             ]
         );
     }

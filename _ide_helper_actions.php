@@ -366,6 +366,20 @@ class GetDocumentTemplates
 class SaveDocumentTemplate
 {
 }
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $template)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $template)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $template)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $template)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $template)
+ * @method static dispatchSync(string $template)
+ * @method static dispatchNow(string $template)
+ * @method static dispatchAfterResponse(string $template)
+ * @method static array run(string $template)
+ */
+class ValidateTemplate
+{
+}
 namespace App\Actions\Documents;
 
 /**
