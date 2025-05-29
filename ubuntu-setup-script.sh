@@ -26,24 +26,35 @@ echo -e "${PURPLE}🚛 ===== LoadPartner TMS Magic Deployment Wizard ===== 🚛$
 echo -e "${CYAN}🎉 Get ready to deploy the most awesome TMS in the universe! 🎉${NC}"
 echo ""
 
+# Function to generate random password
+generate_random_password() {
+    openssl rand -base64 32 | tr -d "=+/" | cut -c1-25
+}
+
 prompt_if_empty() {
     local var_name=$1
     local prompt=$2
+    local default_value=$3
     local current_value="${!var_name}"
     
     if [[ -z "$current_value" ]]; then
-        while [[ -z "${!var_name}" ]]; do
+        if [[ -n "$default_value" ]]; then
+            read -p "$prompt [$default_value]: " value
+        else
             read -p "$prompt: " value
-            # Trim whitespace
-            value=$(echo "$value" | xargs)
-            if [[ -n "$value" ]]; then
-                export "$var_name"="$value"
-                echo "$var_name=\"$value\"" >> "$VARS_FILE"
-                break
-            else
-                echo -e "${RED}❌ This field is required! Please enter a value.${NC}"
-            fi
-        done
+        fi
+        # Trim whitespace
+        value=$(echo "$value" | xargs)
+        if [[ -z "$value" && -n "$default_value" ]]; then
+            value="$default_value"
+        fi
+        if [[ -n "$value" ]]; then
+            export "$var_name"="$value"
+            echo "$var_name=\"$value\"" >> "$VARS_FILE"
+        else
+            echo -e "${RED}❌ This field is required! Please enter a value.${NC}"
+            prompt_if_empty "$var_name" "$prompt" "$default_value"
+        fi
     else
         export "$var_name"="$current_value"
         echo -e "${YELLOW}🔄 Using saved value for $var_name: $current_value${NC}"
@@ -76,22 +87,21 @@ prompt_optional() {
 echo -e "${BLUE}📝 Let's gather some info to make your TMS deployment perfect!${NC}"
 echo ""
 
-prompt_if_empty "APP_NAME" "🏷️  What should we call your TMS instance? (e.g. loadpartner-tms)"
-prompt_if_empty "LINUX_USER" "👤 What Linux user should manage your TMS? (e.g. tmsadmin)"
-prompt_if_empty "DB_NAME" "🗄️  PostgreSQL database name for your TMS"
-prompt_if_empty "DB_USER" "👨‍💼 PostgreSQL database user"
+prompt_if_empty "APP_NAME" "🏷️  What should we call your TMS instance?" "loadpartner-tms"
+prompt_if_empty "LINUX_USER" "👤 What Linux user should manage your TMS?" "tmsadmin"
+prompt_if_empty "DB_NAME" "🗄️  PostgreSQL database name for your TMS" "loadpartner_tms"
+prompt_if_empty "DB_USER" "👨‍💼 PostgreSQL database user" "tms_user"
 
 if [[ -z "$DB_PASS" ]]; then
     echo -e "${YELLOW}🔐 Time for a super secret password!${NC}"
-    while [[ -z "$DB_PASS" ]]; do
-        read -s -p "🔑 Enter PostgreSQL password for user '$DB_USER': " DB_PASS
-        echo ""
-        if [[ -z "$DB_PASS" ]]; then
-            echo -e "${RED}❌ Password cannot be empty! Please enter a password.${NC}"
-        else
-            echo "DB_PASS=\"$DB_PASS\"" >> "$VARS_FILE"
-        fi
-    done
+    RANDOM_PASS=$(generate_random_password)
+    read -s -p "🔑 Enter PostgreSQL password for user '$DB_USER' [press ENTER for random]: " DB_PASS
+    echo ""
+    if [[ -z "$DB_PASS" ]]; then
+        DB_PASS="$RANDOM_PASS"
+        echo -e "${GREEN}🎲 Generated random password for database user${NC}"
+    fi
+    echo "DB_PASS=\"$DB_PASS\"" >> "$VARS_FILE"
 fi
 
 echo -e "${CYAN}🌐 Got a fancy domain for your TMS?${NC}"
@@ -116,6 +126,7 @@ echo -e "${CYAN}📦 TMS Instance: $APP_NAME${NC}"
 echo -e "${CYAN}👤 Linux User: $LINUX_USER${NC}"
 echo -e "${CYAN}🗄️  Database: $DB_NAME${NC}"
 echo -e "${CYAN}👨‍💼 DB User: $DB_USER${NC}"
+echo -e "${CYAN}🔑 DB Password: ${DB_PASS:0:3}***${NC}"
 echo -e "${CYAN}📂 TMS Repo: $GIT_REPO${NC}"
 echo -e "${CYAN}🌐 Domain: ${DOMAIN_NAME:-'(will use server IP)'}${NC}"
 echo -e "${CYAN}📁 Install Path: $APP_PATH${NC}"
