@@ -44,7 +44,10 @@ use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
 use App\Actions\Subscriptions\NewUserSeatsSubscription;
+use App\Actions\Subscriptions\RedirectToBillingPortal;
+use App\Actions\Subscriptions\UpdateUserSeatsSubscription;
 use App\Actions\ZipToTimezone;
+use App\Enums\Subscriptions\SubscriptionType;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FacilityController;
@@ -70,7 +73,11 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/products', function () {
-    return Inertia::render('Subscriptions/Products');
+    return Inertia::render('Subscriptions/Products',
+        [
+            'hasSubscription' => current_organization()?->subscribed(SubscriptionType::USER_SEAT)
+        ]
+    );
 })->name('products-list');
 
 Route::middleware('auth')->group(function () {
@@ -89,6 +96,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'organization-assigned'])->group(function() {
     Route::get('subscriptions/new', NewUserSeatsSubscription::class)->name('subscriptions.new');
+    Route::get('subscriptions/manage', RedirectToBillingPortal::class)->name('subscriptions.manage');
 });
 
 Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscription'])->group(function () {
@@ -115,6 +123,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     Route::get('organizations/{organization}/roles', [OrganizationController::class, 'showRoles'])->name('organizations.roles');
     Route::get('organizations/{organization}/settings', [OrganizationController::class, 'showSettings'])->name('organizations.settings');
     Route::put('organizations/{organization}/settings', UpdateOrganization::class)->name('organizations.settings.update');
+    Route::get('organizations/{organization}/billing', [OrganizationController::class, 'showBilling'])->name('organizations.billing');
+    Route::put('organizations/{organization}/billing/update-seats', UpdateUserSeatsSubscription::class)->name('organizations.billing.update-seats');
+    
     Route::get('organizations/{organization}/document-templates-page', [OrganizationController::class, 'showDocumentTemplates'])->name('organizations.document-templates-page');
     Route::get('organizations/{organization}/integration-settings', [OrganizationController::class, 'showIntegrationSettings'])->name('organizations.integration-settings');
     Route::post('organizations/{organization}/integration-settings', SetIntegrationSetting::class)->name('organizations.integration-settings.store');

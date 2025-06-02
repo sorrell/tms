@@ -2,6 +2,7 @@
 
 namespace App\Actions\Subscriptions;
 
+use App\Enums\Permission;
 use App\Enums\Subscriptions\SubscriptionType;
 use App\Models\Shipments\Shipment;
 use Carbon\Carbon;
@@ -37,22 +38,12 @@ class UpdateUserSeatsSubscription
         }
     }
 
-    // public function asController(ActionRequest $request) : Shipment 
-    // {
-    //     return $this->handle(
-    //         customerIds: $request->validated('customer_ids'),
-    //         carrierId: $request->validated('carrier_id'),
-    //         stops: $request->validated('stops'),
-    //         weight: $request->validated('weight'),
-    //         tripDistance: $request->validated('trip_distance'),
-    //         trailerTypeId: $request->validated('trailer_type_id'),
-    //         trailerSizeId: $request->validated('trailer_size_id'),
-    //         trailerTemperatureRange: $request->validated('trailer_temperature_range'),
-    //         trailerTemperature: $request->validated('trailer_temperature'),
-    //         trailerTemperatureMaximum: $request->validated('trailer_temperature_maximum'),
-    //         shipmentNumber: $request->validated('shipment_number'),
-    //     );
-    // }
+    public function asController(ActionRequest $request)
+    {
+        $this->handle($request->validated('quantity'));
+        
+        return redirect()->back()->with('success', 'Subscription updated successfully');
+    }
 
     // public function htmlResponse(Shipment $shipment)
     // {
@@ -67,11 +58,12 @@ class UpdateUserSeatsSubscription
     public function rules()
     {
         return [
+            'quantity' => ['required', 'integer', 'min:1']
         ];
     }
 
     public function authorize(ActionRequest $request): bool
     {
-        return true; // todo check org billing perm
+        return $request->user()->can(Permission::ORGANIZATION_BILLING);
     }
 }

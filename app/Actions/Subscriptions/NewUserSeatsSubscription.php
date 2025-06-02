@@ -2,6 +2,7 @@
 
 namespace App\Actions\Subscriptions;
 
+use App\Enums\Permission;
 use App\Enums\Subscriptions\SubscriptionType;
 use App\Models\Shipments\Shipment;
 use Carbon\Carbon;
@@ -60,6 +61,6 @@ class NewUserSeatsSubscription
 
     public function authorize(ActionRequest $request): bool
     {
-        return true; // todo check org billing perm
+        return $request->user()->can(Permission::ORGANIZATION_BILLING);
     }
 }

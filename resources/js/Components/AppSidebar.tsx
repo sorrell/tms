@@ -1,6 +1,7 @@
 import {
     Building,
     ChevronRight,
+    CreditCard,
     GalleryVerticalEnd,
     Home,
     Package,
@@ -238,6 +239,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                     )}
                                                 >
                                                     Settings
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        )}
+                                        {permissions?.ORGANIZATION_BILLING && (
+                                            <SidebarMenuSubItem>
+                                                <SidebarMenuSubButton
+                                                    href={route(
+                                                        'organizations.billing',
+                                                        [
+                                                            user.current_organization_id,
+                                                        ],
+                                                    )}
+                                                    isActive={route().current(
+                                                        'organizations.billing',
+                                                        [
+                                                            user.current_organization_id,
+                                                        ],
+                                                    )}
+                                                >
+                                                    Billing
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
                                         )}

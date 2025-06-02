@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\IntegrationSettings\GetAllGlobalIntegrationSettings;
+use App\Enums\Permission;
+use App\Enums\Subscriptions\SubscriptionType;
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Http\Resources\Organization\GlobalIntegrationSettingResource;
@@ -10,7 +12,7 @@ use App\Http\Resources\Organization\IntegrationSettingResource;
 use App\Models\Organizations\IntegrationSetting;
 use App\Models\Organizations\Organization;
 use App\Models\Organizations\OrganizationUser;
-use App\Models\Permissions\Permission;
+use App\Models\Permissions\Permission as PermissionModel;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -68,7 +70,7 @@ class OrganizationController extends Controller
             'organization' => $organization->load('owner', 'users'),
             'invites' => $organization->invites,
             'roles' => $organization->roles->load('permissions', 'users'),
-            'permissions' => Permission::all(),
+            'permissions' => PermissionModel::all(),
         ]);
     }
 
@@ -104,7 +106,7 @@ class OrganizationController extends Controller
         return Inertia::render('Organizations/Roles', [
             'organization' => $organization->load('owner', 'users'),
             'roles' => $organization->roles->load('permissions', 'users'),
-            'permissions' => Permission::all(),
+            'permissions' => PermissionModel::all(),
         ]);
     }
 
@@ -136,6 +138,25 @@ class OrganizationController extends Controller
 
         return Inertia::render('Organizations/DocumentTemplates', [
             'organization' => $organization->load('owner', 'users'),
+        ]);
+    }
+
+    public function showBilling(Organization $organization)
+    {
+        Gate::authorize(Permission::ORGANIZATION_BILLING);
+
+        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
+
+        return Inertia::render('Organizations/Billing', [
+            'organization' => $organization->load('owner', 'users'),
+            'subscription' => $subscription ? [
+                'id' => $subscription->id,
+                'type' => $subscription->type,
+                'stripe_status' => $subscription->stripe_status,
+                'quantity' => $subscription->quantity,
+                'trial_ends_at' => $subscription->trial_ends_at?->toISOString(),
+                'ends_at' => $subscription->ends_at?->toISOString(),
+            ] : null,
         ]);
     }
 

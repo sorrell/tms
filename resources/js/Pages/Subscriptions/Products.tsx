@@ -4,12 +4,13 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/Componen
 import SeatSelectionModal from '@/Components/SeatSelectionModal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Guest from '@/Layouts/GuestLayout';
-import { Head, Link } from '@inertiajs/react';
-import { Check, Github, ArrowRight, Star } from 'lucide-react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { Check, Github, ArrowRight, Star, Settings } from 'lucide-react';
 import { useState } from 'react';
 
-export default function Products() {
+export default function Products({ hasSubscription }: { hasSubscription: boolean }) {
     const [showSeatModal, setShowSeatModal] = useState(false);
+    const { auth } = usePage().props as any;
 
     const plans = [
         {
@@ -33,7 +34,7 @@ export default function Products() {
             requiresSeatSelection: false
         },
         {
-            name: 'Managed',
+            name: 'Premium',
             price: '$50',
             priceUnit: '/user/month',
             description: 'For individuals and growing teams that want hassle-free management',
@@ -48,20 +49,22 @@ export default function Products() {
                 'Team collaboration tools',
                 'API access'
             ],
-            buttonText: 'Get Started',
-            buttonVariant: 'default' as const,
-            buttonIcon: <ArrowRight className="h-4 w-4" />,
-            href: route('subscriptions.new'), 
+            buttonText: hasSubscription ? 'Manage Billing' : 'Get Started',
+            buttonVariant: hasSubscription ? 'outline' as const : 'default' as const,
+            buttonIcon: hasSubscription ? <Settings className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />,
+            href: hasSubscription 
+                ? route('organizations.billing', auth?.user?.current_organization_id || 1)
+                : route('subscriptions.new'), 
             isPopular: true,
-            requiresSeatSelection: true
+            requiresSeatSelection: !hasSubscription
         },
         {
-            name: 'Dedicated',
+            name: 'Enterprise',
             price: '$299',
             priceUnit: '/month',
             priceNote: 'starting at',
             description: 'For enterprises wanting dedicated infrastructure and custom development',
-            badge: 'Enterprise',
+            badge: '',
             badgeVariant: 'outline' as const,
             features: [
                 'Everything in Managed',
@@ -96,8 +99,7 @@ export default function Products() {
     };
 
     return (
-        <div
-        >
+        <div>
             <Head title="Products" />
 
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
