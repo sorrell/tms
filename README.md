@@ -70,3 +70,21 @@ sail npm run dev
 ``` bash
 sail artisan dev:refresh
 ```
+This will create test users with the following credentials:
+
+| Email | Password |
+|-------|----------|
+| admin@test.com | password |
+| user@test.com | password |
+
+
+#### Setting up Mailpit
+- Ensure Mailpit is not commented out in `docker-compose.yml`
+- Visit http://localhost:8025 (or whatever you have specified in `docker-compose.yml FORWARD_MAILPIT_DASHBOARD_PORT`)
+- Update the following .env settings:
+
+``` bash
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025 # or whatever you have specified in docker-compose.yml FORWARD_MAILPIT_PORT
+```
