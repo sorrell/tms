@@ -43,7 +43,12 @@ use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
+use App\Actions\SubmitFeedback;
+use App\Actions\Subscriptions\NewUserSeatsSubscription;
+use App\Actions\Subscriptions\RedirectToBillingPortal;
+use App\Actions\Subscriptions\UpdateUserSeatsSubscription;
 use App\Actions\ZipToTimezone;
+use App\Enums\Subscriptions\SubscriptionType;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FacilityController;
@@ -59,6 +64,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::post('/feedback', SubmitFeedback::class)->name('feedback.submit');
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -66,7 +73,20 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
+
+Route::get('/products', function () {
+    // Check if billing is enabled
+    if (!config('subscriptions.enable_billing')) {
+        abort(403, 'Billing is disabled');
+    }
+
+    return Inertia::render('Subscriptions/Products',
+        [
+            'hasSubscription' => current_organization()?->subscribed(SubscriptionType::USER_SEAT->value)
+        ]
+    );
+})->name('products-list');
 
 Route::middleware('auth')->group(function () {
 
@@ -82,8 +102,12 @@ Route::middleware('auth')->group(function () {
     ])->only(['show']);
 });
 
+Route::middleware(['auth', 'organization-assigned'])->group(function() {
+    Route::get('subscriptions/new', NewUserSeatsSubscription::class)->name('subscriptions.new');
+    Route::get('subscriptions/manage', RedirectToBillingPortal::class)->name('subscriptions.manage');
+});
 
-Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function () {
+Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscription'])->group(function () {
 
     Route::prefix('accounting')->name('accounting.')->group(function() {
         Route::get('rate-types', GetRateTypes::class)->name('rate-types.index');
@@ -107,6 +131,9 @@ Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function
     Route::get('organizations/{organization}/roles', [OrganizationController::class, 'showRoles'])->name('organizations.roles');
     Route::get('organizations/{organization}/settings', [OrganizationController::class, 'showSettings'])->name('organizations.settings');
     Route::put('organizations/{organization}/settings', UpdateOrganization::class)->name('organizations.settings.update');
+    Route::get('organizations/{organization}/billing', [OrganizationController::class, 'showBilling'])->name('organizations.billing');
+    Route::put('organizations/{organization}/billing/update-seats', UpdateUserSeatsSubscription::class)->name('organizations.billing.update-seats');
+    
     Route::get('organizations/{organization}/document-templates-page', [OrganizationController::class, 'showDocumentTemplates'])->name('organizations.document-templates-page');
     Route::get('organizations/{organization}/integration-settings', [OrganizationController::class, 'showIntegrationSettings'])->name('organizations.integration-settings');
     Route::post('organizations/{organization}/integration-settings', SetIntegrationSetting::class)->name('organizations.integration-settings.store');

@@ -42,6 +42,9 @@ class HandleInertiaRequests extends Middleware
                 'name' => config('app.name'),
             ], 
             'integration_settings' => GetFrontendIntegrationSettings::run(),
+            'config' => [
+                'enable_billing' => config('subscriptions.enable_billing'),
+            ],
         ];
     }
 }

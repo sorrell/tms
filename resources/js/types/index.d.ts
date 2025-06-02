@@ -24,6 +24,9 @@ export type PageProps<
     integration_settings: {
         [key: string]: string;
     };
+    config: {
+        enable_billing: boolean;
+    };
 };
 
 export interface Location {

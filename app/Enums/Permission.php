@@ -9,6 +9,7 @@ enum Permission: string
     // case NAMEINAPP = 'name-in-database';
     case ORGANIZATION_MANAGE_USERS = 'organization-manage-users';
     case ORGANIZATION_MANAGER = 'organization-manager';
+    case ORGANIZATION_BILLING = 'organization-billing';
 
     case CUSTOMER_EDIT = 'customer-edit';
     case CUSTOMER_VIEW = 'customer-view';
@@ -31,6 +32,7 @@ enum Permission: string
         return match ($this) {
             self::ORGANIZATION_MANAGE_USERS => 'Manage Organization Users & Permissions',
             self::ORGANIZATION_MANAGER => 'View & Edit Organization Details',
+            self::ORGANIZATION_BILLING => 'Manage Organization Billing & Subscriptions',
             self::CUSTOMER_EDIT => 'Edit Customer Details',
             self::CUSTOMER_VIEW => 'View Customer Details',
             self::FACILITY_EDIT => 'Edit Facility Details',
