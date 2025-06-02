@@ -17,10 +17,10 @@ class EnsureOrganizationAssigned
     {
         if ($request->user()) {
             $invite = $request->user()
-            ->organizationInvites()
-            ->withoutGlobalScopes()
-            ->where('accepted_at', null)
-            ->first();
+                ->organizationInvites()
+                ->withoutGlobalScopes()
+                ->where('accepted_at', null)
+                ->first();
             if ($invite) {
                 return redirect()->route(
                     'organizations.invites.show',
