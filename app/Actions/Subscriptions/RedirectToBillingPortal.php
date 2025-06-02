@@ -12,6 +12,11 @@ class RedirectToBillingPortal
 
     public function handle()
     {
+        // Check if billing is enabled
+        if (!config('subscriptions.enable_billing')) {
+            abort(403, 'Billing is disabled');
+        }
+
         $organization = current_organization();
 
         return $organization->redirectToBillingPortal(

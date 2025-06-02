@@ -16,6 +16,10 @@ class EnsureOrganizationHasSubscription
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip subscription checks if billing is disabled
+        if (!config('subscriptions.enable_billing')) {
+            return $next($request);
+        }
 
         if (current_organization()?->subscribed(SubscriptionType::USER_SEAT->value)) {
             return $next($request);

@@ -31,7 +31,7 @@ export default function Products({
         const urlParams = new URLSearchParams(window.location.search);
         const success = urlParams.get('success');
 
-        if (success === 'true') {
+        if (success) {
             setShowSuccessModal(true);
             // Clean up URL by removing the success parameter
             const newUrl = new URL(window.location.href);

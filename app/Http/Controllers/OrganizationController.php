@@ -148,6 +148,11 @@ class OrganizationController extends Controller
 
     public function showBilling(Organization $organization)
     {
+        // Check if billing is enabled
+        if (!config('subscriptions.enable_billing')) {
+            abort(403, 'Billing is disabled');
+        }
+
         Gate::authorize(Permission::ORGANIZATION_BILLING);
 
         $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);

@@ -12,13 +12,14 @@ import {
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Organization } from '@/types/organization';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 
 export default function SettingsForm({
     organization,
 }: {
     organization: Organization;
 }) {
+    const config = usePage().props.config;
     const { data, setData, put, processing, errors } = useForm({
         name: organization.name || '',
         company_name: organization.company_name || '',
@@ -254,23 +255,28 @@ export default function SettingsForm({
             </form>
 
             {/* Billing Section */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Billing & Subscriptions</CardTitle>
-                    <CardDescription>
-                        Manage your subscription, update seats, and access
-                        billing portal
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Link
-                        href={route('organizations.billing', organization.id)}
-                        className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                    >
-                        Manage Billing
-                    </Link>
-                </CardContent>
-            </Card>
+            {config?.enable_billing && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Billing & Subscriptions</CardTitle>
+                        <CardDescription>
+                            Manage your subscription, update seats, and access
+                            billing portal
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link
+                            href={route(
+                                'organizations.billing',
+                                organization.id,
+                            )}
+                            className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                        >
+                            Manage Billing
+                        </Link>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }

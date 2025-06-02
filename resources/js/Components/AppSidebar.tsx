@@ -36,6 +36,7 @@ import {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const user = usePage().props.auth.user;
     const permissions = usePage().props.auth.permissions;
+    const config = usePage().props.config;
     const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
 
     useEffect(() => {
@@ -241,26 +242,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
                                         )}
-                                        {permissions?.ORGANIZATION_BILLING && (
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton
-                                                    href={route(
-                                                        'organizations.billing',
-                                                        [
-                                                            user.current_organization_id,
-                                                        ],
-                                                    )}
-                                                    isActive={route().current(
-                                                        'organizations.billing',
-                                                        [
-                                                            user.current_organization_id,
-                                                        ],
-                                                    )}
-                                                >
-                                                    Billing
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        )}
+                                        {permissions?.ORGANIZATION_BILLING &&
+                                            config?.enable_billing && (
+                                                <SidebarMenuSubItem>
+                                                    <SidebarMenuSubButton
+                                                        href={route(
+                                                            'organizations.billing',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                        isActive={route().current(
+                                                            'organizations.billing',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                    >
+                                                        Billing
+                                                    </SidebarMenuSubButton>
+                                                </SidebarMenuSubItem>
+                                            )}
                                     </SidebarMenuSub>
                                 </CollapsibleContent>
                             </SidebarMenuItem>

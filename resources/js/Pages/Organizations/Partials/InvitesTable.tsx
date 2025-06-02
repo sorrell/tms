@@ -72,6 +72,7 @@ export default function InvitesTable({
     seatUsage?: SeatUsage;
 }) {
     const organizationId = usePage().props.auth.user.current_organization_id;
+    const config = usePage().props.config;
 
     const { toast } = useToast();
 
@@ -106,6 +107,12 @@ export default function InvitesTable({
     const effectiveSeatUsage = seatUsage || defaultSeatUsage;
 
     const handleNewInviteClick = () => {
+        // If billing is disabled, allow invites without subscription checks
+        if (!config?.enable_billing) {
+            setOpen(true);
+            return;
+        }
+
         if (!effectiveSeatUsage.has_subscription) {
             toast({
                 title: 'No subscription found',
@@ -158,18 +165,19 @@ export default function InvitesTable({
             <Table>
                 <TableCaption>
                     A list of pending organization invites.
-                    {effectiveSeatUsage.has_subscription && (
-                        <div className="mt-2 text-sm text-muted-foreground">
-                            Seat usage: {effectiveSeatUsage.total_used} of{' '}
-                            {effectiveSeatUsage.max_seats} seats used
-                            {!effectiveSeatUsage.has_available_seats && (
-                                <span className="font-medium text-destructive">
-                                    {' '}
-                                    (At capacity)
-                                </span>
-                            )}
-                        </div>
-                    )}
+                    {config?.enable_billing &&
+                        effectiveSeatUsage.has_subscription && (
+                            <div className="mt-2 text-sm text-muted-foreground">
+                                Seat usage: {effectiveSeatUsage.total_used} of{' '}
+                                {effectiveSeatUsage.max_seats} seats used
+                                {!effectiveSeatUsage.has_available_seats && (
+                                    <span className="font-medium text-destructive">
+                                        {' '}
+                                        (At capacity)
+                                    </span>
+                                )}
+                            </div>
+                        )}
                 </TableCaption>
                 <TableHeader>
                     <TableRow>
@@ -266,7 +274,11 @@ export default function InvitesTable({
                         <TableCell colSpan={4} className="text-right">
                             <Button
                                 onClick={handleNewInviteClick}
-                                disabled={!effectiveSeatUsage.has_subscription}
+                                disabled={
+                                    config?.enable_billing
+                                        ? !effectiveSeatUsage.has_subscription
+                                        : false
+                                }
                             >
                                 New Invite
                             </Button>
@@ -340,18 +352,20 @@ export default function InvitesTable({
                         >
                             OK
                         </AlertDialogAction>
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                setShowSeatLimitAlert(false);
-                                window.location.href = route(
-                                    'organizations.billing',
-                                    organization.id,
-                                );
-                            }}
-                        >
-                            Manage Billing
-                        </Button>
+                        {config?.enable_billing && (
+                            <Button
+                                variant="outline"
+                                onClick={() => {
+                                    setShowSeatLimitAlert(false);
+                                    window.location.href = route(
+                                        'organizations.billing',
+                                        organization.id,
+                                    );
+                                }}
+                            >
+                                Manage Billing
+                            </Button>
+                        )}
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
