@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Cashier\Billable;
 
 class Organization extends Model
 {
-    use HasTimestamps, HasFactory;
+    use HasTimestamps, HasFactory, Billable;
 
     protected $fillable = [
         'id',

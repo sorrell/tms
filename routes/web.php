@@ -43,6 +43,7 @@ use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
+use App\Actions\Subscriptions\NewUserSeatsSubscription;
 use App\Actions\ZipToTimezone;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
@@ -66,7 +67,11 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
+
+Route::get('/products', function () {
+    return Inertia::render('Subscriptions/Products');
+})->name('products-list');
 
 Route::middleware('auth')->group(function () {
 
@@ -82,8 +87,11 @@ Route::middleware('auth')->group(function () {
     ])->only(['show']);
 });
 
+Route::middleware(['auth', 'organization-assigned'])->group(function() {
+    Route::get('subscriptions/new', NewUserSeatsSubscription::class)->name('subscriptions.new');
+});
 
-Route::middleware(['auth', 'verified', 'organization-assigned'])->group(function () {
+Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscription'])->group(function () {
 
     Route::prefix('accounting')->name('accounting.')->group(function() {
         Route::get('rate-types', GetRateTypes::class)->name('rate-types.index');

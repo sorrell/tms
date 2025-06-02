@@ -50,13 +50,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         localStorage.setItem('orgMenuOpen', open.toString());
     };
 
+    // Early return if user is not loaded yet
+    if (!user) {
+        return null;
+    }
+
     // Placeholder for future "user teams"
     const data = {
         teams: [
             {
                 name: 'Default Team',
                 logo: GalleryVerticalEnd,
-                plan: user.organizations.find(
+                plan: user.organizations?.find(
                     (org) => org.id === user.current_organization_id,
                 )?.name,
             },
@@ -122,8 +127,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         </a>
                     </SidebarMenuButton>
 
-                    {(permissions.ORGANIZATION_MANAGER ||
-                        permissions.ORGANIZATION_MANAGE_USERS) && (
+                    {(permissions?.ORGANIZATION_MANAGER ||
+                        permissions?.ORGANIZATION_MANAGE_USERS) && (
                         <Collapsible
                             open={isOrgMenuOpen}
                             onOpenChange={handleOrgMenuChange}
@@ -176,7 +181,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                 Roles
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
-                                        {permissions.INTEGRATION_SETTINGS_EDIT && (
+                                        {permissions?.INTEGRATION_SETTINGS_EDIT && (
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
                                                     href={route(
@@ -196,7 +201,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
                                         )}
-                                        {permissions.ORGANIZATION_MANAGER && (
+                                        {permissions?.ORGANIZATION_MANAGER && (
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
                                                     href={route(
@@ -216,7 +221,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
                                         )}
-                                        {permissions.ORGANIZATION_MANAGER && (
+                                        {permissions?.ORGANIZATION_MANAGER && (
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
                                                     href={route(
