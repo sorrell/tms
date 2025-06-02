@@ -103,19 +103,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'organization-assigned'])->group(function() {
-    Route::get('subscriptions/new', function() {
-        if (!config('subscriptions.enable_billing')) {
-            abort(403, 'Billing is disabled');
-        }
-        return app(NewUserSeatsSubscription::class)();
-    })->name('subscriptions.new');
-    
-    Route::get('subscriptions/manage', function() {
-        if (!config('subscriptions.enable_billing')) {
-            abort(403, 'Billing is disabled');
-        }
-        return app(RedirectToBillingPortal::class)();
-    })->name('subscriptions.manage');
+    Route::get('subscriptions/new', NewUserSeatsSubscription::class)->name('subscriptions.new');
+    Route::get('subscriptions/manage', RedirectToBillingPortal::class)->name('subscriptions.manage');
 });
 
 Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscription'])->group(function () {

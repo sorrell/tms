@@ -13,7 +13,7 @@ import {
 import { Toaster } from '@/Components/ui/toaster';
 import { PageProps } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { ArrowRight, Check, Github, Settings, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Github, Settings, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Products({
@@ -147,6 +147,20 @@ export default function Products({
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="mb-12 text-center">
+                    {/* Go Back Button - only show if user is logged in and has subscription */}
+                    {auth?.user && hasSubscription && (
+                        <div className="mb-6 flex justify-start">
+                            <Button
+                                variant="outline"
+                                onClick={() => window.location.href = route('home')}
+                                className="flex items-center gap-2"
+                            >
+                                <ArrowLeft className="h-4 w-4" />
+                                Go Back
+                            </Button>
+                        </div>
+                    )}
+                    
                     <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground">
                         Choose your subscription plan
                     </h1>

@@ -44,7 +44,7 @@ class NewUserSeatsSubscription
 
     public function asController(ActionRequest $request)
     {
-        return $this->handle($request->validated('seat_count'));
+        return $this->handle(quantity: $request->validated('seat_count'));
     }
 
     // public function htmlResponse(Shipment $shipment)
@@ -66,6 +66,6 @@ class NewUserSeatsSubscription
 
     public function authorize(ActionRequest $request): bool
     {
-        return $request->user()->can(Permission::ORGANIZATION_BILLING);
+        return config('subscriptions.enable_billing') && $request->user()->can(Permission::ORGANIZATION_BILLING);
     }
 }
