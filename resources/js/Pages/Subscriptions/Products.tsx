@@ -2,6 +2,7 @@ import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card';
 import SeatSelectionModal from '@/Components/SeatSelectionModal';
+import FeedbackModal from '@/Components/FeedbackModal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Guest from '@/Layouts/GuestLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -10,6 +11,7 @@ import { useState } from 'react';
 
 export default function Products({ hasSubscription }: { hasSubscription: boolean }) {
     const [showSeatModal, setShowSeatModal] = useState(false);
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     const { auth } = usePage().props as any;
 
     const plans = [
@@ -79,14 +81,17 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
             buttonText: 'Contact Sales',
             buttonVariant: 'outline' as const,
             buttonIcon: <ArrowRight className="h-4 w-4" />,
-            href: '#', // Replace with contact URL
+            href: '#', // This will be handled by the click handler to open feedback modal
             isPopular: false,
-            requiresSeatSelection: false
+            requiresSeatSelection: false,
+            opensFeedbackModal: true
         }
     ];
 
     const handlePlanClick = (plan: typeof plans[0]) => {
-        if (plan.requiresSeatSelection) {
+        if (plan.opensFeedbackModal) {
+            setShowFeedbackModal(true);
+        } else if (plan.requiresSeatSelection) {
             setShowSeatModal(true);
         } else {
             // For external links or non-seat-selection plans
@@ -203,7 +208,12 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                     <p>
                         All plans include regular updates and access to our community.
                         <br />
-                        Need a custom solution? <Link href="#" className="text-primary hover:underline">Contact us</Link> for enterprise options.
+                        Need a custom solution? <button 
+                            onClick={() => setShowFeedbackModal(true)} 
+                            className="text-primary hover:underline bg-transparent border-none p-0 cursor-pointer"
+                        >
+                            Contact us
+                        </button> for enterprise options.
                     </p>
                 </div>
             </div>
@@ -212,6 +222,12 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
             <SeatSelectionModal 
                 isOpen={showSeatModal} 
                 onClose={() => setShowSeatModal(false)} 
+            />
+
+            {/* Feedback Modal */}
+            <FeedbackModal 
+                isOpen={showFeedbackModal} 
+                onClose={() => setShowFeedbackModal(false)} 
             />
         </div>
     );

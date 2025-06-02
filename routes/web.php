@@ -43,6 +43,7 @@ use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
 use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
+use App\Actions\SubmitFeedback;
 use App\Actions\Subscriptions\NewUserSeatsSubscription;
 use App\Actions\Subscriptions\RedirectToBillingPortal;
 use App\Actions\Subscriptions\UpdateUserSeatsSubscription;
@@ -62,6 +63,8 @@ use App\Http\Controllers\TimezoneController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::post('/feedback', SubmitFeedback::class)->name('feedback.submit');
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

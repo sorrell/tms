@@ -64,14 +64,7 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
-        Gate::authorize('view', $organization);
-
-        return Inertia::render('Organizations/Show', [
-            'organization' => $organization->load('owner', 'users'),
-            'invites' => $organization->invites,
-            'roles' => $organization->roles->load('permissions', 'users'),
-            'permissions' => PermissionModel::all(),
-        ]);
+        return $this->showUsers($organization);
     }
 
     /**
@@ -93,9 +86,21 @@ class OrganizationController extends Controller
     {
         Gate::authorize('view', $organization);
 
+        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
+        $seatUsage = \App\Actions\Organizations\CheckSeatLimits::make()->getSeatUsage($organization);
+
         return Inertia::render('Organizations/Users', [
             'organization' => $organization->load('owner', 'users'),
             'invites' => $organization->invites,
+            'subscription' => $subscription ? [
+                'id' => $subscription->id,
+                'type' => $subscription->type,
+                'stripe_status' => $subscription->stripe_status,
+                'quantity' => $subscription->quantity,
+                'trial_ends_at' => $subscription->trial_ends_at?->toISOString(),
+                'ends_at' => $subscription->ends_at?->toISOString(),
+            ] : null,
+            'seatUsage' => $seatUsage,
         ]);
     }
 
