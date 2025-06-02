@@ -13,11 +13,11 @@ class CheckSeatLimits
     public function handle(Organization $organization): void
     {
         // Check if organization has a subscription
-        if (!$organization->subscribed(SubscriptionType::USER_SEAT)) {
+        if (!$organization->subscribed(SubscriptionType::USER_SEAT->value)) {
             throw new \Symfony\Component\HttpFoundation\Exception\BadRequestException('Organization does not have an active subscription.');
         }
 
-        $subscription = $organization->subscription(SubscriptionType::USER_SEAT);
+        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
         $maxSeats = $subscription->quantity;
 
         // Count current organization members
@@ -38,7 +38,7 @@ class CheckSeatLimits
      */
     public function getSeatUsage(Organization $organization): array
     {
-        if (!$organization->subscribed(SubscriptionType::USER_SEAT)) {
+        if (!$organization->subscribed(SubscriptionType::USER_SEAT->value)) {
             return [
                 'current_members' => $organization->users()->count(),
                 'pending_invites' => $organization->invites()->count(),
@@ -49,7 +49,7 @@ class CheckSeatLimits
             ];
         }
 
-        $subscription = $organization->subscription(SubscriptionType::USER_SEAT);
+        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
         $maxSeats = $subscription->quantity;
         $currentMembers = $organization->users()->count();
         $pendingInvites = $organization->invites()->count();

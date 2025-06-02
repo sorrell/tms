@@ -1,27 +1,36 @@
+import FeedbackModal from '@/Components/FeedbackModal';
+import SeatSelectionModal from '@/Components/SeatSelectionModal';
+import SubscriptionSuccessModal from '@/Components/SubscriptionSuccessModal';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/Components/ui/card';
 import { Toaster } from '@/Components/ui/toaster';
-import SeatSelectionModal from '@/Components/SeatSelectionModal';
-import FeedbackModal from '@/Components/FeedbackModal';
-import SubscriptionSuccessModal from '@/Components/SubscriptionSuccessModal';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import Guest from '@/Layouts/GuestLayout';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { Check, Github, ArrowRight, Star, Settings } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { PageProps } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
+import { ArrowRight, Check, Github, Settings, Star } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-export default function Products({ hasSubscription }: { hasSubscription: boolean }) {
+export default function Products({
+    hasSubscription,
+}: {
+    hasSubscription: boolean;
+}) {
     const [showSeatModal, setShowSeatModal] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const { auth } = usePage().props as any;
+    const { auth } = usePage<PageProps>().props;
 
     // Check for success parameter in URL
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const success = urlParams.get('success');
-        
+
         if (success === 'true') {
             setShowSuccessModal(true);
             // Clean up URL by removing the success parameter
@@ -43,20 +52,21 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                 'Community support',
                 'Basic features',
                 'Self-hosted deployment',
-                'Active development'
+                'Active development',
             ],
             buttonText: 'View on GitHub',
             buttonVariant: 'outline' as const,
             buttonIcon: <Github className="h-4 w-4" />,
             href: 'https://github.com/loadpartner/tms',
             isPopular: false,
-            requiresSeatSelection: false
+            requiresSeatSelection: false,
         },
         {
             name: 'Premium',
             price: '$50',
             priceUnit: '/user/month',
-            description: 'For individuals and growing teams that want hassle-free management',
+            description:
+                'For individuals and growing teams that want hassle-free management',
             badge: 'Most Popular',
             badgeVariant: 'default' as const,
             features: [
@@ -66,23 +76,33 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                 'Priority support',
                 'Advanced analytics',
                 'Team collaboration tools',
-                'API access'
+                'API access',
             ],
             buttonText: hasSubscription ? 'Manage Billing' : 'Get Started',
-            buttonVariant: hasSubscription ? 'outline' as const : 'default' as const,
-            buttonIcon: hasSubscription ? <Settings className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />,
-            href: hasSubscription 
-                ? route('organizations.billing', auth?.user?.current_organization_id || 1)
-                : route('subscriptions.new'), 
+            buttonVariant: hasSubscription
+                ? ('outline' as const)
+                : ('default' as const),
+            buttonIcon: hasSubscription ? (
+                <Settings className="h-4 w-4" />
+            ) : (
+                <ArrowRight className="h-4 w-4" />
+            ),
+            href: hasSubscription
+                ? route(
+                      'organizations.billing',
+                      auth?.user?.current_organization_id || 1,
+                  )
+                : route('subscriptions.new'),
             isPopular: true,
-            requiresSeatSelection: !hasSubscription
+            requiresSeatSelection: !hasSubscription,
         },
         {
             name: 'Enterprise',
             price: '$299',
             priceUnit: '/month',
             priceNote: 'starting at',
-            description: 'For enterprises wanting dedicated infrastructure and custom development',
+            description:
+                'For enterprises wanting dedicated infrastructure and custom development',
             badge: '',
             badgeVariant: 'outline' as const,
             features: [
@@ -93,7 +113,7 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                 'Dedicated support manager',
                 'Custom SLA options',
                 'White-label options',
-                'Custom development hours included'
+                'Custom development hours included',
             ],
             buttonText: 'Contact Sales',
             buttonVariant: 'outline' as const,
@@ -101,11 +121,11 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
             href: '#', // This will be handled by the click handler to open feedback modal
             isPopular: false,
             requiresSeatSelection: false,
-            opensFeedbackModal: true
-        }
+            opensFeedbackModal: true,
+        },
     ];
 
-    const handlePlanClick = (plan: typeof plans[0]) => {
+    const handlePlanClick = (plan: (typeof plans)[0]) => {
         if (plan.opensFeedbackModal) {
             setShowFeedbackModal(true);
         } else if (plan.requiresSeatSelection) {
@@ -126,34 +146,37 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
 
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold tracking-tight text-foreground mb-4">
+                <div className="mb-12 text-center">
+                    <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground">
                         Choose your subscription plan
                     </h1>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
                         Select the perfect plan for your needs
                     </p>
                 </div>
 
                 {/* Plans Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    {plans.map((plan, index) => (
+                <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
+                    {plans.map((plan) => (
                         <Card
                             key={plan.name}
-                            className={`relative overflow-hidden flex flex-col h-full ${plan.isPopular
-                                    ? 'ring-2 ring-primary shadow-xl scale-105'
-                                    : 'hover:shadow-lg transition-shadow'
-                                }`}
+                            className={`relative flex h-full flex-col overflow-hidden ${
+                                plan.isPopular
+                                    ? 'scale-105 shadow-xl ring-2 ring-primary'
+                                    : 'transition-shadow hover:shadow-lg'
+                            }`}
                         >
                             {plan.isPopular && (
-                                <div className="absolute top-0 left-0 right-0 bg-primary text-primary-foreground text-center py-2 text-sm font-medium">
-                                    <Star className="inline h-4 w-4 mr-1" />
+                                <div className="absolute left-0 right-0 top-0 bg-primary py-2 text-center text-sm font-medium text-primary-foreground">
+                                    <Star className="mr-1 inline h-4 w-4" />
                                     {plan.badge}
                                 </div>
                             )}
 
-                            <CardHeader className={plan.isPopular ? 'pt-12' : ''}>
-                                <div className="flex items-center justify-between mb-2 md:mt-6">
+                            <CardHeader
+                                className={plan.isPopular ? 'pt-12' : ''}
+                            >
+                                <div className="mb-2 flex items-center justify-between md:mt-6">
                                     <CardTitle className="text-xl font-bold">
                                         {plan.name}
                                     </CardTitle>
@@ -167,7 +190,7 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                                 <div className="mb-4">
                                     <div className="flex items-baseline">
                                         {plan.priceNote && (
-                                            <span className="text-sm text-muted-foreground mr-1">
+                                            <span className="mr-1 text-sm text-muted-foreground">
                                                 {plan.priceNote}
                                             </span>
                                         )}
@@ -175,36 +198,39 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                                             {plan.price}
                                         </span>
                                         {plan.priceUnit && (
-                                            <span className="text-sm text-muted-foreground ml-1">
+                                            <span className="ml-1 text-sm text-muted-foreground">
                                                 {plan.priceUnit}
                                             </span>
                                         )}
                                     </div>
                                 </div>
 
-                                <p className="text-muted-foreground text-sm">
+                                <p className="text-sm text-muted-foreground">
                                     {plan.description}
                                 </p>
                             </CardHeader>
 
-                            <CardContent className="space-y-6 flex-grow">
+                            <CardContent className="flex-grow space-y-6">
                                 {/* Features List */}
                                 <ul className="space-y-3">
-                                    {plan.features.map((feature, featureIndex) => (
-                                        <li key={featureIndex} className="flex items-start">
-                                            <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                                            <span className="text-sm text-foreground">
-                                                {feature}
-                                            </span>
-                                        </li>
-                                    ))}
+                                    {plan.features.map(
+                                        (feature, featureIndex) => (
+                                            <li
+                                                key={featureIndex}
+                                                className="flex items-start"
+                                            >
+                                                <Check className="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
+                                                <span className="text-sm text-foreground">
+                                                    {feature}
+                                                </span>
+                                            </li>
+                                        ),
+                                    )}
                                 </ul>
-
-
                             </CardContent>
                             <CardFooter className="mt-auto">
                                 {/* CTA Button */}
-                                <div className="pt-4 w-full">
+                                <div className="w-full pt-4">
                                     <Button
                                         variant={plan.buttonVariant}
                                         className="w-full"
@@ -221,36 +247,39 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                 </div>
 
                 {/* Footer Text */}
-                <div className="text-center mt-12 text-sm text-muted-foreground">
+                <div className="mt-12 text-center text-sm text-muted-foreground">
                     <p>
-                        All plans include regular updates and access to our community.
+                        All plans include regular updates and access to our
+                        community.
                         <br />
-                        Need a custom solution? <button 
-                            onClick={() => setShowFeedbackModal(true)} 
-                            className="text-primary hover:underline bg-transparent border-none p-0 cursor-pointer"
+                        Need a custom solution?{' '}
+                        <button
+                            onClick={() => setShowFeedbackModal(true)}
+                            className="cursor-pointer border-none bg-transparent p-0 text-primary hover:underline"
                         >
                             Contact us
-                        </button> for enterprise options.
+                        </button>{' '}
+                        for enterprise options.
                     </p>
                 </div>
             </div>
 
             {/* Seat Selection Modal */}
-            <SeatSelectionModal 
-                isOpen={showSeatModal} 
-                onClose={() => setShowSeatModal(false)} 
+            <SeatSelectionModal
+                isOpen={showSeatModal}
+                onClose={() => setShowSeatModal(false)}
             />
 
             {/* Feedback Modal */}
-            <FeedbackModal 
-                isOpen={showFeedbackModal} 
-                onClose={() => setShowFeedbackModal(false)} 
+            <FeedbackModal
+                isOpen={showFeedbackModal}
+                onClose={() => setShowFeedbackModal(false)}
             />
 
             {/* Subscription Success Modal */}
-            <SubscriptionSuccessModal 
-                isOpen={showSuccessModal} 
-                onClose={() => setShowSuccessModal(false)} 
+            <SubscriptionSuccessModal
+                isOpen={showSuccessModal}
+                onClose={() => setShowSuccessModal(false)}
             />
 
             {/* Toaster for notifications */}

@@ -17,18 +17,21 @@ interface SeatSelectionModalProps {
     onClose: () => void;
 }
 
-export default function SeatSelectionModal({ isOpen, onClose }: SeatSelectionModalProps) {
+export default function SeatSelectionModal({
+    isOpen,
+    onClose,
+}: SeatSelectionModalProps) {
     const [seatCount, setSeatCount] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
+
         // Build the URL with seat_count parameter
         const url = new URL(route('subscriptions.new'), window.location.origin);
         url.searchParams.set('seat_count', seatCount.toString());
-        
+
         // Redirect to the subscription page
         window.location.href = url.toString();
     };
@@ -46,10 +49,11 @@ export default function SeatSelectionModal({ isOpen, onClose }: SeatSelectionMod
                 <DialogHeader>
                     <DialogTitle>Select Number of Seats</DialogTitle>
                     <DialogDescription>
-                        How many user seats would you like to include in your Managed plan subscription?
+                        How many user seats would you like to include in your
+                        Managed plan subscription?
                     </DialogDescription>
                 </DialogHeader>
-                
+
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -63,32 +67,37 @@ export default function SeatSelectionModal({ isOpen, onClose }: SeatSelectionMod
                                     min="1"
                                     max="100"
                                     value={seatCount}
-                                    onChange={(e) => setSeatCount(parseInt(e.target.value) || 1)}
+                                    onChange={(e) =>
+                                        setSeatCount(
+                                            parseInt(e.target.value) || 1,
+                                        )
+                                    }
                                     className="w-full"
                                     disabled={isSubmitting}
                                 />
                             </div>
                         </div>
-                        
+
                         <div className="text-sm text-muted-foreground">
                             <p>Each seat costs $50/month.</p>
-                            <p className="font-semibold mt-1">
-                                Total: ${(seatCount * 50).toLocaleString()}/month
+                            <p className="mt-1 font-semibold">
+                                Total: ${(seatCount * 50).toLocaleString()}
+                                /month
                             </p>
                         </div>
                     </div>
-                    
+
                     <DialogFooter>
-                        <Button 
-                            type="button" 
-                            variant="outline" 
+                        <Button
+                            type="button"
+                            variant="outline"
                             onClick={handleClose}
                             disabled={isSubmitting}
                         >
                             Cancel
                         </Button>
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={isSubmitting || seatCount < 1}
                         >
                             {isSubmitting ? (
@@ -105,4 +114,4 @@ export default function SeatSelectionModal({ isOpen, onClose }: SeatSelectionMod
             </DialogContent>
         </Dialog>
     );
-} 
+}

@@ -22,14 +22,14 @@ class UpdateUserSeatsSubscription
     {
         $organization = current_organization();
 
-        if($organization->subscribed(SubscriptionType::USER_SEAT)) {
+        if($organization->subscribed(SubscriptionType::USER_SEAT->value)) {
             $organization
-                ->subscription(SubscriptionType::USER_SEAT)
+                ->subscription(SubscriptionType::USER_SEAT->value)
                 ->updateQuantity($quantity);
         } else {
             // create new sub
             return $organization->newSubscription(
-                SubscriptionType::USER_SEAT,
+                SubscriptionType::USER_SEAT->value,
                 config('subscriptions.user_seats.monthly_price_id')
             )
                 ->trialDays(7)

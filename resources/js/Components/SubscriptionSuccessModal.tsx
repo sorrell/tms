@@ -15,48 +15,65 @@ interface SubscriptionSuccessModalProps {
     onClose: () => void;
 }
 
-export default function SubscriptionSuccessModal({ isOpen, onClose }: SubscriptionSuccessModalProps) {
-    const confettiRef = useRef<any>(null);
+interface ConfettiInstance {
+    fire: (options: {
+        particleCount: number;
+        spread: number;
+        origin?: { x?: number; y?: number };
+        angle?: number;
+    }) => Promise<void>;
+}
+
+export default function SubscriptionSuccessModal({
+    isOpen,
+    onClose,
+}: SubscriptionSuccessModalProps) {
+    const confettiRef = useRef<ConfettiInstance | null>(null);
 
     useEffect(() => {
         if (isOpen && confettiRef.current) {
             // Fire confetti when modal opens
             const fireConfetti = async () => {
                 // Multiple bursts for celebration effect
-                await confettiRef.current.fire({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-                
-                setTimeout(async () => {
+                if (confettiRef.current) {
                     await confettiRef.current.fire({
-                        particleCount: 50,
-                        angle: 60,
-                        spread: 55,
-                        origin: { x: 0 }
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 },
                     });
+                }
+
+                setTimeout(async () => {
+                    if (confettiRef.current) {
+                        await confettiRef.current.fire({
+                            particleCount: 50,
+                            angle: 60,
+                            spread: 55,
+                            origin: { x: 0 },
+                        });
+                    }
                 }, 250);
-                
+
                 setTimeout(async () => {
-                    await confettiRef.current.fire({
-                        particleCount: 50,
-                        angle: 120,
-                        spread: 55,
-                        origin: { x: 1 }
-                    });
+                    if (confettiRef.current) {
+                        await confettiRef.current.fire({
+                            particleCount: 50,
+                            angle: 120,
+                            spread: 55,
+                            origin: { x: 1 },
+                        });
+                    }
                 }, 400);
             };
-            
+
             fireConfetti();
         }
     }, [isOpen]);
 
     return (
         <>
-            
             <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className="sm:max-w-md text-center">
+                <DialogContent className="text-center sm:max-w-md">
                     <DialogHeader>
                         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
                             <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
@@ -65,10 +82,12 @@ export default function SubscriptionSuccessModal({ isOpen, onClose }: Subscripti
                             🎉 Welcome to Premium!
                         </DialogTitle>
                         <DialogDescription className="text-lg">
-                            Thank you for subscribing! Your account has been upgraded and you now have access to all premium features.
+                            Thank you for subscribing! Your account has been
+                            upgraded and you now have access to all premium
+                            features.
                         </DialogDescription>
                     </DialogHeader>
-                    
+
                     <div className="py-6">
                         <div className="space-y-3 text-sm text-muted-foreground">
                             <div className="flex items-center justify-center gap-2">
@@ -95,4 +114,4 @@ export default function SubscriptionSuccessModal({ isOpen, onClose }: Subscripti
             </Dialog>
         </>
     );
-} 
+}

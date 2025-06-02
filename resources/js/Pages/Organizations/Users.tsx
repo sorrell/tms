@@ -59,8 +59,8 @@ export default function Users({
 
             <div className="mx-4 mb-4">
                 <h1 className="mb-4 text-xl">Pending Invites</h1>
-                <InvitesTable 
-                    invites={invites} 
+                <InvitesTable
+                    invites={invites}
                     organization={organization}
                     subscription={subscription}
                     seatUsage={seatUsage}

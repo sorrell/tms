@@ -1,7 +1,6 @@
 import {
     Building,
     ChevronRight,
-    CreditCard,
     GalleryVerticalEnd,
     Home,
     Package,

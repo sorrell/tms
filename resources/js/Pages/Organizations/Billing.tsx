@@ -37,11 +37,11 @@ export default function Billing({
             </h1>
 
             <div className="mx-4 mb-4">
-                <BillingForm 
-                    organization={organization} 
+                <BillingForm
+                    organization={organization}
                     subscription={subscription}
                 />
             </div>
         </AuthenticatedLayout>
     );
-} 
+}

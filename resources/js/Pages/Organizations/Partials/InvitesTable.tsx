@@ -1,13 +1,4 @@
 import InputError from '@/Components/InputError';
-import { Button } from '@/Components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/Components/ui/dialog';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,6 +8,15 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/Components/ui/alert-dialog';
+import { Button } from '@/Components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/Components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -37,7 +37,7 @@ import {
     TableRow,
 } from '@/Components/ui/table';
 import { useToast } from '@/hooks/UseToast';
-import { OrganizationInvite, Organization } from '@/types/organization';
+import { Organization, OrganizationInvite } from '@/types/organization';
 import { useForm, usePage } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
@@ -96,7 +96,10 @@ export default function InvitesTable({
         pending_invites: invites.length,
         total_used: (organization.users?.length || 0) + invites.length,
         max_seats: subscription?.quantity || 0,
-        has_available_seats: subscription ? (organization.users?.length || 0) + invites.length < subscription.quantity : false,
+        has_available_seats: subscription
+            ? (organization.users?.length || 0) + invites.length <
+              subscription.quantity
+            : false,
         has_subscription: !!subscription,
     };
 
@@ -138,7 +141,10 @@ export default function InvitesTable({
                 },
                 onError: (errors) => {
                     // Handle seat limit error specifically
-                    if (errors.email && errors.email.includes('Not enough seats')) {
+                    if (
+                        errors.email &&
+                        errors.email.includes('Not enough seats')
+                    ) {
                         setOpen(false);
                         setShowSeatLimitAlert(true);
                     }
@@ -154,9 +160,13 @@ export default function InvitesTable({
                     A list of pending organization invites.
                     {effectiveSeatUsage.has_subscription && (
                         <div className="mt-2 text-sm text-muted-foreground">
-                            Seat usage: {effectiveSeatUsage.total_used} of {effectiveSeatUsage.max_seats} seats used
+                            Seat usage: {effectiveSeatUsage.total_used} of{' '}
+                            {effectiveSeatUsage.max_seats} seats used
                             {!effectiveSeatUsage.has_available_seats && (
-                                <span className="text-destructive font-medium"> (At capacity)</span>
+                                <span className="font-medium text-destructive">
+                                    {' '}
+                                    (At capacity)
+                                </span>
                             )}
                         </div>
                     )}
@@ -254,7 +264,7 @@ export default function InvitesTable({
                 <TableFooter>
                     <TableRow>
                         <TableCell colSpan={4} className="text-right">
-                            <Button 
+                            <Button
                                 onClick={handleNewInviteClick}
                                 disabled={!effectiveSeatUsage.has_subscription}
                             >
@@ -309,24 +319,35 @@ export default function InvitesTable({
             </Table>
 
             {/* Seat Limit Alert Dialog */}
-            <AlertDialog open={showSeatLimitAlert} onOpenChange={setShowSeatLimitAlert}>
+            <AlertDialog
+                open={showSeatLimitAlert}
+                onOpenChange={setShowSeatLimitAlert}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Not Enough Seats</AlertDialogTitle>
                         <AlertDialogDescription>
-                            You are currently using {effectiveSeatUsage.total_used} out of {effectiveSeatUsage.max_seats} available seats. 
-                            To invite more users, please upgrade your subscription to add more seats.
+                            You are currently using{' '}
+                            {effectiveSeatUsage.total_used} out of{' '}
+                            {effectiveSeatUsage.max_seats} available seats. To
+                            invite more users, please upgrade your subscription
+                            to add more seats.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction onClick={() => setShowSeatLimitAlert(false)}>
+                        <AlertDialogAction
+                            onClick={() => setShowSeatLimitAlert(false)}
+                        >
                             OK
                         </AlertDialogAction>
                         <Button
                             variant="outline"
                             onClick={() => {
                                 setShowSeatLimitAlert(false);
-                                window.location.href = route('organizations.billing', organization.id);
+                                window.location.href = route(
+                                    'organizations.billing',
+                                    organization.id,
+                                );
                             }}
                         >
                             Manage Billing

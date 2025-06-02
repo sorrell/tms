@@ -17,7 +17,7 @@ class EnsureOrganizationHasSubscription
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (current_organization()?->subscribed(SubscriptionType::USER_SEAT)) {
+        if (current_organization()?->subscribed(SubscriptionType::USER_SEAT->value)) {
             return $next($request);
         }
 

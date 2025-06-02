@@ -12,7 +12,7 @@ import {
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Organization } from '@/types/organization';
-import { useForm, Link } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 
 export default function SettingsForm({
     organization,
@@ -52,10 +52,14 @@ export default function SettingsForm({
                                 id="name"
                                 type="text"
                                 value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
                                 required
                             />
-                            {errors.name && <InputError message={errors.name} />}
+                            {errors.name && (
+                                <InputError message={errors.name} />
+                            )}
                         </div>
                     </CardContent>
                 </Card>
@@ -102,12 +106,17 @@ export default function SettingsForm({
                                 createForm={LocationForm}
                             />
                             {errors.company_location_id && (
-                                <InputError message={errors.company_location_id} />
+                                <InputError
+                                    message={errors.company_location_id}
+                                />
                             )}
                             {organization.company_location && (
                                 <div className="mt-2 text-sm text-muted-foreground">
                                     Current:{' '}
-                                    {organization.company_location.address_line_1}
+                                    {
+                                        organization.company_location
+                                            .address_line_1
+                                    }
                                     {organization.company_location
                                         .address_line_2 && (
                                         <span>
@@ -120,7 +129,10 @@ export default function SettingsForm({
                                     )}
                                     <span>
                                         ,{' '}
-                                        {organization.company_location.address_city}
+                                        {
+                                            organization.company_location
+                                                .address_city
+                                        }
                                         ,{' '}
                                         {
                                             organization.company_location
@@ -147,7 +159,9 @@ export default function SettingsForm({
                                     }
                                 />
                                 {errors.company_phone && (
-                                    <InputError message={errors.company_phone} />
+                                    <InputError
+                                        message={errors.company_phone}
+                                    />
                                 )}
                             </div>
 
@@ -162,7 +176,9 @@ export default function SettingsForm({
                                     }
                                 />
                                 {errors.company_email && (
-                                    <InputError message={errors.company_email} />
+                                    <InputError
+                                        message={errors.company_email}
+                                    />
                                 )}
                             </div>
                         </div>
@@ -196,7 +212,9 @@ export default function SettingsForm({
                                 />
                                 {errors.accounting_contact_email && (
                                     <InputError
-                                        message={errors.accounting_contact_email}
+                                        message={
+                                            errors.accounting_contact_email
+                                        }
                                     />
                                 )}
                             </div>
@@ -218,7 +236,9 @@ export default function SettingsForm({
                                 />
                                 {errors.accounting_contact_phone && (
                                     <InputError
-                                        message={errors.accounting_contact_phone}
+                                        message={
+                                            errors.accounting_contact_phone
+                                        }
                                     />
                                 )}
                             </div>
@@ -238,13 +258,14 @@ export default function SettingsForm({
                 <CardHeader>
                     <CardTitle>Billing & Subscriptions</CardTitle>
                     <CardDescription>
-                        Manage your subscription, update seats, and access billing portal
+                        Manage your subscription, update seats, and access
+                        billing portal
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Link 
+                    <Link
                         href={route('organizations.billing', organization.id)}
-                        className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium transition-colors"
+                        className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                     >
                         Manage Billing
                     </Link>

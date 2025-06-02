@@ -16,7 +16,7 @@ class SubmitFeedback {
     public function handle(string $email, string $feedback): Response
     {
         Mail::raw($feedback, function($message) use ($email) {
-            $message->to(env('FEEDBACK_EMAIL'))
+            $message->to(config('mail.feedback_email'))
                    ->subject('New Feedback from ' . $email)
                    ->replyTo($email);
         });
@@ -29,7 +29,7 @@ class SubmitFeedback {
         $rateLimitIdentifier = 'ip' . $request->ip();
         $rateLimiterKey = 'submit-feedback.' . $rateLimitIdentifier;
 
-        if (RateLimiter::tooManyAttempts($rateLimiterKey, 5, 60)) {
+        if (RateLimiter::tooManyAttempts($rateLimiterKey, 5)) {
             return new Response(status: 429, content: 'Too many attempts. Please try again later.');
         }
 

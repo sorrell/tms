@@ -78,7 +78,7 @@ Route::get('/', function () {
 Route::get('/products', function () {
     return Inertia::render('Subscriptions/Products',
         [
-            'hasSubscription' => current_organization()?->subscribed(SubscriptionType::USER_SEAT)
+            'hasSubscription' => current_organization()?->subscribed(SubscriptionType::USER_SEAT->value)
         ]
     );
 })->name('products-list');
