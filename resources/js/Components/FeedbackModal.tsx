@@ -10,8 +10,9 @@ import {
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Textarea } from '@/Components/ui/textarea';
+import { useToast } from '@/hooks/UseToast';
 import { router } from '@inertiajs/react';
-import { Send } from 'lucide-react';
+import { Send, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 
 interface FeedbackModalProps {
@@ -24,6 +25,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
     const [message, setMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState<{ email?: string; feedback?: string }>({});
+    const { toast } = useToast();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -66,10 +68,25 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                 setMessage('');
                 setErrors({});
                 onClose();
-                // You might want to show a success toast here
+                
+                // Show success toast
+                toast({
+                    title: 'Thank you for your inquiry!',
+                    description: (
+                        <>
+                            <CheckCircle className="mr-2 inline h-4 w-4" color="green" />
+                            We've received your enterprise inquiry and will get back to you within 24 hours.
+                        </>
+                    ),
+                });
             },
             onError: (errors) => {
                 setErrors(errors);
+                toast({
+                    title: 'Submission failed',
+                    description: 'There was an error submitting your inquiry. Please try again.',
+                    variant: 'destructive',
+                });
             },
             onFinish: () => {
                 setIsSubmitting(false);

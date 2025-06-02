@@ -1,18 +1,35 @@
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Toaster } from '@/Components/ui/toaster';
 import SeatSelectionModal from '@/Components/SeatSelectionModal';
 import FeedbackModal from '@/Components/FeedbackModal';
+import SubscriptionSuccessModal from '@/Components/SubscriptionSuccessModal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Guest from '@/Layouts/GuestLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Check, Github, ArrowRight, Star, Settings } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Products({ hasSubscription }: { hasSubscription: boolean }) {
     const [showSeatModal, setShowSeatModal] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const { auth } = usePage().props as any;
+
+    // Check for success parameter in URL
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+        
+        if (success === 'true') {
+            setShowSuccessModal(true);
+            // Clean up URL by removing the success parameter
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.delete('success');
+            window.history.replaceState({}, '', newUrl.toString());
+        }
+    }, []);
 
     const plans = [
         {
@@ -229,6 +246,15 @@ export default function Products({ hasSubscription }: { hasSubscription: boolean
                 isOpen={showFeedbackModal} 
                 onClose={() => setShowFeedbackModal(false)} 
             />
+
+            {/* Subscription Success Modal */}
+            <SubscriptionSuccessModal 
+                isOpen={showSuccessModal} 
+                onClose={() => setShowSuccessModal(false)} 
+            />
+
+            {/* Toaster for notifications */}
+            <Toaster />
         </div>
     );
 }
