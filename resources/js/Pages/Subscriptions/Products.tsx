@@ -12,8 +12,16 @@ import {
 } from '@/Components/ui/card';
 import { Toaster } from '@/Components/ui/toaster';
 import { PageProps } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
-import { ArrowLeft, ArrowRight, Check, Github, Settings, Star } from 'lucide-react';
+import { Head, router, usePage } from '@inertiajs/react';
+import {
+    ArrowLeft,
+    ArrowRight,
+    Check,
+    Github,
+    LogOut,
+    Settings,
+    Star,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Products({
@@ -148,11 +156,13 @@ export default function Products({
                 {/* Header */}
                 <div className="mb-12 text-center">
                     {/* Go Back Button - only show if user is logged in and has subscription */}
-                    {auth?.user && hasSubscription && (
+                    {((auth?.user && hasSubscription) || !auth?.user) && (
                         <div className="mb-6 flex justify-start">
                             <Button
                                 variant="outline"
-                                onClick={() => window.location.href = route('home')}
+                                onClick={() =>
+                                    (window.location.href = route('home'))
+                                }
                                 className="flex items-center gap-2"
                             >
                                 <ArrowLeft className="h-4 w-4" />
@@ -160,7 +170,25 @@ export default function Products({
                             </Button>
                         </div>
                     )}
-                    
+
+                    {/* Logout Button - show if user is logged in */}
+                    {auth?.user && (
+                        <div className="mb-6 flex justify-end">
+                            <Button
+                                variant="outline"
+                                onClick={() =>
+                                    router.visit(route('logout'), {
+                                        method: 'post',
+                                    })
+                                }
+                                className="flex items-center gap-2"
+                            >
+                                <LogOut className="h-4 w-4" />
+                                Log out
+                            </Button>
+                        </div>
+                    )}
+
                     <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground">
                         Choose your subscription plan
                     </h1>
