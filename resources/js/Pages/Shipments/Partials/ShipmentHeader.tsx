@@ -58,6 +58,10 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
         patch(route('shipments.cancel', { shipment: shipment.id }));
     };
 
+    const uncancelShipment = () => {
+        patch(route('shipments.uncancel', { shipment: shipment.id }));
+    };
+
     const viewRateCon = () => {
         setShowRateConDialog(true);
     };
@@ -316,10 +320,14 @@ export default function ShipmentHeader({ shipment }: { shipment: Shipment }) {
                             </ConfirmDropdownMenuItem>
                         )}
                         {shipment.state === ShipmentState.Canceled && (
-                            <DropdownMenuItem disabled={true}>
+                            <ConfirmDropdownMenuItem
+                                onConfirm={() => {
+                                    uncancelShipment();
+                                }}
+                            >
                                 <Undo2 className="mr-2 h-4 w-4" />
                                 Un-Cancel Shipment
-                            </DropdownMenuItem>
+                            </ConfirmDropdownMenuItem>
                         )}
                     </DropdownMenuContent>
                 </DropdownMenu>
