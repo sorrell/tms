@@ -789,6 +789,20 @@ class GetShipmentAccounting
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ * @method static \App\Models\Shipments\Shipment run(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
+ */
+class UncancelShipment
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, int $carrierId, ?int $driverId = null)
