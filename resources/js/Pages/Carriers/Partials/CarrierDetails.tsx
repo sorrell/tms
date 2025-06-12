@@ -607,7 +607,7 @@ function BouncedShipmentsList({ carrier }: { carrier?: Carrier }) {
                         <TableHead>Bounce Date</TableHead>
                         <TableHead>Shipment</TableHead>
                         <TableHead>Driver</TableHead>
-                        <TableHead>Bounce Type</TableHead>
+                        <TableHead>Bounce Cause</TableHead>
                         <TableHead>Reason</TableHead>
                         <TableHead>Bounced By</TableHead>
                     </TableRow>
@@ -637,7 +637,7 @@ function BouncedShipmentsList({ carrier }: { carrier?: Carrier }) {
                                 </Link>
                             </TableCell>
                             <TableCell>{bounce.driver?.name}</TableCell>
-                            <TableCell>{bounce.bounce_type}</TableCell>
+                            <TableCell>{bounce.bounce_cause}</TableCell>
                             <TableCell>{bounce.reason}</TableCell>
                             <TableCell>
                                 {bounce.bounced_by_user?.name}
