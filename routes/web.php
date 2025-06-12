@@ -38,6 +38,7 @@ use App\Actions\Shipments\CancelShipment;
 use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\DispatchShipment;
 use App\Actions\Shipments\GetShipmentAccounting;
+use App\Actions\Shipments\UncancelShipment;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
 use App\Actions\Shipments\UpdateShipmentNumber;
@@ -214,6 +215,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     Route::patch('shipments/{shipment}/stops', UpdateShipmentStops::class)->name('shipments.updateStops');
     Route::patch('shipments/{shipment}/dispatch', DispatchShipment::class)->name('shipments.dispatch');
     Route::patch('shipments/{shipment}/cancel', CancelShipment::class)->name('shipments.cancel');
+    Route::patch('shipments/{shipment}/uncancel', UncancelShipment::class)->name('shipments.uncancel');
     Route::post('shipments/{shipment}/bounce', BounceCarrier::class)->name('shipments.bounce');
 
     Route::get('shipments/{shipment}/accounting', GetShipmentAccounting::class)->name('shipments.accounting');

@@ -48,6 +48,15 @@ abstract class ShipmentState extends State
                         ],
                         Canceled::class
                     ],
+                    
+                    // Support for uncanceled transitions - defined individually
+                    [Canceled::class, Pending::class],
+                    [Canceled::class, Booked::class],
+                    [Canceled::class, Dispatched::class],
+                    [Canceled::class, AtPickup::class],
+                    [Canceled::class, InTransit::class],
+                    [Canceled::class, AtDelivery::class],
+                    [Canceled::class, Delivered::class],
                 ]
             )
         ;
