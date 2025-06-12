@@ -221,7 +221,7 @@ export interface CarrierBounce {
     carrier_id: number;
     shipment_id: number;
     driver_id: number;
-    bounce_type: string;
+    bounce_cause: string;
     reason: string;
     created_at: string;
     bounced_by: number;

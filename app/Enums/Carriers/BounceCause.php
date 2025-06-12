@@ -2,7 +2,7 @@
 
 namespace App\Enums\Carriers;
 
-enum BounceType: string
+enum BounceCause: string
 {
     case RATE_DISAGREEMENT_RATE_TOO_LOW = 'Rate disagreement/rate too low';
     case EQUIPMENT_UNAVAILABILITY = 'Equipment unavailability';
