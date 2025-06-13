@@ -1,4 +1,3 @@
-import { useForm } from '@inertiajs/react';
 import { Button } from '@/Components/ui/button';
 import {
     Select,
@@ -8,8 +7,9 @@ import {
     SelectValue,
 } from '@/Components/ui/select';
 import { useToast } from '@/hooks/UseToast';
-import { useEffect, useState } from 'react';
+import { useForm } from '@inertiajs/react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 interface Props {
     user: {
@@ -26,23 +26,24 @@ interface Language {
 export default function UpdateLanguageForm({ user }: Props) {
     const { toast } = useToast();
     const [languages, setLanguages] = useState<Language[]>([]);
-    const { data, setData, patch, processing, errors } = useForm({
+    const { data, setData, patch, processing } = useForm({
         language_preference: user.language_preference,
     });
 
     useEffect(() => {
-        axios.get<Language[]>(route('languages.index'))
-            .then(response => {
+        axios
+            .get<Language[]>(route('languages.index'))
+            .then((response) => {
                 setLanguages(response.data);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Failed to fetch languages:', error);
                 toast({
                     variant: 'destructive',
                     description: 'Failed to load available languages.',
                 });
             });
-    }, []);
+    }, [toast]);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -62,14 +63,19 @@ export default function UpdateLanguageForm({ user }: Props) {
                 <label className="text-sm font-medium">Language</label>
                 <Select
                     value={data.language_preference}
-                    onValueChange={(value) => setData('language_preference', value)}
+                    onValueChange={(value) =>
+                        setData('language_preference', value)
+                    }
                 >
                     <SelectTrigger>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                         {languages.map((language) => (
-                            <SelectItem key={language.code} value={language.code}>
+                            <SelectItem
+                                key={language.code}
+                                value={language.code}
+                            >
                                 {language.native_name}
                             </SelectItem>
                         ))}
@@ -82,4 +88,4 @@ export default function UpdateLanguageForm({ user }: Props) {
             </div>
         </form>
     );
-} 
+}

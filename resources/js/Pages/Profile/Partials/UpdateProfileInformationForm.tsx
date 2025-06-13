@@ -14,9 +14,9 @@ import {
 import { Timezone } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import axios from 'axios';
 
 interface Language {
     code: string;
@@ -39,7 +39,9 @@ export default function UpdateProfileInformation({
         user?.timezone ? [{ id: 0, name: user?.timezone }] : [],
     );
     const [languages, setLanguages] = useState<Language[]>([]);
-    const [selectedLanguage, setSelectedLanguage] = useState<string>(user.language_preference || 'en');
+    const [selectedLanguage, setSelectedLanguage] = useState<string>(
+        user.language_preference || 'en',
+    );
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
@@ -67,12 +69,13 @@ export default function UpdateProfileInformation({
                 setTimezones(data);
             });
 
-        axios.get<Language[]>(route('languages.index'))
-            .then(response => {
+        axios
+            .get<Language[]>(route('languages.index'))
+            .then((response) => {
                 setLanguages(response.data);
                 setSelectedLanguage(user.language_preference || 'en');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Failed to fetch languages:', error);
             });
     }, [user.language_preference]);
@@ -259,12 +262,17 @@ export default function UpdateProfileInformation({
                     >
                         <SelectTrigger>
                             <SelectValue>
-                                {languages.find(lang => lang.code === selectedLanguage)?.native_name || 'Select a language'}
+                                {languages.find(
+                                    (lang) => lang.code === selectedLanguage,
+                                )?.native_name || 'Select a language'}
                             </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                             {languages.map((language) => (
-                                <SelectItem key={language.code} value={language.code}>
+                                <SelectItem
+                                    key={language.code}
+                                    value={language.code}
+                                >
                                     {language.native_name}
                                 </SelectItem>
                             ))}

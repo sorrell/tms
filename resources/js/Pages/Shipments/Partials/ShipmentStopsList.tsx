@@ -24,8 +24,8 @@ import {
 } from '@/lib/timezone';
 import { ShipmentStop, TimezoneData } from '@/types';
 import { StopType } from '@/types/enums';
-import { useForm, usePage } from '@inertiajs/react';
 import { PageProps as InertiaPageProps } from '@inertiajs/core';
+import { useForm, usePage } from '@inertiajs/react';
 import {
     ArrowDown,
     ArrowUp,
