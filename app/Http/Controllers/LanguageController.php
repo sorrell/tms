@@ -24,6 +24,11 @@ class LanguageController extends Controller
                 'name' => 'French',
                 'native_name' => 'Français',
             ],
+            [
+                'code' => 'ct',
+                'name' => 'Custom',
+                'native_name' => 'Custom',
+            ],
             // Add more languages as needed
         ];
 
