@@ -43,7 +43,7 @@ export default function UpdateProfileInformation({
         user.language_preference || 'en',
     );
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
+    const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
             email: user.email,
@@ -56,6 +56,14 @@ export default function UpdateProfileInformation({
     const [photoPreview, setPhotoPreview] = useState<string | null>(
         user.profile_photo_url || null,
     );
+
+    // Reset photo preview to server URL after successful upload
+    useEffect(() => {
+        if (recentlySuccessful && user.profile_photo_url) {
+            setPhotoPreview(user.profile_photo_url);
+            setData('photo', null); // Clear the file from form data
+        }
+    }, [recentlySuccessful, user.profile_photo_url, setData]);
 
     useEffect(() => {
         fetch(route('timezones.search'), {
@@ -114,7 +122,7 @@ export default function UpdateProfileInformation({
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'), {});
+        post(route('profile.update'), {});
     };
 
     const handleLanguageChange = (value: string) => {

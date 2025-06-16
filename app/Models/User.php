@@ -67,7 +67,9 @@ class User extends Authenticatable
     public function getProfilePhotoUrlAttribute()
     {
         if ($this->profile_photo_path) {
-            return Storage::url($this->profile_photo_path);
+            // Extract filename from path
+            $filename = basename($this->profile_photo_path);
+            return route('profile.photo', ['userId' => $this->id, 'filename' => $filename]);
         }
 
         return null;
