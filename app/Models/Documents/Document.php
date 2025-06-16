@@ -35,6 +35,9 @@ class Document extends Model
         return Storage::temporaryUrl(
             $this->path,
             now()->addMinutes(5),
+            [
+                'ResponseContentDisposition' => 'attachment; filename="' . $this->name . '"'
+            ]
         );
     }
 

@@ -23,6 +23,10 @@ class GetDocument
 
     public function htmlResponse(Document $document)
     {
+        // if using local storage, return file with filename
+        if (Storage::getDefaultDriver() === 'local') {
+            return Storage::download($document->path, $document->name);
+        }
         return redirect($document->getTemporaryUrl());
     }
 
