@@ -291,29 +291,31 @@ export default function InvitesTable({
                                                 organization
                                             </DialogTitle>
                                             <DialogDescription>
-                                                <div className="my-4">
-                                                    <Label htmlFor="invite-email">
-                                                        Email
-                                                    </Label>
-                                                    <Input
-                                                        id="invite-email"
-                                                        type="email"
-                                                        value={data.email}
-                                                        placeholder="m@example.com"
-                                                        required
-                                                        onChange={(e) =>
-                                                            setData(
-                                                                'email',
-                                                                e.target.value,
-                                                            )
-                                                        }
-                                                    />
-                                                    <InputError
-                                                        message={errors.email}
-                                                    />
-                                                </div>
+                                                Enter the email address of the
+                                                person you'd like to invite.
                                             </DialogDescription>
                                         </DialogHeader>
+                                        <div className="my-4">
+                                            <Label htmlFor="invite-email">
+                                                Email
+                                            </Label>
+                                            <Input
+                                                id="invite-email"
+                                                type="email"
+                                                value={data.email}
+                                                placeholder="m@example.com"
+                                                required
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'email',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                message={errors.email}
+                                            />
+                                        </div>
                                         <DialogFooter>
                                             <Button
                                                 type="submit"
