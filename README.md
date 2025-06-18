@@ -41,10 +41,13 @@ export PATH=./vendor/bin:$PATH
 cp .env.example .env
 ```
 
-#### Up sail
+#### Up sail 
 ``` bash
-sail up -d
+sail up -d      # (using sqlite and no other servies)
+# OR
+sail --profile full up -d   # (all services in docker-composer.yml)
 ```
+
 
 #### Setup database 
 ``` bash
@@ -88,3 +91,26 @@ MAIL_MAILER=smtp
 MAIL_HOST=mailpit
 MAIL_PORT=1025 # or whatever you have specified in docker-compose.yml FORWARD_MAILPIT_PORT
 ```
+
+#### Setting up Localstack
+If setting up localstack S3, you should first create the bucket:
+
+```bash
+aws --endpoint-url=http://localhost:4566 s3 mb s3://my-test-bucket
+# or list contents if already there
+aws --endpoint-url=http://localhost:4566 s3 ls s3://my-test-bucket --recursive
+```
+
+Update your .env to reflect s3
+
+```bash
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=my-test-bucket
+AWS_ENDPOINT=http://localstack:4566
+AWS_USE_PATH_STYLE_ENDPOINT=true
+FILESYSTEM_DISK=s3
+```
+
+
