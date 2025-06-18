@@ -21,11 +21,11 @@ services:
             - '.:/var/www/html'
         networks:
             - sail
-        depends_on:
-            # - pgsql
-            - mailpit
+        # Dependencies are removed by default - use --profile full to include them
     pgsql:
         image: 'postgres:17'
+        profiles:
+            - full
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
@@ -51,6 +51,8 @@ services:
             timeout: 5s
     mailpit:
         image: 'axllent/mailpit:latest'
+        profiles:
+            - full
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
@@ -59,6 +61,8 @@ services:
     localstack:
         container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
         image: localstack/localstack
+        profiles:
+            - full
         ports:
             - "4566:4566"
         environment:
