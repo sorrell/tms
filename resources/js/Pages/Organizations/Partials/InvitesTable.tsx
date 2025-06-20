@@ -58,6 +58,7 @@ interface SeatUsage {
     max_seats: number;
     has_available_seats: boolean;
     has_subscription: boolean;
+    is_startup_plan?: boolean;
 }
 
 export default function InvitesTable({
@@ -122,6 +123,16 @@ export default function InvitesTable({
             return;
         }
 
+        // Check if this is a startup plan - should show upgrade message
+        if (effectiveSeatUsage.is_startup_plan) {
+            toast({
+                title: 'Upgrade Required',
+                description: 'Startup plan is limited to a single seat. Please upgrade to Premium to invite more users.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
         if (!effectiveSeatUsage.has_available_seats) {
             setShowSeatLimitAlert(true);
             return;
@@ -168,13 +179,27 @@ export default function InvitesTable({
                     {config?.enable_billing &&
                         effectiveSeatUsage.has_subscription && (
                             <div className="mt-2 text-sm text-muted-foreground">
-                                Seat usage: {effectiveSeatUsage.total_used} of{' '}
-                                {effectiveSeatUsage.max_seats} seats used
-                                {!effectiveSeatUsage.has_available_seats && (
-                                    <span className="font-medium text-destructive">
-                                        {' '}
-                                        (At capacity)
-                                    </span>
+                                {effectiveSeatUsage.is_startup_plan ? (
+                                    <>
+                                        Startup plan: 1 seat limit
+                                        {effectiveSeatUsage.total_used > 0 && (
+                                            <span className="font-medium text-orange-600">
+                                                {' '}
+                                                ({effectiveSeatUsage.total_used} seat used - no additional invites allowed)
+                                            </span>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        Seat usage: {effectiveSeatUsage.total_used} of{' '}
+                                        {effectiveSeatUsage.max_seats} seats used
+                                        {!effectiveSeatUsage.has_available_seats && (
+                                            <span className="font-medium text-destructive">
+                                                {' '}
+                                                (At capacity)
+                                            </span>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         )}
@@ -276,8 +301,13 @@ export default function InvitesTable({
                                 onClick={handleNewInviteClick}
                                 disabled={
                                     config?.enable_billing
-                                        ? !effectiveSeatUsage.has_subscription
+                                        ? !effectiveSeatUsage.has_subscription || effectiveSeatUsage.is_startup_plan
                                         : false
+                                }
+                                title={
+                                    effectiveSeatUsage.is_startup_plan
+                                        ? 'Startup plan is limited to a single seat. Upgrade to Premium to invite more users.'
+                                        : undefined
                                 }
                             >
                                 New Invite

@@ -13,6 +13,7 @@ import { useEffect, useRef } from 'react';
 interface SubscriptionSuccessModalProps {
     isOpen: boolean;
     onClose: () => void;
+    subscriptionType: 'premium' | 'startup';
 }
 
 interface ConfettiInstance {
@@ -27,6 +28,7 @@ interface ConfettiInstance {
 export default function SubscriptionSuccessModal({
     isOpen,
     onClose,
+    subscriptionType,
 }: SubscriptionSuccessModalProps) {
     const confettiRef = useRef<ConfettiInstance | null>(null);
 
@@ -70,6 +72,32 @@ export default function SubscriptionSuccessModal({
         }
     }, [isOpen]);
 
+    const getContent = () => {
+        if (subscriptionType === 'premium') {
+            return {
+                title: '🎉 Welcome to Premium!',
+                description: 'Thank you for subscribing! Your account has been upgraded and you now have access to all premium features.',
+                features: [
+                    'Managed hosting activated',
+                    'Priority support enabled',
+                    'Advanced analytics unlocked',
+                ]
+            };
+        } else {
+            return {
+                title: '🚀 Welcome to Startup!',
+                description: 'Thank you for subscribing! Your account has been upgraded and you now have access to all startup features.',
+                features: [
+                    'Basic shipment management',
+                    'Team collaboration tools',
+                    'Basic analytics dashboard',
+                ]
+            };
+        }
+    };
+
+    const content = getContent();
+
     return (
         <>
             <Dialog open={isOpen} onOpenChange={onClose}>
@@ -79,29 +107,21 @@ export default function SubscriptionSuccessModal({
                             <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
                         </div>
                         <DialogTitle className="text-2xl font-bold">
-                            🎉 Welcome to Premium!
+                            {content.title}
                         </DialogTitle>
                         <DialogDescription className="text-lg">
-                            Thank you for subscribing! Your account has been
-                            upgraded and you now have access to all premium
-                            features.
+                            {content.description}
                         </DialogDescription>
                     </DialogHeader>
 
                     <div className="py-6">
                         <div className="space-y-3 text-sm text-muted-foreground">
-                            <div className="flex items-center justify-center gap-2">
-                                <Sparkles className="h-4 w-4 text-yellow-500" />
-                                <span>Managed hosting activated</span>
-                            </div>
-                            <div className="flex items-center justify-center gap-2">
-                                <Sparkles className="h-4 w-4 text-yellow-500" />
-                                <span>Priority support enabled</span>
-                            </div>
-                            <div className="flex items-center justify-center gap-2">
-                                <Sparkles className="h-4 w-4 text-yellow-500" />
-                                <span>Advanced analytics unlocked</span>
-                            </div>
+                            {content.features.map((feature, index) => (
+                                <div key={index} className="flex items-center justify-center gap-2">
+                                    <Sparkles className="h-4 w-4 text-yellow-500" />
+                                    <span>{feature}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

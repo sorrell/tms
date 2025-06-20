@@ -20,6 +20,7 @@ interface SeatUsage {
     max_seats: number;
     has_available_seats: boolean;
     has_subscription: boolean;
+    is_startup_plan?: boolean;
 }
 
 export default function Users({

@@ -21,7 +21,10 @@ class EnsureOrganizationHasSubscription
             return $next($request);
         }
 
-        if (current_organization()?->subscribed(SubscriptionType::USER_SEAT->value)) {
+        $organization = current_organization();
+        
+        if ($organization?->subscribed(SubscriptionType::USER_SEAT->value) || 
+            $organization?->subscribed(SubscriptionType::STARTUP->value)) {
             return $next($request);
         }
 

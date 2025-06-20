@@ -46,6 +46,7 @@ use App\Actions\Shipments\UpdateShipmentCustomers;
 use App\Actions\Shipments\UpdateShipmentStops;
 use App\Actions\SubmitFeedback;
 use App\Actions\Subscriptions\NewUserSeatsSubscription;
+use App\Actions\Subscriptions\NewStartupSubscription;
 use App\Actions\Subscriptions\RedirectToBillingPortal;
 use App\Actions\Subscriptions\UpdateUserSeatsSubscription;
 use App\Actions\ZipToTimezone;
@@ -83,11 +84,22 @@ Route::get('/products', function () {
         abort(403, 'Billing is disabled');
     }
 
-    return Inertia::render('Subscriptions/Products',
-        [
-            'hasSubscription' => current_organization()?->subscribed(SubscriptionType::USER_SEAT->value)
-        ]
-    );
+    $organization = current_organization();
+    $hasSubscription = $organization?->subscribed(SubscriptionType::USER_SEAT->value) || 
+                      $organization?->subscribed(SubscriptionType::STARTUP->value);
+
+    // Determine the current subscription type
+    $currentSubscriptionType = null;
+    if ($organization?->subscribed(SubscriptionType::USER_SEAT->value)) {
+        $currentSubscriptionType = 'premium';
+    } elseif ($organization?->subscribed(SubscriptionType::STARTUP->value)) {
+        $currentSubscriptionType = 'startup';
+    }
+
+    return Inertia::render('Subscriptions/Products', [
+        'hasSubscription' => $hasSubscription,
+        'currentSubscriptionType' => $currentSubscriptionType
+    ]);
 })->name('products-list');
 
 Route::middleware('auth')->group(function () {
@@ -109,6 +121,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'organization-assigned'])->group(function() {
     Route::get('subscriptions/new', NewUserSeatsSubscription::class)->name('subscriptions.new');
+    Route::get('subscriptions/startup', NewStartupSubscription::class)->name('subscriptions.startup');
     Route::get('subscriptions/manage', RedirectToBillingPortal::class)->name('subscriptions.manage');
 });
 

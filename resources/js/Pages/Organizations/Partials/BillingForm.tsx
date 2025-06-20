@@ -13,22 +13,16 @@ import { Organization } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
 import { CreditCard, Settings } from 'lucide-react';
 import { useState } from 'react';
-
-interface Subscription {
-    id: number;
-    type: string;
-    stripe_status: string;
-    quantity: number;
-    trial_ends_at?: string;
-    ends_at?: string;
-}
+import { ShipmentUsage, Subscription } from '@/types/shipment';
 
 export default function BillingForm({
     organization,
     subscription,
+    shipmentUsage,
 }: {
     organization: Organization;
     subscription?: Subscription;
+    shipmentUsage?: ShipmentUsage;
 }) {
     const { data, setData, processing, errors, put } = useForm({
         quantity: subscription?.quantity || 1,
@@ -69,7 +63,8 @@ export default function BillingForm({
         return new Date(dateString).toLocaleDateString();
     };
 
-    const monthlyPrice = 50; // From config
+    const monthlyPrice = subscription?.type === 'startup' ? 0 : 50;
+    const isStartupPlan = subscription?.type === 'startup';
 
     return (
         <div className="space-y-6">
@@ -94,10 +89,10 @@ export default function BillingForm({
                                     </Label>
                                     <div className="mt-1">
                                         <span className="text-lg font-medium">
-                                            Premium
+                                            {isStartupPlan ? 'Startup' : 'Premium'}
                                         </span>
                                         <div className="text-sm text-muted-foreground">
-                                            User Seat Subscription
+                                            {isStartupPlan ? 'Single Seat Plan' : 'User Seat Subscription'}
                                         </div>
                                     </div>
                                 </div>
@@ -119,19 +114,41 @@ export default function BillingForm({
                                     </Label>
                                     <div className="mt-1">
                                         <span className="text-lg font-medium">
-                                            $
-                                            {(
-                                                subscription.quantity *
-                                                monthlyPrice
-                                            ).toLocaleString()}
+                                            ${monthlyPrice}
                                         </span>
                                         <div className="text-sm text-muted-foreground">
-                                            {subscription.quantity} seats × $
-                                            {monthlyPrice}/month
+                                            {isStartupPlan ? 'Fixed monthly rate' : `${subscription.quantity} seats × $${monthlyPrice}/month`}
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Shipment Usage for Startup Plan */}
+                            {shipmentUsage?.is_startup_plan && (
+                                <div className="rounded-md border border-blue-200 bg-blue-50 p-4">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h4 className="font-medium text-blue-900">Weekly Shipment Usage</h4>
+                                        <Badge variant={typeof shipmentUsage.remaining_shipments === 'number' && shipmentUsage.remaining_shipments > 0 ? 'default' : 'destructive'}>
+                                            {shipmentUsage.shipments_this_week} / {shipmentUsage.weekly_limit} shipments
+                                        </Badge>
+                                    </div>
+                                    <div className="text-sm text-blue-800">
+                                        <p>
+                                            You have <strong>{shipmentUsage.remaining_shipments ?? 'unlimited'}</strong> shipments remaining this week.
+                                        </p>
+                                        {shipmentUsage.week_start && shipmentUsage.week_end && (
+                                            <p className="mt-1">
+                                                Week: {new Date(shipmentUsage.week_start).toLocaleDateString()} - {new Date(shipmentUsage.week_end).toLocaleDateString()}
+                                            </p>
+                                        )}
+                                        {shipmentUsage.remaining_shipments === 0 && (
+                                            <p className="mt-2 font-medium">
+                                                ⚠️ Weekly limit reached. Please upgrade to Premium for unlimited shipments.
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
 
                             {subscription.trial_ends_at && (
                                 <div className="rounded-md border border-blue-200 bg-blue-50 p-3">
@@ -153,44 +170,35 @@ export default function BillingForm({
                 </CardContent>
             </Card>
 
-            {/* Update Seats */}
-            {subscription && (
+            {/* Seat Management - Hidden for Startup Plan */}
+            {subscription && !isStartupPlan && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Update Seats</CardTitle>
+                        <CardTitle>Seat Management</CardTitle>
                         <CardDescription>
-                            Change the number of user seats for your
-                            subscription
+                            Update the number of seats for your organization
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form
-                            onSubmit={handleUpdateSeats}
-                            className="space-y-4"
-                        >
-                            <div className="max-w-xs">
-                                <Label htmlFor="quantity">
-                                    Number of Seats
-                                </Label>
+                        <form onSubmit={handleUpdateSeats} className="space-y-4">
+                            <div>
+                                <Label htmlFor="quantity">Number of Seats</Label>
                                 <Input
                                     id="quantity"
                                     type="number"
                                     min="1"
-                                    max="1000"
                                     value={data.quantity}
                                     onChange={(e) =>
-                                        setData(
-                                            'quantity',
-                                            parseInt(e.target.value) || 1,
-                                        )
+                                        setData('quantity', parseInt(e.target.value))
                                     }
-                                    required
+                                    className="mt-1"
                                 />
                                 {errors.quantity && (
-                                    <div className="mt-1 text-sm text-destructive">
+                                    <div className="mt-1 text-sm text-red-600">
                                         {errors.quantity}
                                     </div>
                                 )}
+
                                 <div className="mt-1 text-sm text-muted-foreground">
                                     New monthly total: $
                                     {(
@@ -213,6 +221,38 @@ export default function BillingForm({
                                     : 'Update Seats'}
                             </Button>
                         </form>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Startup Plan Upgrade Notice */}
+            {isStartupPlan && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Upgrade Your Plan</CardTitle>
+                        <CardDescription>
+                            Ready to grow? Upgrade to Premium for unlimited shipments and team features
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            <div className="text-sm text-muted-foreground">
+                                <p><strong>Startup Plan Limitations:</strong></p>
+                                <ul className="mt-2 list-disc list-inside space-y-1">
+                                    <li>Limited to 10 shipments per week</li>
+                                    <li>Single user seat only</li>
+                                    <li>No API access</li>
+                                    <li>Basic support</li>
+                                </ul>
+                            </div>
+                            <Button
+                                onClick={() => window.location.href = route('products-list')}
+                                variant="default"
+                                className="w-full sm:w-auto"
+                            >
+                                Upgrade to Premium
+                            </Button>
+                        </div>
                     </CardContent>
                 </Card>
             )}
