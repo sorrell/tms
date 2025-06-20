@@ -101,7 +101,7 @@ aws --endpoint-url=http://localhost:4566 s3 mb s3://my-test-bucket
 aws --endpoint-url=http://localhost:4566 s3 ls s3://my-test-bucket --recursive
 ```
 
-Update your .env to reflect s3
+Update your .env to reflect s3:
 
 ```bash
 AWS_ACCESS_KEY_ID=test
@@ -112,5 +112,7 @@ AWS_ENDPOINT=http://localstack:4566
 AWS_USE_PATH_STYLE_ENDPOINT=true
 FILESYSTEM_DISK=s3
 ```
+
+As noted above, the AWS endpoint is `localstack` which is the container name that can be reached other containers within docker that are linked. However, if you are testing via the browser and try to download, you will be served with `http://localstack:4566` so one way to solve that is to edit your hosts file to point `localstack` to `127.0.0.1` the same way localhost is.
 
 
