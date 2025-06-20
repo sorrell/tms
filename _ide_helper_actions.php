@@ -703,6 +703,20 @@ class CheckSeatLimits
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Organizations\Organization $organization)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Organizations\Organization $organization)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Organizations\Organization $organization)
+ * @method static dispatchSync(\App\Models\Organizations\Organization $organization)
+ * @method static dispatchNow(\App\Models\Organizations\Organization $organization)
+ * @method static dispatchAfterResponse(\App\Models\Organizations\Organization $organization)
+ * @method static void run(\App\Models\Organizations\Organization $organization)
+ */
+class CheckShipmentLimits
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $email, \App\Models\Organizations\Organization $organization)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $email, \App\Models\Organizations\Organization $organization)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $email, \App\Models\Organizations\Organization $organization)
@@ -904,6 +918,20 @@ class ZipToTimezone
 }
 namespace App\Actions\Subscriptions;
 
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean)
+ * @method static dispatchSync()
+ * @method static dispatchNow()
+ * @method static dispatchAfterResponse()
+ * @method static mixed run()
+ */
+class NewStartupSubscription
+{
+}
 /**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $quantity = 1)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $quantity = 1)

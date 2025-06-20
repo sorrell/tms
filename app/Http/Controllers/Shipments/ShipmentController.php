@@ -20,6 +20,7 @@ use App\Models\Facility;
 use App\Models\Shipments\TrailerSize;
 use App\Models\Shipments\TrailerType;
 use App\Models\Customers\Customer;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ShipmentController extends ResourceSearchController
@@ -40,9 +41,12 @@ class ShipmentController extends ResourceSearchController
      */
     public function create()
     {
+        $shipmentUsage = \App\Actions\Organizations\CheckShipmentLimits::make()->getShipmentUsage(current_organization());
+        
         return Inertia::render('Shipments/Create', [
             'trailerTypes' => TrailerTypeResource::collection(TrailerType::all()),
             'trailerSizes' => TrailerSizeResource::collection(TrailerSize::all()),
+            'shipmentUsage' => $shipmentUsage,
         ]);
     }
 

@@ -86,7 +86,8 @@ class OrganizationController extends Controller
     {
         Gate::authorize('view', $organization);
 
-        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
+        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value) ?: 
+                       $organization->subscription(SubscriptionType::STARTUP->value);
         $seatUsage = \App\Actions\Organizations\CheckSeatLimits::make()->getSeatUsage($organization);
 
         return Inertia::render('Organizations/Users', [
@@ -155,7 +156,10 @@ class OrganizationController extends Controller
 
         Gate::authorize(Permission::ORGANIZATION_BILLING);
 
-        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
+        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value) ?: 
+                       $organization->subscription(SubscriptionType::STARTUP->value);
+
+        $shipmentUsage = \App\Actions\Organizations\CheckShipmentLimits::make()->getShipmentUsage($organization);
 
         return Inertia::render('Organizations/Billing', [
             'organization' => $organization->load('owner', 'users'),
@@ -167,6 +171,7 @@ class OrganizationController extends Controller
                 'trial_ends_at' => $subscription->trial_ends_at?->toISOString(),
                 'ends_at' => $subscription->ends_at?->toISOString(),
             ] : null,
+            'shipmentUsage' => $shipmentUsage,
         ]);
     }
 

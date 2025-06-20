@@ -1,23 +1,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Organization } from '@/types/organization';
+import { ShipmentUsage, Subscription } from '@/types/shipment';
 import { Head } from '@inertiajs/react';
 import BillingForm from './Partials/BillingForm';
-
-interface Subscription {
-    id: number;
-    type: string;
-    stripe_status: string;
-    quantity: number;
-    trial_ends_at?: string;
-    ends_at?: string;
-}
 
 export default function Billing({
     organization,
     subscription,
+    shipmentUsage,
 }: {
     organization: Organization;
     subscription?: Subscription;
+    shipmentUsage?: ShipmentUsage;
 }) {
     return (
         <AuthenticatedLayout
@@ -40,6 +34,7 @@ export default function Billing({
                 <BillingForm
                     organization={organization}
                     subscription={subscription}
+                    shipmentUsage={shipmentUsage}
                 />
             </div>
         </AuthenticatedLayout>

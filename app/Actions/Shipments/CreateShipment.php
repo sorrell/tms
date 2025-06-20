@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Nette\NotImplementedException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class CreateShipment
 {
@@ -32,6 +33,15 @@ class CreateShipment
         ?string $shipmentNumber = null,
     ): Shipment
     {
+        // Check load limits for startup plans
+        try {
+            \App\Actions\Organizations\CheckShipmentLimits::run(current_organization());
+        } catch (BadRequestException $e) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'shipment_limit' => [$e->getMessage()]
+            ]);
+        }
+
         DB::beginTransaction();
 
         $shipment = Shipment::create([
