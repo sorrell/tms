@@ -1,8 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Organization } from '@/types/organization';
+import { ShipmentUsage, Subscription } from '@/types/shipment';
 import { Head } from '@inertiajs/react';
 import BillingForm from './Partials/BillingForm';
-import { ShipmentUsage, Subscription } from '@/types/shipment';
 
 export default function Billing({
     organization,

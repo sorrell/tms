@@ -14,4 +14,4 @@ export interface Subscription {
     quantity: number;
     trial_ends_at?: string;
     ends_at?: string;
-} 
+}

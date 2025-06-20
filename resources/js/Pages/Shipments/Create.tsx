@@ -25,12 +25,12 @@ import { TrailerSize, TrailerType } from '@/types';
 import { StopType } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
-import { ArrowDown, ArrowUp, Trash, AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ArrowDown, ArrowUp, Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 import FacilityForm from '@/Components/CreateForms/FacilityForm';
-import { z } from 'zod';
 import { ShipmentUsage } from '@/types/shipment';
+import { z } from 'zod';
 
 export default function Create({
     trailerTypes,
@@ -136,48 +136,87 @@ export default function Create({
                     className="mx-auto max-w-screen-2xl space-y-2 pb-8 md:space-y-8 md:px-8"
                 >
                     {/* Shipment Limit Warning */}
-                    {shipmentUsage?.is_startup_plan && typeof shipmentUsage.remaining_shipments === 'number' && shipmentUsage.remaining_shipments <= 2 && (
-                        <Card className={cn(
-                            "border-2",
-                            shipmentUsage.remaining_shipments === 0 
-                                ? "border-red-200 bg-red-50" 
-                                : "border-yellow-200 bg-yellow-50"
-                        )}>
-                            <CardContent className="p-4">
-                                <div className="flex items-center gap-3">
-                                    <AlertTriangle className={cn(
-                                        "h-5 w-5",
-                                        shipmentUsage.remaining_shipments === 0 
-                                            ? "text-red-600" 
-                                            : "text-yellow-600"
-                                    )} />
-                                    <div className="flex-1">
-                                        {shipmentUsage.remaining_shipments === 0 ? (
-                                            <div>
-                                                <p className="font-medium text-red-900">
-                                                    Weekly shipment limit reached
-                                                </p>
-                                                <p className="text-sm text-red-800">
-                                                    You've created {shipmentUsage.shipments_this_week} out of {shipmentUsage.weekly_limit} shipments this week. 
-                                                    Please <a href={route('products-list')} className="underline font-medium">upgrade to Premium</a> for unlimited shipments.
-                                                </p>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <p className="font-medium text-yellow-900">
-                                                    Approaching shipment limit
-                                                </p>
-                                                <p className="text-sm text-yellow-800">
-                                                    You have {shipmentUsage.remaining_shipments} shipments remaining this week 
-                                                    ({shipmentUsage.shipments_this_week}/{shipmentUsage.weekly_limit} used).
-                                                </p>
-                                            </div>
-                                        )}
+                    {shipmentUsage?.is_startup_plan &&
+                        typeof shipmentUsage.remaining_shipments === 'number' &&
+                        shipmentUsage.remaining_shipments <= 2 && (
+                            <Card
+                                className={cn(
+                                    'border-2',
+                                    shipmentUsage.remaining_shipments === 0
+                                        ? 'border-red-200 bg-red-50'
+                                        : 'border-yellow-200 bg-yellow-50',
+                                )}
+                            >
+                                <CardContent className="p-4">
+                                    <div className="flex items-center gap-3">
+                                        <AlertTriangle
+                                            className={cn(
+                                                'h-5 w-5',
+                                                shipmentUsage.remaining_shipments ===
+                                                    0
+                                                    ? 'text-red-600'
+                                                    : 'text-yellow-600',
+                                            )}
+                                        />
+                                        <div className="flex-1">
+                                            {shipmentUsage.remaining_shipments ===
+                                            0 ? (
+                                                <div>
+                                                    <p className="font-medium text-red-900">
+                                                        Weekly shipment limit
+                                                        reached
+                                                    </p>
+                                                    <p className="text-sm text-red-800">
+                                                        You've created{' '}
+                                                        {
+                                                            shipmentUsage.shipments_this_week
+                                                        }{' '}
+                                                        out of{' '}
+                                                        {
+                                                            shipmentUsage.weekly_limit
+                                                        }{' '}
+                                                        shipments this week.
+                                                        Please{' '}
+                                                        <a
+                                                            href={route(
+                                                                'products-list',
+                                                            )}
+                                                            className="font-medium underline"
+                                                        >
+                                                            upgrade to Premium
+                                                        </a>{' '}
+                                                        for unlimited shipments.
+                                                    </p>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <p className="font-medium text-yellow-900">
+                                                        Approaching shipment
+                                                        limit
+                                                    </p>
+                                                    <p className="text-sm text-yellow-800">
+                                                        You have{' '}
+                                                        {
+                                                            shipmentUsage.remaining_shipments
+                                                        }{' '}
+                                                        shipments remaining this
+                                                        week (
+                                                        {
+                                                            shipmentUsage.shipments_this_week
+                                                        }
+                                                        /
+                                                        {
+                                                            shipmentUsage.weekly_limit
+                                                        }{' '}
+                                                        used).
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
+                                </CardContent>
+                            </Card>
+                        )}
 
                     {/* Display server-side validation error for shipment limit */}
                     {errors.shipment_limit && (
@@ -186,8 +225,12 @@ export default function Create({
                                 <div className="flex items-center gap-3">
                                     <AlertTriangle className="h-5 w-5 text-red-600" />
                                     <div className="flex-1">
-                                        <p className="font-medium text-red-900">Cannot create shipment</p>
-                                        <p className="text-sm text-red-800">{errors.shipment_limit}</p>
+                                        <p className="font-medium text-red-900">
+                                            Cannot create shipment
+                                        </p>
+                                        <p className="text-sm text-red-800">
+                                            {errors.shipment_limit}
+                                        </p>
                                     </div>
                                 </div>
                             </CardContent>
@@ -896,10 +939,14 @@ export default function Create({
                     </Card>
 
                     <div className="flex justify-center md:justify-start">
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={shipmentUsage?.remaining_shipments === 0}
-                            className={shipmentUsage?.remaining_shipments === 0 ? "cursor-not-allowed" : ""}
+                            className={
+                                shipmentUsage?.remaining_shipments === 0
+                                    ? 'cursor-not-allowed'
+                                    : ''
+                            }
                         >
                             Create Shipment
                         </Button>

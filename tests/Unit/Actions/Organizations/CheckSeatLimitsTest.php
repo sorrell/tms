@@ -151,6 +151,7 @@ it('returns correct seat usage information with subscription', function () {
         'max_seats' => 5,
         'has_available_seats' => true,
         'has_subscription' => true,
+        'is_startup_plan' => false,
     ]);
 });
 
@@ -174,5 +175,6 @@ it('returns correct seat usage information without subscription', function () {
         'max_seats' => 0,
         'has_available_seats' => false,
         'has_subscription' => false,
+        'is_startup_plan' => false,
     ]);
 }); 

@@ -20,7 +20,7 @@ class CheckShipmentLimits
 
         $subscription = $organization->subscription(SubscriptionType::STARTUP->value);
         
-        if (!$subscription || !in_array($subscription->stripe_status, ['active', 'trialing'])) {
+        if (!in_array($subscription->stripe_status, ['active', 'trialing'])) {
             return;
         }
 
@@ -68,7 +68,7 @@ class CheckShipmentLimits
         // Handle startup subscription only if no premium subscription exists
         $subscription = $organization->subscription(SubscriptionType::STARTUP->value);
         
-        if (!$subscription || !in_array($subscription->stripe_status, ['active', 'trialing'])) {
+        if (!in_array($subscription->stripe_status, ['active', 'trialing'])) {
             return [
                 'is_startup_plan' => false,
                 'weekly_limit' => 0,

@@ -34,7 +34,9 @@ export default function Products({
     const [showSeatModal, setShowSeatModal] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [subscriptionType, setSubscriptionType] = useState<'premium' | 'startup'>('premium');
+    const [subscriptionType, setSubscriptionType] = useState<
+        'premium' | 'startup'
+    >('premium');
     const { auth } = usePage<PageProps>().props;
 
     // Check for success parameter in URL
@@ -47,7 +49,7 @@ export default function Products({
             setShowSuccessModal(true);
             // Set subscription type, default to premium if not specified
             setSubscriptionType(type === 'startup' ? 'startup' : 'premium');
-            
+
             // Clean up URL by removing the success and type parameters
             const newUrl = new URL(window.location.href);
             newUrl.searchParams.delete('success');
@@ -91,25 +93,33 @@ export default function Products({
                 'Email support',
                 'Basic analytics',
             ],
-            buttonText: hasSubscription && currentSubscriptionType === 'startup' ? 'Manage Billing' : 'Get Started',
-            buttonVariant: hasSubscription && currentSubscriptionType === 'startup'
-                ? ('outline' as const)
-                : ('default' as const),
-            buttonIcon: hasSubscription && currentSubscriptionType === 'startup' ? (
-                <Settings className="h-4 w-4" />
-            ) : (
-                <ArrowRight className="h-4 w-4" />
-            ),
-            href: hasSubscription && currentSubscriptionType === 'startup'
-                ? route(
-                      'organizations.billing',
-                      auth?.user?.current_organization_id || 1,
-                  )
-                : route('subscriptions.startup'),
+            buttonText:
+                hasSubscription && currentSubscriptionType === 'startup'
+                    ? 'Manage Billing'
+                    : 'Get Started',
+            buttonVariant:
+                hasSubscription && currentSubscriptionType === 'startup'
+                    ? ('outline' as const)
+                    : ('default' as const),
+            buttonIcon:
+                hasSubscription && currentSubscriptionType === 'startup' ? (
+                    <Settings className="h-4 w-4" />
+                ) : (
+                    <ArrowRight className="h-4 w-4" />
+                ),
+            href:
+                hasSubscription && currentSubscriptionType === 'startup'
+                    ? route(
+                          'organizations.billing',
+                          auth?.user?.current_organization_id || 1,
+                      )
+                    : route('subscriptions.startup'),
             isPopular: false,
             requiresSeatSelection: false,
             shipmentLimit: '10 shipments per week',
-            showButton: !(hasSubscription && currentSubscriptionType === 'premium'),
+            showButton: !(
+                hasSubscription && currentSubscriptionType === 'premium'
+            ),
         },
         {
             name: 'Premium',
@@ -128,27 +138,33 @@ export default function Products({
                 'Team collaboration tools',
                 'API access',
             ],
-            buttonText: hasSubscription && currentSubscriptionType === 'premium' 
-                ? 'Manage Billing' 
-                : currentSubscriptionType === 'startup' 
-                    ? 'Upgrade' 
-                    : 'Get Started',
-            buttonVariant: hasSubscription && currentSubscriptionType === 'premium'
-                ? ('outline' as const)
-                : ('default' as const),
-            buttonIcon: hasSubscription && currentSubscriptionType === 'premium' ? (
-                <Settings className="h-4 w-4" />
-            ) : (
-                <ArrowRight className="h-4 w-4" />
-            ),
-            href: hasSubscription && currentSubscriptionType === 'premium'
-                ? route(
-                      'organizations.billing',
-                      auth?.user?.current_organization_id || 1,
-                  )
-                : route('subscriptions.new'),
+            buttonText:
+                hasSubscription && currentSubscriptionType === 'premium'
+                    ? 'Manage Billing'
+                    : currentSubscriptionType === 'startup'
+                      ? 'Upgrade'
+                      : 'Get Started',
+            buttonVariant:
+                hasSubscription && currentSubscriptionType === 'premium'
+                    ? ('outline' as const)
+                    : ('default' as const),
+            buttonIcon:
+                hasSubscription && currentSubscriptionType === 'premium' ? (
+                    <Settings className="h-4 w-4" />
+                ) : (
+                    <ArrowRight className="h-4 w-4" />
+                ),
+            href:
+                hasSubscription && currentSubscriptionType === 'premium'
+                    ? route(
+                          'organizations.billing',
+                          auth?.user?.current_organization_id || 1,
+                      )
+                    : route('subscriptions.new'),
             isPopular: true,
-            requiresSeatSelection: !(hasSubscription && currentSubscriptionType === 'premium'),
+            requiresSeatSelection: !(
+                hasSubscription && currentSubscriptionType === 'premium'
+            ),
         },
         {
             name: 'Enterprise',
@@ -296,10 +312,11 @@ export default function Products({
                                 <p className="text-sm text-muted-foreground">
                                     {plan.description}
                                 </p>
-                                
+
                                 {plan.shipmentLimit && (
-                                    <div className="mt-2 rounded-md bg-yellow-50 p-2 text-xs text-yellow-800 border border-yellow-200">
-                                        <strong>Note:</strong> {plan.shipmentLimit}
+                                    <div className="mt-2 rounded-md border border-yellow-200 bg-yellow-50 p-2 text-xs text-yellow-800">
+                                        <strong>Note:</strong>{' '}
+                                        {plan.shipmentLimit}
                                     </div>
                                 )}
                             </CardHeader>
@@ -330,7 +347,9 @@ export default function Products({
                                             variant={plan.buttonVariant}
                                             className="w-full"
                                             size="lg"
-                                            onClick={() => handlePlanClick(plan)}
+                                            onClick={() =>
+                                                handlePlanClick(plan)
+                                            }
                                         >
                                             {plan.buttonIcon}
                                             {plan.buttonText}

@@ -127,7 +127,8 @@ export default function InvitesTable({
         if (effectiveSeatUsage.is_startup_plan) {
             toast({
                 title: 'Upgrade Required',
-                description: 'Startup plan is limited to a single seat. Please upgrade to Premium to invite more users.',
+                description:
+                    'Startup plan is limited to a single seat. Please upgrade to Premium to invite more users.',
                 variant: 'destructive',
             });
             return;
@@ -185,14 +186,20 @@ export default function InvitesTable({
                                         {effectiveSeatUsage.total_used > 0 && (
                                             <span className="font-medium text-orange-600">
                                                 {' '}
-                                                ({effectiveSeatUsage.total_used} seat used - no additional invites allowed)
+                                                ({
+                                                    effectiveSeatUsage.total_used
+                                                }{' '}
+                                                seat used - no additional
+                                                invites allowed)
                                             </span>
                                         )}
                                     </>
                                 ) : (
                                     <>
-                                        Seat usage: {effectiveSeatUsage.total_used} of{' '}
-                                        {effectiveSeatUsage.max_seats} seats used
+                                        Seat usage:{' '}
+                                        {effectiveSeatUsage.total_used} of{' '}
+                                        {effectiveSeatUsage.max_seats} seats
+                                        used
                                         {!effectiveSeatUsage.has_available_seats && (
                                             <span className="font-medium text-destructive">
                                                 {' '}
@@ -301,7 +308,8 @@ export default function InvitesTable({
                                 onClick={handleNewInviteClick}
                                 disabled={
                                     config?.enable_billing
-                                        ? !effectiveSeatUsage.has_subscription || effectiveSeatUsage.is_startup_plan
+                                        ? !effectiveSeatUsage.has_subscription ||
+                                          effectiveSeatUsage.is_startup_plan
                                         : false
                                 }
                                 title={
