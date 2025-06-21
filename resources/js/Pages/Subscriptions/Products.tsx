@@ -394,7 +394,7 @@ export default function Products({
             {/* Subscription Success Modal */}
             <SubscriptionSuccessModal
                 isOpen={showSuccessModal}
-                onClose={() => setShowSuccessModal(false)}
+                onClose={() => router.visit(route('dashboard'))}
                 subscriptionType={subscriptionType}
             />
 
