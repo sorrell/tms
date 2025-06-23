@@ -8,11 +8,18 @@ import { Head, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        name: string;
+        email: string;
+        password: string;
+        password_confirmation: string;
+        agree_to_terms: boolean;
+    }>({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        agree_to_terms: false,
     });
 
     const submit: FormEventHandler = (e) => {
@@ -146,8 +153,53 @@ export default function Register() {
                             />
                         </div>
 
+                        <div className="flex items-start gap-2">
+                            <input
+                                id="agree_to_terms"
+                                type="checkbox"
+                                name="agree_to_terms"
+                                checked={data.agree_to_terms}
+                                onChange={(e) =>
+                                    setData('agree_to_terms', e.target.checked)
+                                }
+                                className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                required
+                            />
+                            <Label
+                                htmlFor="agree_to_terms"
+                                className="text-sm leading-relaxed"
+                            >
+                                I agree to the{' '}
+                                <a
+                                    href="https://get.loadpartner.io/terms-of-service"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline underline-offset-4 hover:text-blue-800"
+                                >
+                                    Terms of Service
+                                </a>{' '}
+                                and{' '}
+                                <a
+                                    href="https://get.loadpartner.io/privacy-policy"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline underline-offset-4 hover:text-blue-800"
+                                >
+                                    Privacy Policy
+                                </a>
+                            </Label>
+                        </div>
+
+                        <InputError
+                            message={errors.agree_to_terms}
+                            className="mt-2"
+                        />
+
                         <div className="flex items-center justify-end">
-                            <Button className="w-full" disabled={processing}>
+                            <Button
+                                className="w-full"
+                                disabled={processing || !data.agree_to_terms}
+                            >
                                 Register
                             </Button>
                         </div>
