@@ -3,6 +3,7 @@ import {
     ChevronRight,
     GalleryVerticalEnd,
     Home,
+    MessageCircle,
     Package,
     Truck,
     Users,
@@ -11,6 +12,7 @@ import {
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+import GeneralFeedbackModal from '@/Components/GeneralFeedbackModal';
 import { NavUser } from '@/Components/NavUser';
 import { TeamSwitcher } from '@/Components/TeamSwitcher';
 import {
@@ -38,6 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const permissions = usePage().props.auth.permissions;
     const config = usePage().props.config;
     const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
+    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
     useEffect(() => {
         const savedState = localStorage.getItem('orgMenuOpen');
@@ -76,204 +79,219 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     };
 
     return (
-        <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
-                <TeamSwitcher teams={data.teams} />
-            </SidebarHeader>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarMenuButton
-                        asChild
-                        isActive={route().current('dashboard')}
-                    >
-                        <a href={route('dashboard')}>
-                            <Home />
-                            <span>Dashboard</span>
-                        </a>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                        asChild
-                        isActive={route().current('shipments.index')}
-                    >
-                        <a href={route('shipments.index')}>
-                            <Package />
-                            <span>Shipments</span>
-                        </a>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                        asChild
-                        isActive={route().current('carriers.index')}
-                    >
-                        <a href={route('carriers.index')}>
-                            <Truck />
-                            <span>Carriers</span>
-                        </a>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                        asChild
-                        isActive={route().current('customers.index')}
-                    >
-                        <a href={route('customers.index')}>
-                            <Users />
-                            <span>Customers</span>
-                        </a>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                        asChild
-                        isActive={route().current('facilities.index')}
-                    >
-                        <a href={route('facilities.index')}>
-                            <Warehouse />
-                            <span>Facilities</span>
-                        </a>
-                    </SidebarMenuButton>
-
-                    {(permissions?.ORGANIZATION_MANAGER ||
-                        permissions?.ORGANIZATION_MANAGE_USERS) && (
-                        <Collapsible
-                            open={isOrgMenuOpen}
-                            onOpenChange={handleOrgMenuChange}
+        <>
+            <Sidebar collapsible="icon" {...props}>
+                <SidebarHeader>
+                    <TeamSwitcher teams={data.teams} />
+                </SidebarHeader>
+                <SidebarContent>
+                    <SidebarGroup>
+                        <SidebarMenuButton
                             asChild
-                            className="group/collapsible"
+                            isActive={route().current('dashboard')}
                         >
-                            <SidebarMenuItem className="list-none">
-                                <CollapsibleTrigger asChild>
-                                    <SidebarMenuButton>
-                                        <Building />
-                                        <span>Organization</span>
-                                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                    </SidebarMenuButton>
-                                </CollapsibleTrigger>
-                                <CollapsibleContent>
-                                    <SidebarMenuSub>
-                                        <SidebarMenuSubItem>
-                                            <SidebarMenuSubButton
-                                                isActive={route().current(
-                                                    'organizations.users',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                                href={route(
-                                                    'organizations.users',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                            >
-                                                Users
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                        <SidebarMenuSubItem>
-                                            <SidebarMenuSubButton
-                                                href={route(
-                                                    'organizations.roles',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                                isActive={route().current(
-                                                    'organizations.roles',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                            >
-                                                Roles
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                        {permissions?.INTEGRATION_SETTINGS_EDIT && (
+                            <a href={route('dashboard')}>
+                                <Home />
+                                <span>Dashboard</span>
+                            </a>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton
+                            asChild
+                            isActive={route().current('shipments.index')}
+                        >
+                            <a href={route('shipments.index')}>
+                                <Package />
+                                <span>Shipments</span>
+                            </a>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton
+                            asChild
+                            isActive={route().current('carriers.index')}
+                        >
+                            <a href={route('carriers.index')}>
+                                <Truck />
+                                <span>Carriers</span>
+                            </a>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton
+                            asChild
+                            isActive={route().current('customers.index')}
+                        >
+                            <a href={route('customers.index')}>
+                                <Users />
+                                <span>Customers</span>
+                            </a>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton
+                            asChild
+                            isActive={route().current('facilities.index')}
+                        >
+                            <a href={route('facilities.index')}>
+                                <Warehouse />
+                                <span>Facilities</span>
+                            </a>
+                        </SidebarMenuButton>
+
+                        {(permissions?.ORGANIZATION_MANAGER ||
+                            permissions?.ORGANIZATION_MANAGE_USERS) && (
+                            <Collapsible
+                                open={isOrgMenuOpen}
+                                onOpenChange={handleOrgMenuChange}
+                                asChild
+                                className="group/collapsible"
+                            >
+                                <SidebarMenuItem className="list-none">
+                                    <CollapsibleTrigger asChild>
+                                        <SidebarMenuButton>
+                                            <Building />
+                                            <span>Organization</span>
+                                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                        </SidebarMenuButton>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent>
+                                        <SidebarMenuSub>
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
-                                                    href={route(
-                                                        'organizations.integration-settings',
+                                                    isActive={route().current(
+                                                        'organizations.users',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
-                                                    isActive={route().current(
-                                                        'organizations.integration-settings',
+                                                    href={route(
+                                                        'organizations.users',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
                                                 >
-                                                    Integration Settings
+                                                    Users
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
-                                        )}
-                                        {permissions?.ORGANIZATION_MANAGER && (
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
                                                     href={route(
-                                                        'organizations.document-templates-page',
+                                                        'organizations.roles',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
                                                     isActive={route().current(
-                                                        'organizations.document-templates-page',
+                                                        'organizations.roles',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
                                                 >
-                                                    Document Templates
+                                                    Roles
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
-                                        )}
-                                        {permissions?.ORGANIZATION_MANAGER && (
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton
-                                                    href={route(
-                                                        'organizations.settings',
-                                                        [
-                                                            user.current_organization_id,
-                                                        ],
-                                                    )}
-                                                    isActive={route().current(
-                                                        'organizations.settings',
-                                                        [
-                                                            user.current_organization_id,
-                                                        ],
-                                                    )}
-                                                >
-                                                    Settings
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        )}
-                                        {permissions?.ORGANIZATION_BILLING &&
-                                            config?.enable_billing && (
+                                            {permissions?.INTEGRATION_SETTINGS_EDIT && (
                                                 <SidebarMenuSubItem>
                                                     <SidebarMenuSubButton
                                                         href={route(
-                                                            'organizations.billing',
+                                                            'organizations.integration-settings',
                                                             [
                                                                 user.current_organization_id,
                                                             ],
                                                         )}
                                                         isActive={route().current(
-                                                            'organizations.billing',
+                                                            'organizations.integration-settings',
                                                             [
                                                                 user.current_organization_id,
                                                             ],
                                                         )}
                                                     >
-                                                        Billing
+                                                        Integration Settings
                                                     </SidebarMenuSubButton>
                                                 </SidebarMenuSubItem>
                                             )}
-                                    </SidebarMenuSub>
-                                </CollapsibleContent>
-                            </SidebarMenuItem>
-                        </Collapsible>
-                    )}
-                </SidebarGroup>
-            </SidebarContent>
-            <SidebarFooter>
-                <NavUser user={userData} />
-            </SidebarFooter>
-            <SidebarRail />
-        </Sidebar>
+                                            {permissions?.ORGANIZATION_MANAGER && (
+                                                <SidebarMenuSubItem>
+                                                    <SidebarMenuSubButton
+                                                        href={route(
+                                                            'organizations.document-templates-page',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                        isActive={route().current(
+                                                            'organizations.document-templates-page',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                    >
+                                                        Document Templates
+                                                    </SidebarMenuSubButton>
+                                                </SidebarMenuSubItem>
+                                            )}
+                                            {permissions?.ORGANIZATION_MANAGER && (
+                                                <SidebarMenuSubItem>
+                                                    <SidebarMenuSubButton
+                                                        href={route(
+                                                            'organizations.settings',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                        isActive={route().current(
+                                                            'organizations.settings',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                    >
+                                                        Settings
+                                                    </SidebarMenuSubButton>
+                                                </SidebarMenuSubItem>
+                                            )}
+                                            {permissions?.ORGANIZATION_BILLING &&
+                                                config?.enable_billing && (
+                                                    <SidebarMenuSubItem>
+                                                        <SidebarMenuSubButton
+                                                            href={route(
+                                                                'organizations.billing',
+                                                                [
+                                                                    user.current_organization_id,
+                                                                ],
+                                                            )}
+                                                            isActive={route().current(
+                                                                'organizations.billing',
+                                                                [
+                                                                    user.current_organization_id,
+                                                                ],
+                                                            )}
+                                                        >
+                                                            Billing
+                                                        </SidebarMenuSubButton>
+                                                    </SidebarMenuSubItem>
+                                                )}
+                                        </SidebarMenuSub>
+                                    </CollapsibleContent>
+                                </SidebarMenuItem>
+                            </Collapsible>
+                        )}
+
+                        <SidebarMenuButton
+                            onClick={() => setIsFeedbackModalOpen(true)}
+                        >
+                            <MessageCircle />
+                            <span>Send Feedback</span>
+                        </SidebarMenuButton>
+                    </SidebarGroup>
+                </SidebarContent>
+                <SidebarFooter>
+                    <NavUser user={userData} />
+                </SidebarFooter>
+                <SidebarRail />
+            </Sidebar>
+
+            <GeneralFeedbackModal
+                isOpen={isFeedbackModalOpen}
+                onClose={() => setIsFeedbackModalOpen(false)}
+                userEmail={user.email}
+            />
+        </>
     );
 }
