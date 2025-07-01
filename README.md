@@ -115,4 +115,13 @@ FILESYSTEM_DISK=s3
 
 As noted above, the AWS endpoint is `localstack` which is the container name that can be reached other containers within docker that are linked. However, if you are testing via the browser and try to download, you will be served with `http://localstack:4566` so one way to solve that is to edit your hosts file to point `localstack` to `127.0.0.1` the same way localhost is.
 
+## ⚠️ Troubleshooting: Nginx Proxy Manager tip
+
+If you're hosting the app behind **Nginx Proxy Manager** and pages are not fully loading or assets seem broken, try adding the following in the **Advanced > Custom Nginx Configuration** section of your proxy:
+
+```nginx
+proxy_buffering on;
+proxy_buffers 16 16k;
+proxy_buffer_size 32k;
+```
 
