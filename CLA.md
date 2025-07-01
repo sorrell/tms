@@ -1,4 +1,4 @@
-LoadPartner Platforms, Inc. Individual Contributor License Agreement ("Agreement"), v2.0
+LoadPartner, Inc. Individual Contributor License Agreement ("Agreement"), v2.0
 
 You accept and agree to the following terms and conditions for Your present and future Contributions submitted to LoadPartner, Inc. ("LoadPartner"). Except for the license granted herein to LoadPartner and recipients of software distributed by LoadPartner, You reserve all right, title, and interest in and to Your Contributions.
 
