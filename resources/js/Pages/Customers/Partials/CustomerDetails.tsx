@@ -1,3 +1,4 @@
+import CustomerAuditHistory from '@/Components/Audit/CustomerAuditHistory';
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import ContactForm from '@/Components/CreateForms/ContactForm';
 import LocationForm from '@/Components/CreateForms/LocationForm';
@@ -119,6 +120,7 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                             <SelectItem value="shipments">
                                 Shipment History
                             </SelectItem>
+                            <SelectItem value="audit">Audit History</SelectItem>
                         </SelectContent>
                     </Select>
                 ) : (
@@ -152,6 +154,12 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                             onClick={() => handleTabChange('shipments')}
                         >
                             Shipment History
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="audit"
+                            onClick={() => handleTabChange('audit')}
+                        >
+                            Audit History
                         </TabsTrigger>
                     </TabsList>
                 )}
@@ -604,6 +612,11 @@ export default function CustomerDetails({ customer }: { customer: Customer }) {
                             />
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                {/* Audit History Tab */}
+                <TabsContent value="audit">
+                    <CustomerAuditHistory customer={customer} />
                 </TabsContent>
             </Tabs>
         </div>

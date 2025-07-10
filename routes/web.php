@@ -8,6 +8,8 @@ use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
 use App\Actions\Carriers\FmcsaDOTLookup;
 use App\Actions\Carriers\FmcsaNameLookup;
+use App\Actions\Audit\GetAuditLinkedData;
+use App\Actions\Carriers\GetCarrierAuditHistory;
 use App\Actions\Carriers\UpdateCarrierGeneral;
 use App\Actions\Contacts\CreateContact;
 use App\Actions\Contacts\DeleteContact;
@@ -16,6 +18,7 @@ use App\Actions\Contacts\UpdateContact;
 use App\Actions\Customers\CreateCustomer;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
+use App\Actions\Customers\GetCustomerAuditHistory;
 use App\Actions\Customers\UpdateCustomer;
 use App\Actions\Dashboard\RecentCarriersCard;
 use App\Actions\Dashboard\RecentShipmentsCard;
@@ -185,6 +188,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     Route::post('carriers', CreateCarrier::class)->name('carriers.store');
 
     Route::get('carriers/{carrier}/bounced-loads', [CarrierController::class, 'bouncedLoads'])->name('carriers.bounced-loads');
+    Route::get('carriers/{carrier}/audit-history', GetCarrierAuditHistory::class)->name('carriers.audit-history');
+
+    Route::get('customers/{customer}/audit-history', GetCustomerAuditHistory::class)->name('customers.audit-history');
+
+    Route::get('audit/linked-data/{type}/{id}', GetAuditLinkedData::class)->name('audit.linked-data');
 
     Route::get('carriers/fmcsa/name', FmcsaNameLookup::class)->name('carriers.fmcsa.lookup.name');
     Route::post('carriers/fmcsa/{carrierSaferReport}/create', CreateCarrierFromSaferReport::class)->name('carriers.fmcsa.store');

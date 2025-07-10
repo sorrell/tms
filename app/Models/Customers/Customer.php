@@ -13,10 +13,12 @@ use App\Traits\HasNotes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Customer extends Model
+class Customer extends Model implements Auditable
 {
     use HasFactory, HasOrganization, Searchable, HasNotes, HasContacts, HasDocuments, HasAliases;
+    use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
         'organization_id',

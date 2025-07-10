@@ -1,3 +1,4 @@
+import CarrierAuditHistory from '@/Components/Audit/CarrierAuditHistory';
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import DocumentsList from '@/Components/Documents/DocumentsList';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
@@ -143,6 +144,7 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                                 Shipment History
                             </SelectItem>
                             <SelectItem value="safer">SAFER</SelectItem>
+                            <SelectItem value="audit">Audit History</SelectItem>
                         </SelectContent>
                     </Select>
                 ) : (
@@ -182,6 +184,12 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                             onClick={() => handleTabChange('safer')}
                         >
                             SAFER
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="audit"
+                            onClick={() => handleTabChange('audit')}
+                        >
+                            Audit History
                         </TabsTrigger>
                     </TabsList>
                 )}
@@ -580,6 +588,11 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                             )}
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                {/* Audit History Tab */}
+                <TabsContent value="audit">
+                    <CarrierAuditHistory carrier={carrier} />
                 </TabsContent>
             </Tabs>
         </div>

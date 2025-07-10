@@ -132,147 +132,147 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             </a>
                         </SidebarMenuButton>
 
-                    {(permissions?.ORGANIZATION_MANAGER ||
-                        permissions?.ORGANIZATION_MANAGE_USERS) && (
-                        <Collapsible
-                            open={isOrgMenuOpen}
-                            onOpenChange={handleOrgMenuChange}
-                            asChild
-                            className="group/collapsible"
-                        >
-                            <SidebarMenuItem className="list-none">
-                                <CollapsibleTrigger asChild>
-                                    <SidebarMenuButton>
-                                        <Building />
-                                        <span>Organization</span>
-                                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                    </SidebarMenuButton>
-                                </CollapsibleTrigger>
-                                <CollapsibleContent>
-                                    <SidebarMenuSub>
-                                        <SidebarMenuSubItem>
-                                            <SidebarMenuSubButton
-                                                isActive={route().current(
-                                                    'organizations.users',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                                href={route(
-                                                    'organizations.users',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                            >
-                                                Users
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                        <SidebarMenuSubItem>
-                                            <SidebarMenuSubButton
-                                                href={route(
-                                                    'organizations.roles',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                                isActive={route().current(
-                                                    'organizations.roles',
-                                                    [
-                                                        user.current_organization_id,
-                                                    ],
-                                                )}
-                                            >
-                                                Roles
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                        {permissions?.INTEGRATION_SETTINGS_EDIT && (
+                        {(permissions?.ORGANIZATION_MANAGER ||
+                            permissions?.ORGANIZATION_MANAGE_USERS) && (
+                            <Collapsible
+                                open={isOrgMenuOpen}
+                                onOpenChange={handleOrgMenuChange}
+                                asChild
+                                className="group/collapsible"
+                            >
+                                <SidebarMenuItem className="list-none">
+                                    <CollapsibleTrigger asChild>
+                                        <SidebarMenuButton>
+                                            <Building />
+                                            <span>Organization</span>
+                                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                        </SidebarMenuButton>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent>
+                                        <SidebarMenuSub>
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
-                                                    href={route(
-                                                        'organizations.integration-settings',
+                                                    isActive={route().current(
+                                                        'organizations.users',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
-                                                    isActive={route().current(
-                                                        'organizations.integration-settings',
+                                                    href={route(
+                                                        'organizations.users',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
                                                 >
-                                                    Integration Settings
+                                                    Users
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
-                                        )}
-                                        {permissions?.ORGANIZATION_MANAGER && (
                                             <SidebarMenuSubItem>
                                                 <SidebarMenuSubButton
                                                     href={route(
-                                                        'organizations.document-templates-page',
+                                                        'organizations.roles',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
                                                     isActive={route().current(
-                                                        'organizations.document-templates-page',
+                                                        'organizations.roles',
                                                         [
                                                             user.current_organization_id,
                                                         ],
                                                     )}
                                                 >
-                                                    Document Templates
+                                                    Roles
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
-                                        )}
-                                        {permissions?.ORGANIZATION_MANAGER && (
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton
-                                                    href={route(
-                                                        'organizations.settings',
-                                                        [
-                                                            user.current_organization_id,
-                                                        ],
-                                                    )}
-                                                    isActive={route().current(
-                                                        'organizations.settings',
-                                                        [
-                                                            user.current_organization_id,
-                                                        ],
-                                                    )}
-                                                >
-                                                    Settings
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        )}
-                                        {permissions?.ORGANIZATION_BILLING &&
-                                            config?.enable_billing && (
+                                            {permissions?.INTEGRATION_SETTINGS_EDIT && (
                                                 <SidebarMenuSubItem>
                                                     <SidebarMenuSubButton
                                                         href={route(
-                                                            'organizations.billing',
+                                                            'organizations.integration-settings',
                                                             [
                                                                 user.current_organization_id,
                                                             ],
                                                         )}
                                                         isActive={route().current(
-                                                            'organizations.billing',
+                                                            'organizations.integration-settings',
                                                             [
                                                                 user.current_organization_id,
                                                             ],
                                                         )}
                                                     >
-                                                        Billing
+                                                        Integration Settings
                                                     </SidebarMenuSubButton>
                                                 </SidebarMenuSubItem>
                                             )}
-                                    </SidebarMenuSub>
-                                </CollapsibleContent>
-                            </SidebarMenuItem>
-                        </Collapsible>
-                    )}
-                    <SidebarMenuButton
+                                            {permissions?.ORGANIZATION_MANAGER && (
+                                                <SidebarMenuSubItem>
+                                                    <SidebarMenuSubButton
+                                                        href={route(
+                                                            'organizations.document-templates-page',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                        isActive={route().current(
+                                                            'organizations.document-templates-page',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                    >
+                                                        Document Templates
+                                                    </SidebarMenuSubButton>
+                                                </SidebarMenuSubItem>
+                                            )}
+                                            {permissions?.ORGANIZATION_MANAGER && (
+                                                <SidebarMenuSubItem>
+                                                    <SidebarMenuSubButton
+                                                        href={route(
+                                                            'organizations.settings',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                        isActive={route().current(
+                                                            'organizations.settings',
+                                                            [
+                                                                user.current_organization_id,
+                                                            ],
+                                                        )}
+                                                    >
+                                                        Settings
+                                                    </SidebarMenuSubButton>
+                                                </SidebarMenuSubItem>
+                                            )}
+                                            {permissions?.ORGANIZATION_BILLING &&
+                                                config?.enable_billing && (
+                                                    <SidebarMenuSubItem>
+                                                        <SidebarMenuSubButton
+                                                            href={route(
+                                                                'organizations.billing',
+                                                                [
+                                                                    user.current_organization_id,
+                                                                ],
+                                                            )}
+                                                            isActive={route().current(
+                                                                'organizations.billing',
+                                                                [
+                                                                    user.current_organization_id,
+                                                                ],
+                                                            )}
+                                                        >
+                                                            Billing
+                                                        </SidebarMenuSubButton>
+                                                    </SidebarMenuSubItem>
+                                                )}
+                                        </SidebarMenuSub>
+                                    </CollapsibleContent>
+                                </SidebarMenuItem>
+                            </Collapsible>
+                        )}
+                        <SidebarMenuButton
                             onClick={() => setIsFeedbackModalOpen(true)}
                         >
                             <MessageCircle />

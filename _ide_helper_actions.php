@@ -117,6 +117,20 @@ class FmcsaNameLookup
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carriers\Carrier $carrier)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carriers\Carrier $carrier)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carriers\Carrier $carrier)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Carriers\Carrier $carrier)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Carriers\Carrier $carrier)
+ * @method static dispatchSync(\App\Models\Carriers\Carrier $carrier)
+ * @method static dispatchNow(\App\Models\Carriers\Carrier $carrier)
+ * @method static dispatchAfterResponse(\App\Models\Carriers\Carrier $carrier)
+ * @method static mixed run(\App\Models\Carriers\Carrier $carrier)
+ */
+class GetCarrierAuditHistory
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carriers\Carrier $carrier, ?string $name = null, ?string $mc_number = null, ?string $dot_number = null, ?int $physical_location_id = null, ?string $contact_email = null, ?string $contact_phone = null)
