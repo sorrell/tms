@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Facility extends Model
+class Facility extends Model implements Auditable
 {
     use HasFactory, HasOrganization, Searchable, HasContacts, HasNotes, HasDocuments, HasAliases;
+    use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
         'organization_id',

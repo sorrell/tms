@@ -30,6 +30,7 @@ use App\Actions\Documents\GetDocument;
 use App\Actions\Documents\GetDocumentsWithFolders;
 use App\Actions\Documents\UpdateDocument;
 use App\Actions\Facilities\CreateFacility;
+use App\Actions\Facilities\GetFacilityAuditHistory;
 use App\Actions\IntegrationSettings\DeleteIntegrationSetting;
 use App\Actions\IntegrationSettings\SetIntegrationSetting;
 use App\Actions\Locations\CreateLocation;
@@ -179,6 +180,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     ]);
     Route::post('facilities', CreateFacility::class)->name('facilities.store');
     Route::put('facilities/{facility}', \App\Actions\Facilities\UpdateFacility::class)->name('facilities.update');
+    Route::get('facilities/{facility}/audit-history', GetFacilityAuditHistory::class)->name('facilities.audit-history');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
     Route::resource('carriers', CarrierController::class, [

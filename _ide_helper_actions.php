@@ -44,6 +44,22 @@ class SavePayables
 class SaveReceivables
 {
 }
+namespace App\Actions\Audit;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $type, int $id)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $type, int $id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $type, int $id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $type, int $id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $type, int $id)
+ * @method static dispatchSync(string $type, int $id)
+ * @method static dispatchNow(string $type, int $id)
+ * @method static dispatchAfterResponse(string $type, int $id)
+ * @method static mixed run(string $type, int $id)
+ */
+class GetAuditLinkedData
+{
+}
 namespace App\Actions\Carriers;
 
 /**
@@ -260,6 +276,20 @@ class CreateCustomerFacility
  * @method static \App\Models\Facility run(int $customerId, int $facilityId)
  */
 class DeleteCustomerFacility
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Customers\Customer $customer)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Customers\Customer $customer)
+ * @method static dispatchSync(\App\Models\Customers\Customer $customer)
+ * @method static dispatchNow(\App\Models\Customers\Customer $customer)
+ * @method static dispatchAfterResponse(\App\Models\Customers\Customer $customer)
+ * @method static mixed run(\App\Models\Customers\Customer $customer)
+ */
+class GetCustomerAuditHistory
 {
 }
 /**
@@ -510,6 +540,20 @@ namespace App\Actions\Facilities;
  * @method static \App\Models\Facility run(string $name, int $location_id)
  */
 class CreateFacility
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Facility $facility)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Facility $facility)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Facility $facility)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Facility $facility)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Facility $facility)
+ * @method static dispatchSync(\App\Models\Facility $facility)
+ * @method static dispatchNow(\App\Models\Facility $facility)
+ * @method static dispatchAfterResponse(\App\Models\Facility $facility)
+ * @method static mixed run(\App\Models\Facility $facility)
+ */
+class GetFacilityAuditHistory
 {
 }
 /**

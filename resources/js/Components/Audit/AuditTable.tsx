@@ -31,6 +31,10 @@ interface AuditChange {
 interface AuditEntry {
     id: number;
     event: string;
+    auditable_type?: string;
+    auditable_id?: number;
+    entity_type?: string;
+    entity_name?: string;
     user: {
         id: number;
         name: string;
@@ -176,11 +180,16 @@ export default function AuditTable({ audits, loading }: AuditTableProps) {
     };
 
     const exportToCsv = () => {
-        const headers = ['Date', 'Event', 'User', 'Changes'];
+        const headers = ['Date', 'Event', 'User', 'Entity', 'Changes'];
         const csvData = filteredAndSortedAudits.map((audit) => [
             new Date(audit.created_at).toLocaleString(),
             audit.event,
             audit.user?.name || 'System',
+            audit.entity_type &&
+            (audit.entity_type === 'Document' ||
+                audit.entity_type === 'Contact')
+                ? `${audit.entity_type}: ${audit.entity_name}`
+                : '-',
             audit.changes
                 .map(
                     (c) =>
@@ -350,6 +359,7 @@ export default function AuditTable({ audits, loading }: AuditTableProps) {
                                         )}
                                     </div>
                                 </TableHead>
+                                <TableHead>Entity</TableHead>
                                 <TableHead>Changes</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -357,7 +367,7 @@ export default function AuditTable({ audits, loading }: AuditTableProps) {
                             {filteredAndSortedAudits.length === 0 ? (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={4}
+                                        colSpan={5}
                                         className="py-8 text-center text-gray-500"
                                     >
                                         {audits.length === 0
@@ -408,34 +418,84 @@ export default function AuditTable({ audits, loading }: AuditTableProps) {
                                             )}
                                         </TableCell>
                                         <TableCell>
+                                            {audit.entity_type &&
+                                            (audit.entity_type === 'Document' ||
+                                                audit.entity_type ===
+                                                    'Contact') ? (
+                                                <div>
+                                                    <Badge
+                                                        variant="secondary"
+                                                        className="text-xs"
+                                                    >
+                                                        {audit.entity_type}
+                                                    </Badge>
+                                                    <div className="mt-1 max-w-[120px] truncate text-xs text-gray-500">
+                                                        {audit.entity_name}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <span className="text-xs text-gray-500">
+                                                    -
+                                                </span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
                                             <div className="space-y-2">
                                                 {audit.changes.length === 0 ? (
                                                     <span className="text-gray-500">
                                                         No changes
                                                     </span>
                                                 ) : (
-                                                    audit.changes.map((change, changeIndex) => (
-                                                        <div key={changeIndex} className="border-l-2 border-gray-200 pl-3">
-                                                            <div className="text-sm font-medium text-gray-700 mb-1">
-                                                                {change.field}
+                                                    audit.changes.map(
+                                                        (
+                                                            change,
+                                                            changeIndex,
+                                                        ) => (
+                                                            <div
+                                                                key={
+                                                                    changeIndex
+                                                                }
+                                                                className="border-l-2 border-gray-200 pl-3"
+                                                            >
+                                                                <div className="mb-1 text-sm font-medium text-gray-700">
+                                                                    {
+                                                                        change.field
+                                                                    }
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-xs">
+                                                                    <span className="max-w-[120px] truncate rounded border border-red-200 bg-red-50 px-2 py-1 text-red-800">
+                                                                        <AuditFieldValue
+                                                                            fieldName={
+                                                                                change.field_name
+                                                                            }
+                                                                            value={
+                                                                                change.old_value
+                                                                            }
+                                                                            auditUser={
+                                                                                audit.user
+                                                                            }
+                                                                        />
+                                                                    </span>
+                                                                    <span className="text-gray-400">
+                                                                        →
+                                                                    </span>
+                                                                    <span className="max-w-[120px] truncate rounded border border-green-200 bg-green-50 px-2 py-1 text-green-800">
+                                                                        <AuditFieldValue
+                                                                            fieldName={
+                                                                                change.field_name
+                                                                            }
+                                                                            value={
+                                                                                change.new_value
+                                                                            }
+                                                                            auditUser={
+                                                                                audit.user
+                                                                            }
+                                                                        />
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                            <div className="flex items-center gap-2 text-xs">
-                                                                <span className="rounded bg-red-50 border border-red-200 px-2 py-1 text-red-800 max-w-[120px] truncate">
-                                                                    <AuditFieldValue
-                                                                        fieldName={change.field_name}
-                                                                        value={change.old_value}
-                                                                    />
-                                                                </span>
-                                                                <span className="text-gray-400">→</span>
-                                                                <span className="rounded bg-green-50 border border-green-200 px-2 py-1 text-green-800 max-w-[120px] truncate">
-                                                                    <AuditFieldValue
-                                                                        fieldName={change.field_name}
-                                                                        value={change.new_value}
-                                                                    />
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    ))
+                                                        ),
+                                                    )
                                                 )}
                                             </div>
                                         </TableCell>

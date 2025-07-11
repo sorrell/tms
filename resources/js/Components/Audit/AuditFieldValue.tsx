@@ -7,26 +7,32 @@ interface AuditFieldValueProps {
     fieldName: string;
     value: unknown;
     className?: string;
+    auditUser?: {
+        id: number;
+        name: string;
+        email: string;
+    } | null;
 }
 
 // Map of field names to their corresponding model types
 const FOREIGN_KEY_MAPPINGS: Record<string, string> = {
-    'billing_location_id': 'location',
-    'physical_location_id': 'location',
-    'location_id': 'location',
-    'billing_contact_id': 'contact',
-    'contact_id': 'contact',
-    'user_id': 'user',
-    'created_by': 'user',
-    'updated_by': 'user',
-    'carrier_id': 'carrier',
-    'customer_id': 'customer',
+    billing_location_id: 'location',
+    physical_location_id: 'location',
+    location_id: 'location',
+    billing_contact_id: 'contact',
+    contact_id: 'contact',
+    user_id: 'user',
+    created_by: 'user',
+    updated_by: 'user',
+    carrier_id: 'carrier',
+    customer_id: 'customer',
 };
 
 export default function AuditFieldValue({
     fieldName,
     value,
     className = '',
+    auditUser,
 }: AuditFieldValueProps) {
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -40,7 +46,26 @@ export default function AuditFieldValue({
         if (typeof value === 'object') {
             return JSON.stringify(value);
         }
-        return String(value);
+
+        const stringValue = String(value);
+
+        // Special handling for file paths
+        if (fieldName === 'path' && stringValue) {
+            // Extract just the filename from the path
+            const parts = stringValue.split('/');
+            return parts[parts.length - 1] || stringValue;
+        }
+
+        // Special handling for uploaded_by - show the user name if it matches the audit user
+        if (
+            fieldName === 'uploaded_by' &&
+            auditUser &&
+            String(value) === String(auditUser.id)
+        ) {
+            return auditUser.name;
+        }
+
+        return stringValue;
     };
 
     // Check if this field is a foreign key

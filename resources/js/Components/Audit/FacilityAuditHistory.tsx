@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/Components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
-import { Customer } from '@/types';
+import { Facility } from '@/types';
 import { Clock, Table } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AuditTable from './AuditTable';
@@ -34,13 +34,13 @@ interface AuditEntry {
     user_agent?: string;
 }
 
-interface CustomerAuditHistoryProps {
-    customer: Customer;
+interface FacilityAuditHistoryProps {
+    facility: Facility;
 }
 
-export default function CustomerAuditHistory({
-    customer,
-}: CustomerAuditHistoryProps) {
+export default function FacilityAuditHistory({
+    facility,
+}: FacilityAuditHistoryProps) {
     const [audits, setAudits] = useState<AuditEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -51,7 +51,7 @@ export default function CustomerAuditHistory({
             try {
                 setLoading(true);
                 const response = await fetch(
-                    route('customers.audit-history', customer.id),
+                    route('facilities.audit-history', facility.id),
                 );
 
                 if (!response.ok) {
@@ -69,10 +69,10 @@ export default function CustomerAuditHistory({
             }
         };
 
-        if (customer.id) {
+        if (facility.id) {
             fetchAudits();
         }
-    }, [customer.id]);
+    }, [facility.id]);
 
     if (error) {
         return (

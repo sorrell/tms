@@ -6,7 +6,7 @@ import {
     DialogTitle,
 } from '@/Components/ui/dialog';
 import { Skeleton } from '@/Components/ui/skeleton';
-import { ExternalLink, X } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface LinkedData {
@@ -44,7 +44,7 @@ export default function AuditLinkedDataModal({
         try {
             setLoading(true);
             setError(null);
-            
+
             const response = await fetch(
                 route('audit.linked-data', {
                     type: modelType,
@@ -59,9 +59,7 @@ export default function AuditLinkedDataModal({
             const data = await response.json();
             setLinkedData(data);
         } catch (err) {
-            setError(
-                err instanceof Error ? err.message : 'An error occurred',
-            );
+            setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setLoading(false);
         }
@@ -70,7 +68,7 @@ export default function AuditLinkedDataModal({
     const formatFieldName = (key: string): string => {
         return key
             .split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
     };
 
@@ -130,7 +128,9 @@ export default function AuditLinkedDataModal({
 
                     {error && (
                         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-                            <div className="font-medium">Error loading data</div>
+                            <div className="font-medium">
+                                Error loading data
+                            </div>
                             <div className="text-sm">{error}</div>
                         </div>
                     )}

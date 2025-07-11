@@ -15,6 +15,10 @@ interface AuditChange {
 interface AuditEntry {
     id: number;
     event: string;
+    auditable_type?: string;
+    auditable_id?: number;
+    entity_type?: string;
+    entity_name?: string;
     user: {
         id: number;
         name: string;
@@ -158,6 +162,18 @@ export default function AuditTimeline({ audits, loading }: AuditTimelineProps) {
                                         <Badge variant="outline">
                                             {getEventTitle(audit.event)}
                                         </Badge>
+                                        {audit.entity_type &&
+                                            (audit.entity_type === 'Document' ||
+                                                audit.entity_type ===
+                                                    'Contact') && (
+                                                <Badge
+                                                    variant="secondary"
+                                                    className="text-xs"
+                                                >
+                                                    {audit.entity_type}:{' '}
+                                                    {audit.entity_name}
+                                                </Badge>
+                                            )}
                                         {audit.user && (
                                             <div className="flex items-center gap-2 text-sm text-gray-600">
                                                 <User className="h-4 w-4" />
@@ -185,8 +201,15 @@ export default function AuditTimeline({ audits, loading }: AuditTimelineProps) {
                                             <div className="text-sm">
                                                 <span className="text-red-600">
                                                     <AuditFieldValue
-                                                        fieldName={audit.changes[0].field_name}
-                                                        value={audit.changes[0].old_value}
+                                                        fieldName={
+                                                            audit.changes[0]
+                                                                .field_name
+                                                        }
+                                                        value={
+                                                            audit.changes[0]
+                                                                .old_value
+                                                        }
+                                                        auditUser={audit.user}
                                                     />
                                                 </span>
                                                 <span className="mx-2 text-gray-400">
@@ -194,8 +217,15 @@ export default function AuditTimeline({ audits, loading }: AuditTimelineProps) {
                                                 </span>
                                                 <span className="text-green-600">
                                                     <AuditFieldValue
-                                                        fieldName={audit.changes[0].field_name}
-                                                        value={audit.changes[0].new_value}
+                                                        fieldName={
+                                                            audit.changes[0]
+                                                                .field_name
+                                                        }
+                                                        value={
+                                                            audit.changes[0]
+                                                                .new_value
+                                                        }
+                                                        auditUser={audit.user}
                                                     />
                                                 </span>
                                             </div>
@@ -234,8 +264,15 @@ export default function AuditTimeline({ audits, loading }: AuditTimelineProps) {
                                                             </div>
                                                             <div className="rounded border border-red-200 bg-red-50 p-2 text-red-800">
                                                                 <AuditFieldValue
-                                                                    fieldName={change.field_name}
-                                                                    value={change.old_value}
+                                                                    fieldName={
+                                                                        change.field_name
+                                                                    }
+                                                                    value={
+                                                                        change.old_value
+                                                                    }
+                                                                    auditUser={
+                                                                        audit.user
+                                                                    }
                                                                 />
                                                             </div>
                                                         </div>
@@ -245,8 +282,15 @@ export default function AuditTimeline({ audits, loading }: AuditTimelineProps) {
                                                             </div>
                                                             <div className="rounded border border-green-200 bg-green-50 p-2 text-green-800">
                                                                 <AuditFieldValue
-                                                                    fieldName={change.field_name}
-                                                                    value={change.new_value}
+                                                                    fieldName={
+                                                                        change.field_name
+                                                                    }
+                                                                    value={
+                                                                        change.new_value
+                                                                    }
+                                                                    auditUser={
+                                                                        audit.user
+                                                                    }
                                                                 />
                                                             </div>
                                                         </div>
