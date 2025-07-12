@@ -34,12 +34,11 @@ interface Props {
     globalIntegrationSettings: GlobalIntegrationSetting[];
 }
 
-interface IntegrationSettingForm {
+type IntegrationSettingForm = {
     key: string;
     value: string;
     provider?: string;
     expose_to_frontend: boolean;
-    [key: string]: string | boolean | undefined;
 }
 
 interface ProviderGroup {
