@@ -31,7 +31,7 @@ class PreCommitChecks extends Command
     ];
 
     protected $commands = [
-        'phpstan' => 'php ./vendor/bin/phpstan analyse',
+        'phpstan' => 'php ./vendor/bin/phpstan analyse --memory-limit=1024M',
         'npm-lint' => 'npm run lint',
         'typescript' => 'npm exec tsc',
         'npm-build' => 'npm run build',

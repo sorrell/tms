@@ -39,7 +39,7 @@ type IntegrationSettingForm = {
     value: string;
     provider?: string;
     expose_to_frontend: boolean;
-}
+};
 
 interface ProviderGroup {
     name: string;
