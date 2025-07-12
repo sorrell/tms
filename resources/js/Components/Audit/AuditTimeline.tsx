@@ -92,19 +92,6 @@ export default function AuditTimeline({ audits, loading }: AuditTimelineProps) {
         }
     };
 
-    const formatValue = (value: unknown): string => {
-        if (value === null || value === undefined) {
-            return 'No value';
-        }
-        if (typeof value === 'boolean') {
-            return value ? 'Yes' : 'No';
-        }
-        if (typeof value === 'object') {
-            return JSON.stringify(value);
-        }
-        return String(value);
-    };
-
     if (loading) {
         return (
             <div className="space-y-4">

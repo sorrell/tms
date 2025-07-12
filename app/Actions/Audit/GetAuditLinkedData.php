@@ -24,7 +24,7 @@ class GetAuditLinkedData
         }
 
         return [
-            'id' => $model->id,
+            'id' => $model->getKey(),
             'type' => $this->getDisplayType($type),
             'title' => $this->getDisplayTitle($model, $type),
             'data' => $this->getDisplayData($model, $type),
@@ -77,16 +77,20 @@ class GetAuditLinkedData
     {
         return match ($type) {
             'location' => $this->formatLocationTitle($model),
-            'contact' => $model->name ?? 'Contact #' . $model->id,
-            'carrier' => $model->name ?? 'Carrier #' . $model->id,
-            'customer' => $model->name ?? 'Customer #' . $model->id,
-            'user' => $model->name ?? 'User #' . $model->id,
-            default => ucfirst($type) . ' #' . $model->id,
+            'contact' => ($model instanceof Contact ? $model->name : null) ?? 'Contact #' . $model->getKey(),
+            'carrier' => ($model instanceof Carrier ? $model->name : null) ?? 'Carrier #' . $model->getKey(),
+            'customer' => ($model instanceof Customer ? $model->name : null) ?? 'Customer #' . $model->getKey(),
+            'user' => ($model instanceof User ? $model->name : null) ?? 'User #' . $model->getKey(),
+            default => ucfirst($type) . ' #' . $model->getKey(),
         };
     }
 
     private function formatLocationTitle(Model $location): string
     {
+        if (!$location instanceof Location) {
+            return 'Location #' . $location->getKey();
+        }
+        
         $parts = array_filter([
             $location->name,
             $location->address_line_1,
@@ -94,7 +98,7 @@ class GetAuditLinkedData
             $location->address_state,
         ]);
 
-        return implode(', ', $parts) ?: 'Location #' . $location->id;
+        return implode(', ', $parts) ?: 'Location #' . $location->getKey();
     }
 
     private function getDisplayData(Model $model, string $type): array
@@ -111,6 +115,10 @@ class GetAuditLinkedData
 
     private function getLocationData(Model $location): array
     {
+        if (!$location instanceof Location) {
+            return [];
+        }
+        
         return [
             'name' => $location->name,
             'address_line_1' => $location->address_line_1,
@@ -118,26 +126,36 @@ class GetAuditLinkedData
             'city' => $location->address_city,
             'state' => $location->address_state,
             'zipcode' => $location->address_zipcode,
-            'country' => $location->address_country,
-            'phone' => $location->phone,
+            'latitude' => $location->latitude,
+            'longitude' => $location->longitude,
             'created_at' => $location->created_at?->format('M j, Y g:i A'),
         ];
     }
 
     private function getContactData(Model $contact): array
     {
+        if (!$contact instanceof Contact) {
+            return [];
+        }
+        
         return [
             'name' => $contact->name,
             'email' => $contact->email,
-            'phone' => $contact->phone,
+            'mobile_phone' => $contact->mobile_phone,
+            'office_phone' => $contact->office_phone,
+            'office_phone_extension' => $contact->office_phone_extension,
             'title' => $contact->title,
-            'notes' => $contact->notes,
+            'contact_type' => $contact->contact_type,
             'created_at' => $contact->created_at?->format('M j, Y g:i A'),
         ];
     }
 
     private function getCarrierData(Model $carrier): array
     {
+        if (!$carrier instanceof Carrier) {
+            return [];
+        }
+        
         return [
             'name' => $carrier->name,
             'mc_number' => $carrier->mc_number,
@@ -152,6 +170,10 @@ class GetAuditLinkedData
 
     private function getCustomerData(Model $customer): array
     {
+        if (!$customer instanceof Customer) {
+            return [];
+        }
+        
         return [
             'name' => $customer->name,
             'dba_name' => $customer->dba_name,
@@ -163,6 +185,10 @@ class GetAuditLinkedData
 
     private function getUserData(Model $user): array
     {
+        if (!$user instanceof User) {
+            return [];
+        }
+        
         return [
             'name' => $user->name,
             'email' => $user->email,
@@ -174,8 +200,8 @@ class GetAuditLinkedData
     {
         try {
             return match ($type) {
-                'carrier' => route('carriers.show', $model->id),
-                'customer' => route('customers.show', $model->id),
+                'carrier' => route('carriers.show', $model->getKey()),
+                'customer' => route('customers.show', $model->getKey()),
                 'location' => null, // Locations don't have individual view pages
                 'contact' => null, // Contacts don't have individual view pages
                 'user' => null, // Users don't have individual view pages typically

@@ -7,7 +7,7 @@ import {
 } from '@/Components/ui/dialog';
 import { Skeleton } from '@/Components/ui/skeleton';
 import { ExternalLink } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface LinkedData {
     id: number;
@@ -34,13 +34,7 @@ export default function AuditLinkedDataModal({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (open && modelId && modelType) {
-            fetchLinkedData();
-        }
-    }, [open, modelId, modelType]);
-
-    const fetchLinkedData = async () => {
+    const fetchLinkedData = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
@@ -63,7 +57,13 @@ export default function AuditLinkedDataModal({
         } finally {
             setLoading(false);
         }
-    };
+    }, [modelType, modelId]);
+
+    useEffect(() => {
+        if (open && modelId && modelType) {
+            fetchLinkedData();
+        }
+    }, [open, modelId, modelType, fetchLinkedData]);
 
     const formatFieldName = (key: string): string => {
         return key

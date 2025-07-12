@@ -5,11 +5,12 @@ namespace App\Traits;
 use App\Models\Contact;
 use App\Models\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Models\Audit;
 
 trait HandlesAuditHistory
 {
-    protected function getAuditHistory(Model $parentModel): \Illuminate\Support\Collection
+    protected function getAuditHistory(Model & Auditable $parentModel): \Illuminate\Support\Collection
     {
         $parentClass = get_class($parentModel);
         
@@ -20,7 +21,7 @@ trait HandlesAuditHistory
         $documentAudits = $this->getRelatedModelAudits(
             Document::class,
             $parentClass,
-            $parentModel->id,
+            $parentModel->getKey(),
             'documentable_type',
             'documentable_id'
         );
@@ -29,7 +30,7 @@ trait HandlesAuditHistory
         $contactAudits = $this->getRelatedModelAudits(
             Contact::class,
             $parentClass,
-            $parentModel->id,
+            $parentModel->getKey(),
             'contact_for_type',
             'contact_for_id'
         );
@@ -43,7 +44,7 @@ trait HandlesAuditHistory
     private function getRelatedModelAudits(
         string $auditableType,
         string $parentClass,
-        int $parentId,
+        mixed $parentId,
         string $typeField,
         string $idField
     ): \Illuminate\Support\Collection {
@@ -72,26 +73,33 @@ trait HandlesAuditHistory
     protected function formatAuditData(\Illuminate\Support\Collection $audits): \Illuminate\Support\Collection
     {
         return $audits->map(function (Audit $audit) {
+            /** @var mixed $auditableType */
+            $auditableType = $audit->getAttributeValue('auditable_type');
+            /** @var mixed $oldValues */
+            $oldValues = $audit->getAttributeValue('old_values') ?? [];
+            /** @var mixed $newValues */
+            $newValues = $audit->getAttributeValue('new_values') ?? [];
+            
             return [
-                'id' => $audit->id,
-                'event' => $audit->event,
-                'auditable_type' => $audit->auditable_type,
-                'auditable_id' => $audit->auditable_id,
-                'entity_type' => $this->getEntityType($audit->auditable_type),
+                'id' => $audit->getKey(),
+                'event' => $audit->getAttributeValue('event'),
+                'auditable_type' => $auditableType,
+                'auditable_id' => $audit->getAttributeValue('auditable_id'),
+                'entity_type' => $this->getEntityType($auditableType),
                 'entity_name' => $this->getEntityName($audit),
                 'user' => $audit->user ? [
-                    'id' => $audit->user->id,
-                    'name' => $audit->user->name,
-                    'email' => $audit->user->email,
+                    'id' => $audit->user->getKey(),
+                    'name' => $audit->user->getAttributeValue('name'),
+                    'email' => $audit->user->getAttributeValue('email'),
                 ] : null,
-                'old_values' => $audit->old_values ?? [],
-                'new_values' => $audit->new_values ?? [],
-                'url' => $audit->url,
-                'ip_address' => $audit->ip_address,
-                'user_agent' => $audit->user_agent,
-                'created_at' => $audit->created_at,
-                'created_at_human' => $audit->created_at->diffForHumans(),
-                'changes' => $this->formatChanges($audit->old_values ?? [], $audit->new_values ?? [], $audit->auditable_type),
+                'old_values' => $oldValues,
+                'new_values' => $newValues,
+                'url' => $audit->getAttributeValue('url'),
+                'ip_address' => $audit->getAttributeValue('ip_address'),
+                'user_agent' => $audit->getAttributeValue('user_agent'),
+                'created_at' => $audit->getAttributeValue('created_at'),
+                'created_at_human' => $audit->getAttributeValue('created_at')?->diffForHumans(),
+                'changes' => $this->formatChanges($oldValues, $newValues, $auditableType),
             ];
         });
     }
@@ -181,11 +189,19 @@ trait HandlesAuditHistory
 
     private function getEntityName(Audit $audit): string
     {
-        if (!$audit->auditable) {
+        $auditable = $audit->auditable;
+        /** @var mixed $auditableType */
+        $auditableType = $audit->getAttributeValue('auditable_type');
+        /** @var mixed $oldValues */
+        $oldValues = $audit->getAttributeValue('old_values') ?? [];
+        /** @var mixed $newValues */
+        $newValues = $audit->getAttributeValue('new_values') ?? [];
+        
+        if (!$auditable) {
             // For deleted entities, try to get name from old_values or new_values
-            $name = $audit->old_values['name'] ?? $audit->new_values['name'] ?? null;
+            $name = $oldValues['name'] ?? $newValues['name'] ?? null;
             
-            return match ($audit->auditable_type) {
+            return match ($auditableType) {
                 \App\Models\Customers\Customer::class => $name ? $name . ' (deleted)' : 'Deleted Customer',
                 \App\Models\Facility::class => $name ? $name . ' (deleted)' : 'Deleted Facility',
                 \App\Models\Carriers\Carrier::class => $name ? $name . ' (deleted)' : 'Deleted Carrier',
@@ -195,12 +211,12 @@ trait HandlesAuditHistory
             };
         }
 
-        return match ($audit->auditable_type) {
-            \App\Models\Customers\Customer::class => $audit->auditable->name ?? 'Unknown Customer',
-            \App\Models\Facility::class => $audit->auditable->name ?? 'Unknown Facility',
-            \App\Models\Carriers\Carrier::class => $audit->auditable->name ?? 'Unknown Carrier',
-            Document::class => $audit->auditable->name ?? 'Unknown Document',
-            Contact::class => $audit->auditable->name ?? 'Unknown Contact',
+        return match ($auditableType) {
+            \App\Models\Customers\Customer::class => $auditable->getAttributeValue('name') ?? 'Unknown Customer',
+            \App\Models\Facility::class => $auditable->getAttributeValue('name') ?? 'Unknown Facility',
+            \App\Models\Carriers\Carrier::class => $auditable->getAttributeValue('name') ?? 'Unknown Carrier',
+            Document::class => $auditable->getAttributeValue('name') ?? 'Unknown Document',
+            Contact::class => $auditable->getAttributeValue('name') ?? 'Unknown Contact',
             default => 'Unknown Entity',
         };
     }
