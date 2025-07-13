@@ -861,6 +861,20 @@ class GetShipmentAccounting
 {
 }
 /**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment)
+ * @method static mixed run(\App\Models\Shipments\Shipment $shipment)
+ */
+class GetShipmentAuditHistory
+{
+}
+/**
  * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
  * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment, ?\App\Services\Shipments\ShipmentStateService $stateService = null)

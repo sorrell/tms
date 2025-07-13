@@ -48,26 +48,40 @@ trait HandlesAuditHistory
         string $typeField,
         string $idField
     ): \Illuminate\Support\Collection {
-        return Audit::where('auditable_type', $auditableType)
-            ->where(function ($query) use ($parentClass, $parentId, $typeField, $idField) {
-                // Include audits where the model still exists
-                $query->whereHas('auditable', function ($subQuery) use ($parentClass, $parentId, $typeField, $idField) {
-                    $subQuery->where($typeField, $parentClass)
-                             ->where($idField, $parentId);
-                })
-                // OR include audits where model was deleted but belonged to this parent
-                ->orWhere(function ($subQuery) use ($parentClass, $parentId, $typeField, $idField) {
-                    $subQuery->whereDoesntHave('auditable')
-                             ->where(function ($valueQuery) use ($parentClass, $parentId, $typeField, $idField) {
-                                 $valueQuery->whereJsonContains("old_values->{$typeField}", $parentClass)
-                                           ->whereJsonContains("old_values->{$idField}", $parentId)
-                                           ->orWhereJsonContains("new_values->{$typeField}", $parentClass)
-                                           ->whereJsonContains("new_values->{$idField}", $parentId);
-                             });
-                });
+        $audits = collect();
+        
+        // Get audits for models that currently exist and belong to this parent
+        $existingModelAudits = Audit::where('auditable_type', $auditableType)
+            ->whereHas('auditable', function ($subQuery) use ($parentClass, $parentId, $typeField, $idField) {
+                $subQuery->where($typeField, $parentClass)
+                         ->where($idField, $parentId);
             })
             ->with('user', 'auditable')
             ->get();
+        
+        $audits = $audits->merge($existingModelAudits);
+        
+        // Get audits for deleted models - but be very precise to avoid cross-contamination
+        $deletedModelAudits = Audit::where('auditable_type', $auditableType)
+            ->whereDoesntHave('auditable')
+            ->get()
+            ->filter(function (Audit $audit) use ($parentClass, $parentId, $typeField, $idField) {
+                $oldValues = $audit->getAttributeValue('old_values') ?? [];
+                $newValues = $audit->getAttributeValue('new_values') ?? [];
+                
+                // Check if this audit belongs to our specific parent
+                $matchesInOld = isset($oldValues[$typeField]) && isset($oldValues[$idField]) &&
+                               $oldValues[$typeField] === $parentClass && 
+                               (int)$oldValues[$idField] === (int)$parentId;
+                
+                $matchesInNew = isset($newValues[$typeField]) && isset($newValues[$idField]) &&
+                               $newValues[$typeField] === $parentClass && 
+                               (int)$newValues[$idField] === (int)$parentId;
+                
+                return $matchesInOld || $matchesInNew;
+            });
+        
+        return $audits->merge($deletedModelAudits);
     }
 
     protected function formatAuditData(\Illuminate\Support\Collection $audits): \Illuminate\Support\Collection
@@ -181,6 +195,7 @@ trait HandlesAuditHistory
             \App\Models\Customers\Customer::class => 'Customer',
             \App\Models\Facility::class => 'Facility',
             \App\Models\Carriers\Carrier::class => 'Carrier',
+            \App\Models\Shipments\Shipment::class => 'Shipment',
             Document::class => 'Document',
             Contact::class => 'Contact',
             default => class_basename($auditableType),
@@ -200,11 +215,13 @@ trait HandlesAuditHistory
         if (!$auditable) {
             // For deleted entities, try to get name from old_values or new_values
             $name = $oldValues['name'] ?? $newValues['name'] ?? null;
+            $shipmentNumber = $oldValues['shipment_number'] ?? $newValues['shipment_number'] ?? null;
             
             return match ($auditableType) {
                 \App\Models\Customers\Customer::class => $name ? $name . ' (deleted)' : 'Deleted Customer',
                 \App\Models\Facility::class => $name ? $name . ' (deleted)' : 'Deleted Facility',
                 \App\Models\Carriers\Carrier::class => $name ? $name . ' (deleted)' : 'Deleted Carrier',
+                \App\Models\Shipments\Shipment::class => $shipmentNumber ? 'Shipment ' . $shipmentNumber . ' (deleted)' : 'Deleted Shipment',
                 Document::class => $name ? $name . ' (deleted)' : 'Deleted Document',
                 Contact::class => $name ? $name . ' (deleted)' : 'Deleted Contact',
                 default => 'Deleted Entity',
@@ -215,6 +232,7 @@ trait HandlesAuditHistory
             \App\Models\Customers\Customer::class => $auditable->getAttributeValue('name') ?? 'Unknown Customer',
             \App\Models\Facility::class => $auditable->getAttributeValue('name') ?? 'Unknown Facility',
             \App\Models\Carriers\Carrier::class => $auditable->getAttributeValue('name') ?? 'Unknown Carrier',
+            \App\Models\Shipments\Shipment::class => $auditable->getAttributeValue('shipment_number') ? 'Shipment ' . $auditable->getAttributeValue('shipment_number') : 'Shipment #' . $auditable->getKey(),
             Document::class => $auditable->getAttributeValue('name') ?? 'Unknown Document',
             Contact::class => $auditable->getAttributeValue('name') ?? 'Unknown Contact',
             default => 'Unknown Entity',

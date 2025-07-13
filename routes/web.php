@@ -42,6 +42,7 @@ use App\Actions\Shipments\CancelShipment;
 use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\DispatchShipment;
 use App\Actions\Shipments\GetShipmentAccounting;
+use App\Actions\Shipments\GetShipmentAuditHistory;
 use App\Actions\Shipments\UncancelShipment;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
@@ -248,6 +249,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     Route::get('shipments/{shipment}/accounting', GetShipmentAccounting::class)->name('shipments.accounting');
     Route::post('shipments/{shipment}/accounting/payables', SavePayables::class)->name('shipments.accounting.payables');
     Route::post('shipments/{shipment}/accounting/receivables', SaveReceivables::class)->name('shipments.accounting.receivables');
+    Route::get('shipments/{shipment}/audit-history', GetShipmentAuditHistory::class)->name('shipments.audit-history');
 
     Route::post('shipments/{shipment}/documents/generate-rate-con', GenerateRateConfirmation::class)->name('shipments.documents.generate-rate-confirmation');
     Route::post('shipments/{shipment}/documents/generate-customer-invoice/{customer}', GenerateCustomerInvoice::class)->name('shipments.documents.generate-customer-invoice');
