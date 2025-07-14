@@ -37,10 +37,24 @@ export default function AuditFieldValue({
     const [modalOpen, setModalOpen] = useState(false);
 
     const formatValue = (value: unknown): string => {
+        // Check for folder-related fields (both raw and formatted names)
+        const isFolderField = fieldName === 'folder_name' || fieldName === 'Folder Name';
+        const isPathField = fieldName === 'path' || fieldName === 'Path';
+        
         if (value === null || value === undefined) {
+            // For path fields, only show '/' if the value was explicitly set to null/undefined
+            // but not when there was no previous value (which should show 'No value')
             return 'No value';
         }
         if (typeof value === 'boolean') {
+            // Special handling for folder fields - don't convert to Yes/No
+            if (isFolderField) {
+                return value ? 'true' : '/';
+            }
+            // Special handling for path fields - show root folder when false
+            if (isPathField) {
+                return value ? 'true' : '/';
+            }
             return value ? 'Yes' : 'No';
         }
         if (typeof value === 'object') {
@@ -48,6 +62,11 @@ export default function AuditFieldValue({
         }
 
         const stringValue = String(value);
+
+        // Special handling for folder fields - show root folder when empty
+        if (isFolderField && stringValue.trim() === '') {
+            return '/';
+        }
 
         // Special handling for file paths
         if (fieldName === 'path' && stringValue) {

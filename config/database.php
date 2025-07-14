@@ -42,6 +42,11 @@ return [
             'synchronous' => null,
         ],
 
+        'sqlite_testing' => [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+        ],
+
         // connector for doing zip 3 to timezone lookups
         'zip3_to_timezone' => [
             'driver' => 'sqlite',
