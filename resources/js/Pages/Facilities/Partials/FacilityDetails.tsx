@@ -1,3 +1,4 @@
+import FacilityAuditHistory from '@/Components/Audit/FacilityAuditHistory';
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import LocationForm from '@/Components/CreateForms/LocationForm';
 import DocumentsList from '@/Components/Documents/DocumentsList';
@@ -161,6 +162,7 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                             <SelectItem value="shipments">
                                 Shipment History
                             </SelectItem>
+                            <SelectItem value="audit">Audit History</SelectItem>
                         </SelectContent>
                     </Select>
                 ) : (
@@ -188,6 +190,12 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                             onClick={() => handleTabChange('shipments')}
                         >
                             Shipment History
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="audit"
+                            onClick={() => handleTabChange('audit')}
+                        >
+                            Audit History
                         </TabsTrigger>
                     </TabsList>
                 )}
@@ -374,6 +382,11 @@ export default function FacilityDetails({ facility }: { facility: Facility }) {
                             />
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                {/* Audit History Tab */}
+                <TabsContent value="audit">
+                    <FacilityAuditHistory facility={facility} />
                 </TabsContent>
             </Tabs>
         </div>

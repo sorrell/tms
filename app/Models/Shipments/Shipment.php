@@ -23,12 +23,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\HasStatesContract;
 
-class Shipment extends Model implements HasStatesContract
+class Shipment extends Model implements HasStatesContract, Auditable
 {
-    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates, HasDocuments, HasAliases;
+    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates, HasDocuments, HasAliases, AuditableTrait;
 
     protected $fillable = [
         'organization_id',

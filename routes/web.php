@@ -8,6 +8,8 @@ use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
 use App\Actions\Carriers\FmcsaDOTLookup;
 use App\Actions\Carriers\FmcsaNameLookup;
+use App\Actions\Audit\GetAuditLinkedData;
+use App\Actions\Carriers\GetCarrierAuditHistory;
 use App\Actions\Carriers\UpdateCarrierGeneral;
 use App\Actions\Contacts\CreateContact;
 use App\Actions\Contacts\DeleteContact;
@@ -16,6 +18,7 @@ use App\Actions\Contacts\UpdateContact;
 use App\Actions\Customers\CreateCustomer;
 use App\Actions\Customers\CreateCustomerFacility;
 use App\Actions\Customers\DeleteCustomerFacility;
+use App\Actions\Customers\GetCustomerAuditHistory;
 use App\Actions\Customers\UpdateCustomer;
 use App\Actions\Dashboard\RecentCarriersCard;
 use App\Actions\Dashboard\RecentShipmentsCard;
@@ -27,6 +30,7 @@ use App\Actions\Documents\GetDocument;
 use App\Actions\Documents\GetDocumentsWithFolders;
 use App\Actions\Documents\UpdateDocument;
 use App\Actions\Facilities\CreateFacility;
+use App\Actions\Facilities\GetFacilityAuditHistory;
 use App\Actions\IntegrationSettings\DeleteIntegrationSetting;
 use App\Actions\IntegrationSettings\SetIntegrationSetting;
 use App\Actions\Locations\CreateLocation;
@@ -38,6 +42,7 @@ use App\Actions\Shipments\CancelShipment;
 use App\Actions\Shipments\CreateShipment;
 use App\Actions\Shipments\DispatchShipment;
 use App\Actions\Shipments\GetShipmentAccounting;
+use App\Actions\Shipments\GetShipmentAuditHistory;
 use App\Actions\Shipments\UncancelShipment;
 use App\Actions\Shipments\UpdateShipmentCarrierDetails;
 use App\Actions\Shipments\UpdateShipmentGeneral;
@@ -176,6 +181,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     ]);
     Route::post('facilities', CreateFacility::class)->name('facilities.store');
     Route::put('facilities/{facility}', \App\Actions\Facilities\UpdateFacility::class)->name('facilities.update');
+    Route::get('facilities/{facility}/audit-history', GetFacilityAuditHistory::class)->name('facilities.audit-history');
 
     Route::get('carriers/search', [CarrierController::class, 'search'])->name('carriers.search');
     Route::resource('carriers', CarrierController::class, [
@@ -185,6 +191,11 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     Route::post('carriers', CreateCarrier::class)->name('carriers.store');
 
     Route::get('carriers/{carrier}/bounced-loads', [CarrierController::class, 'bouncedLoads'])->name('carriers.bounced-loads');
+    Route::get('carriers/{carrier}/audit-history', GetCarrierAuditHistory::class)->name('carriers.audit-history');
+
+    Route::get('customers/{customer}/audit-history', GetCustomerAuditHistory::class)->name('customers.audit-history');
+
+    Route::get('audit/linked-data/{type}/{id}', GetAuditLinkedData::class)->name('audit.linked-data');
 
     Route::get('carriers/fmcsa/name', FmcsaNameLookup::class)->name('carriers.fmcsa.lookup.name');
     Route::post('carriers/fmcsa/{carrierSaferReport}/create', CreateCarrierFromSaferReport::class)->name('carriers.fmcsa.store');
@@ -238,6 +249,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     Route::get('shipments/{shipment}/accounting', GetShipmentAccounting::class)->name('shipments.accounting');
     Route::post('shipments/{shipment}/accounting/payables', SavePayables::class)->name('shipments.accounting.payables');
     Route::post('shipments/{shipment}/accounting/receivables', SaveReceivables::class)->name('shipments.accounting.receivables');
+    Route::get('shipments/{shipment}/audit-history', GetShipmentAuditHistory::class)->name('shipments.audit-history');
 
     Route::post('shipments/{shipment}/documents/generate-rate-con', GenerateRateConfirmation::class)->name('shipments.documents.generate-rate-confirmation');
     Route::post('shipments/{shipment}/documents/generate-customer-invoice/{customer}', GenerateCustomerInvoice::class)->name('shipments.documents.generate-customer-invoice');

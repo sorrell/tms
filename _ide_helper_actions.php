@@ -44,6 +44,22 @@ class SavePayables
 class SaveReceivables
 {
 }
+namespace App\Actions\Audit;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $type, int $id)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $type, int $id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $type, int $id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, string $type, int $id)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, string $type, int $id)
+ * @method static dispatchSync(string $type, int $id)
+ * @method static dispatchNow(string $type, int $id)
+ * @method static dispatchAfterResponse(string $type, int $id)
+ * @method static mixed run(string $type, int $id)
+ */
+class GetAuditLinkedData
+{
+}
 namespace App\Actions\Carriers;
 
 /**
@@ -114,6 +130,20 @@ class FmcsaDOTLookup
  * @method static \Illuminate\Support\Collection run(string $name)
  */
 class FmcsaNameLookup
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Carriers\Carrier $carrier)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Carriers\Carrier $carrier)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Carriers\Carrier $carrier)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Carriers\Carrier $carrier)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Carriers\Carrier $carrier)
+ * @method static dispatchSync(\App\Models\Carriers\Carrier $carrier)
+ * @method static dispatchNow(\App\Models\Carriers\Carrier $carrier)
+ * @method static dispatchAfterResponse(\App\Models\Carriers\Carrier $carrier)
+ * @method static mixed run(\App\Models\Carriers\Carrier $carrier)
+ */
+class GetCarrierAuditHistory
 {
 }
 /**
@@ -246,6 +276,20 @@ class CreateCustomerFacility
  * @method static \App\Models\Facility run(int $customerId, int $facilityId)
  */
 class DeleteCustomerFacility
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Customers\Customer $customer)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Customers\Customer $customer)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Customers\Customer $customer)
+ * @method static dispatchSync(\App\Models\Customers\Customer $customer)
+ * @method static dispatchNow(\App\Models\Customers\Customer $customer)
+ * @method static dispatchAfterResponse(\App\Models\Customers\Customer $customer)
+ * @method static mixed run(\App\Models\Customers\Customer $customer)
+ */
+class GetCustomerAuditHistory
 {
 }
 /**
@@ -496,6 +540,20 @@ namespace App\Actions\Facilities;
  * @method static \App\Models\Facility run(string $name, int $location_id)
  */
 class CreateFacility
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Facility $facility)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Facility $facility)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Facility $facility)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Facility $facility)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Facility $facility)
+ * @method static dispatchSync(\App\Models\Facility $facility)
+ * @method static dispatchNow(\App\Models\Facility $facility)
+ * @method static dispatchAfterResponse(\App\Models\Facility $facility)
+ * @method static mixed run(\App\Models\Facility $facility)
+ */
+class GetFacilityAuditHistory
 {
 }
 /**
@@ -800,6 +858,20 @@ class DispatchShipment
  * @method static \App\Models\Shipments\Shipment run(\App\Models\Shipments\Shipment $shipment)
  */
 class GetShipmentAccounting
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(\App\Models\Shipments\Shipment $shipment)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(\App\Models\Shipments\Shipment $shipment)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(\App\Models\Shipments\Shipment $shipment)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(bool $boolean, \App\Models\Shipments\Shipment $shipment)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(bool $boolean, \App\Models\Shipments\Shipment $shipment)
+ * @method static dispatchSync(\App\Models\Shipments\Shipment $shipment)
+ * @method static dispatchNow(\App\Models\Shipments\Shipment $shipment)
+ * @method static dispatchAfterResponse(\App\Models\Shipments\Shipment $shipment)
+ * @method static mixed run(\App\Models\Shipments\Shipment $shipment)
+ */
+class GetShipmentAuditHistory
 {
 }
 /**

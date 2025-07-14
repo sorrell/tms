@@ -8,10 +8,12 @@ use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Contact extends Model
+class Contact extends Model implements Auditable
 {
     use HasOrganization, Searchable, HasAliases;
+    use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
         'organization_id',

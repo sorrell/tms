@@ -31,7 +31,7 @@ class PreCommitChecks extends Command
     ];
 
     protected $commands = [
-        'phpstan' => 'php ./vendor/bin/phpstan analyse',
+        'phpstan' => 'php ./vendor/bin/phpstan analyse --memory-limit=1024M',
         'npm-lint' => 'npm run lint',
         'typescript' => 'npm exec tsc',
         'npm-build' => 'npm run build',
@@ -53,12 +53,12 @@ class PreCommitChecks extends Command
             
             // Refresh testing database before running tests
             if ($check === 'tests:php') {
-                $this->refreshTestingDatabase();
                 $env = [
                     'APP_ENV' => 'testing',
                     'DB_CONNECTION' => 'sqlite',
                     'DB_DATABASE' => ':memory:',
                 ];
+                $this->refreshTestingDatabase();
             }
             
             $this->info("========== Running $check ==========");
@@ -156,13 +156,13 @@ class PreCommitChecks extends Command
             // Override the database configuration for testing
             config([
                 'database.connections.sqlite.database' => ':memory:',
-                'database.default' => 'sqlite',
+                'database.default' => 'sqlite_testing',
             ]);
             
             $this->call('migrate:fresh', [
                 '--env' => 'testing',
                 '--seed' => true,
-                '--database' => 'sqlite',
+                '--database' => 'sqlite_testing',
             ]);
             $this->info("Testing database refreshed successfully");
         } catch (\Exception $e) {

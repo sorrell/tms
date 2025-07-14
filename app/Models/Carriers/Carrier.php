@@ -14,10 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Carrier extends Model
+class Carrier extends Model implements Auditable
 {
     use HasFactory, HasOrganization, Searchable, HasContacts, HasDocuments, HasAliases;
+    use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
         'organization_id',

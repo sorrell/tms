@@ -1,7 +1,7 @@
+import ShipmentAuditHistory from '@/Components/Audit/ShipmentAuditHistory';
 import DocumentsList from '@/Components/Documents/DocumentsList';
 import LocationMap from '@/Components/Shipments/LocationMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
-import { ComingSoon } from '@/Components/ui/coming-soon';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Shipment, ShipmentStop, TrailerSize, TrailerType } from '@/types';
 import { Documentable } from '@/types/enums';
@@ -102,10 +102,7 @@ export default function Show({
                                 <CardTitle>Recent Activity</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <ComingSoon
-                                    variant="outline"
-                                    className="mx-auto"
-                                />
+                                <ShipmentAuditHistory shipment={shipment} />
                             </CardContent>
                         </Card>
 
