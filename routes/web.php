@@ -161,6 +161,14 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
     Route::get('organizations/{organization}/integration-settings', [OrganizationController::class, 'showIntegrationSettings'])->name('organizations.integration-settings');
     Route::post('organizations/{organization}/integration-settings', SetIntegrationSetting::class)->name('organizations.integration-settings.store');
     Route::delete('organizations/{organization}/integration-settings/{setting}', DeleteIntegrationSetting::class)->name('organizations.integration-settings.destroy');
+    
+    // New Integrations routes
+    Route::prefix('organizations/{organization}/settings/integrations')->name('settings.integrations.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Settings\IntegrationsController::class, 'index'])->name('index');
+        Route::get('/highway', [\App\Http\Controllers\Settings\HighwayIntegrationController::class, 'index'])->name('highway.index');
+        Route::post('/highway', [\App\Http\Controllers\Settings\HighwayIntegrationController::class, 'store'])->name('highway.store');
+        Route::post('/highway/test', [\App\Http\Controllers\Settings\HighwayIntegrationController::class, 'test'])->name('highway.test');
+    });
 
     // Document Templates routes
     Route::get('organizations/{organization}/document-templates', \App\Actions\DocumentTemplates\GetDocumentTemplates::class)->name('organizations.document-templates.index');

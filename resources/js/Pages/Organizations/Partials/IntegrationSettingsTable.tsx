@@ -18,6 +18,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/Components/ui/tooltip';
 import { useToast } from '@/hooks/UseToast';
 import {
     GlobalIntegrationSetting,
@@ -25,7 +31,7 @@ import {
     Organization,
 } from '@/types/organization';
 import { useForm } from '@inertiajs/react';
-import { Eye, EyeOff, Plus } from 'lucide-react';
+import { Eye, EyeOff, Plus, HelpCircle } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface Props {
@@ -445,7 +451,22 @@ export default function IntegrationSettingsTable({
                                     <TableHead>Key</TableHead>
                                     <TableHead>Value</TableHead>
                                     <TableHead>Status</TableHead>
-                                    <TableHead>Available on Frontend</TableHead>
+                                    <TableHead>
+                                        <div className="flex items-center gap-1">
+                                            Available on Frontend
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Users can potentially see this value if marked 'Yes'.<br />
+                                                        Keep sensitive data like API keys marked as 'No'.</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                    </TableHead>
                                     <TableHead className="text-right">
                                         Actions
                                     </TableHead>

@@ -5,6 +5,8 @@ namespace App\Models\Organizations;
 use App\Models\User;
 use App\Models\Location;
 use App\Models\Documents\DocumentTemplate;
+use App\Models\Highway\HighwayConfiguration;
+use App\Models\Highway\HighwayCarrierSyncLog;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -90,5 +92,29 @@ class Organization extends Model
     public function documentTemplates() : HasMany
     {
         return $this->hasMany(DocumentTemplate::class);
+    }
+
+    /**
+     * Get the Highway configuration for this organization
+     */
+    public function highwayConfiguration()
+    {
+        return $this->hasOne(HighwayConfiguration::class);
+    }
+
+    /**
+     * Get the Highway carrier sync logs for this organization
+     */
+    public function highwayCarrierSyncLogs(): HasMany
+    {
+        return $this->hasMany(HighwayCarrierSyncLog::class);
+    }
+
+    /**
+     * Check if Highway is configured for this organization
+     */
+    public function hasHighwayConfigured(): bool
+    {
+        return $this->highwayConfiguration()->exists();
     }
 }
