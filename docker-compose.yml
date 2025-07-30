@@ -59,7 +59,6 @@ services:
         networks:
             - sail
     localstack:
-        container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
         image: localstack/localstack
         profiles:
             - full
