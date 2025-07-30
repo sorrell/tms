@@ -27,6 +27,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
+    useSidebar,
 } from '@/Components/ui/sidebar';
 import { usePage } from '@inertiajs/react';
 import {
@@ -41,6 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const config = usePage().props.config;
     const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+    const { state, setOpen } = useSidebar();
 
     useEffect(() => {
         const savedState = localStorage.getItem('orgMenuOpen');
@@ -52,6 +54,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const handleOrgMenuChange = (open: boolean) => {
         setIsOrgMenuOpen(open);
         localStorage.setItem('orgMenuOpen', open.toString());
+
+        // If opening the organization menu while sidebar is collapsed, expand the sidebar
+        if (open && state === 'collapsed') {
+            setOpen(true);
+        }
     };
 
     // Early return if user is not loaded yet

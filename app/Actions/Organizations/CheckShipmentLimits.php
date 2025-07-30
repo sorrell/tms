@@ -13,20 +13,16 @@ class CheckShipmentLimits
 
     public function handle(Organization $organization): void
     {
-        // Only check load limits for startup subscriptions
-        if (!$organization->subscription(SubscriptionType::STARTUP->value)) {
-            return;
-        }
 
         $subscription = $organization->subscription(SubscriptionType::STARTUP->value);
-        
-        if (!in_array($subscription->stripe_status, ['active', 'trialing'])) {
+
+        if (!$subscription || !in_array($subscription->stripe_status, ['active', 'trialing'])
+        || $this->billingDisabled()
+        || $this->hasActivePremiumSubscription($organization)) {
             return;
         }
 
         $weeklyLimit = config('subscriptions.startup.weekly_load_limit', 10);
-
-        // Count shipments created this week
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
 
@@ -48,35 +44,51 @@ class CheckShipmentLimits
      */
     public function getShipmentUsage(Organization $organization): array
     {
-        // Check for premium subscription first (USER_SEAT has unlimited shipments)
-        if ($organization->subscribed(SubscriptionType::USER_SEAT->value)) {
-            $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
-            
-            if ($subscription && in_array($subscription->stripe_status, ['active', 'trialing'])) {
-                // Premium users have unlimited shipments
-                return [
-                    'is_startup_plan' => false,
-                    'weekly_limit' => null, // null indicates unlimited
-                    'shipments_this_week' => 0, // Not relevant for premium
-                    'remaining_shipments' => null, // null indicates unlimited
-                    'week_start' => null,
-                    'week_end' => null,
-                ];
-            }
+        // If billing is disabled, return unlimited usage
+        if ($this->billingDisabled()
+        || $this->hasActivePremiumSubscription($organization)) {
+            return $this->getUnlimitedUsage();
         }
 
-        // Handle startup subscription only if no premium subscription exists
+        // Check startup subscription limits
+        return $this->getStartupUsage($organization);
+    }
+
+    private function getUnlimitedUsage(): array
+    {
+        return [
+            'is_startup_plan' => false,
+            'weekly_limit' => null, // null indicates unlimited
+            'shipments_this_week' => 0, // Not relevant when unlimited
+            'remaining_shipments' => null, // null indicates unlimited
+            'week_start' => null,
+            'week_end' => null,
+        ];
+    }
+
+    private function billingDisabled(): bool
+    {
+        return !config('cashier.key') || config('subscriptions.enable_billing') === false;
+    }
+
+    private function hasActivePremiumSubscription(Organization $organization): bool
+    {
+        if (!$organization->subscribed(SubscriptionType::USER_SEAT->value)) {
+            return false;
+        }
+
+        $subscription = $organization->subscription(SubscriptionType::USER_SEAT->value);
+        
+        return $subscription && in_array($subscription->stripe_status, ['active', 'trialing']);
+    }
+
+    private function getStartupUsage(Organization $organization): array
+    {
         $subscription = $organization->subscription(SubscriptionType::STARTUP->value);
         
-        if (!in_array($subscription->stripe_status, ['active', 'trialing'])) {
-            return [
-                'is_startup_plan' => false,
-                'weekly_limit' => 0,
-                'shipments_this_week' => 0,
-                'remaining_shipments' => 0,
-                'week_start' => null,
-                'week_end' => null,
-            ];
+        // If no startup subscription or not active, treat as unlimited
+        if (!$subscription || !in_array($subscription->stripe_status, ['active', 'trialing'])) {
+            return $this->getUnlimitedUsage();
         }
 
         $weeklyLimit = config('subscriptions.startup.weekly_load_limit', 10);
