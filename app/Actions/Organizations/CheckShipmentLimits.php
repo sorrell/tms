@@ -16,7 +16,7 @@ class CheckShipmentLimits
 
         $subscription = $organization->subscription(SubscriptionType::STARTUP->value);
 
-        if (!in_array($subscription->stripe_status, ['active', 'trialing'])
+        if (!$subscription || !in_array($subscription->stripe_status, ['active', 'trialing'])
         || $this->billingDisabled()
         || $this->hasActivePremiumSubscription($organization)) {
             return;
