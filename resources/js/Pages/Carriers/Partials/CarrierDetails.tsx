@@ -2,6 +2,7 @@ import CarrierAuditHistory from '@/Components/Audit/CarrierAuditHistory';
 import ContactList from '@/Components/Contacts/ContactList/ContactList';
 import DocumentsList from '@/Components/Documents/DocumentsList';
 import ShipmentList from '@/Components/Shipments/ShipmentList/ShipmentList';
+import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { ComingSoon } from '@/Components/ui/coming-soon';
 import { Input } from '@/Components/ui/input';
@@ -22,6 +23,12 @@ import {
     TableRow,
 } from '@/Components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/Components/ui/tooltip';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { Carrier, CarrierBounce } from '@/types';
@@ -32,6 +39,7 @@ import {
     CheckCircle2,
     ExternalLink,
     Pencil,
+    RefreshCw,
     X,
     XCircle,
 } from 'lucide-react';
@@ -297,6 +305,30 @@ export default function CarrierDetails({ carrier }: { carrier: Carrier }) {
                 {/* SAFER Tab */}
                 <TabsContent value="safer">
                     <div className="grid gap-6">
+                        {/* Last Updated and Refresh */}
+                        {carrier?.safer_report && (
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">
+                                    Data last updated:{' '}
+                                    {new Date(
+                                        carrier.safer_report.updated_at,
+                                    ).toLocaleString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })}
+                                </span>
+                                <SaferRefreshButton
+                                    carrier={carrier}
+                                    lastUpdated={
+                                        carrier.safer_report.updated_at
+                                    }
+                                />
+                            </div>
+                        )}
+
                         {/* Company Information */}
                         <Card>
                             <CardHeader>
@@ -660,5 +692,83 @@ function BouncedShipmentsList({ carrier }: { carrier?: Carrier }) {
                 </TableBody>
             </Table>
         </div>
+    );
+}
+
+function SaferRefreshButton({
+    carrier,
+    lastUpdated,
+}: {
+    carrier: Carrier;
+    lastUpdated: string;
+}) {
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    // Calculate if 24 hours have passed
+    const lastUpdateDate = new Date(lastUpdated);
+    const now = new Date();
+    const hoursSinceUpdate =
+        (now.getTime() - lastUpdateDate.getTime()) / (1000 * 60 * 60);
+    const canRefresh = hoursSinceUpdate >= 24;
+
+    // Calculate when next refresh will be available
+    const nextRefreshDate = new Date(
+        lastUpdateDate.getTime() + 24 * 60 * 60 * 1000,
+    );
+    const hoursUntilRefresh = Math.ceil(
+        (nextRefreshDate.getTime() - now.getTime()) / (1000 * 60 * 60),
+    );
+
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        router.post(
+            route('carriers.refresh-safer', carrier.id),
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIsRefreshing(false);
+                },
+                onError: () => {
+                    setIsRefreshing(false);
+                },
+            },
+        );
+    };
+
+    return (
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <span>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleRefresh}
+                            disabled={!canRefresh || isRefreshing}
+                            className="gap-2"
+                        >
+                            <RefreshCw
+                                className={cn(
+                                    'h-4 w-4',
+                                    isRefreshing && 'animate-spin',
+                                )}
+                            />
+                            Refresh
+                        </Button>
+                    </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                    {!canRefresh ? (
+                        <p>
+                            Can refresh again in {hoursUntilRefresh} hour
+                            {hoursUntilRefresh !== 1 ? 's' : ''}
+                        </p>
+                    ) : (
+                        <p>Refresh SAFER data</p>
+                    )}
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
     );
 }
