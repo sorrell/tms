@@ -2,8 +2,10 @@
 
 namespace App\Actions\Contacts;
 
+use App\Actions\Utilities\FormatPhoneForE164;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
+use App\Rules\ValidPhoneNumber;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\ActionRequest;
@@ -39,6 +41,15 @@ class UpdateContact
 
     public function asController(ActionRequest $request, Contact $contact): Contact
     {
+        $mobilePhone = $request->validated('mobile_phone');
+        $officePhone = $request->validated('office_phone');
+
+        if ($mobilePhone) {
+            $mobilePhone = FormatPhoneForE164::handle($mobilePhone);
+        }
+        if ($officePhone) {
+            $officePhone = FormatPhoneForE164::handle($officePhone);
+        }
 
         $contact = $this->handle(
             contact: $contact,
@@ -46,8 +57,8 @@ class UpdateContact
             contact_type: $request->validated('contact_type'),
             title: $request->validated('title'),
             email: $request->validated('email'),
-            mobile_phone: $request->validated('mobile_phone'),
-            office_phone: $request->validated('office_phone'),
+            mobile_phone: $mobilePhone,
+            office_phone: $officePhone,
             office_phone_extension: $request->validated('office_phone_extension'),
         );
 
@@ -70,8 +81,8 @@ class UpdateContact
             'title' => ['nullable', 'string', 'min:3', 'max:255'],
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
-            'mobile_phone' => ['nullable', 'string', 'max:255', 'phone'],
-            'office_phone' => ['nullable', 'string', 'max:255', 'phone'],
+            'mobile_phone' => ['nullable', 'string', 'max:255', new ValidPhoneNumber],
+            'office_phone' => ['nullable', 'string', 'max:255', new ValidPhoneNumber],
             'office_phone_extension' => ['nullable', 'string', 'max:255'],
             'contact_type' => ['required', 'string'],
         ];
