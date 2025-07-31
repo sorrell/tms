@@ -220,7 +220,46 @@ export default function ContactList({
                 open={isAddContactDialogOpen}
                 onOpenChange={setIsAddContactDialogOpen}
             >
-                <DialogContent>
+                <DialogContent
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            // Submit form
+                            if (editContact) {
+                                putContactForm(
+                                    route('contacts.update', editContact.id),
+                                    {
+                                        onSuccess: () => {
+                                            setIsAddContactDialogOpen(false);
+                                            getContacts();
+                                            toast({
+                                                title: 'Contact updated',
+                                            });
+                                        },
+                                        onError: () => {
+                                            console.error(
+                                                'Error updating contact',
+                                            );
+                                        },
+                                    },
+                                );
+                            } else {
+                                postContactForm(route('contacts.store'), {
+                                    onSuccess: () => {
+                                        setIsAddContactDialogOpen(false);
+                                        getContacts();
+                                        toast({
+                                            title: 'Contact created',
+                                        });
+                                    },
+                                    onError: () => {
+                                        console.error('Error creating contact');
+                                    },
+                                });
+                            }
+                        }
+                    }}
+                >
                     <DialogHeader>
                         <DialogTitle>
                             {editContact ? 'Edit Contact' : 'Add Contact'}
