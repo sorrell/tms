@@ -192,6 +192,10 @@ export default function ContactList({
                         onClick={() => {
                             resetContactForm();
                             setEditContact(null);
+                            // Set default contact type to 'general' if available
+                            if (contactTypes.includes('general')) {
+                                setContactFormData('contact_type', 'general');
+                            }
                             setIsAddContactDialogOpen(true);
                         }}
                     >
