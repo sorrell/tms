@@ -17,7 +17,6 @@ use App\States\Shipments\InTransit;
 use App\States\Shipments\Pending;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Lorisleiva\Actions\ActionRequest;
-use Mockery;
 use Spatie\Permission\Models\Role;
 use Tests\Traits\WithOrganization;
 
@@ -28,7 +27,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    Mockery::close();
+    \Mockery::close();
 });
 
 it('can uncancel a shipment with no carrier to pending state', function () {
@@ -309,7 +308,7 @@ it('requires shipment edit permission', function () {
     $user->assignRole($role);
     
     // Create a mock request with the unauthorized user
-    $request = Mockery::mock(ActionRequest::class);
+    $request = \Mockery::mock(ActionRequest::class);
     $request->shouldReceive('user')->andReturn($user);
 
     // Create the action and check authorization
@@ -336,7 +335,7 @@ it('returns redirect response when called as controller', function () {
     $user->assignRole($role);
     
     // Create a mock request with the authorized user
-    $request = Mockery::mock(ActionRequest::class);
+    $request = \Mockery::mock(ActionRequest::class);
     $request->shouldReceive('user')->andReturn($user);
 
     // Execute the action as controller
