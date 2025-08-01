@@ -2,6 +2,7 @@
 
 namespace App\Actions\Audit;
 
+use App\Actions\Utilities\FormatPhoneForCountry;
 use App\Models\Carriers\Carrier;
 use App\Models\Contact;
 use App\Models\Customers\Customer;
@@ -141,8 +142,8 @@ class GetAuditLinkedData
         return [
             'name' => $contact->name,
             'email' => $contact->email,
-            'mobile_phone' => $contact->mobile_phone,
-            'office_phone' => $contact->office_phone,
+            'mobile_phone' => FormatPhoneForCountry::handle($contact->mobile_phone),
+            'office_phone' => FormatPhoneForCountry::handle($contact->office_phone),
             'office_phone_extension' => $contact->office_phone_extension,
             'title' => $contact->title,
             'contact_type' => $contact->contact_type,
@@ -161,9 +162,9 @@ class GetAuditLinkedData
             'mc_number' => $carrier->mc_number,
             'dot_number' => $carrier->dot_number,
             'contact_email' => $carrier->contact_email,
-            'contact_phone' => $carrier->contact_phone,
+            'contact_phone' => FormatPhoneForCountry::handle($carrier->contact_phone),
             'billing_email' => $carrier->billing_email,
-            'billing_phone' => $carrier->billing_phone,
+            'billing_phone' => FormatPhoneForCountry::handle($carrier->billing_phone),
             'created_at' => $carrier->created_at?->format('M j, Y g:i A'),
         ];
     }

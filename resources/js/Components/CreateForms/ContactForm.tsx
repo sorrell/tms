@@ -43,7 +43,13 @@ export default function ContactForm({
     useEffect(() => {
         fetch(route('contacts.types', contactForType))
             .then((response) => response.json())
-            .then((data) => setContactTypes(data));
+            .then((data) => {
+                setContactTypes(data);
+                // Set default to 'general' if it's available
+                if (data.includes('general')) {
+                    setContactType('general');
+                }
+            });
     }, [contactForType]);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
