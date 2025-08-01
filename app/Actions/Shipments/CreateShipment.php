@@ -71,7 +71,10 @@ class CreateShipment
 
         DB::commit();
 
-        event(new ShipmentCarrierUpdated($shipment));
+        // Only fire carrier updated event if a carrier was actually assigned
+        if ($carrierId !== null) {
+            event(new ShipmentCarrierUpdated($shipment));
+        }
 
         return $shipment;
     }
