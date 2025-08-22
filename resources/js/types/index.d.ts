@@ -332,6 +332,7 @@ export interface CheckCall {
     contact_name: string | null;
     contact_method: string | null;
     contact_method_detail: string | null;
+    location: string | null;
     note_id: number | null;
     created_at: string;
     updated_at: string;

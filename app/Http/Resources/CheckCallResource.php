@@ -26,6 +26,7 @@ class CheckCallResource extends JsonResource
             'contact_name' => $this->contact_name,
             'contact_method' => $this->contact_method,
             'contact_method_detail' => $this->contact_method_detail,
+            'location' => $this->location,
             'is_late' => $this->is_late,
             'arrived_at' => $this->arrived_at,
             'left_at' => $this->left_at,
