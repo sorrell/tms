@@ -140,6 +140,7 @@ export default function NewCheckCallButton({
         contact_name: string | null;
         contact_method: string | null;
         contact_method_detail: string | null;
+        location: string | null;
         is_late: boolean | null;
         is_truck_empty: boolean | null;
         note: string | null;
@@ -152,6 +153,7 @@ export default function NewCheckCallButton({
         contact_name: '',
         contact_method: '',
         contact_method_detail: '',
+        location: '',
         is_late: null,
         is_truck_empty: null,
         note: null,
@@ -327,6 +329,22 @@ export default function NewCheckCallButton({
                                 </p>
                             )}
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="location">Location</Label>
+                        <Input
+                            id="location"
+                            type="text"
+                            value={data.location || ''}
+                            onChange={(e) => setData('location', e.target.value)}
+                            placeholder="Enter current location"
+                        />
+                        {errors.location && (
+                            <p className="text-sm text-red-500">
+                                {errors.location}
+                            </p>
+                        )}
                     </div>
 
                     {shouldShowField(shipment, shipment.next_stop, 'eta') && (
