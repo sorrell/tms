@@ -193,6 +193,11 @@ export default function ShipmentCheckCalls({
                                                     }
                                                 </span>
                                             )}
+                                            {checkCall.location && (
+                                                <div className="text-sm text-muted-foreground">
+                                                    Location: {checkCall.location}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
