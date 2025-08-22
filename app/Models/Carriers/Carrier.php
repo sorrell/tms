@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Traits\HasAliases;
 use App\Traits\HasContacts;
 use App\Traits\HasDocuments;
+use App\Traits\DispatchesEvents;
 use App\Traits\HasOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Carrier extends Model implements Auditable
 {
-    use HasFactory, HasOrganization, Searchable, HasContacts, HasDocuments, HasAliases;
+    use HasFactory, HasOrganization, Searchable, HasContacts, HasDocuments, HasAliases, DispatchesEvents;
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [

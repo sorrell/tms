@@ -71,7 +71,9 @@ class CreateShipment
 
         DB::commit();
 
-        event(new ShipmentCarrierUpdated($shipment));
+        if ($carrierId) {
+            event(new ShipmentCarrierUpdated($shipment));
+        }
 
         return $shipment;
     }

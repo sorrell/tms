@@ -7,11 +7,10 @@ use App\Models\Shipments\Shipment;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Support\Str;
 
-class ShipmentCarrierBounced extends TmsEvent implements ShouldBroadcast
+class ShipmentDeleted extends TmsEvent implements ShouldBroadcast
 {
     public function __construct(
         public readonly Shipment $shipment,
-        public readonly ?string $reason = null,
         array $metadata = []
     ) {
         parent::__construct(
@@ -19,13 +18,13 @@ class ShipmentCarrierBounced extends TmsEvent implements ShouldBroadcast
             organizationId: $shipment->organization_id,
             occurredAt: now(),
             triggeredBy: auth()->user(),
-            metadata: array_merge($metadata, ['reason' => $reason])
+            metadata: $metadata
         );
     }
 
     public function getEventType(): string
     {
-        return 'shipment.carrier_bounced';
+        return 'shipment.deleted';
     }
 
     public function getEventData(): array
@@ -35,9 +34,7 @@ class ShipmentCarrierBounced extends TmsEvent implements ShouldBroadcast
             'entity_id' => $this->shipment->id,
             'shipment_id' => $this->shipment->id,
             'shipment_number' => $this->shipment->shipment_number,
-            'carrier_id' => $this->shipment->carrier_id,
-            'reason' => $this->reason,
-            'bounced_at' => now()->toDateTimeString(),
+            'deleted_at' => now()->toDateTimeString(),
         ];
     }
 

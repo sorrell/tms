@@ -31,6 +31,7 @@ class UpdateShipmentGeneral
             'trailer_temperature_range' => $trailerTemperatureRange ?? false,
         ]);
 
+
         return $shipment;
     }
 

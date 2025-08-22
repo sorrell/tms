@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Events\Shipments;
+namespace App\Events\Carriers;
 
 use App\Events\Core\TmsEvent;
+use App\Models\Carriers\Carrier;
 use App\Models\Shipments\Shipment;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Support\Str;
 
-class ShipmentCarrierBounced extends TmsEvent implements ShouldBroadcast
+class CarrierAssigned extends TmsEvent implements ShouldBroadcast
 {
     public function __construct(
         public readonly Shipment $shipment,
-        public readonly ?string $reason = null,
+        public readonly Carrier $carrier,
+        public readonly ?Carrier $previousCarrier = null,
         array $metadata = []
     ) {
         parent::__construct(
@@ -19,13 +21,13 @@ class ShipmentCarrierBounced extends TmsEvent implements ShouldBroadcast
             organizationId: $shipment->organization_id,
             occurredAt: now(),
             triggeredBy: auth()->user(),
-            metadata: array_merge($metadata, ['reason' => $reason])
+            metadata: $metadata
         );
     }
 
     public function getEventType(): string
     {
-        return 'shipment.carrier_bounced';
+        return 'carrier.assigned';
     }
 
     public function getEventData(): array
@@ -35,9 +37,10 @@ class ShipmentCarrierBounced extends TmsEvent implements ShouldBroadcast
             'entity_id' => $this->shipment->id,
             'shipment_id' => $this->shipment->id,
             'shipment_number' => $this->shipment->shipment_number,
-            'carrier_id' => $this->shipment->carrier_id,
-            'reason' => $this->reason,
-            'bounced_at' => now()->toDateTimeString(),
+            'carrier_id' => $this->carrier->id,
+            'carrier_name' => $this->carrier->name,
+            'previous_carrier_id' => $this->previousCarrier?->id,
+            'previous_carrier_name' => $this->previousCarrier?->name,
         ];
     }
 

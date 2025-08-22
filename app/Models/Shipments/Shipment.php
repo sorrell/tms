@@ -14,6 +14,7 @@ use App\Models\Customers\Customer;
 use App\States\Shipments\ShipmentState;
 use App\Traits\HasAliases;
 use App\Traits\HasDocuments;
+use App\Traits\DispatchesEvents;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasOrganization;
 use App\Traits\HasNotes;
@@ -30,7 +31,7 @@ use Spatie\ModelStates\HasStatesContract;
 
 class Shipment extends Model implements HasStatesContract, Auditable
 {
-    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates, HasDocuments, HasAliases, AuditableTrait;
+    use HasOrganization, Searchable, HasFactory, HasNotes, HasStates, HasDocuments, HasAliases, AuditableTrait, DispatchesEvents;
 
     protected $fillable = [
         'organization_id',
