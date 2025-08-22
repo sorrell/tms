@@ -27,7 +27,6 @@ class CheckCall extends Model
         'contact_name',
         'contact_method',
         'contact_method_detail',
-        'location',
         'is_late',
         'arrived_at',
         'left_at',

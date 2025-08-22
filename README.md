@@ -2,12 +2,12 @@
 
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/loadpartner/tms/tree/main)
 
-The Open Source Transportation Management System for Freight Brokers---***...
+The Open Source Transportation Management System for Freight Brokers
 
 #### 🌐 [tms.loadpartner.io](https://tms.loadpartner.io)
 
 ## Get involved
-🗨️ [Discord Community](https://tms.loadpartner.io/links/discord)
+🗨️ [Discord Community](https://tms.loadpartner.io/links/discord) 
 
 📰 [Subscribe to the newsletter](https://tms.loadpartner.io/links/newsletter)
 
@@ -35,13 +35,13 @@ Can't find `sail` in your path? Add to your bashrc/zshrc
 ``` bash
 export PATH=./vendor/bin:$PATH
 ```
-
+  
 #### Copy `env` file
 ``` bash
 cp .env.example .env
 ```
 
-#### Up sail
+#### Up sail 
 ``` bash
 sail up -d      # (using sqlite and no other servies)
 # OR
@@ -49,7 +49,7 @@ sail --profile full up -d   # (all services in docker-composer.yml)
 ```
 
 
-#### Setup database
+#### Setup database 
 ``` bash
 sail artisan migrate
 ```

@@ -195,12 +195,6 @@ export default function ShipmentCheckCalls({
                                             )}
                                         </div>
                                     </div>
-                                    
-                                    {checkCall.location && (
-                                        <div className="text-sm text-muted-foreground">
-                                            📍 {checkCall.location}
-                                        </div>
-                                    )}
 
                                     <div className="my-2 flex flex-row justify-between text-sm">
                                         <div>
