@@ -56,7 +56,10 @@ class UpdateShipmentState
 
     protected function handleCarrierChanged(ShipmentCarrierUpdated $event): void
     {
-        if ($event->shipment->state::class === Pending::class) {
+        if (
+            $event->shipment->state::class === Pending::class &&
+            $event->shipment->carrier_id !== null
+        ) {
             $event->shipment->state->transitionTo(Booked::class);
         }
     }

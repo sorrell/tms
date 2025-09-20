@@ -8,6 +8,7 @@ use App\Actions\Carriers\CreateCarrier;
 use App\Actions\Carriers\CreateCarrierFromSaferReport;
 use App\Actions\Carriers\FmcsaDOTLookup;
 use App\Actions\Carriers\FmcsaNameLookup;
+use App\Actions\Carriers\RefreshCarrierSaferReport;
 use App\Actions\Audit\GetAuditLinkedData;
 use App\Actions\Carriers\GetCarrierAuditHistory;
 use App\Actions\Carriers\UpdateCarrierGeneral;
@@ -192,6 +193,7 @@ Route::middleware(['auth', 'verified', 'organization-assigned', 'active-subscrip
 
     Route::get('carriers/{carrier}/bounced-loads', [CarrierController::class, 'bouncedLoads'])->name('carriers.bounced-loads');
     Route::get('carriers/{carrier}/audit-history', GetCarrierAuditHistory::class)->name('carriers.audit-history');
+    Route::post('carriers/{carrier}/refresh-safer', RefreshCarrierSaferReport::class)->name('carriers.refresh-safer');
 
     Route::get('customers/{customer}/audit-history', GetCustomerAuditHistory::class)->name('customers.audit-history');
 

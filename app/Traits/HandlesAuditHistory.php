@@ -51,11 +51,15 @@ trait HandlesAuditHistory
         $audits = collect();
         
         // Get audits for models that currently exist and belong to this parent
+        // We need to join with the actual model table to filter by the polymorphic relationship
+        $modelTable = (new $auditableType)->getTable();
         $existingModelAudits = Audit::where('auditable_type', $auditableType)
-            ->whereHas('auditable', function ($subQuery) use ($parentClass, $parentId, $typeField, $idField) {
-                $subQuery->where($typeField, $parentClass)
-                         ->where($idField, $parentId);
+            ->join($modelTable, function ($join) use ($modelTable) {
+                $join->on('audits.auditable_id', '=', $modelTable . '.id');
             })
+            ->where($modelTable . '.' . $typeField, $parentClass)
+            ->where($modelTable . '.' . $idField, $parentId)
+            ->select('audits.*')
             ->with('user', 'auditable')
             ->get();
         

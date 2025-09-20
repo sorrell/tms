@@ -38,9 +38,10 @@ export default function AuditFieldValue({
 
     const formatValue = (value: unknown): string => {
         // Check for folder-related fields (both raw and formatted names)
-        const isFolderField = fieldName === 'folder_name' || fieldName === 'Folder Name';
+        const isFolderField =
+            fieldName === 'folder_name' || fieldName === 'Folder Name';
         const isPathField = fieldName === 'path' || fieldName === 'Path';
-        
+
         if (value === null || value === undefined) {
             // For path fields, only show '/' if the value was explicitly set to null/undefined
             // but not when there was no previous value (which should show 'No value')

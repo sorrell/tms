@@ -97,6 +97,7 @@ export interface CarrierSaferReport {
     id: number;
     dot_number: string;
     created_at: string;
+    updated_at: string;
     report: {
         name: string;
         dba: string;

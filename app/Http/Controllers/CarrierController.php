@@ -42,6 +42,19 @@ class CarrierController extends ResourceSearchController
     public function show(Carrier $carrier)
     {
         Gate::authorize(\App\Enums\Permission::CARRIER_VIEW);
+        
+        // If carrier has DOT number but no SAFER report, try to fetch it
+        if ($carrier->dot_number && !$carrier->safer_report && config('fmcsa.api_key')) {
+            try {
+                app(\App\Actions\Carriers\FmcsaDOTLookup::class)->handle($carrier->dot_number);
+                // Reload the carrier to get the newly created safer_report
+                $carrier->load('safer_report');
+            } catch (\Exception $e) {
+                // Log the error but don't fail the page load
+                \Log::error('Failed to fetch SAFER report for carrier ' . $carrier->id . ': ' . $e->getMessage());
+            }
+        }
+        
         return Inertia::render('Carriers/Show', [
             'carrier' => CarrierResource::make($carrier->load('physical_location', 'billing_location', 'safer_report')),
         ]);

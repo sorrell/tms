@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Carriers;
 
+use App\Actions\Utilities\FormatPhoneForCountry;
 use App\Http\Resources\LocationResource;
 use App\Http\Resources\Carriers\CarrierSaferReportResource;
 use App\Http\Resources\ContactResource;
@@ -28,10 +29,10 @@ class CarrierResource extends JsonResource
             'mc_number' => $this->mc_number,
             'dot_number' => $this->dot_number,
             'contact_email' => $this->contact_email,
-            'contact_phone' => $this->contact_phone,
+            'contact_phone' => FormatPhoneForCountry::handle($this->contact_phone),
             'physical_location_id' => $this->physical_location_id,
             'billing_email' => $this->billing_email,
-            'billing_phone' => $this->billing_phone,
+            'billing_phone' => FormatPhoneForCountry::handle($this->billing_phone),
             'billing_location_id' => $this->billing_location_id,
 
             'physical_location' => $this->whenLoaded('physical_location', function () {

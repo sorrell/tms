@@ -23,6 +23,11 @@ class Location extends Model
         'longitude',
     ];
 
+    protected $casts = [
+        'latitude' => 'float',
+        'longitude' => 'float',
+    ];
+
     protected $appends = [ 'selectable_label' ];
 
     public function getSelectableLabelAttribute() : string

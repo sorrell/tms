@@ -54,7 +54,6 @@ export default function ContactList({
         data: contactFormData,
         setData: setContactFormData,
         post: postContactForm,
-        reset: resetContactForm,
         errors: contactFormErrors,
         put: putContactForm,
     } = useForm<{
@@ -78,6 +77,21 @@ export default function ContactList({
         contact_for_id: contactForId,
         contact_for_type: contactForType,
     });
+
+    const resetContactForm = useCallback(() => {
+        setContactFormData({
+            contact_type: contactTypes.includes('general') ? 'general' : '',
+            title: '',
+            name: '',
+            email: '',
+            mobile_phone: '',
+            office_phone: '',
+            office_phone_extension: '',
+            contact_for_id: contactForId,
+            contact_for_type: contactForType,
+        });
+        setEditContact(null);
+    }, [contactTypes, contactForId, contactForType, setContactFormData]);
 
     const getContacts = useCallback(
         (searchTerm?: string) => {
@@ -191,7 +205,6 @@ export default function ContactList({
                     <Button
                         onClick={() => {
                             resetContactForm();
-                            setEditContact(null);
                             setIsAddContactDialogOpen(true);
                         }}
                     >
@@ -214,9 +227,57 @@ export default function ContactList({
             )}
             <Dialog
                 open={isAddContactDialogOpen}
-                onOpenChange={setIsAddContactDialogOpen}
+                onOpenChange={(open) => {
+                    setIsAddContactDialogOpen(open);
+                    if (!open) {
+                        resetContactForm();
+                    }
+                }}
             >
-                <DialogContent>
+                <DialogContent
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            // Submit form
+                            if (editContact) {
+                                putContactForm(
+                                    route('contacts.update', editContact.id),
+                                    {
+                                        onSuccess: () => {
+                                            setIsAddContactDialogOpen(false);
+                                            getContacts();
+                                            // Reset form after successful update
+                                            resetContactForm();
+                                            toast({
+                                                title: 'Contact updated',
+                                            });
+                                        },
+                                        onError: () => {
+                                            console.error(
+                                                'Error updating contact',
+                                            );
+                                        },
+                                    },
+                                );
+                            } else {
+                                postContactForm(route('contacts.store'), {
+                                    onSuccess: () => {
+                                        setIsAddContactDialogOpen(false);
+                                        getContacts();
+                                        // Reset form after successful creation
+                                        resetContactForm();
+                                        toast({
+                                            title: 'Contact created',
+                                        });
+                                    },
+                                    onError: () => {
+                                        console.error('Error creating contact');
+                                    },
+                                });
+                            }
+                        }
+                    }}
+                >
                     <DialogHeader>
                         <DialogTitle>
                             {editContact ? 'Edit Contact' : 'Add Contact'}
@@ -367,7 +428,11 @@ export default function ContactList({
                     <DialogFooter>
                         <Button
                             variant="outline"
-                            onClick={() => setIsAddContactDialogOpen(false)}
+                            onClick={() => {
+                                setIsAddContactDialogOpen(false);
+                                // Reset form when canceling
+                                resetContactForm();
+                            }}
                         >
                             Cancel
                         </Button>
@@ -385,6 +450,8 @@ export default function ContactList({
                                                     false,
                                                 );
                                                 getContacts();
+                                                // Reset form after successful update
+                                                resetContactForm();
                                                 toast({
                                                     title: 'Contact updated',
                                                 });
@@ -401,6 +468,8 @@ export default function ContactList({
                                         onSuccess: () => {
                                             setIsAddContactDialogOpen(false);
                                             getContacts();
+                                            // Reset form after successful creation
+                                            resetContactForm();
                                             toast({
                                                 title: 'Contact created',
                                             });

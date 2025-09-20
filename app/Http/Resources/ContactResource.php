@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Actions\Utilities\FormatPhoneForCountry;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,8 +24,8 @@ class ContactResource extends JsonResource
             'title' => $this->title,
             'name' => $this->name,
             'email' => $this->email,
-            'mobile_phone' => $this->mobile_phone,
-            'office_phone' => $this->office_phone,
+            'mobile_phone' => FormatPhoneForCountry::handle($this->mobile_phone),
+            'office_phone' => FormatPhoneForCountry::handle($this->office_phone),
             'office_phone_extension' => $this->office_phone_extension,
             'selectable_label' => $this->selectable_label,
             'contact_for' => $this->whenLoaded('contactFor', fn () => $this->contactFor->toArray()),
