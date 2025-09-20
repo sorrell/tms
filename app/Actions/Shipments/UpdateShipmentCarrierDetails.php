@@ -8,8 +8,6 @@ use App\Models\Contact;
 use App\Models\Shipments\Shipment;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Testing\Fakes\EventFake;
 
 class UpdateShipmentCarrierDetails
 {
@@ -30,10 +28,6 @@ class UpdateShipmentCarrierDetails
         $shipment->carrier_id = $carrierId;
         $shipment->driver_id = $driverId;
         $shipment->save();
-
-        if (Event::getFacadeRoot() instanceof EventFake) {
-            Shipment::dispatchUpdatedEventForModel($shipment);
-        }
 
         event(new ShipmentCarrierUpdated($shipment));
 

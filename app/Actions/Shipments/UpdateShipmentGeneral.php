@@ -5,8 +5,6 @@ namespace App\Actions\Shipments;
 use App\Models\Shipments\Shipment;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Testing\Fakes\EventFake;
 
 
 class UpdateShipmentGeneral
@@ -32,10 +30,6 @@ class UpdateShipmentGeneral
             'trailer_temperature_maximum' => $trailerTemperatureMaximum,
             'trailer_temperature_range' => $trailerTemperatureRange ?? false,
         ]);
-
-        if (Event::getFacadeRoot() instanceof EventFake) {
-            Shipment::dispatchUpdatedEventForModel($shipment);
-        }
 
 
         return $shipment;

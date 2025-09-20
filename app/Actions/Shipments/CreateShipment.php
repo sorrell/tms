@@ -14,8 +14,6 @@ use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Nette\NotImplementedException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Testing\Fakes\EventFake;
 
 class CreateShipment
 {
@@ -101,10 +99,6 @@ class CreateShipment
 
             return $shipment;
         });
-
-        if (Event::getFacadeRoot() instanceof EventFake) {
-            Shipment::dispatchCreatedEventForModel($shipment);
-        }
 
         if ($carrierId) {
             event(new ShipmentCarrierUpdated($shipment));

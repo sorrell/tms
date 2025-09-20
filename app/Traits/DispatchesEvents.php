@@ -11,7 +11,6 @@ use App\Events\Shipments\ShipmentRestored;
 use App\Events\Shipments\ShipmentUpdated;
 use App\Models\Carriers\Carrier;
 use App\Models\Shipments\Shipment;
-use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 trait DispatchesEvents
 {
@@ -34,16 +33,6 @@ trait DispatchesEvents
                 static::handleRestoredEvent($model);
             });
         }
-    }
-
-    public static function dispatchCreatedEventForModel(EloquentModel $model): void
-    {
-        static::handleCreatedEvent($model);
-    }
-
-    public static function dispatchUpdatedEventForModel(EloquentModel $model): void
-    {
-        static::handleUpdatedEvent($model);
     }
 
     protected static function handleCreatedEvent($model): void

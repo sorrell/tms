@@ -16,6 +16,7 @@ use App\Models\Customers\Customer;
 use App\Models\Facility;
 use App\Models\Location;
 use App\Models\Organizations\Organization;
+use App\Models\Shipments\Shipment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -55,10 +56,19 @@ class ShipmentEventTest extends TestCase
         parent::tearDown();
     }
 
+    protected function fakeEventBus(): void
+    {
+        Event::fakeExcept([
+            'eloquent.created: ' . Shipment::class,
+            'eloquent.updated: ' . Shipment::class,
+            'eloquent.created: ' . Carrier::class,
+        ]);
+    }
+
     /** @test */
     public function it_fires_shipment_created_event_when_creating_shipment()
     {
-        Event::fake();
+        $this->fakeEventBus();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
         $location = Location::factory()->create(['organization_id' => $this->organization->id]);
@@ -87,7 +97,7 @@ class ShipmentEventTest extends TestCase
     /** @test */
     public function it_fires_carrier_created_event_when_creating_carrier()
     {
-        Event::fake();
+        $this->fakeEventBus();
 
         CreateCarrier::run('Test Carrier');
 
@@ -99,7 +109,7 @@ class ShipmentEventTest extends TestCase
     /** @test */
     public function it_fires_shipment_updated_event_when_updating_general_details()
     {
-        Event::fake();
+        $this->fakeEventBus();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
         $location = Location::factory()->create(['organization_id' => $this->organization->id]);
@@ -122,7 +132,7 @@ class ShipmentEventTest extends TestCase
             ]
         );
 
-        Event::fake(); // Reset events to focus on update
+        $this->fakeEventBus(); // Reset events to focus on update
 
         UpdateShipmentGeneral::run(
             shipment: $shipment,
@@ -140,7 +150,7 @@ class ShipmentEventTest extends TestCase
     /** @test */
     public function it_fires_carrier_assigned_event_when_assigning_carrier()
     {
-        Event::fake();
+        $this->fakeEventBus();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
         $location = Location::factory()->create(['organization_id' => $this->organization->id]);
@@ -164,7 +174,7 @@ class ShipmentEventTest extends TestCase
             ]
         );
 
-        Event::fake(); // Reset events to focus on carrier assignment
+        $this->fakeEventBus(); // Reset events to focus on carrier assignment
 
         UpdateShipmentCarrierDetails::run(
             shipment: $shipment,
@@ -180,7 +190,7 @@ class ShipmentEventTest extends TestCase
     /** @test */
     public function it_fires_shipment_updated_event_when_updating_shipment_number()
     {
-        Event::fake();
+        $this->fakeEventBus();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
         $location = Location::factory()->create(['organization_id' => $this->organization->id]);
@@ -203,7 +213,7 @@ class ShipmentEventTest extends TestCase
             ]
         );
 
-        Event::fake(); // Reset events to focus on update
+        $this->fakeEventBus(); // Reset events to focus on update
 
         UpdateShipmentNumber::run(
             shipment: $shipment,
