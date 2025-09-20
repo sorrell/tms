@@ -93,6 +93,11 @@ trait DispatchesEvents
     protected static function handleShipmentUpdated(Shipment $shipment): void
     {
         $changes = $shipment->getChanges();
+        $previousValues = [];
+
+        foreach (array_keys($changes) as $attribute) {
+            $previousValues[$attribute] = $shipment->getOriginal($attribute);
+        }
         
         // Check for carrier assignment/unassignment
         if (isset($changes['carrier_id'])) {
@@ -124,9 +129,10 @@ trait DispatchesEvents
 
         // Always fire general shipment updated event
         event(new ShipmentUpdated(
-            $shipment,
-            $changes,
-            [
+            shipment: $shipment,
+            changedAttributes: $changes,
+            previousAttributes: $previousValues,
+            metadata: [
                 'updated_via' => 'model_observer',
                 'has_carrier_change' => isset($changes['carrier_id']),
             ]

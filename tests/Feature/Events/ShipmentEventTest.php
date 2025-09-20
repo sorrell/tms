@@ -13,7 +13,8 @@ use App\Events\Shipments\ShipmentCreated;
 use App\Events\Shipments\ShipmentUpdated;
 use App\Models\Carriers\Carrier;
 use App\Models\Customers\Customer;
-use App\Models\Facilities\Facility;
+use App\Models\Facility;
+use App\Models\Location;
 use App\Models\Organizations\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,9 +32,27 @@ class ShipmentEventTest extends TestCase
     {
         parent::setUp();
         
-        $this->organization = Organization::factory()->create();
-        $this->user = User::factory()->create(['organization_id' => $this->organization->id]);
+        $this->user = User::factory()->create();
+        $this->organization = Organization::factory()->create([
+            'owner_id' => $this->user->id,
+        ]);
+
+        $this->user->organizations()->attach($this->organization);
+        $this->user->forceFill([
+            'current_organization_id' => $this->organization->id,
+        ])->save();
         $this->actingAs($this->user);
+
+        set_context_organization($this->organization->id);
+
+        config(['queue.default' => 'sync']);
+    }
+
+    protected function tearDown(): void
+    {
+        clear_context_organization();
+
+        parent::tearDown();
     }
 
     /** @test */
@@ -42,7 +61,11 @@ class ShipmentEventTest extends TestCase
         Event::fake();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
-        $facility = Facility::factory()->create(['organization_id' => $this->organization->id]);
+        $location = Location::factory()->create(['organization_id' => $this->organization->id]);
+        $facility = Facility::factory()->create([
+            'organization_id' => $this->organization->id,
+            'location_id' => $location->id,
+        ]);
         
         CreateShipment::run(
             customerIds: [$customer->id],
@@ -79,7 +102,11 @@ class ShipmentEventTest extends TestCase
         Event::fake();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
-        $facility = Facility::factory()->create(['organization_id' => $this->organization->id]);
+        $location = Location::factory()->create(['organization_id' => $this->organization->id]);
+        $facility = Facility::factory()->create([
+            'organization_id' => $this->organization->id,
+            'location_id' => $location->id,
+        ]);
         
         $shipment = CreateShipment::run(
             customerIds: [$customer->id],
@@ -116,7 +143,11 @@ class ShipmentEventTest extends TestCase
         Event::fake();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
-        $facility = Facility::factory()->create(['organization_id' => $this->organization->id]);
+        $location = Location::factory()->create(['organization_id' => $this->organization->id]);
+        $facility = Facility::factory()->create([
+            'organization_id' => $this->organization->id,
+            'location_id' => $location->id,
+        ]);
         $carrier = Carrier::factory()->create(['organization_id' => $this->organization->id]);
         
         $shipment = CreateShipment::run(
@@ -152,7 +183,11 @@ class ShipmentEventTest extends TestCase
         Event::fake();
 
         $customer = Customer::factory()->create(['organization_id' => $this->organization->id]);
-        $facility = Facility::factory()->create(['organization_id' => $this->organization->id]);
+        $location = Location::factory()->create(['organization_id' => $this->organization->id]);
+        $facility = Facility::factory()->create([
+            'organization_id' => $this->organization->id,
+            'location_id' => $location->id,
+        ]);
         
         $shipment = CreateShipment::run(
             customerIds: [$customer->id],

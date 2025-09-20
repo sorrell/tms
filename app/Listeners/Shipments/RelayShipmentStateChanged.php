@@ -14,8 +14,12 @@ class RelayShipmentStateChanged implements ShouldQueue
     public function handle(ShipmentStateChanged $event): void
     {
         $shipment = $event->model;
-        $previous = method_exists($event->initialState, 'value') ? $event->initialState->value() : (string) $event->initialState;
-        $current = method_exists($event->finalState, 'value') ? $event->finalState->value() : (string) $event->finalState;
+        $previous = method_exists($event->initialState, 'getValue')
+            ? $event->initialState->getValue()
+            : (string) $event->initialState;
+        $current = method_exists($event->finalState, 'getValue')
+            ? $event->finalState->getValue()
+            : (string) $event->finalState;
 
         event(new ShipmentStateChangedTms(
             shipment: $shipment,

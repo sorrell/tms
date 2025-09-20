@@ -12,6 +12,7 @@ class ShipmentUpdated extends TmsEvent implements ShouldBroadcast
     public function __construct(
         public readonly Shipment $shipment,
         public readonly array $changedAttributes,
+        public readonly array $previousAttributes,
         array $metadata = []
     ) {
         parent::__construct(
@@ -36,7 +37,8 @@ class ShipmentUpdated extends TmsEvent implements ShouldBroadcast
             'shipment_id' => $this->shipment->id,
             'shipment_number' => $this->shipment->shipment_number,
             'changed_attributes' => $this->changedAttributes,
-            'current_state' => $this->shipment->state->value(),
+            'previous_attributes' => $this->previousAttributes,
+            'current_state' => $this->shipment->state?->getValue(),
         ];
     }
 

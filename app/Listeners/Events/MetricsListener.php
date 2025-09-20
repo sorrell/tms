@@ -2,134 +2,149 @@
 
 namespace App\Listeners\Events;
 
-use App\Events\Core\TmsEvent;
+use App\Contracts\Events\TmsEventContract;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+use App\Support\Events\TmsEventRegistry;
 
 class MetricsListener implements ShouldQueue
 {
     use InteractsWithQueue;
 
-    public function handle(TmsEvent $event): void
+    public function __construct(private readonly TmsEventRegistry $registry)
+    {
+    }
+
+    public function handle(TmsEventContract $event): void
     {
         $this->updateEventMetrics($event);
         $this->updateBusinessMetrics($event);
     }
 
-    protected function updateEventMetrics(TmsEvent $event): void
+    protected function updateEventMetrics(TmsEventContract $event): void
     {
+        $timestamp = Carbon::make($event->getOccurredAt()) ?? now();
+
         // Increment event counter
-        $eventCountKey = "metrics:events:{$event->organizationId}:{$event->getEventType()}:count";
-        Cache::increment($eventCountKey);
+        $eventCountKey = "metrics:events:{$event->getOrganizationId()}:{$event->getEventType()}:count";
+        $this->incrementCounter($eventCountKey);
 
         // Track event velocity (events per hour)
-        $velocityKey = "metrics:events:{$event->organizationId}:{$event->getEventType()}:velocity:" . now()->format('Y-m-d-H');
-        Cache::increment($velocityKey);
-        Cache::expire($velocityKey, 86400); // Keep for 24 hours
+        $velocityKey = "metrics:events:{$event->getOrganizationId()}:{$event->getEventType()}:velocity:" . $timestamp->copy()->format('Y-m-d-H');
+        $this->incrementCounter($velocityKey, $timestamp->copy()->addDay());
 
         // Update daily metrics
         $this->updateDailyMetrics($event);
     }
 
-    protected function updateBusinessMetrics(TmsEvent $event): void
+    protected function updateBusinessMetrics(TmsEventContract $event): void
     {
-        switch ($event->getEventType()) {
-            case 'shipment.created':
-                $this->incrementShipmentMetrics($event);
-                break;
-                
-            case 'shipment.state_changed':
-                $this->updateShipmentStateMetrics($event);
-                break;
-                
-            case 'carrier.assigned':
-                $this->updateCarrierMetrics($event);
-                break;
-                
-            case 'payable.created':
-            case 'receivable.created':
-                $this->updateFinancialMetrics($event);
-                break;
+        $handler = $this->registry->getMetricsHandler($event->getEventType());
+
+        if ($handler && method_exists($this, $handler)) {
+            $this->{$handler}($event);
         }
     }
 
-    protected function updateDailyMetrics(TmsEvent $event): void
+    protected function updateDailyMetrics(TmsEventContract $event): void
     {
-        $date = now()->format('Y-m-d');
-        $metricsKey = "metrics:daily:{$event->organizationId}:{$date}";
-        
-        // Use hash to store different metric types
-        Cache::hIncrBy($metricsKey, 'total_events', 1);
-        Cache::hIncrBy($metricsKey, $event->getEventType(), 1);
-        Cache::expire($metricsKey, 604800); // Keep for 7 days
+        $timestamp = Carbon::make($event->getOccurredAt()) ?? now();
+        $metricsKey = "metrics:daily:{$event->getOrganizationId()}:" . $timestamp->format('Y-m-d');
+
+        $metrics = Cache::get($metricsKey, []);
+        $metrics['total_events'] = ($metrics['total_events'] ?? 0) + 1;
+        $metrics[$event->getEventType()] = ($metrics[$event->getEventType()] ?? 0) + 1;
+
+        Cache::put($metricsKey, $metrics, $timestamp->copy()->addDays(7));
     }
 
-    protected function incrementShipmentMetrics(TmsEvent $event): void
+    protected function incrementShipmentMetrics(TmsEventContract $event): void
     {
         $data = $event->getEventData();
-        $organizationId = $event->organizationId;
-        
+        $organizationId = $event->getOrganizationId();
+        $timestamp = Carbon::make($event->getOccurredAt()) ?? now();
+
         // Increment shipment counters
-        Cache::increment("metrics:shipments:{$organizationId}:total");
-        Cache::increment("metrics:shipments:{$organizationId}:" . now()->format('Y-m'));
-        
+        $this->incrementCounter("metrics:shipments:{$organizationId}:total");
+        $this->incrementCounter("metrics:shipments:{$organizationId}:" . $timestamp->format('Y-m'));
+
         // Track by carrier if assigned
         if (!empty($data['carrier_id'])) {
-            Cache::increment("metrics:carriers:{$organizationId}:{$data['carrier_id']}:shipments");
+            $this->incrementCounter("metrics:carriers:{$organizationId}:{$data['carrier_id']}:shipments");
         }
     }
 
-    protected function updateShipmentStateMetrics(TmsEvent $event): void
+    protected function updateShipmentStateMetrics(TmsEventContract $event): void
     {
         $data = $event->getEventData();
-        $organizationId = $event->organizationId;
-        
-        // Track state transitions
-        if (isset($data['previous_state']) && isset($data['current_state'])) {
+        $organizationId = $event->getOrganizationId();
+
+        if (isset($data['previous_state'], $data['current_state'])) {
             $transitionKey = "metrics:shipments:{$organizationId}:transitions:{$data['previous_state']}:{$data['current_state']}";
-            Cache::increment($transitionKey);
-            
-            // Calculate average time in state
+            $this->incrementCounter($transitionKey);
+
             if ($data['current_state'] === 'delivered') {
                 $this->calculateDeliveryMetrics($event);
             }
         }
     }
 
-    protected function updateCarrierMetrics(TmsEvent $event): void
+    protected function updateCarrierMetrics(TmsEventContract $event): void
     {
         $data = $event->getEventData();
-        $organizationId = $event->organizationId;
+        $organizationId = $event->getOrganizationId();
         
-        Cache::increment("metrics:carriers:{$organizationId}:{$data['carrier_id']}:assignments");
-        Cache::set("metrics:carriers:{$organizationId}:{$data['carrier_id']}:last_assignment", now());
+        $this->incrementCounter("metrics:carriers:{$organizationId}:{$data['carrier_id']}:assignments");
+        $this->storeTimestamp("metrics:carriers:{$organizationId}:{$data['carrier_id']}:last_assignment", $event);
     }
 
-    protected function updateFinancialMetrics(TmsEvent $event): void
+    protected function updateFinancialMetrics(TmsEventContract $event): void
     {
         $data = $event->getEventData();
-        $organizationId = $event->organizationId;
+        $organizationId = $event->getOrganizationId();
         $type = str_contains($event->getEventType(), 'payable') ? 'payables' : 'receivables';
-        
-        // Update financial metrics
+
         if (isset($data['amount'])) {
-            $monthKey = "metrics:financial:{$organizationId}:{$type}:" . now()->format('Y-m');
-            Cache::increment($monthKey . ':count');
-            Cache::increment($monthKey . ':total', $data['amount']);
+            $timestamp = Carbon::make($event->getOccurredAt()) ?? now();
+            $monthKey = "metrics:financial:{$organizationId}:{$type}:" . $timestamp->format('Y-m');
+            $this->incrementCounter($monthKey . ':count');
+            $this->incrementCounter($monthKey . ':total', ttl: null, by: (float) $data['amount']);
         }
     }
 
-    protected function calculateDeliveryMetrics(TmsEvent $event): void
+    protected function calculateDeliveryMetrics(TmsEventContract $event): void
     {
-        // Calculate delivery time metrics
+        $timestamp = Carbon::make($event->getOccurredAt()) ?? now();
+
         DB::table('shipment_delivery_metrics')->insert([
-            'organization_id' => $event->organizationId,
+            'organization_id' => $event->getOrganizationId(),
             'shipment_id' => $event->getEventData()['shipment_id'],
-            'delivered_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'delivered_at' => $timestamp,
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
         ]);
+    }
+
+    protected function incrementCounter(string $key, ?Carbon $ttl = null, float $by = 1): void
+    {
+        $current = Cache::get($key, 0);
+        $newValue = $current + $by;
+
+        if ($ttl) {
+            Cache::put($key, $newValue, $ttl);
+
+            return;
+        }
+
+        Cache::forever($key, $newValue);
+    }
+
+    protected function storeTimestamp(string $key, TmsEventContract $event): void
+    {
+        $timestamp = Carbon::make($event->getOccurredAt()) ?? now();
+        Cache::forever($key, $timestamp);
     }
 }

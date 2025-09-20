@@ -16,6 +16,7 @@ class CreateCarrier
     ): Carrier
     {
         return Carrier::create([
+            'organization_id' => current_organization_id(),
             'name' => $name,
         ]);
     }

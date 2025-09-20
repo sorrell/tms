@@ -34,7 +34,9 @@ class ShipmentDeleted extends TmsEvent implements ShouldBroadcast
             'entity_id' => $this->shipment->id,
             'shipment_id' => $this->shipment->id,
             'shipment_number' => $this->shipment->shipment_number,
-            'deleted_at' => now()->toDateTimeString(),
+            'deleted_at' => $this->shipment->deleted_at
+                ? $this->shipment->deleted_at->toDateTimeString()
+                : $this->occurredAt->toDateTimeString(),
         ];
     }
 

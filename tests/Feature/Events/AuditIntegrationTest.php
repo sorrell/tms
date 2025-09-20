@@ -22,9 +22,27 @@ class AuditIntegrationTest extends TestCase
     {
         parent::setUp();
         
-        $this->organization = Organization::factory()->create();
-        $this->user = User::factory()->create(['organization_id' => $this->organization->id]);
+        $this->user = User::factory()->create();
+        $this->organization = Organization::factory()->create([
+            'owner_id' => $this->user->id,
+        ]);
+
+        $this->user->organizations()->attach($this->organization);
+        $this->user->forceFill([
+            'current_organization_id' => $this->organization->id,
+        ])->save();
         $this->actingAs($this->user);
+
+        set_context_organization($this->organization->id);
+
+        config(['queue.default' => 'sync']);
+    }
+
+    protected function tearDown(): void
+    {
+        clear_context_organization();
+
+        parent::tearDown();
     }
 
     public function test_events_are_stored_as_custom_audit_entries()

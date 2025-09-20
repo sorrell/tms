@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Events;
 
-use App\Events\Core\TmsEvent;
+use App\Contracts\Events\TmsEventContract;
 use App\Models\User;
 use App\Notifications\EventNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,7 +13,7 @@ class NotificationListener implements ShouldQueue
 {
     use InteractsWithQueue;
 
-    public function handle(TmsEvent $event): void
+    public function handle(TmsEventContract $event): void
     {
         if (!$this->shouldNotify($event)) {
             return;
@@ -28,7 +28,7 @@ class NotificationListener implements ShouldQueue
         Notification::send($users, new EventNotification($event));
     }
 
-    protected function shouldNotify(TmsEvent $event): bool
+    protected function shouldNotify(TmsEventContract $event): bool
     {
         // Check if the event type is configured for notifications
         $notifiableEvents = config('events.notifiable', [
@@ -41,13 +41,15 @@ class NotificationListener implements ShouldQueue
         return in_array($event->getEventType(), $notifiableEvents);
     }
 
-    protected function getNotificationRecipients(TmsEvent $event): \Illuminate\Database\Eloquent\Collection
+    protected function getNotificationRecipients(TmsEventContract $event): \Illuminate\Database\Eloquent\Collection
     {
         // Users in the event's organization (either current org or membership) with permission
-        return User::where(function ($q) use ($event) {
-                $q->where('current_organization_id', $event->organizationId)
-                  ->orWhereHas('organizations', function ($q2) use ($event) {
-                      $q2->where('organizations.id', $event->organizationId);
+        $organizationId = $event->getOrganizationId();
+
+        return User::where(function ($q) use ($organizationId) {
+                $q->where('current_organization_id', $organizationId)
+                  ->orWhereHas('organizations', function ($q2) use ($organizationId) {
+                      $q2->where('organizations.id', $organizationId);
                   });
             })
             ->whereHas('roles', function ($query) {

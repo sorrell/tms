@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Events\Core\TmsEvent;
+use App\Contracts\Events\TmsEventContract;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -13,7 +13,7 @@ class EventNotification extends Notification implements ShouldQueue
     use Queueable;
 
     public function __construct(
-        private TmsEvent $event
+        private TmsEventContract $event
     ) {}
 
     public function via($notifiable): array
@@ -37,10 +37,10 @@ class EventNotification extends Notification implements ShouldQueue
     public function toArray($notifiable): array
     {
         return [
-            'event_id' => $this->event->eventId,
+            'event_id' => $this->event->getEventId(),
             'event_type' => $this->event->getEventType(),
             'data' => $this->event->getEventData(),
-            'occurred_at' => $this->event->occurredAt->toDateTimeString(),
+            'occurred_at' => $this->event->getOccurredAt()->toDateTimeString(),
         ];
     }
 

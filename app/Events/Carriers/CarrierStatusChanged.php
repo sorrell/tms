@@ -38,7 +38,7 @@ class CarrierStatusChanged extends TmsEvent implements ShouldBroadcast
             'carrier_name' => $this->carrier->name,
             'previous_status' => $this->previousStatus,
             'new_status' => $this->newStatus,
-            'changed_at' => now()->toDateTimeString(),
+            'changed_at' => $this->occurredAt->toDateTimeString(),
         ];
     }
 

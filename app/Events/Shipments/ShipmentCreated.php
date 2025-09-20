@@ -35,7 +35,7 @@ class ShipmentCreated extends TmsEvent implements ShouldBroadcast
             'shipment_id' => $this->shipment->id,
             'shipment_number' => $this->shipment->shipment_number,
             'carrier_id' => $this->shipment->carrier_id,
-            'state' => $this->shipment->state->value(),
+            'state' => $this->shipment->state?->getValue(),
             'weight' => $this->shipment->weight,
             'trip_distance' => $this->shipment->trip_distance,
             'trailer_type_id' => $this->shipment->trailer_type_id,
