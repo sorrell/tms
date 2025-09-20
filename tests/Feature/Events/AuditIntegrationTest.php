@@ -8,6 +8,7 @@ use App\Models\Organizations\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use OwenIt\Auditing\Models\Audit;
 use Tests\TestCase;
 
@@ -21,7 +22,7 @@ class AuditIntegrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
         $this->organization = Organization::factory()->create([
             'owner_id' => $this->user->id,
@@ -50,8 +51,6 @@ class AuditIntegrationTest extends TestCase
         // Create a carrier which triggers CarrierCreated event
         $carrier = CreateCarrier::run('Test Audit Carrier');
 
-        // Wait a moment for async processing
-        sleep(1);
 
         // Check that an audit entry was created for the TMS event
         $auditEntry = Audit::where('event', 'carrier.created')
@@ -73,8 +72,6 @@ class AuditIntegrationTest extends TestCase
         // Create a carrier
         $carrier = CreateCarrier::run('Metadata Test Carrier');
 
-        // Wait for processing
-        sleep(1);
 
         // Get the audit entry
         $auditEntry = Audit::where('event', 'carrier.created')
@@ -102,7 +99,6 @@ class AuditIntegrationTest extends TestCase
     {
         $carrier = CreateCarrier::run('Tag Test Carrier');
 
-        sleep(1);
 
         $auditEntry = Audit::where('event', 'carrier.created')
             ->where('auditable_id', $carrier->id)
@@ -118,7 +114,6 @@ class AuditIntegrationTest extends TestCase
         // Create a carrier (which creates both regular audit and TMS event audit)
         $carrier = CreateCarrier::run('Query Test Carrier');
 
-        sleep(1);
 
         // Get all audits for this carrier
         $allAudits = Audit::where('auditable_type', get_class($carrier))

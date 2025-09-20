@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Support\Events\TmsEventRegistry;
+use Illuminate\Support\Facades\Schema;
 
 class MetricsListener implements ShouldQueue
 {
@@ -117,9 +118,14 @@ class MetricsListener implements ShouldQueue
 
     protected function calculateDeliveryMetrics(TmsEventContract $event): void
     {
+        if (! Schema::hasTable('shipment_delivery_metrics')) {
+            return;
+        }
+
         $timestamp = Carbon::make($event->getOccurredAt()) ?? now();
 
-        DB::table('shipment_delivery_metrics')->insert([
+        // Use insertOrIgnore to avoid conflicts and handle existing records gracefully
+        DB::table('shipment_delivery_metrics')->insertOrIgnore([
             'organization_id' => $event->getOrganizationId(),
             'shipment_id' => $event->getEventData()['shipment_id'],
             'delivered_at' => $timestamp,

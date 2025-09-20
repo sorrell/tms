@@ -17,6 +17,7 @@ class AuditListener implements ShouldQueue
     {
     }
 
+
     public function handle(TmsEventContract $event): void
     {
         try {
@@ -82,7 +83,8 @@ class AuditListener implements ShouldQueue
 
         $triggeredBy = $event->getTriggeredBy();
 
-        return Audit::create([
+        // Use saveQuietly to avoid triggering more events and to handle transactions properly
+        $audit = new Audit([
             'auditable_type' => $entityClass,
             'auditable_id' => $entityId,
             'event' => $event->getEventType(),
@@ -95,5 +97,9 @@ class AuditListener implements ShouldQueue
             'user_id' => $triggeredBy?->id,
             'tags' => $tags,
         ]);
+
+        $audit->saveQuietly();
+
+        return $audit;
     }
 }

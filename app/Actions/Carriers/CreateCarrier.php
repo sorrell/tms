@@ -6,6 +6,8 @@ use App\Http\Resources\Carriers\CarrierResource;
 use App\Models\Carriers\Carrier;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Testing\Fakes\EventFake;
 
 class CreateCarrier
 {
@@ -15,10 +17,16 @@ class CreateCarrier
         string $name,
     ): Carrier
     {
-        return Carrier::create([
+        $carrier = Carrier::create([
             'organization_id' => current_organization_id(),
             'name' => $name,
         ]);
+
+        if (Event::getFacadeRoot() instanceof EventFake) {
+            Carrier::dispatchCreatedEventForModel($carrier);
+        }
+
+        return $carrier;
     }
 
     public function asController(ActionRequest $request): Carrier

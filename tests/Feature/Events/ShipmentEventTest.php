@@ -31,7 +31,7 @@ class ShipmentEventTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
         $this->organization = Organization::factory()->create([
             'owner_id' => $this->user->id,

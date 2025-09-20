@@ -15,6 +15,10 @@ class TmsEventRegistry
 
     public function __construct(array $config = [])
     {
+        if (empty($config)) {
+            $config = config('tms_events', []);
+        }
+
         $this->listeners = $config['listeners'] ?? [];
         $this->auditableEventTypes = $config['audit']['tracked_events'] ?? [];
         $this->metricsHandlers = $config['metrics']['handlers'] ?? [];
