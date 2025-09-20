@@ -20,6 +20,7 @@ use App\Models\Shipments\Shipment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ShipmentEventTest extends TestCase
@@ -65,7 +66,7 @@ class ShipmentEventTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fires_shipment_created_event_when_creating_shipment()
     {
         $this->fakeEventBus();
@@ -94,7 +95,7 @@ class ShipmentEventTest extends TestCase
         Event::assertDispatched(ShipmentCreated::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_fires_carrier_created_event_when_creating_carrier()
     {
         $this->fakeEventBus();
@@ -106,7 +107,7 @@ class ShipmentEventTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_fires_shipment_updated_event_when_updating_general_details()
     {
         $this->fakeEventBus();
@@ -147,7 +148,7 @@ class ShipmentEventTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_fires_carrier_assigned_event_when_assigning_carrier()
     {
         $this->fakeEventBus();
@@ -187,7 +188,7 @@ class ShipmentEventTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_fires_shipment_updated_event_when_updating_shipment_number()
     {
         $this->fakeEventBus();

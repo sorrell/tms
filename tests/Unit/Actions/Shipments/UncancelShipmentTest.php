@@ -23,6 +23,7 @@ use Mockery;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Tests\Traits\WithOrganization;
+use PHPUnit\Framework\Attributes\Test;
 
 class UncancelShipmentTest extends TestCase
 {
@@ -35,7 +36,7 @@ class UncancelShipmentTest extends TestCase
         $this->setupOrganization();
     }
 
-    /** @test */
+    #[Test]
     public function it_can_uncancel_a_shipment_with_no_carrier_to_pending_state()
     {
         // Create a shipment in Canceled state with no carrier
@@ -56,7 +57,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertEquals('pending', $result->state->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_uncancel_a_shipment_with_carrier_but_no_stop_progress_to_booked_state()
     {
         // Create a carrier
@@ -102,7 +103,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertEquals('booked', $result->state->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_uncancel_a_shipment_which_listener_recalculates_to_at_pickup()
     {
         // Create a carrier
@@ -148,7 +149,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertEquals('at_pickup', $result->state->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_uncancel_a_shipment_which_listener_recalculates_to_in_transit()
     {
         // Create a carrier
@@ -195,7 +196,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertEquals('in_transit', $result->state->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_uncancel_a_shipment_which_listener_recalculates_to_at_delivery()
     {
         // Create a carrier
@@ -242,7 +243,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertEquals('at_delivery', $result->state->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_uncancel_a_shipment_which_listener_recalculates_to_delivered()
     {
         // Create a carrier
@@ -288,7 +289,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertEquals('delivered', $result->state->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_uncancel_a_shipment_that_was_only_booked_not_dispatched()
     {
         // Create a carrier
@@ -319,7 +320,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertEquals('booked', $result->state->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function it_requires_shipment_edit_permission()
     {
         // Create a user without shipment edit permission
@@ -341,7 +342,7 @@ class UncancelShipmentTest extends TestCase
         $this->assertTrue($action->authorize($request));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_redirect_response_when_called_as_controller()
     {
         // Create a shipment in Canceled state
