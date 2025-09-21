@@ -40,7 +40,7 @@ class EventNotification extends Notification implements ShouldQueue
             'event_id' => $this->event->getEventId(),
             'event_type' => $this->event->getEventType(),
             'data' => $this->event->getEventData(),
-            'occurred_at' => $this->event->getOccurredAt()->toDateTimeString(),
+            'occurred_at' => $this->event->getOccurredAt()->format('Y-m-d H:i:s'),
         ];
     }
 

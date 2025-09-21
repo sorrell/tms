@@ -37,7 +37,7 @@ class ShipmentCarrierBounced extends TmsEvent implements ShouldBroadcast
             'shipment_number' => $this->shipment->shipment_number,
             'carrier_id' => $this->shipment->carrier_id,
             'reason' => $this->reason,
-            'bounced_at' => $this->occurredAt->toDateTimeString(),
+            'bounced_at' => $this->occurredAt->format('Y-m-d H:i:s'),
         ];
     }
 

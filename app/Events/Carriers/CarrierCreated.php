@@ -4,6 +4,7 @@ namespace App\Events\Carriers;
 
 use App\Events\Core\TmsEvent;
 use App\Models\Carriers\Carrier;
+use Carbon\CarbonInterface;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Support\Str;
 
@@ -29,6 +30,8 @@ class CarrierCreated extends TmsEvent implements ShouldBroadcast
 
     public function getEventData(): array
     {
+        $createdAt = $this->carrier->created_at;
+
         return [
             'entity_type' => Carrier::class,
             'entity_id' => $this->carrier->id,
@@ -36,8 +39,8 @@ class CarrierCreated extends TmsEvent implements ShouldBroadcast
             'carrier_name' => $this->carrier->name,
             'mc_number' => $this->carrier->mc_number,
             'dot_number' => $this->carrier->dot_number,
-            'status' => $this->carrier->status,
-            'created_at' => $this->carrier->created_at->toDateTimeString(),
+            'status' => $this->carrier->getAttribute('status'),
+            'created_at' => $createdAt instanceof CarbonInterface ? $createdAt->toDateTimeString() : null,
         ];
     }
 

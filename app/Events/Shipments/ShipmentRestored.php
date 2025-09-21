@@ -34,7 +34,7 @@ class ShipmentRestored extends TmsEvent implements ShouldBroadcast
             'entity_id' => $this->shipment->id,
             'shipment_id' => $this->shipment->id,
             'shipment_number' => $this->shipment->shipment_number,
-            'restored_at' => $this->occurredAt->toDateTimeString(),
+            'restored_at' => $this->occurredAt->format('Y-m-d H:i:s'),
             'current_state' => $this->shipment->state?->getValue(),
         ];
     }

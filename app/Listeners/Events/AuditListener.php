@@ -71,7 +71,7 @@ class AuditListener implements ShouldQueue
         $newValues = array_merge($newValues, [
             'event_id' => $event->getEventId(),
             'organization_id' => $event->getOrganizationId(),
-            'occurred_at' => $event->getOccurredAt()->toDateTimeString(),
+            'occurred_at' => $event->getOccurredAt()->format('Y-m-d H:i:s'),
             'metadata' => $event->getMetadata(),
         ]);
 
@@ -83,6 +83,9 @@ class AuditListener implements ShouldQueue
 
         $triggeredBy = $event->getTriggeredBy();
 
+        /** @var \Illuminate\Http\Request|null $currentRequest */
+        $currentRequest = app()->bound('request') ? request() : null;
+
         // Use saveQuietly to avoid triggering more events and to handle transactions properly
         $audit = new Audit([
             'auditable_type' => $entityClass,
@@ -90,9 +93,9 @@ class AuditListener implements ShouldQueue
             'event' => $event->getEventType(),
             'old_values' => $oldValues,
             'new_values' => $newValues,
-            'url' => request()?->fullUrl(),
-            'ip_address' => request()?->ip(),
-            'user_agent' => request()?->userAgent(),
+            'url' => $currentRequest?->fullUrl(),
+            'ip_address' => $currentRequest?->ip(),
+            'user_agent' => $currentRequest?->userAgent(),
             'user_type' => $triggeredBy ? $triggeredBy::class : null,
             'user_id' => $triggeredBy?->id,
             'tags' => $tags,

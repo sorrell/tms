@@ -11,6 +11,9 @@ use App\Events\Shipments\ShipmentRestored;
 use App\Events\Shipments\ShipmentUpdated;
 use App\Models\Carriers\Carrier;
 use App\Models\Shipments\Shipment;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use function class_uses_recursive;
 
 trait DispatchesEvents
 {
@@ -73,6 +76,7 @@ trait DispatchesEvents
             case Shipment::class:
                 event(new ShipmentDeleted($model, [
                     'deleted_via' => 'model_observer',
+                      // @phpstan-ignore-next-line
                     'soft_delete' => method_exists($model, 'trashed') && $model->trashed(),
                 ]));
                 break;

@@ -38,7 +38,7 @@ class CarrierUnassigned extends TmsEvent implements ShouldBroadcast
             'shipment_number' => $this->shipment->shipment_number,
             'carrier_id' => $this->carrier->id,
             'carrier_name' => $this->carrier->name,
-            'unassigned_at' => $this->occurredAt->toDateTimeString(),
+            'unassigned_at' => $this->occurredAt->format('Y-m-d H:i:s'),
         ];
     }
 
