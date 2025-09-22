@@ -30,3 +30,106 @@ The following changes were introduced to make the event system extensible before
 - Keeps custom event implementations interchangeable and ensures shared infrastructure (audit logs, notifications, metrics) stays compatible even if events are emitted from outside the core codebase.
 
 These foundations let the platform accept third-party event emitters/listeners without additional breaking changes while keeping today’s behaviour intact.
+
+## Plugin Usage Examples
+
+Third-party packages can both publish new domain events and react to existing core events by leaning on the registry and standard Laravel tooling.
+
+### Dispatching Plugin Events
+
+Example event class (e.g., `packages/acme-inventory/src/Events/InventoryAdjusted.php`):
+
+```php
+namespace Acme\Inventory\Events;
+
+use App\Events\Core\TmsEvent;
+use Illuminate\Support\Str;
+
+class InventoryAdjusted extends TmsEvent
+{
+    public function __construct(
+        public readonly string $sku,
+        public readonly int $newQuantity,
+        public readonly int $organizationId,
+        array $metadata = []
+    ) {
+        parent::__construct(
+            eventId: Str::uuid()->toString(),
+            organizationId: $organizationId,
+            occurredAt: now(),
+            triggeredBy: auth()->user(),
+            metadata: $metadata
+        );
+    }
+
+    public function getEventType(): string
+    {
+        return 'inventory.adjusted';
+    }
+
+    public function getEventData(): array
+    {
+        return [
+            'sku' => $this->sku,
+            'new_quantity' => $this->newQuantity,
+        ];
+    }
+}
+```
+
+Bootstrap registrations in your plugin service provider (e.g., `packages/acme-inventory/src/InventoryServiceProvider.php`):
+
+```php
+use Acme\Inventory\Events\InventoryAdjusted;
+use App\Support\Events\TmsEventRegistry;
+
+public function boot(TmsEventRegistry $registry): void
+{
+    $registry->registerAuditableEvent('inventory.adjusted');
+    $registry->registerMetricsHandler('inventory.adjusted', 'recordInventoryAdjustment');
+}
+```
+
+Dispatch the event from domain logic (e.g., `packages/acme-inventory/src/Services/InventorySyncService.php`):
+
+```php
+event(new InventoryAdjusted($sku, $newQuantity, $organizationId, [
+    'adjusted_via' => 'acme_inventory_sync',
+]));
+```
+
+`recordInventoryAdjustment` should refer to a callable exposed by whichever metrics listener you register (for example, by adding the method to `App\Listeners\Events\MetricsListener`).
+
+### Listening To Core Events
+
+Register listeners in the plugin provider (e.g., `packages/acme-inventory/src/InventoryServiceProvider.php`):
+
+```php
+use App\Events\Shipments\ShipmentUpdated;
+use App\Support\Events\TmsEventRegistry;
+use Acme\Inventory\Listeners\SyncShipmentSkus;
+
+public function boot(TmsEventRegistry $registry): void
+{
+    $registry->registerListener(ShipmentUpdated::class, SyncShipmentSkus::class);
+}
+```
+
+Implement the listener (e.g., `packages/acme-inventory/src/Listeners/SyncShipmentSkus.php`):
+
+```php
+namespace Acme\Inventory\Listeners;
+
+use App\Events\Shipments\ShipmentUpdated;
+
+class SyncShipmentSkus
+{
+    public function handle(ShipmentUpdated $event): void
+    {
+        // Inspect $event->changedAttributes to determine whether SKUs changed
+        // and push updates to the inventory system.
+    }
+}
+```
+
+Because everything runs through the shared registry, plugin events show up in the same audit/metrics/notification pipelines as first-party events when registered, and core events remain discoverable to any package listening in.

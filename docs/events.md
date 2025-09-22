@@ -57,7 +57,7 @@ The `App\Events\Core\BroadcastsToChannels` trait automatically registers broadca
 - Organization channel: `private-organization.{organizationId}`
 - Entity channels (if present in payload): `shipment.{shipment_id}`, `carrier.{carrier_id}`, `customer.{customer_id}`, `user.{user_id}`
 
-You can customize this by overriding `getEventData()` or extending the trait for plugin-specific channels.
+You can customize this by overriding `getEventData()` or extending the base observers for plugin-specific channels.
 
 ## Dispatching Events
 
@@ -67,7 +67,7 @@ Events are dispatched with Laravel’s `event()` helper:
 event(new ShipmentCreated($shipment));
 ```
 
-The `App\Traits\DispatchesEvents` trait wires model lifecycle hooks to event dispatch (e.g., `Shipment::bootDispatchesEvents()` fires `ShipmentCreated`, `ShipmentUpdated`, etc.). If you add the trait to a model, ensure it produces the correct event envelope for your domain.
+Model observers wire lifecycle hooks to event dispatch. For example, `App\Observers\ShipmentObserver` fires `ShipmentCreated`, `ShipmentUpdated`, and related carrier events, while `App\Observers\CarrierObserver` handles carrier lifecycle events.
 
 ## Default Listeners
 
@@ -146,6 +146,6 @@ The registry merges additional listeners rather than replacing existing ones, al
 - Event registry: `app/Support/Events/TmsEventRegistry.php`
 - Listener config: `config/tms_events.php`
 - Default listeners: `app/Listeners/Events/{Audit,Metrics,Notification}Listener.php`
-- Dispatch helpers: `app/Traits/DispatchesEvents.php`
+- Dispatch helpers: `app/Observers/ShipmentObserver.php`, `app/Observers/CarrierObserver.php`
 
 With these pieces, both core developers and plugin authors can publish new event types, subscribe to them, and participate in auditing/metrics/notifications without modifying existing code.
