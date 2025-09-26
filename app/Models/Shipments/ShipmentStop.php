@@ -3,6 +3,7 @@
 namespace App\Models\Shipments;
 
 use App\Enums\StopType;
+use App\Events\Shipments\ShipmentUpdated;
 use App\Models\Facility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,20 +59,56 @@ class ShipmentStop extends Model
         static::updated(function ($stop) {
             if ($stop->shipment) {
                 event(new \App\Events\Shipments\ShipmentStopsUpdated($stop->shipment));
+
+                // Also fire the TMS ShipmentUpdated event
+                event(new ShipmentUpdated(
+                    shipment: $stop->shipment->fresh(),
+                    changedAttributes: ['stops_updated' => true],
+                    previousAttributes: [],
+                    metadata: [
+                        'updated_via' => 'stop_model_update',
+                        'stop_id' => $stop->id,
+                        'stop_number' => $stop->stop_number,
+                    ]
+                ));
             }
         });
-        
+
         // Also fire the event when a stop is created
         static::created(function ($stop) {
             if ($stop->shipment) {
                 event(new \App\Events\Shipments\ShipmentStopsUpdated($stop->shipment));
+
+                // Also fire the TMS ShipmentUpdated event
+                event(new ShipmentUpdated(
+                    shipment: $stop->shipment->fresh(),
+                    changedAttributes: ['stop_added' => true],
+                    previousAttributes: [],
+                    metadata: [
+                        'updated_via' => 'stop_model_create',
+                        'stop_id' => $stop->id,
+                        'stop_number' => $stop->stop_number,
+                    ]
+                ));
             }
         });
-        
+
         // And when a stop is deleted
         static::deleted(function ($stop) {
             if ($stop->shipment) {
                 event(new \App\Events\Shipments\ShipmentStopsUpdated($stop->shipment));
+
+                // Also fire the TMS ShipmentUpdated event
+                event(new ShipmentUpdated(
+                    shipment: $stop->shipment->fresh(),
+                    changedAttributes: ['stop_deleted' => true],
+                    previousAttributes: [],
+                    metadata: [
+                        'updated_via' => 'stop_model_delete',
+                        'stop_id' => $stop->id,
+                        'stop_number' => $stop->stop_number,
+                    ]
+                ));
             }
         });
     }

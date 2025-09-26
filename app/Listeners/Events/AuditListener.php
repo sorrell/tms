@@ -29,8 +29,9 @@ class AuditListener implements ShouldQueue
             // Store event as custom audit entry in OwenIT auditing system
             $audit = $this->createCustomAudit($event);
 
-            // Log the event
+            // Log the event with full payload for debugging
             $triggeredBy = $event->getTriggeredBy();
+            $eventData = $event->getEventData();
 
             Log::channel('audit')->info('Event tracked in audit system', [
                 'audit_id' => $audit->id,
@@ -38,6 +39,8 @@ class AuditListener implements ShouldQueue
                 'event_type' => $event->getEventType(),
                 'organization_id' => $event->getOrganizationId(),
                 'triggered_by' => $triggeredBy?->id,
+                'event_data' => $eventData, // Full payload for debugging
+                'metadata' => $event->getMetadata(),
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to audit event', [
