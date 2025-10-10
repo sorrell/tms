@@ -4,6 +4,8 @@ use App\Events\Carriers\CarrierAssigned;
 use App\Events\Carriers\CarrierCreated;
 use App\Events\Carriers\CarrierStatusChanged;
 use App\Events\Carriers\CarrierUnassigned;
+use App\Events\Customers\CustomerAssigned;
+use App\Events\Customers\CustomerUnassigned;
 use App\Events\Shipments\ShipmentCarrierBounced;
 use App\Events\Shipments\ShipmentCreated;
 use App\Events\Shipments\ShipmentDeleted;
@@ -72,6 +74,14 @@ return [
             MetricsListener::class,
             NotificationListener::class,
         ],
+        CustomerAssigned::class => [
+            AuditListener::class,
+            MetricsListener::class,
+        ],
+        CustomerUnassigned::class => [
+            AuditListener::class,
+            MetricsListener::class,
+        ],
     ],
     'audit' => [
         'tracked_events' => [
@@ -85,6 +95,8 @@ return [
             'carrier.unassigned',
             'carrier.created',
             'carrier.status_changed',
+            'customer.assigned',
+            'customer.unassigned',
             'payable.created',
             'payable.updated',
             'payable.deleted',

@@ -42,6 +42,8 @@ class GetShipmentAuditHistory
             return [
                 'organization_id' => 'Organization',
                 'carrier_id' => 'Carrier',
+                'customer_id' => 'Customer',
+                'customer_name' => 'Customer',
                 'driver_id' => 'Driver',
                 'weight' => 'Weight',
                 'trip_distance' => 'Trip Distance',

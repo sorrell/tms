@@ -97,7 +97,7 @@ trait HandlesAuditHistory
             $oldValues = $audit->getAttributeValue('old_values') ?? [];
             /** @var mixed $newValues */
             $newValues = $audit->getAttributeValue('new_values') ?? [];
-            
+
             return [
                 'id' => $audit->getKey(),
                 'event' => $audit->getAttributeValue('event'),
@@ -119,14 +119,24 @@ trait HandlesAuditHistory
                 'created_at_human' => $audit->getAttributeValue('created_at')?->diffForHumans(),
                 'changes' => $this->formatChanges($oldValues, $newValues, $auditableType),
             ];
-        });
+        })->filter(function (array $auditData) {
+            // Filter out audits that have no displayable changes after system field filtering
+            // Keep audits for created/deleted events even if they have no changes
+            $event = $auditData['event'];
+            if (str_contains($event, 'created') || str_contains($event, 'deleted') || str_contains($event, 'restored')) {
+                return true;
+            }
+
+            // For update events, only keep if there are actual changes to display
+            return count($auditData['changes']) > 0;
+        })->values();
     }
 
     private function formatChanges(array $oldValues, array $newValues, string $auditableType): array
     {
         $changes = [];
         $allKeys = array_unique(array_merge(array_keys($oldValues), array_keys($newValues)));
-        
+
         // Filter out system fields we don't want to show in the UI
         $systemFields = [
             'id',
@@ -135,6 +145,18 @@ trait HandlesAuditHistory
             'contact_for_type',
             'documentable_id',
             'documentable_type',
+            'auditable_id',
+            'auditable_type',
+            'entity_id',
+            'entity_type',
+            'shipment_id',
+            'shipment_number',
+            'event_id',
+            'occurred_at',
+            'metadata',
+            'changed_attributes',
+            'previous_attributes',
+            'current_state',
             'created_at',
             'updated_at'
         ];
@@ -144,7 +166,7 @@ trait HandlesAuditHistory
             if (in_array($key, $systemFields)) {
                 continue;
             }
-            
+
             $oldValue = $oldValues[$key] ?? null;
             $newValue = $newValues[$key] ?? null;
 

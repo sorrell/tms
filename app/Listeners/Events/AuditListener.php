@@ -33,7 +33,7 @@ class AuditListener implements ShouldQueue
             $triggeredBy = $event->getTriggeredBy();
             $eventData = $event->getEventData();
 
-            Log::channel('audit')->info('Event tracked in audit system', [
+            Log::info('Event tracked in audit system', [
                 'audit_id' => $audit->id,
                 'event_id' => $event->getEventId(),
                 'event_type' => $event->getEventType(),
@@ -61,22 +61,41 @@ class AuditListener implements ShouldQueue
         $eventData = $event->getEventData();
         $entityClass = $eventData['entity_type'] ?? null;
         $entityId = $eventData['entity_id'] ?? null;
+        $eventType = $event->getEventType();
 
         // Prepare old/new values based on event type
         $oldValues = $eventData['previous_attributes'] ?? [];
         $changedAttributes = $eventData['changed_attributes'] ?? [];
 
-        $newValues = $eventData;
-        unset($newValues['previous_attributes']);
-        $newValues['changed_attributes'] = $changedAttributes;
+        // For unassigned/deleted events, the data should be in old_values, not new_values
+        $isUnassignment = str_contains($eventType, 'unassigned') || str_contains($eventType, 'deleted');
 
-        // Add metadata to new values
-        $newValues = array_merge($newValues, [
-            'event_id' => $event->getEventId(),
-            'organization_id' => $event->getOrganizationId(),
-            'occurred_at' => $event->getOccurredAt()->format('Y-m-d H:i:s'),
-            'metadata' => $event->getMetadata(),
-        ]);
+        if ($isUnassignment) {
+            // Put the entity data in old_values (what was removed)
+            $oldValues = array_merge($oldValues, $eventData);
+            unset($oldValues['previous_attributes']);
+            unset($oldValues['changed_attributes']);
+
+            $newValues = [
+                'event_id' => $event->getEventId(),
+                'organization_id' => $event->getOrganizationId(),
+                'occurred_at' => $event->getOccurredAt()->format('Y-m-d H:i:s'),
+                'metadata' => $event->getMetadata(),
+            ];
+        } else {
+            // For assigned/created/updated events, data goes in new_values
+            $newValues = $eventData;
+            unset($newValues['previous_attributes']);
+            $newValues['changed_attributes'] = $changedAttributes;
+
+            // Add metadata to new values
+            $newValues = array_merge($newValues, [
+                'event_id' => $event->getEventId(),
+                'organization_id' => $event->getOrganizationId(),
+                'occurred_at' => $event->getOccurredAt()->format('Y-m-d H:i:s'),
+                'metadata' => $event->getMetadata(),
+            ]);
+        }
 
         // Determine tags based on event type
         $tags = collect([
