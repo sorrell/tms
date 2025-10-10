@@ -166,9 +166,16 @@ trait HandlesAuditHistory
                 'changes' => $this->formatChanges($oldValues, $newValues, $auditableType),
             ];
         })->filter(function (array $auditData) {
+            $event = $auditData['event'];
+
+            // Filter out shipment.updated and shipment.state_changed events
+            // The standard "updated" event already shows this information
+            if ($event === 'shipment.updated' || $event === 'shipment.state_changed') {
+                return false;
+            }
+
             // Filter out audits that have no displayable changes after system field filtering
             // Keep audits for created/deleted events even if they have no changes
-            $event = $auditData['event'];
             if (str_contains($event, 'created') || str_contains($event, 'deleted') || str_contains($event, 'restored')) {
                 return true;
             }

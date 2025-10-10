@@ -83,18 +83,21 @@ class AuditListener implements ShouldQueue
                 'metadata' => $event->getMetadata(),
             ];
         } else {
-            // For assigned/created/updated events, data goes in new_values
-            $newValues = $eventData;
-            unset($newValues['previous_attributes']);
-            $newValues['changed_attributes'] = $changedAttributes;
-
-            // Add metadata to new values
-            $newValues = array_merge($newValues, [
+            // For assigned/created/updated events, use changed attributes as new values
+            // This ensures the audit display logic can properly show old → new transitions
+            $newValues = array_merge($changedAttributes, [
                 'event_id' => $event->getEventId(),
                 'organization_id' => $event->getOrganizationId(),
                 'occurred_at' => $event->getOccurredAt()->format('Y-m-d H:i:s'),
                 'metadata' => $event->getMetadata(),
             ]);
+
+            // Add additional event data for context (but not the changed/previous attributes)
+            foreach ($eventData as $key => $value) {
+                if (!in_array($key, ['changed_attributes', 'previous_attributes', 'entity_type', 'entity_id'], true)) {
+                    $newValues[$key] = $value;
+                }
+            }
         }
 
         // Determine tags based on event type
