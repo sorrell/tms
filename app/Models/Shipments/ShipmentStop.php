@@ -11,10 +11,12 @@ use App\Traits\HasOrganization;
 use App\Traits\HasAliases;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class ShipmentStop extends Model
+class ShipmentStop extends Model implements Auditable
 {
-    use HasFactory, HasOrganization, HasAliases;
+    use HasFactory, HasOrganization, HasAliases, AuditableTrait;
 
     protected $fillable = [
         'organization_id',
@@ -35,14 +37,51 @@ class ShipmentStop extends Model
 
     protected $casts = [
         'stop_type' => StopType::class,
+        'eta' => 'datetime',
+        'arrived_at' => 'datetime',
+        'loaded_unloaded_at' => 'datetime',
+        'left_at' => 'datetime',
+        'appointment_at' => 'datetime',
+        'appointment_end_at' => 'datetime',
     ];
 
     public $aliasName = 'stop';
     public $aliasProperties = [
         'number' => 'stop_number',
         'type' => 'stop_type',
-        
+
     ];
+
+    /**
+     * Transform audit data to show facility name instead of ID
+     */
+    public function transformAudit(array $data): array
+    {
+        // Replace facility_id with facility name in old_values
+        if (isset($data['old_values']['facility_id'])) {
+            $facilityId = $data['old_values']['facility_id'];
+            if ($facilityId) {
+                $facility = Facility::find($facilityId);
+                if ($facility) {
+                    $data['old_values']['facility_id'] = $facility->name;
+                }
+            }
+        }
+
+        // Replace facility_id with facility name in new_values
+        if (isset($data['new_values']['facility_id'])) {
+            $facilityId = $data['new_values']['facility_id'];
+            if ($facilityId) {
+                $facility = Facility::find($facilityId);
+                if ($facility) {
+                    $data['new_values']['facility_id'] = $facility->name;
+                }
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * Boot the model.
      */

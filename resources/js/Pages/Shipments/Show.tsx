@@ -72,16 +72,6 @@ export default function Show({
 
                         {/* Notes */}
                         <ShipmentNotes shipmentId={shipment.id} />
-
-                        {/* Activity Feed */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Recent Activity</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <ShipmentAuditHistory shipment={shipment} />
-                            </CardContent>
-                        </Card>
                     </div>
 
                     {/* Sidebar - 1 column */}
@@ -126,6 +116,16 @@ export default function Show({
                         </Card>
                     </div>
                 </div>
+
+                {/* Activity Feed - Full Width */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Recent Activity</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        <ShipmentAuditHistory shipment={shipment} />
+                    </CardContent>
+                </Card>
             </div>
         </AuthenticatedLayout>
     );

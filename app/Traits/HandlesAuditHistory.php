@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Contact;
 use App\Models\Documents\Document;
+use App\Models\Shipments\ShipmentStop;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Models\Audit;
@@ -13,7 +14,7 @@ trait HandlesAuditHistory
     protected function getAuditHistory(Model & Auditable $parentModel): \Illuminate\Support\Collection
     {
         $parentClass = get_class($parentModel);
-        
+
         // Get parent model audits
         $parentAudits = $parentModel->audits()->with('user')->get();
 
@@ -35,8 +36,16 @@ trait HandlesAuditHistory
             'contact_for_id'
         );
 
+        // Get shipment stop audits if this is a shipment
+        $stopAudits = collect();
+        if ($parentClass === \App\Models\Shipments\Shipment::class) {
+            $stopAudits = $this->getShipmentStopAudits(
+                $parentModel->getKey()
+            );
+        }
+
         // Merge all audits and sort by created_at desc
-        return $parentAudits->merge($documentAudits)->merge($contactAudits)
+        return $parentAudits->merge($documentAudits)->merge($contactAudits)->merge($stopAudits)
             ->sortByDesc('created_at')
             ->values();
     }
@@ -86,6 +95,43 @@ trait HandlesAuditHistory
             });
         
         return $audits->merge($deletedModelAudits);
+    }
+
+    private function getShipmentStopAudits(mixed $shipmentId): \Illuminate\Support\Collection
+    {
+        $audits = collect();
+
+        // Get audits for stops that currently exist and belong to this shipment
+        $existingStopAudits = Audit::where('auditable_type', ShipmentStop::class)
+            ->join('shipment_stops', function ($join) {
+                $join->on('audits.auditable_id', '=', 'shipment_stops.id');
+            })
+            ->where('shipment_stops.shipment_id', $shipmentId)
+            ->select('audits.*')
+            ->with('user', 'auditable')
+            ->get();
+
+        $audits = $audits->merge($existingStopAudits);
+
+        // Get audits for deleted stops
+        $deletedStopAudits = Audit::where('auditable_type', ShipmentStop::class)
+            ->whereDoesntHave('auditable')
+            ->get()
+            ->filter(function (Audit $audit) use ($shipmentId) {
+                $oldValues = $audit->getAttributeValue('old_values') ?? [];
+                $newValues = $audit->getAttributeValue('new_values') ?? [];
+
+                // Check if this audit belongs to our specific shipment
+                $matchesInOld = isset($oldValues['shipment_id']) &&
+                               (int)$oldValues['shipment_id'] === (int)$shipmentId;
+
+                $matchesInNew = isset($newValues['shipment_id']) &&
+                               (int)$newValues['shipment_id'] === (int)$shipmentId;
+
+                return $matchesInOld || $matchesInNew;
+            });
+
+        return $audits->merge($deletedStopAudits);
     }
 
     protected function formatAuditData(\Illuminate\Support\Collection $audits): \Illuminate\Support\Collection
@@ -222,6 +268,7 @@ trait HandlesAuditHistory
             \App\Models\Facility::class => 'Facility',
             \App\Models\Carriers\Carrier::class => 'Carrier',
             \App\Models\Shipments\Shipment::class => 'Shipment',
+            ShipmentStop::class => 'Stop',
             Document::class => 'Document',
             Contact::class => 'Contact',
             default => class_basename($auditableType),
@@ -243,11 +290,15 @@ trait HandlesAuditHistory
             $name = $oldValues['name'] ?? $newValues['name'] ?? null;
             $shipmentNumber = $oldValues['shipment_number'] ?? $newValues['shipment_number'] ?? null;
             
+            $stopNumber = $oldValues['stop_number'] ?? $newValues['stop_number'] ?? null;
+            $stopType = $oldValues['stop_type'] ?? $newValues['stop_type'] ?? null;
+
             return match ($auditableType) {
                 \App\Models\Customers\Customer::class => $name ? $name . ' (deleted)' : 'Deleted Customer',
                 \App\Models\Facility::class => $name ? $name . ' (deleted)' : 'Deleted Facility',
                 \App\Models\Carriers\Carrier::class => $name ? $name . ' (deleted)' : 'Deleted Carrier',
                 \App\Models\Shipments\Shipment::class => $shipmentNumber ? 'Shipment ' . $shipmentNumber . ' (deleted)' : 'Deleted Shipment',
+                ShipmentStop::class => $stopNumber ? 'Stop #' . $stopNumber . ' (deleted)' : 'Deleted Stop',
                 Document::class => $name ? $name . ' (deleted)' : 'Deleted Document',
                 Contact::class => $name ? $name . ' (deleted)' : 'Deleted Contact',
                 default => 'Deleted Entity',
@@ -259,6 +310,7 @@ trait HandlesAuditHistory
             \App\Models\Facility::class => $auditable->getAttributeValue('name') ?? 'Unknown Facility',
             \App\Models\Carriers\Carrier::class => $auditable->getAttributeValue('name') ?? 'Unknown Carrier',
             \App\Models\Shipments\Shipment::class => $auditable->getAttributeValue('shipment_number') ? 'Shipment ' . $auditable->getAttributeValue('shipment_number') : 'Shipment #' . $auditable->getKey(),
+            ShipmentStop::class => 'Stop #' . $auditable->getAttributeValue('stop_number'),
             Document::class => $auditable->getAttributeValue('name') ?? 'Unknown Document',
             Contact::class => $auditable->getAttributeValue('name') ?? 'Unknown Contact',
             default => 'Unknown Entity',
